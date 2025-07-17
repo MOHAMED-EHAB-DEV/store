@@ -76,7 +76,7 @@ const Features = () => {
                                     }}>
                                     <span className="opacity-60 z-10 text-white font-medium">5000$+</span>
                                     <div
-                                        className={`${isVisible ? "w-[80%]" : "w-0"} h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-out`} />
+                                        className={`${isVisible ? "w-[80%]" : "w-0"} h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`} />
                                 </div>
                             </div>
                             <div className="flex gap-6 w-full md:w-[70%] items-center">
@@ -91,7 +91,7 @@ const Features = () => {
                                     }}>
                                     <span className="z-10 text-white font-medium">99$</span>
                                     <div
-                                        className={`${isVisible ? "w-[75%]" : "w-0"} h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-in-out`}/>
+                                        className={`${isVisible ? "w-[75%]" : "w-0"} h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}/>
                                 </div>
                             </div>
                         </div>

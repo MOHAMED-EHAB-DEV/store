@@ -60,31 +60,6 @@ const NavbarItem = ({text, link}: { text: string, link: string, }) => {
 const MobileDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const drawerVariants = {
-        hidden: {
-            x: "100%",
-            opacity: 0,
-        },
-        visible: {
-            x: 0,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 25,
-            },
-        },
-        exit: {
-            x: "100%",
-            opacity: 0,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 25,
-            },
-        },
-    };
-
     return (
         <div className="relative sm:hidden block">
             <button className="p-2 bg-transparent" onClick={() => setIsOpen(true)}>
@@ -100,7 +75,30 @@ const MobileDrawer = () => {
 
                     <motion.div
                         className="fixed top-0 right-0 h-full w-2/4 bg-dark shadow-lg z-50"
-                        variants={drawerVariants}
+                        variants={{
+                            hidden: {
+                                x: "100%",
+                                opacity: 0,
+                            },
+                            visible: {
+                                x: 0,
+                                opacity: 1,
+                                transition: {
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 25,
+                                },
+                            },
+                            exit: {
+                                x: "100%",
+                                opacity: 0,
+                                transition: {
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 25,
+                                },
+                            },
+                        }}
                         initial="hidden"
                         animate="visible"
                         exit="exit"

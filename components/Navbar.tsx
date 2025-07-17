@@ -3,6 +3,7 @@
 import {useState, useEffect} from 'react';
 import {MenuIcon, XIcon} from 'lucide-react';
 import {motion} from 'motion/react';
+import { useRouter } from "next/navigation";
 
 import {NavbarLinks} from "@/constants";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import Link from "next/link";
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -26,7 +28,7 @@ const Navbar = () => {
     return (
         <div
             className={`w-full sm:w-1/2 flex items-center justify-between py-8 gap-3 ${isScrolled && "fixed top-0 bg-dark"}`}>
-            <div className="flex items-center justify-center p-2 h-10 w-12 gap-1">
+            <div className="flex items-center justify-center p-2 h-10 w-12 gap-1 hover:rotate-360 cursor-pointer" onClick={() => router.push("/")}>
                 <div className="w-1/3 h-full bg-white"/>
                 <div className="flex w-full h-full flex-col gap-1">
                     <div className="w-3 h-3 bg-white"/>

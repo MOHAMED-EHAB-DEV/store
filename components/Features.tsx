@@ -1,42 +1,43 @@
 'use client';
 
-import {useRef} from "react";
-import gsap from 'gsap';
-import {ScrollTrigger} from "gsap/all";
-import {useGSAP} from "@gsap/react";
+import {useRef, useState, useEffect} from "react";
 import {Badge} from "./ui/badge"
 import {
     Framer,
     Layers,
 } from "lucide-react";
-
-gsap.registerPlugin(ScrollTrigger);
+import Image from "next/image";
 
 const Features = () => {
-    const progress1Ref = useRef(null);
-    const progress2Ref = useRef(null);
+    const scrollableRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
 
-    useGSAP(() => {
-        const bars = gsap.utils.toArray(".progress")
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                    } else {
+                        setIsVisible(false);
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
 
-        bars.forEach((el) => {
-            console.log(el)
-            gsap.to(
-                el,
-                {
-                    width: "90%",
-                    duration: 1.5,
-                    ease: "power1.inOut",
-                    scrollTrigger: {
-                        trigger: el,
-                        // start: "bottom bottom",
-                        // end: "top 80%", // gives scroll distance
-                        scrub: true,
-                    },
-                }
-            );
-        });
-    });
+        if (scrollableRef.current) {
+            observer.observe(scrollableRef.current);
+        }
+
+        return () => {
+            if (scrollableRef.current) {
+                observer.unobserve(scrollableRef.current);
+            }
+        };
+    }, []);
+
+
     return (
         <div className="flex flex-col w-full h-full items-center justify-center gap-4 mt-24">
             <div className="flex flex-col items-center justify-center gap-1">
@@ -60,7 +61,7 @@ const Features = () => {
                         className="flex flex-col gap-12 border w-[80dvw] md:w-full p-10 justify-center rounded-lg bg-dark"
                         style={{
                             borderColor: "rgba(255, 255, 255, 0.1)"
-                        }}>
+                        }} ref={scrollableRef}>
                         <div className="flex flex-col gap-7">
                             <div className="flex gap-1 md:gap-6 w-full items-center">
                                 <div className="flex text-xl opacity-[0.24] text-white gap-1 w-1/2">
@@ -75,10 +76,10 @@ const Features = () => {
                                     }}>
                                     <span className="opacity-60 z-10 text-white font-medium">5000$+</span>
                                     <div
-                                        className="w-0 h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg progress"/>
+                                        className={`${isVisible ? "w-[80%]" : "w-0"} h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-out`} />
                                 </div>
                             </div>
-                            <div className="flex gap-6 w-full md:w-[69%] items-center">
+                            <div className="flex gap-6 w-full md:w-[70%] items-center">
                                 <div className="flex text-white gap-2 w-full">
                                     <Framer/>
                                     <span className="font-bold text-base">Framer Templates</span>
@@ -90,7 +91,7 @@ const Features = () => {
                                     }}>
                                     <span className="z-10 text-white font-medium">99$</span>
                                     <div
-                                        className="w-0 h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg progress"/>
+                                        className={`${isVisible ? "w-[75%]" : "w-0"} h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-in-out`}/>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +118,8 @@ const Features = () => {
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
 
-                            <div className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
+                            <div
+                                className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
                                 <h1 className="text-white font-medium text-base md:text-2xl">
                                     No Coding Skills Required.
                                 </h1>
@@ -126,7 +128,33 @@ const Features = () => {
                                 </p>
                             </div>
                         </div>
-                        <div></div>
+                        <div
+                            className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[60dvh] overflow-hidden bg-dark"
+                            style={{borderColor: "rgba(255, 255, 255, 0.1)"}}
+                        >
+                            {/* Background Media */}
+                            <video
+                                src="/assets/Videos/framer-demo.mp4"
+                                autoPlay
+                                loop
+                                muted
+                                className="absolute top-0 left-0 w-full h-full object-cover"
+                            />
+                            {/* Gradient overlay for readability */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
+                            {/* Content */}
+                            <div className="relative z-10 p-6 md:p-10">
+                                <h1 className="text-white font-paras font-bold text-xl md:text-3xl">
+                                    Bring Your Website to Life
+                                </h1>
+                                <p className="text-secondary font-medium text-base md:text-lg">
+                                    Launch stunning websites in minutes with ready-to-use templates. Simply choose,
+                                    customize, and publish—no hassle, just results.
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div className="w-full md:w-1/3 h-full md:h-1/2 grid grid-rows-1 md:grid-rows-2"></div>

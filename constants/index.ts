@@ -172,14 +172,16 @@ const HeroItems = [
 
 const featuresBusinessSales = [
     {
-        id: 1,
         iconPath: "/assets/Icons/paypal.svg",
         text: "You received 1000$ from John!"
     },
     {
-        id: 2,
         iconPath: "/assets/Icons/stripe.svg",
         text: "You received a payment of $5,987!"
+    },
+    {
+        iconPath: "/assets/Icons/wh.avif",
+        text: "Woohoo! You made a sale!"
     },
 ]
 

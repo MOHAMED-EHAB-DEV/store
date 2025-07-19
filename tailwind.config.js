@@ -19,14 +19,6 @@ const config = {
                 "paras": ["Parastoo", "serif"],
                 "poppins": ["Poppins", "sans-serif"],
             },
-            animation: {
-                'marquee-vertical': "marquee-vertical var(--marquee-duration) linear infinite"
-            },
-            keyframes: {
-                "marquee-vertical": {
-                    '100%': { transform: 'translateY(-50%)' }
-                }
-            }
         },
     },
     plugins: [require("tailwindcss-animate")],

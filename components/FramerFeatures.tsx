@@ -1,18 +1,16 @@
 'use client';
 
-import {useRef, useState, useEffect} from "react";
+import {useRef, useState, useEffect, useMemo} from "react";
 import {Badge} from "./ui/badge"
 import {
     Framer,
     Layers,
 } from "lucide-react";
 import Image from "next/image";
-// import {Marquee} from "@/components/ui/marquee";
-import Marquee from "react-fast-marquee";
 import {featuresBusinessSales} from "@/constants";
-import { cn } from "@/lib/utils";
+import VerticalMarquee from "@/components/ui/marquee";
 
-const Features = () => {
+const FramerFeatures = () => {
     const scrollableRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -41,26 +39,31 @@ const Features = () => {
         };
     }, []);
 
+    const marqueeItems = useMemo(
+        () => [...featuresBusinessSales, ...featuresBusinessSales],
+        []
+    );
+
 
     return (
-        <div className="flex flex-col w-full h-full items-center justify-center gap-4 mt-24">
+        <div className="flex flex-col w-full h-full items-center justify-center gap-4 mt-44">
             <div className="flex flex-col items-center justify-center gap-1">
                 <Badge variant="outline"
-                       className="bg-dark animate-shimmer relative hover:shadow-[0_0_25px_#746D91]">
+                       className="bg-transparent animate-shimmer relative hover:shadow-[0_0_25px_#746D91]">
                     <Framer className="w-10 h-10"/>
                     Framer Templates
                     <span
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shine"/>
                 </Badge>
 
-                <h1 className="text-xl md:text-3xl text-white font-paras font-bold w-full md:w-3/5 text-center">
-                    Save time, reduce costs, and ship stunning websites with ease.
+                <h1 className="text-xl md:text-4xl text-white font-paras font-bold w-full md:w-4/5 text-center">
+                    Ship Websites Faster with Framer
                 </h1>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-[7fr_3fr] w-full h-full gap-5 px-20">
                 <div
-                    className="grid grid-rows-1 md:grid-rows-2 w-full h-full items-center justify-center md:items-between md:justify-start gap-8 md:gap-0">
+                    className="grid grid-rows-1 md:grid-rows-2 w-full h-full items-center justify-center md:items-between md:justify-between gap-8 md:gap-0">
                     <div
                         className="flex flex-col gap-12 border w-[80dvw] md:w-full p-10 justify-center rounded-lg bg-dark"
                         style={{
@@ -100,11 +103,8 @@ const Features = () => {
                             </div>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-white text-2xl md:text-4xl font-paras font-bold">Premium web design at
-                                fraction of the cost</h1>
-                            <p className="text-secondary text-base md:text-lg font-medium">Get a premium website without
-                                the premium price tag. Save thousands while still getting all the quality and features
-                                your business deserves.</p>
+                            <h1 className="text-white text-2xl md:text-4xl font-paras font-bold">Premium Templates at Affordable Prices</h1>
+                            <p className="text-secondary text-base md:text-lg font-medium">Create pixel-perfect designs without breaking the bank. Our pre-built Framer templates cost a fraction of hiring a professional designer.</p>
                         </div>
                     </div>
                     <div className="flex gap-5 flex-col md:flex-row">
@@ -125,10 +125,10 @@ const Features = () => {
                             <div
                                 className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
                                 <h1 className="text-white font-medium text-base md:text-2xl">
-                                    No Coding Skills Required.
+                                    Drag-and-Drop Simplicity
                                 </h1>
                                 <p className="text-secondary font-normal text-sm md:text-lg">
-                                    Customize your website with simple drag-and-drop editing.
+                                    Forget complex code. Framer’s intuitive drag-and-drop editor empowers you to design and launch with ease.
                                 </p>
                             </div>
                         </div>
@@ -147,11 +147,10 @@ const Features = () => {
 
                             <div className="relative z-10 p-6 md:p-10">
                                 <h1 className="text-white font-paras font-bold text-xl md:text-3xl">
-                                    Bring Your Website to Life
+                                    Lightning-Fast Launch
                                 </h1>
                                 <p className="text-secondary font-medium text-base md:text-lg">
-                                    Launch stunning websites in minutes with ready-to-use templates. Simply choose,
-                                    customize, and publish—no hassle, just results.
+                                    From concept to live site in <b>days, not months</b>. Start building, customize with ease, and hit publish without delays.
                                 </p>
                             </div>
                         </div>
@@ -192,35 +191,19 @@ const Features = () => {
                              borderColor: "rgba(255, 255, 255, 0.1)"
                          }}>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-white text-2xl md:text-4xl font-paras font-bold">Built to bring your
-                                business results</h1>
-                            <p className="text-secondary text-base font-medium">Designed to help turn website visits
-                                into actual sales.</p>
+                            <h1 className="text-white text-2xl md:text-4xl font-paras font-bold">Business-Driven Design</h1>
+                            <p className="text-secondary text-base font-medium">Every template is optimized for <b>conversions</b>, helping you turn visitors into paying customers.</p>
                         </div>
-                        {/*<div*/}
-                        {/*    className="overflow-hidden w-full h-[80%]"*/}
-                        {/*>*/}
-                        {/*    <div className="animate-marquee-vertical h-[200%] flex flex-col gap-3">*/}
-                        {/*        {featuresBusinessSales.map(({id, iconPath, text}) => (*/}
-                        {/*            <div key={id} className="flex items-center justify-center gap-2">*/}
-                        {/*                <Image*/}
-                        {/*                    src={iconPath}*/}
-                        {/*                    alt="paypal"*/}
-                        {/*                    width={25}*/}
-                        {/*                    height={25}*/}
-                        {/*                />*/}
-
-                        {/*                <div*/}
-                        {/*                    className="bg-secondary flex items-center justify-center rounded-full px-3 py-2">{text}</div>*/}
-                        {/*            </div>*/}
-                        {/*        ))}*/}
-                        {/*    </div>*/}
-                        </div>
-
+                        <VerticalMarquee
+                            items={featuresBusinessSales}
+                            speed={10}
+                            height="h-36 md:h-48"
+                            direction="down"
+                        />
                     </div>
                 </div>
             </div>
         </div>
     )
 }
-export default Features
+export default FramerFeatures

@@ -1,7 +1,8 @@
 import Hero from "@/components/Hero";
 import {HeroItems} from "@/constants";
 import WhyUs from "@/components/WhyUS";
-import Features from "@/components/Features";
+import FramerFeatures from "@/components/FramerFeatures";
+import CodedTemplatesFeaturesPinnedAll from "@/components/CodedTemplatesFeatures";
 
 export default async function Home() {
     return (
@@ -20,9 +21,11 @@ export default async function Home() {
                 ))}
             </div>
         {/*  Featured Templates  */}
-        {/*  WhyUS  */}
             <WhyUs />
-            <Features />
+            <FramerFeatures />
+            <div className="h-[50vh]" />  {/* Spacer before */}
+            <CodedTemplatesFeaturesPinnedAll />
+            <div className="h-[50vh]" />  {/* Spacer after */}
         </>
     );
 }

@@ -122,6 +122,16 @@ body {
 /*  }*/
 /*}*/
 
+@layer base {
+  :root {
+    --gold: 45 90% 60%;
+    --gold-foreground: 220 27% 8%;
+
+    --glass: 210 40% 98% / 0.1;
+    --glass-border: 210 40% 98% / 0.2;
+  }
+}
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;

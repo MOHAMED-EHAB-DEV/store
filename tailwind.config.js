@@ -13,7 +13,15 @@ const config = {
                 secondary: {
                     DEFAULT: "#746D91",
                 },
-                dark: "#121520"
+                dark: "#121520",
+                gold: {
+                    DEFAULT: "hsl(var(--gold))",
+                    foreground: "hsl(var(--gold-foreground))",
+                },
+                glass: {
+                    DEFAULT: "hsl(var(--glass))",
+                    border: "hsl(var(--glass-border))",
+                },
             },
             fontFamily: {
                 "paras": ["Parastoo", "serif"],

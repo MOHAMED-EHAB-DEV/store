@@ -75,7 +75,7 @@ const FigmaFeatures = () => {
 
                         <div className="space-y-4 sm:space-y-6 mb-8">
                             {figmaFeatures.map((feature) => (
-                                <div key={feature.title} className="figma-feature flex items-start space-x-4">
+                                <div key={feature.title} className="figma-feature flex space-x-4">
                                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0">
                                         <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                                     </div>

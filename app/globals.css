@@ -138,6 +138,10 @@ body {
   .glass-strong {
     @apply bg-white/10 border border-white/20 backdrop-blur-lg;
   }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-gold to-yellow-300 bg-clip-text text-transparent;
+  }
 }
 
 @keyframes shimmer {

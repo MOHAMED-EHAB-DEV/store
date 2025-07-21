@@ -69,11 +69,11 @@ const Hero = () => {
                 </Badge>
 
                 <div className="flex flex-col gap-1 items-center justify-center w-full">
-                    <h1 className="header font-bold tracking-tight text-3xl md:text-7xl lg:text-9xl w-full md:w-2/3 text-center font-paras text-white">
+                    <h1 className="header font-bold tracking-tight text-3xl md:text-7xl lg:text-8xl w-full md:w-2/3 text-center font-paras text-white">
                         Premium Templates to Elevate Your Projects
                         {/*{current.heading}*/}
                     </h1>
-                    <p className="header text-base md:text-lg lg:text-2xl w-[calc(100%-40px)] md:w-1/4 font-medium text-center font-paras text-secondary">
+                    <p className="header text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/4 font-medium text-center font-paras text-secondary">
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
                         {/*{current.subtext}*/}
                     </p>

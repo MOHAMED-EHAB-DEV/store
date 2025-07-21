@@ -41,11 +41,13 @@ const Navbar = () => {
             <div className="flex gap-2 items-center justify-center">
                 <button
                     className="outline-none hidden sm:block cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                    aria-label="Signin button"
                 >
                     Signin
                 </button>
                 <button
                     className="outline-none hidden sm:block cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                    aria-label="Signup button"
                 >
                     Get Started
                 </button>
@@ -74,7 +76,7 @@ const MobileDrawer = () => {
 
     return (
         <div className="relative sm:hidden block">
-            <button className="p-2 bg-transparent" onClick={() => setIsOpen(true)}>
+            <button aria-label="Menu Button" className="p-2 bg-transparent" onClick={() => setIsOpen(true)}>
                 <MenuIcon />
             </button>
 

@@ -1,26 +1,14 @@
 'use client';
 
-// import { useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { SplitText } from 'gsap/SplitText';
 import { Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-// import { heroVariants } from "@/constants";
 
 gsap.registerPlugin(SplitText);
 
 const Hero = () => {
-    // Switch Hero Variants Automatically Logic
-    // const [variantKey, setVariantKey] = useState('authority');
-
-    // useEffect(() => {
-    //     const keys = Object.keys(heroVariants);
-    //     const randomKey = keys[Math.floor(Math.random() * keys.length)];
-    //     setVariantKey(randomKey);
-    // }, []);
-    //
-    // const current = heroVariants[variantKey];
     useGSAP(() => {
         const splitHeader = SplitText.create('.header', {
             type: 'words',
@@ -60,10 +48,7 @@ const Hero = () => {
                     variant="secondary"
                     className={`hero-badge relative bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-400 text-white border border-yellow-500 rounded-lg px-4 py-2 font-semibold overflow-hidden animate-shimmer hover:shadow-[0_0_25px_rgba(255,215,0,0.7)] transition-all duration-500`}
                 >
-                    {/*${current.badgeColor}*/}
                     <Star className="w-4 h-4 mr-2 inline-block" />
-                    {/*Launch Your Site in Minutes*/}
-                    {/*{current.badge}*/}
                     Unleash Your Creativity
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shine" />
                 </Badge>
@@ -71,11 +56,9 @@ const Hero = () => {
                 <div className="flex flex-col gap-1 items-center justify-center w-full">
                     <h1 className="header font-bold tracking-tight text-3xl md:text-7xl lg:text-8xl w-full md:w-2/3 text-center font-paras text-white">
                         Premium Templates to Elevate Your Projects
-                        {/*{current.heading}*/}
                     </h1>
-                    <p className="header text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/4 font-medium text-center font-paras text-secondary">
+                    <p className="header text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/4 font-medium text-center font-paras text-secondary" aria-label="description">
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
-                        {/*{current.subtext}*/}
                     </p>
                 </div>
 
@@ -83,7 +66,6 @@ const Hero = () => {
                     className="hero-btn mt-6 outline-none cursor-pointer hover:scale-105 transition-transform duration-500 border-none bg-[#262626] px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                 >
                     Browse Templates
-                    {/*{current.button}*/}
                 </button>
             </div>
 

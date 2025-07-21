@@ -25,8 +25,7 @@ const config = {
             },
             fontFamily: {
                 "paras": ["Parastoo", "serif"],
-                "poppins": ["Poppins", "sans-serif"],
-                "libre": ["Libre Baskerville", "serif"],
+                "roboto": ["var(--roboto)", "sans-serif"]
             },
         },
     },

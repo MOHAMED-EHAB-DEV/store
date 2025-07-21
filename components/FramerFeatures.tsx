@@ -110,7 +110,7 @@ const FramerFeatures = () => {
 
                     <div className="flex flex-col md:flex-row gap-5">
                         <div
-                            className="relative flex flex-col justify-end w-full md:w-1/2 h-[40dvh] rounded-lg overflow-hidden border p-6"
+                            className="relative flex flex-col justify-end w-full md:w-1/2 h-[50dvh] rounded-lg overflow-hidden border p-6"
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video
@@ -133,7 +133,7 @@ const FramerFeatures = () => {
                         </div>
 
                         <div
-                            className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[40dvh] overflow-hidden bg-dark p-6"
+                            className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6"
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video

@@ -27,7 +27,7 @@ const FramerFeatures = () => {
     }, []);
 
     return (
-        <div className="flex flex-col w-full h-full items-center justify-center gap-6 mt-48 md:mt-24">
+        <section className="flex flex-col w-full h-full items-center justify-center gap-6 mt-[700px] md:mt-24">
             {/* Header Section */}
             <div className="flex flex-col items-center justify-center gap-2">
                 <Badge
@@ -209,7 +209,7 @@ const FramerFeatures = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

@@ -66,7 +66,7 @@ const FigmaFeatures = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
                     <div className="text-center lg:text-left">
-                        <h2 className="figma-title text-3xl sm:text-4xl md:text-[51px] font-bold text-white mb-6 font-heading leading-tight">
+                        <h2 className="figma-title text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 font-heading leading-tight">
                             {SplitText('Figma Design Systems')}
                         </h2>
                         <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">

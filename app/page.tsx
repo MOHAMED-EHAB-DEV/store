@@ -3,6 +3,7 @@ import {HeroItems} from "@/constants";
 import WhyUs from "@/components/WhyUS";
 import FramerFeatures from "@/components/FramerFeatures";
 import CodedFeatures from "@/components/CodedFeatures";
+import FigmaFeatures from "@/components/FigmaFeatures";
 
 export default async function Home() {
     return (
@@ -24,6 +25,7 @@ export default async function Home() {
             <WhyUs />
             <FramerFeatures />
             <CodedFeatures />
+            <FigmaFeatures />
         </>
     );
 }

@@ -1,50 +1,14 @@
 'use client';
 
-import {Code2, Blocks, Shield, Cpu} from "lucide-react";
+import {Code2} from "lucide-react";
 import {useGSAP} from "@gsap/react"
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {TextPlugin} from "gsap/TextPlugin";
+import SplitText from "./ui/SplitText";
+import { codeFeatures } from "@/constants";
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
-const codeFeatures = [
-    {
-        icon: Code2,
-        title: "Next-Gen Frameworks",
-        description: "Cutting-edge templates built with React, Next.js, and TypeScript for lightning-fast development.",
-    },
-    {
-        icon: Blocks,
-        title: "Scalable Architecture",
-        description: "Crafted with modular, reusable components following industry-leading best practices.",
-    },
-    {
-        icon: Shield,
-        title: "Battle-Tested Code",
-        description: "Production-ready, secure, and optimized templates that are trusted for real-world deployments.",
-    },
-    {
-        icon: Cpu,
-        title: "Blazing Performance",
-        description: "Ultra-fast templates engineered for SEO, accessibility, and modern performance standards.",
-    },
-];
-
-const splitText = (text: string, className: string = "") => {
-    return text.split("").map((char, index) => (
-        <span
-            key={index}
-            className={`char ${className}`}
-            style={{
-                display: "inline-block",
-                minWidth: char === " " ? "0.3em" : "auto",
-            }}
-        >
-        {char === " " ? "\u00A0" : char}
-      </span>
-    ));
-};
 
 const CodedFeatures = () => {
     useGSAP(() => {
@@ -101,7 +65,7 @@ const CodedFeatures = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="code-title text-5xl md:text-6xl font-bold text-white mb-8 font-paras">
-                        {splitText("Production-Ready Code")}
+                        {SplitText("Production-Ready Code")}
                     </h2>
                     <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                         Skip the boilerplate and start building. Our code templates are
@@ -111,24 +75,11 @@ const CodedFeatures = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-                    {/* {codeFeatures.map((feature, index) => (
-                    //     <div key={feature.title} className="code-feature text-center hover:scale-105 hover:bg-glass rounded-lg py-6 px-3 transition-all duration-400">
-                    //         <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    //             <feature.icon className="w-8 h-8 text-white" />
-                    //         </div>
-                    //         <h3 className="text-xl font-bold text-white mb-3">
-                    //             {feature.title}
-                    //         </h3>
-                    //         <p className="text-gray-300">{feature.description}</p>
-                    //     </div>
-                    // ))} */}
                     {codeFeatures.map((f, i) => {
                         const Icon = f.icon;
                         return (
                             <div
                                 key={f.title}
-                                // ref={el => { if (el) featureRefs.current[i] = el; }}
-                                // bg-gradient-to-b from-white/10 via-white/5 to-transparent
                                 className="code-feature group relative text-center rounded-xl p-[1px] bg-glass backdrop-blur-sm hover:backdrop-blur-md transition-all duration-500"
                             >
                                 <div

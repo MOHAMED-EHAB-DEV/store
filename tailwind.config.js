@@ -11,7 +11,7 @@ const config = {
             colors: {
                 primary: "#0D0F19",
                 secondary: {
-                    DEFAULT: "#746D91",
+                    DEFAULT: "#8C86A7",
                 },
                 dark: "#121520",
                 gold: {
@@ -26,6 +26,7 @@ const config = {
             fontFamily: {
                 "paras": ["Parastoo", "serif"],
                 "poppins": ["Poppins", "sans-serif"],
+                "libre": ["Libre Baskerville", "serif"],
             },
         },
     },

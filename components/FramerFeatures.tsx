@@ -26,11 +26,6 @@ const FramerFeatures = () => {
         };
     }, []);
 
-    const marqueeItems = useMemo(
-        () => [...featuresBusinessSales, ...featuresBusinessSales],
-        []
-    );
-
     return (
         <div className="flex flex-col w-full h-full items-center justify-center gap-6 mt-48 md:mt-24">
             {/* Header Section */}

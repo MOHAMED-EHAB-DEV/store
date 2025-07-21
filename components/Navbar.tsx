@@ -10,7 +10,6 @@ import Link from "next/link";
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -27,7 +26,7 @@ const Navbar = () => {
 
     return (
         <div
-            className={`w-full sm:w-1/2 flex items-center justify-between py-8 gap-3 ${isScrolled && "fixed top-0 bg-dark"}`}>
+            className={`z-50 flex items-center justify-between py-8 max-w-7xl w-full mx-auto ${isScrolled && "fixed top-0 bg-dark"}`}>
             <div className="flex items-center justify-center p-2 h-10 w-12 gap-1 hover:rotate-360 cursor-pointer" onClick={() => router.push("/")}>
                 <div className="w-1/3 h-full bg-white"/>
                 <div className="flex w-full h-full flex-col gap-1">
@@ -37,6 +36,19 @@ const Navbar = () => {
             </div>
             <div className="sm:flex hidden flex-row gap-4 items-center justify-center w-fit">
                 {NavbarLinks.map(({id, text, link}) => <NavbarItem text={text} link={link} key={id}/>)}
+            </div>
+
+            <div className="flex gap-2 items-center justify-center">
+                <button
+                    className="outline-none hidden sm:block cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                >
+                    Signin
+                </button>
+                <button
+                    className="outline-none hidden sm:block cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                >
+                    Get Started
+                </button>
             </div>
             <MobileDrawer />
         </div>
@@ -108,6 +120,12 @@ const MobileDrawer = () => {
                                 <XIcon />
                             </button>
                             <ul className={`flex flex-col-reverse`}>
+                                <button
+                                    className="outline-none cursor-pointer hover:scale-105 transition-transform duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                                >
+                                    Get Started
+                                    {/*{current.button}*/}
+                                </button>
                                 {NavbarLinks.map(({id, link, text}) => (
                                     <li className="p-2" key={id}>
                                         <Link

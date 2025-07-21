@@ -130,6 +130,14 @@ body {
     --glass: 210 40% 98% / 0.1;
     --glass-border: 210 40% 98% / 0.2;
   }
+
+  .glass {
+    @apply bg-glass border border-glass-border backdrop-blur-md;
+  }
+
+  .glass-strong {
+    @apply bg-white/10 border border-white/20 backdrop-blur-lg;
+  }
 }
 
 @keyframes shimmer {

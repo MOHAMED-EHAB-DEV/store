@@ -1,4 +1,20 @@
+import {
+    Blocks,
+    Shield,
+    Cpu,
+    Palette,
+    Layers,
+    MousePointer,
+    Smartphone,
+    Code2,
+} from "lucide-react"
+
 const NavbarLinks = [
+    {
+        id: 0,
+        text: "Home",
+        link: "/",
+    },
     {
         id: 1,
         text: "Templates",
@@ -185,9 +201,57 @@ const featuresBusinessSales = [
     },
 ]
 
+const codeFeatures = [
+    {
+        icon: Code2,
+        title: "Next-Gen Frameworks",
+        description: "Cutting-edge templates built with React, Next.js, and TypeScript for lightning-fast development.",
+    },
+    {
+        icon: Blocks,
+        title: "Scalable Architecture",
+        description: "Crafted with modular, reusable components following industry-leading best practices.",
+    },
+    {
+        icon: Shield,
+        title: "Battle-Tested Code",
+        description: "Production-ready, secure, and optimized templates that are trusted for real-world deployments.",
+    },
+    {
+        icon: Cpu,
+        title: "Blazing Performance",
+        description: "Ultra-fast templates engineered for SEO, accessibility, and modern performance standards.",
+    },
+];
+
+const figmaFeatures = [
+    {
+        icon: Palette,
+        title: 'Design Systems',
+        description: 'Complete design systems with components, colors, and typography',
+    },
+    {
+        icon: Layers,
+        title: 'Component Libraries',
+        description: 'Reusable components for faster design workflow',
+    },
+    {
+        icon: MousePointer,
+        title: 'Interactive Prototypes',
+        description: 'Ready-to-use prototypes with micro-interactions',
+    },
+    {
+        icon: Smartphone,
+        title: 'Multi-Device Layouts',
+        description: 'Responsive designs for all screen sizes',
+    },
+];
+
 export {
     NavbarLinks,
     HeroItems,
     heroVariants,
-    featuresBusinessSales
+    featuresBusinessSales,
+    codeFeatures,
+    figmaFeatures
 }

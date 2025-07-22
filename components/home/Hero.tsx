@@ -56,7 +56,7 @@ const Hero = () => {
                 </Badge>
 
                 <div className="flex flex-col gap-1 items-center justify-center w-full">
-                    <h1 className="header font-bold tracking-tight text-3xl md:text-7xl lg:text-8xl xl:text-9xl w-full md:w-2/3 text-center font-paras text-white">
+                    <h1 className="header font-bold tracking-tight text-3xl md:text-7xl xl:text-9xl w-full md:w-2/3 text-center font-paras text-white">
                         Premium Templates to Elevate Your Projects
                     </h1>
                     <p className="header text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/4 font-medium text-center font-paras text-secondary"

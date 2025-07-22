@@ -33,18 +33,13 @@ export default async function Home() {
                     ))}
                 </section>
             </div>
-            
-            {/* Featured Templates Section */}
+
             <FeaturedTemplates />
-            
-            {/* About Me Section */}
-            <AboutMe />
-            
-            {/* Other Sections */}
             <WhyUs />
             <FramerFeatures />
             <CodedFeatures />
             <FigmaFeatures />
+            <AboutMe />
             <Testimonials />
             <Cta />
         </main>

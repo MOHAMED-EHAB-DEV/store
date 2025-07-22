@@ -45,12 +45,11 @@ const Cta = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         {/* Button Gradient */}
-                        <button className="flex gap-2 items-center justify-center cursor-pointer
+                        <button className="
                             bg-gradient-to-r from-cyan-500 to-blue-500
                             hover:from-blue-500 hover:to-cyan-500
                             hover:shadow-[0_0_25px_rgba(0,180,255,0.6)]
-                            font-semibold px-6 py-3 rounded-lg transition-all duration-300
-                            transform hover:scale-105 text-lg text-white">
+                            btn">
                             Get Started Now
                             <Sparkles className="w-5 h-5 ml-2 transition-transform" />
                         </button>

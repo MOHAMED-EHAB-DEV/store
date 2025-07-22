@@ -2,7 +2,9 @@ import {withSentryConfig} from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+      optimizePackageImports: ["@sentry/nextjs", "gsap", "lucide-react", "motion"],
+  }
 };
 
 export default withSentryConfig(nextConfig, {

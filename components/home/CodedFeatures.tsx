@@ -159,9 +159,9 @@ const CodedFeatures = () => {
                     </div>
                     <div className="text-center mt-8">
                         <button
-                            className="relative overflow-hidden bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold text-gold-foreground font-semibold px-8 py-4 rounded-xl transition-all duration-300
+                            className="btn bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold
               shadow-[0_0_0_0_rgba(255,200,0,0.4)] hover:shadow-[0_0_32px_-4px_rgba(255,220,0,0.55)] focus:outline-none focus:ring-4 focus:ring-yellow-400/40
-              active:scale-95 flex items-center gap-2 mx-auto group"
+              active:scale-95"
                             aria-label="Explore premium code templates"
                         >
                             <span

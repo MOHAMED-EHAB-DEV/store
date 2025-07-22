@@ -90,14 +90,14 @@ const FigmaFeatures = () => {
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <button className="flex gap-2 items-center justify-center bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold text-gold-foreground font-semibold px-5 sm:px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                            <button className="flex gap-2 items-center justify-center bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold btn">
                                 <Download className="w-5 h-5 mr-2" />
                                 Browse Figma Templates
                             </button>
-                            <button className="flex gap-2 items-center justify-center glass hover:bg-white/15 text-foreground font-medium px-5 sm:px-6 py-3 rounded-lg transition-all duration-300 hover:backdrop-blur-xl">
-                                <Play className="w-5 h-5 mr-2" />
-                                Watch Tutorial
-                            </button>
+                            {/*<button className="flex gap-2 items-center justify-center glass hover:bg-white/15 text-foreground font-medium px-5 sm:px-6 py-3 rounded-lg transition-all duration-300 hover:backdrop-blur-xl">*/}
+                            {/*    <Play className="w-5 h-5 mr-2" />*/}
+                            {/*    Watch Tutorial*/}
+                            {/*</button>*/}
                         </div>
                     </div>
 

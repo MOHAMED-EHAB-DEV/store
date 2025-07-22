@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://your-domain.com'),
+    metadataBase: new URL('https://mhd-store.vercel.app/'),
     title: "Mohammed Ehab - Premium Templates Store | Modern Web Templates",
     description: "Discover premium, responsive web templates built with React, Next.js, and Tailwind CSS. Perfect for SaaS, e-commerce, portfolios, and agencies. Created by Mohammed Ehab.",
     keywords: "web templates, React templates, Next.js templates, Tailwind CSS, premium templates, responsive design, SaaS templates, e-commerce templates, portfolio templates, agency templates",
@@ -28,11 +28,11 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Mohammed Ehab - Premium Templates Store",
         description: "Premium, responsive web templates for modern businesses and creators",
-        url: "https://mhd-store.vercel.app/",
+        url: "https://mhd-store.vercel.app",
         siteName: "Mohammed Ehab Templates",
         images: [
             {
-                url: "/assets/illustration/background_pattern.png",
+                url: "/assets/images/Logo.svg",
                 width: 1200,
                 height: 630,
                 alt: "Mohammed Ehab Premium Templates",
@@ -48,6 +48,7 @@ export const metadata: Metadata = {
         images: ["/assets/illustration/background_pattern.png"],
         creator: "@__M__O__H__",
     },
+    icons: "/assets/images/Logo.svg",
 };
 
 export default function RootLayout({

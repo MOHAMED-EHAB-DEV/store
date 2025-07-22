@@ -15,7 +15,7 @@ export default async function Home() {
             <div className="w-full flex flex-col items-center justify-center">
                 <Hero/>
                 <section 
-                    className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full mt-0 md:mt-12"
+                    className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full mt-12"
                     aria-label="Key features overview"
                 >
                     {HeroItems.map(({ id, title, desc }) => (

@@ -8,7 +8,7 @@ const Footer = () => {
                 <div className="flex flex-col md:items-start items-center gap-6 w-full md:w-[269px]">
                     <div className="flex items-center justify-center md:items-start md:justify-start flex-col gap-1">
                         <Logo />
-                        <p className="font-medium text-secondary w-1/2 text-center md:text-left">Premium Templates for creative entrepreneurs</p>
+                        <p className="font-medium text-secondary text-center md:text-left">Premium Templates for creative entrepreneurs</p>
                     </div>
                     <div className="flex gap-2 w-fit flex-row items-center justify-center">
                         {socialImgs.map((socialImg, index) => (

@@ -107,7 +107,7 @@ const Hero = () => {
                     
                     <button
                         className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
-                        aria-label="View live demo of templates"
+                        aria-label="Demo"
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             View Demo
@@ -116,7 +116,6 @@ const Hero = () => {
                     </button>
                 </div>
 
-                {/* Trust indicators */}
                 <div className="flex items-center gap-6 mt-8 text-sm text-secondary/80">
                     <div className="flex items-center gap-2">
                         <div className="flex -space-x-2">

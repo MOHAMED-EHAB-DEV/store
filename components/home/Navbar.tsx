@@ -11,11 +11,13 @@ import Logo from "@/components/ui/Logo";
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
+        setIsMounted(true);
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
+            setIsScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -23,19 +25,13 @@ const Navbar = () => {
 
     return (
         <div
-            className={`z-50 w-full ${isScrolled ? "fixed top-0 bg-dark" : ""}`}
+            className={`z-50 w-full top-0 transition-all duration-500 ease-in-out ${
+                isScrolled && isMounted
+                    ? "translate-y-0 fixed opacity-100 bg-dark/95 backdrop-blur-md shadow-lg" 
+                    : "bg-transparent"
+            }`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8 relative">
-                {/*<div*/}
-                {/*    className="flex flex-1 items-center justify-start p-2 h-10 gap-1 hover:rotate-360 cursor-pointer"*/}
-                {/*    onClick={() => router.push("/")}*/}
-                {/*>*/}
-                {/*    <div className="w-[10px] h-full bg-white" />*/}
-                {/*    <div className="flex w-full h-full flex-col gap-1">*/}
-                {/*        <div className="w-3 h-3 bg-white" />*/}
-                {/*        <div className="w-3 h-3 bg-white" />*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <Logo onClick={() => router.push("/")} className="flex-1" />
 
                 <nav className="sm:flex hidden flex-row gap-6 items-center justify-center">

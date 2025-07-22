@@ -32,7 +32,7 @@ const FramerFeatures = () => {
             <div className="flex flex-col items-center justify-center gap-2">
                 <Badge
                     variant="outline"
-                    className="bg-transparent animate-shimmer relative hover:shadow-[0_0_25px_#746D91]"
+                    className="bg-transparent relative hover:shadow-[0_0_25px_#746D91]"
                 >
                     <Framer className="w-10 h-10" />
                     Framer Templates

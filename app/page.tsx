@@ -12,7 +12,7 @@ export default async function Home() {
         <div className="flex flex-col items-center justify-center gap-24">
             <div className="w-full flex flex-col items-center justify-center">
                 <Hero/>
-                <section className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full">
+                <section className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full mt-0 md:mt-12">
                     {HeroItems.map(({ id, title, desc }) => (
                         <div key={id} className="flex w-full md:w-1/4 h-full flex-col gap-1 items-center justify-center text-center">
                             <h1 className="font-paras font-medium text-2xl md:text-3xl tracking-tight header">

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Logo from "@/components/ui/Logo";
 import {socialImgs, NavigationLinks} from "@/constants";
 
@@ -13,7 +14,7 @@ const Footer = () => {
                     <div className="flex gap-2 w-fit flex-row items-center justify-center">
                         {socialImgs.map((socialImg, index) => (
                             <a key={index} target="_blank" href={socialImg.link} className="icon">
-                                <img src={socialImg.imgPath} alt="social icon" />
+                                <Image src={socialImg.imgPath} alt="social icon" width={25} height={25} />
                             </a>
                         ))}
                     </div>

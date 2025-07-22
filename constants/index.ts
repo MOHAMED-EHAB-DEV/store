@@ -9,7 +9,7 @@ import {
     Code2,
 } from "lucide-react"
 
-const NavbarLinks = [
+const NavigationLinks = [
     {
         id: 0,
         text: "Home",
@@ -247,11 +247,25 @@ const figmaFeatures = [
     },
 ];
 
+const socialImgs = [
+    {
+        name: "insta",
+        imgPath: "/assets/Icons/insta.png",
+        link: "https://www.instagram.com/__m4_e__/"
+    },
+    {
+        name: "linkedin",
+        imgPath: "/assets/Icons/linkedin.png",
+        link: "https://www.linkedin.com/in/1-mohammed"
+    },
+];
+
 export {
-    NavbarLinks,
+    NavigationLinks,
     HeroItems,
     heroVariants,
     featuresBusinessSales,
     codeFeatures,
-    figmaFeatures
+    figmaFeatures,
+    socialImgs,
 }

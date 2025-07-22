@@ -5,8 +5,9 @@ import {MenuIcon, XIcon} from 'lucide-react';
 import {motion} from 'motion/react';
 import { useRouter } from "next/navigation";
 
-import {NavbarLinks} from "@/constants";
+import {NavigationLinks} from "@/constants";
 import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -25,19 +26,20 @@ const Navbar = () => {
             className={`z-50 w-full ${isScrolled ? "fixed top-0 bg-dark" : ""}`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8 relative">
-                <div
-                    className="flex flex-1 items-center justify-start p-2 h-10 gap-1 hover:rotate-360 cursor-pointer"
-                    onClick={() => router.push("/")}
-                >
-                    <div className="w-[10px] h-full bg-white" />
-                    <div className="flex w-full h-full flex-col gap-1">
-                        <div className="w-3 h-3 bg-white" />
-                        <div className="w-3 h-3 bg-white" />
-                    </div>
-                </div>
+                {/*<div*/}
+                {/*    className="flex flex-1 items-center justify-start p-2 h-10 gap-1 hover:rotate-360 cursor-pointer"*/}
+                {/*    onClick={() => router.push("/")}*/}
+                {/*>*/}
+                {/*    <div className="w-[10px] h-full bg-white" />*/}
+                {/*    <div className="flex w-full h-full flex-col gap-1">*/}
+                {/*        <div className="w-3 h-3 bg-white" />*/}
+                {/*        <div className="w-3 h-3 bg-white" />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                <Logo onClick={() => router.push("/")} className="flex-1" />
 
                 <nav className="sm:flex hidden flex-row gap-6 items-center justify-center">
-                    {NavbarLinks.map(({id, text, link}) => (
+                    {NavigationLinks.map(({id, text, link}) => (
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
                 </nav>
@@ -121,7 +123,7 @@ const MobileDrawer = () => {
                                 <XIcon />
                             </button>
                             <ul className="flex flex-col">
-                                {NavbarLinks.map(({id, link, text}) => (
+                                {NavigationLinks.map(({id, link, text}) => (
                                     <li className="p-2" key={id}>
                                         <Link
                                             href={link}
@@ -132,7 +134,6 @@ const MobileDrawer = () => {
                                         </Link>
                                     </li>
                                 ))}
-                                {/*<div className="flex flex-col gap-2 items-center">*/}
                                     <button
                                         className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                                         aria-label="Signin button"
@@ -145,7 +146,6 @@ const MobileDrawer = () => {
                                     >
                                         Get Started
                                     </button>
-                                {/*</div>*/}
                             </ul>
                         </div>
                     </motion.div>

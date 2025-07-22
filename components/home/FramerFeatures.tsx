@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useMemo } from "react";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 import { Framer, Layers } from "lucide-react";
 import Image from "next/image";
 import { featuresBusinessSales } from "@/constants";
@@ -27,7 +27,7 @@ const FramerFeatures = () => {
     }, []);
 
     return (
-        <section className="flex flex-col w-full h-full items-center justify-center gap-6 mt-[700px] md:mt-24">
+        <section className="flex flex-col w-full h-full items-center justify-center gap-6">
             {/* Header Section */}
             <div className="flex flex-col items-center justify-center gap-2">
                 <Badge
@@ -83,7 +83,7 @@ const FramerFeatures = () => {
                                     <span className="font-bold text-base">Framer Templates</span>
                                 </div>
                                 <div
-                                    className="relative flex items-center justify-center w-full overflow-hidden"
+                                    className="relative flex items-center justify-center md:justify-center w-full overflow-hidden"
                                     style={{
                                         mask: "linear-gradient(90deg,rgba(0,0,0,0) 0%,rgba(0,0,0,1) 25.1%)",
                                     }}

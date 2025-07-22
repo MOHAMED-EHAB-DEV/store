@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const WhyUs = () => {
     return (
-        <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full gap-28 mt-20">
+        <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full gap-28">
             <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2">
                 <h1 className="md:text-4xl font-bold text-2xl font-paras">
                     Stop stressing over your business website.

@@ -4,7 +4,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { TextPlugin, ScrollTrigger } from 'gsap/all';
 import { Download, Play, Figma } from 'lucide-react';
-import SplitText from './ui/SplitText';
+import SplitText from '../ui/SplitText';
 import {figmaFeatures} from "@/constants";
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
@@ -62,7 +62,7 @@ const FigmaFeatures = () => {
     });
 
     return (
-        <section className="figma-section relative z-10 px-4 sm:px-6 py-16 sm:py-24 md:py-32">
+        <section className="figma-section relative z-10 px-4 py-6">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
                     <div className="text-center lg:text-left">

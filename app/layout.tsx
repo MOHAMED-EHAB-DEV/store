@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         siteName: "Mohammed Ehab Templates",
         images: [
             {
-                url: "/assets/images/Logo.svg",
+                url: "/assets/images/Logo.png",
                 width: 1200,
                 height: 630,
                 alt: "Mohammed Ehab Premium Templates",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
         images: ["/assets/illustration/background_pattern.png"],
         creator: "@__M__O__H__",
     },
-    icons: "/assets/images/Logo.svg",
+    icons: "/assets/images/Logo.png",
 };
 
 export default function RootLayout({

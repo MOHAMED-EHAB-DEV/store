@@ -10,12 +10,6 @@ import Footer from "@/components/home/Footer";
 
 gsap.registerPlugin(useGSAP);
 
-export const viewport: Viewport = {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-};
-
 export const metadata: Metadata = {
     metadataBase: new URL('https://mhd-store.vercel.app/'),
     title: "Mohammed Ehab - Premium Templates Store | Modern Web Templates",

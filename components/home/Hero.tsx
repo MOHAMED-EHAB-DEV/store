@@ -96,7 +96,8 @@ const Hero = () => {
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-6">
                     <button
                         className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
-                        aria-label="Browse our premium templates collection"
+                        aria-label="Browse"
+                        role="button"
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             Browse Templates
@@ -108,6 +109,7 @@ const Hero = () => {
                     <button
                         className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Demo"
+                        role="button"
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             View Demo

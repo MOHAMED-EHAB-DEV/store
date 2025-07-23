@@ -2,7 +2,8 @@
 
 import {useState, useEffect} from 'react';
 import {MenuIcon, XIcon} from 'lucide-react';
-import {motion} from 'motion/react';
+import * as m from 'motion/react-m';
+import {LazyMotion, domAnimation} from "motion/react";
 import { useRouter } from "next/navigation";
 
 import {NavigationLinks} from "@/constants";
@@ -95,56 +96,58 @@ const MobileDrawer = () => {
                         onClick={() => setIsOpen(false)}
                     ></div>
 
-                    <motion.div
-                        className="fixed top-0 right-0 h-full w-2/4 bg-dark shadow-lg z-50"
-                        variants={{
-                            hidden: { x: "100%", opacity: 0 },
-                            visible: {
-                                x: 0,
-                                opacity: 1,
-                                transition: { type: "spring", stiffness: 300, damping: 25 },
-                            },
-                            exit: {
-                                x: "100%",
-                                opacity: 0,
-                                transition: { type: "spring", stiffness: 300, damping: 25 },
-                            },
-                        }}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                    >
-                        <div className="p-4 flex flex-col h-full gap-4">
-                            <button className="p-2 mb-2" onClick={() => setIsOpen(false)}>
-                                <XIcon />
-                            </button>
-                            <ul className="flex flex-col">
-                                {NavigationLinks.map(({id, link, text}) => (
-                                    <li className="p-2" key={id}>
-                                        <Link
-                                            href={link}
-                                            className="text-white flex hover:text-secondary text-lg"
-                                            onClick={() => setIsOpen(false)}
+                    <LazyMotion features={domAnimation}>
+                        <m.div
+                            className="fixed top-0 right-0 h-full w-2/4 bg-dark shadow-lg z-50"
+                            variants={{
+                                hidden: { x: "100%", opacity: 0 },
+                                visible: {
+                                    x: 0,
+                                    opacity: 1,
+                                    transition: { type: "spring", stiffness: 300, damping: 25 },
+                                },
+                                exit: {
+                                    x: "100%",
+                                    opacity: 0,
+                                    transition: { type: "spring", stiffness: 300, damping: 25 },
+                                },
+                            }}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                        >
+                            <div className="p-4 flex flex-col h-full gap-4">
+                                <button className="p-2 mb-2" onClick={() => setIsOpen(false)}>
+                                    <XIcon />
+                                </button>
+                                <ul className="flex flex-col">
+                                    {NavigationLinks.map(({id, link, text}) => (
+                                        <li className="p-2" key={id}>
+                                            <Link
+                                                href={link}
+                                                className="text-white flex hover:text-secondary text-lg"
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                {text}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                        <button
+                                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                                            aria-label="Signin button"
                                         >
-                                            {text}
-                                        </Link>
-                                    </li>
-                                ))}
-                                    <button
-                                        className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                                        aria-label="Signin button"
-                                    >
-                                        Signin
-                                    </button>
-                                    <button
-                                        className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                                        aria-label="Signup button"
-                                    >
-                                        Get Started
-                                    </button>
-                            </ul>
-                        </div>
-                    </motion.div>
+                                            Signin
+                                        </button>
+                                        <button
+                                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                                            aria-label="Signup button"
+                                        >
+                                            Get Started
+                                        </button>
+                                </ul>
+                            </div>
+                        </m.div>
+                    </LazyMotion>
                 </div>
             )}
         </div>

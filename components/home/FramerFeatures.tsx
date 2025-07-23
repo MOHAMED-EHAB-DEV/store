@@ -55,7 +55,7 @@ const FramerFeatures = () => {
                     >
                         <div className="flex flex-col gap-7">
                             <div className="flex gap-6 w-full items-center">
-                                <div className="flex text-xl opacity-[0.24] text-white gap-1 w-1/2">
+                                <div className="flex text-xl opacity-60 text-white gap-1 w-1/2">
                                     <Layers />
                                     <span className="font-bold text-base">Web Designer</span>
                                 </div>

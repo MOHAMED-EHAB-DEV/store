@@ -25,11 +25,11 @@ const stats = [
 
 const skills = [
     {name: "React & Next.js", level: 95, color: "from-blue-500 to-cyan-500"},
-    {name: "UI/UX Design", level: 90, color: "from-purple-500 to-pink-500"},
+    // {name: "UI/UX Design", level: 90, color: "from-purple-500 to-pink-500"},
     {name: "Tailwind CSS", level: 98, color: "from-green-500 to-teal-500"},
     {name: "Framer Motion", level: 85, color: "from-orange-500 to-red-500"},
     {name: "Figma Design", level: 92, color: "from-indigo-500 to-purple-500"},
-    {name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500"}
+    {name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500"},
 ];
 
 const badges = [
@@ -57,7 +57,7 @@ const AboutMe = () => {
                     </span>
                 </h2>
                 <p className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto">
-                    Passionate developer and designer creating premium templates that help businesses and creators build
+                    Passionate Full Stack Web Developer creating Premium Templates that help businesses and creators build
                     stunning digital experiences.
                 </p>
             </div>
@@ -74,7 +74,7 @@ const AboutMe = () => {
                             </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-white">Mohammed Ehab</h3>
-                                <p className="text-teal-400 font-medium">Full-Stack Developer & Designer</p>
+                                <p className="text-teal-400 font-medium">Full-Stack Developer</p>
                                 <div className="flex items-center gap-2 mt-2">
                                     <Coffee className="w-4 h-4 text-yellow-400"/>
                                     <span className="text-gray-300 text-sm">Fueled by coffee & creativity</span>
@@ -109,6 +109,26 @@ const AboutMe = () => {
                                 </div>
                             );
                         })}
+                    </div>
+
+                    <div className="relative overflow-hidden rounded-2xl glass-strong p-6 w-full mx-auto">
+                        <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-500/20"></div>
+                        <div className="relative z-10 text-center">
+                            <h4 className="text-xl font-bold text-white mb-3">Let's Build Something Amazing</h4>
+                            <p className="text-gray-300 mb-4">
+                                Ready to elevate your project with premium templates?
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <button
+                                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300">
+                                    Browse Templates
+                                </button>
+                                <button
+                                    className="flex-1 border border-white/20 text-white py-3 px-6 rounded-xl hover:bg-white/10 transition-colors duration-200">
+                                    Get in Touch
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -160,25 +180,6 @@ const AboutMe = () => {
                         </div>
                     </div>
 
-                </div>
-            </div>
-            <div className="relative overflow-hidden rounded-2xl glass-strong p-6 w-full md:w-1/2 mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-500/20"></div>
-                <div className="relative z-10 text-center">
-                    <h4 className="text-xl font-bold text-white mb-3">Let's Build Something Amazing</h4>
-                    <p className="text-gray-300 mb-4">
-                        Ready to elevate your project with premium templates?
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <button
-                            className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300">
-                            Browse Templates
-                        </button>
-                        <button
-                            className="flex-1 border border-white/20 text-white py-3 px-6 rounded-xl hover:bg-white/10 transition-colors duration-200">
-                            Get in Touch
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

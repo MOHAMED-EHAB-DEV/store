@@ -70,7 +70,7 @@ const Hero = () => {
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1 
                         id="hero-title"
-                        className="header font-bold tracking-tight text-3xl md:text-7xl xl:text-9xl w-full md:w-2/3 text-center font-paras text-white relative"
+                        className="header font-bold tracking-tight text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white relative"
                     >
                         <span className="relative header">
                             Premium Templates to{' '}

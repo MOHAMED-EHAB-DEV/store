@@ -1,12 +1,10 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import Navbar from "@/components/home/Navbar";
 import {gsap} from "gsap";
 import {useGSAP} from "@gsap/react";
 import {Roboto} from "@/lib/fonts";
 import {Analytics} from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import Footer from "@/components/home/Footer";
 
 gsap.registerPlugin(useGSAP);
 
@@ -56,7 +54,7 @@ export const metadata: Metadata = {
     },
     icons: "/assets/images/Logo.png",
     verification: {
-        google: "your-google-verification-code",
+        google: process.env.google_verification_code!,
     },
     alternates: {
         canonical: "https://mhd-store.vercel.app",
@@ -104,16 +102,8 @@ export default function RootLayout({
                         }}
                     />
                 </div>
-                
-                <div className="relative z-10 flex flex-col min-h-screen">
-                    <Navbar/>
-                    
-                    <div id="main-content" className="flex-1 flex flex-col items-center gap-3 justify-start">
-                        {children}
-                    </div>
-                    
-                    <Footer />
-                </div>
+
+                {children}
             </div>
             
             <Analytics />

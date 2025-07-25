@@ -50,8 +50,8 @@ const Hero = () => {
     });
 
     return (
-        <section 
-            className="relative flex items-center justify-center gap-3 min-h-[calc(100dvh-200px)] h-full w-full"
+        <section
+            className="relative flex items-center justify-center gap-3 min-h-[calc(100dvh-200px)] pt-28 sm:pt-46 md:pt-36 h-full w-full"
             aria-labelledby="hero-title"
             role="banner"
         >

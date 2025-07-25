@@ -11,25 +11,17 @@ import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 
 const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
         setIsMounted(true);
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
         <div
-            className={`z-50 w-full top-0 transition-all duration-500 ease-in-out ${
-                isScrolled && isMounted
-                    ? "translate-y-0 fixed opacity-100 bg-dark/95 backdrop-blur-md shadow-lg" 
-                    : "bg-transparent"
+            className={`z-50 w-12/13 md:w-4/5 self-center mt-2 top-0 fixed transition-all rounded-full duration-500 ease-in-out ${
+                isMounted ? "translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg" : "-translate-y-full bg-transparent"
             }`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8 relative">

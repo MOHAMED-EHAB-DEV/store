@@ -1,10 +1,9 @@
-import type {NextApiRequest} from 'next'
 import { NextResponse } from "next/server";
 import {connectToDatabase} from "@/lib/database";
 import User from "@/lib/models/User";
 
 export async function GET(
-    req: NextApiRequest,
+    req: Request,
     {params}: { params: { id: string } },
 ) {
     const {id} = await params;

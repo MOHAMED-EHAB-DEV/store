@@ -1,4 +1,4 @@
-import {MouseEventHandler, useState} from "react";
+import {MouseEvent as ReactMouseEvent, useState} from "react";
 import Image from "next/image";
 import {
     DropdownMenu,
@@ -23,7 +23,7 @@ const ProfileDropdown = ({userImage, username, userEmail}: {
     const [open, isOpen] = useState(false);
     const router = useRouter();
 
-    const handleLogout = async (e: MouseEventHandler<HTMLDivElement>) => {
+    const handleLogout = async (e: ReactMouseEvent<HTMLDivElement>) => {
         try {
             e?.preventDefault();
 

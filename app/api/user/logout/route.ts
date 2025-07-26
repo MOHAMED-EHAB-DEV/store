@@ -13,7 +13,7 @@ export async function GET() {
             expires: new Date(0),
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            domain: process.env.NODE_ENV === "production" ? ".vercel.app" : "",
+            // domain: process.env.NODE_ENV === "production" ? ".vercel.app" : "",
             path: "/",
         });
 

@@ -10,7 +10,7 @@ import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import UILoader from "@/components/ui/UILoader";
 
-const Navbar = ({user}: { user: IUser }) => {
+const Navbar = ({user}: { user: IUser | undefined }) => {
     const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 

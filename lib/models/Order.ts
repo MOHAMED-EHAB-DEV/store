@@ -19,4 +19,4 @@ const OrderSchema = new Schema<IOrder>({
 
 const Order: Model<IOrder> = mongoose.models.Order || mongoose.model<IOrder>("Order", OrderSchema);
 
-export default Template;
+export default Order;

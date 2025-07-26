@@ -1,8 +1,6 @@
 import Logo from "@/components/ui/Logo";
 import RegisterForm from "@/components/Forms/RegisterForm";
 
-export const dynamic = "force-dynamic";
-
 const Page = () => {
     return (
         <div className="min-h-screen h-full min-w-screen flex items-center justify-center">

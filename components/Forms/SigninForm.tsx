@@ -10,6 +10,7 @@ import {
     Check,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import revalidate from "@/actions/revalidateTag";
 
 const SigninForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -47,6 +48,7 @@ const SigninForm = () => {
 
         if (data?.success) {
             router.push('/');
+            await revalidate("/");
         } else {
             setError(true);
             setErrorMessage("Invalid email or password");

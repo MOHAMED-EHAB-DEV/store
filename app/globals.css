@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./fonts.css";
 
+
 @theme {
     --color-primary: #0D0F19;
     --color-secondary: #8C86A7;
@@ -42,10 +43,10 @@
         }
     }
 
-    *:focus-visible {
-        outline: 2px solid #667eea;
-        outline-offset: 2px;
-    }
+    /**:focus-visible {*/
+    /*    outline: 2px solid #667eea;*/
+    /*    outline-offset: 2px;*/
+    /*}*/
 }
 
 @layer components {

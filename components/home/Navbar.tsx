@@ -1,16 +1,16 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, Suspense} from 'react';
 import {MenuIcon, XIcon} from 'lucide-react';
-import * as m from 'motion/react-m';
-import {LazyMotion, domAnimation} from "motion/react";
-import { useRouter } from "next/navigation";
-
+import {motion} from "motion/react";
+import {useRouter} from "next/navigation";
+import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
 import {NavigationLinks} from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
+import UILoader from "@/components/ui/UILoader";
 
-const Navbar = () => {
+const Navbar = ({user}: { user: IUser }) => {
     const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 
@@ -20,35 +20,42 @@ const Navbar = () => {
 
     return (
         <div
-            className={`z-50 w-12/13 md:w-4/5 self-center mt-2 top-0 fixed transition-all rounded-full duration-500 ease-in-out ${
+            className={`z-50 w-12/13 md:w-4/5 self-center mt-2 top-0 fixed transition-all rounded-full duration-800 ease-in-out ${
                 isMounted ? "translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg" : "-translate-y-full bg-transparent"
             }`}
         >
-            <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8 relative">
-                <Logo onClick={() => router.push("/")} className="flex-1" />
+            <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8">
+                <Logo onClick={() => router.push("/")} className="flex-1"/>
 
                 <nav className="sm:flex hidden flex-row gap-6 items-center justify-center">
                     {NavigationLinks.map(({id, text, link}) => (
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
                 </nav>
-
-                <div className="flex flex-1 gap-2 items-center justify-end">
+                <MobileDrawer/>
+                {!user ? <div className="hidden sm:flex flex-1 gap-2 items-center justify-end">
                     <button
-                        className="outline-none hidden sm:block cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                        className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                         aria-label="Signin button"
+                        onClick={() => router.push("/signin")}
                     >
                         Signin
                     </button>
                     <button
-                        className="outline-none hidden sm:block cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                        className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                         aria-label="Signup button"
+                        onClick={() => router.push("/register")}
                     >
                         Get Started
                     </button>
-                </div>
-
-                <MobileDrawer />
+                </div> : (
+                    <Suspense fallback={<UILoader/>}>
+                        <div className="flex md:flex-1 items-center justify-end">
+                            <ProfileDropdown username={user.name} userImage={user.avatar as String}
+                                             userEmail={user.email}/>
+                        </div>
+                    </Suspense>
+                )}
             </div>
         </div>
     );
@@ -76,70 +83,68 @@ const MobileDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="relative sm:hidden block ml-2">
+        <div className="relative sm:hidden block ml-2 self-end">
             <button aria-label="Menu Button" className="p-2 bg-transparent" onClick={() => setIsOpen(true)}>
-                <MenuIcon />
+                <MenuIcon/>
             </button>
 
             {isOpen && (
                 <div>
                     <div
-                        className="fixed inset-0 bg-black bg-opacity-50 z-40"
                         onClick={() => setIsOpen(false)}
+                        className="fixed inset-0 z-40 w-screen h-screen bg-black/40 backdrop-blur-lg"
                     ></div>
 
-                    <LazyMotion features={domAnimation}>
-                        <m.div
-                            className="fixed top-0 right-0 h-full w-2/4 bg-dark shadow-lg z-50"
-                            variants={{
-                                hidden: { x: "100%", opacity: 0 },
-                                visible: {
-                                    x: 0,
-                                    opacity: 1,
-                                    transition: { type: "spring", stiffness: 300, damping: 25 },
-                                },
-                                exit: {
-                                    x: "100%",
-                                    opacity: 0,
-                                    transition: { type: "spring", stiffness: 300, damping: 25 },
-                                },
-                            }}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                        >
-                            <div className="p-4 flex flex-col h-full gap-4">
-                                <button className="p-2 mb-2" onClick={() => setIsOpen(false)}>
-                                    <XIcon />
+                    <motion.div
+                        className="fixed top-0 right-0 h-screen w-2/4 bg-dark shadow-lg z-50"
+                        variants={{
+                            hidden: {x: "100%", opacity: 0},
+                            visible: {
+                                x: 0,
+                                opacity: 1,
+                                transition: {type: "spring", stiffness: 300, damping: 25},
+                            },
+                            exit: {
+                                x: "100%",
+                                opacity: 0,
+                                transition: {type: "spring", stiffness: 300, damping: 25},
+                            },
+                        }}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                    >
+                        <div className="p-4 flex flex-col h-full gap-4">
+                            <button className="p-2 mb-2" onClick={() => setIsOpen(false)}>
+                                <XIcon/>
+                            </button>
+                            <ul className="flex flex-col">
+                                {NavigationLinks.map(({id, link, text}) => (
+                                    <li className="p-2" key={id}>
+                                        <Link
+                                            href={link}
+                                            className="text-white flex hover:text-secondary text-lg"
+                                            onClick={() => setIsOpen(false)}
+                                        >
+                                            {text}
+                                        </Link>
+                                    </li>
+                                ))}
+                                <button
+                                    className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                                    aria-label="Signin button"
+                                >
+                                    Signin
                                 </button>
-                                <ul className="flex flex-col">
-                                    {NavigationLinks.map(({id, link, text}) => (
-                                        <li className="p-2" key={id}>
-                                            <Link
-                                                href={link}
-                                                className="text-white flex hover:text-secondary text-lg"
-                                                onClick={() => setIsOpen(false)}
-                                            >
-                                                {text}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                        <button
-                                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                                            aria-label="Signin button"
-                                        >
-                                            Signin
-                                        </button>
-                                        <button
-                                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                                            aria-label="Signup button"
-                                        >
-                                            Get Started
-                                        </button>
-                                </ul>
-                            </div>
-                        </m.div>
-                    </LazyMotion>
+                                <button
+                                    className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                                    aria-label="Signup button"
+                                >
+                                    Get Started
+                                </button>
+                            </ul>
+                        </div>
+                    </motion.div>
                 </div>
             )}
         </div>

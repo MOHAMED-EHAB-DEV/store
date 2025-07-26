@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {MouseEventHandler, useState} from "react";
 import Image from "next/image";
 import {
     DropdownMenu,
@@ -23,9 +23,9 @@ const ProfileDropdown = ({userImage, username, userEmail}: {
     const [open, isOpen] = useState(false);
     const router = useRouter();
 
-    const handleLogout = async (e: MouseEvent) => {
+    const handleLogout = async (e: MouseEventHandler<HTMLDivElement>) => {
         try {
-            e.preventDefault();
+            e?.preventDefault();
 
             const response = await fetch("/api/user/logout");
 

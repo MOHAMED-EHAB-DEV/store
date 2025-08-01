@@ -138,20 +138,6 @@ const Hero = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Enhanced background effects */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {/* Main gradient orb */}
-                <div className="gradient-orb-1 absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-500/30 via-pink-500/20 to-cyan-500/10 rounded-full blur-3xl" />
-                
-                {/* Secondary gradient orb */}
-                <div className="gradient-orb-2 absolute -bottom-32 -left-32 w-80 h-80 bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl" />
-                
-                {/* Floating particles */}
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-float opacity-60" />
-                <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-pink-400 rounded-full animate-float opacity-40" style={{animationDelay: '1s'}} />
-                <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-float opacity-50" style={{animationDelay: '2s'}} />
-            </div>
         </section>
     );
 };

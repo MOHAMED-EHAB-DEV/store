@@ -32,6 +32,7 @@ export async function authenticateUser() {
 
         return user;
     } catch (error) {
-        throw new Error((error as Error).message || "Authentication failed");
+        console.log(`Error while authenticating user: ${error}`);
+        return null;
     }
 }

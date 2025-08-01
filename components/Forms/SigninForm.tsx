@@ -6,8 +6,6 @@ import {
     Lock,
     Eye,
     EyeOff,
-    User,
-    Check,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import revalidate from "@/actions/revalidateTag";

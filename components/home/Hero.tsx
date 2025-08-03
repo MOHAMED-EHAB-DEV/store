@@ -10,28 +10,28 @@ gsap.registerPlugin(SplitText);
 
 const Hero = () => {
     useGSAP(() => {
-        const splitHeader = SplitText.create('.header', {
-            type: 'words',
-            mask: 'words',
-        });
-
-        gsap.from(splitHeader.words, {
-            duration: 1.5,
-            y: 80,
-            autoAlpha: 0,
-            opacity: 0,
-            stagger: 0.05,
-            filter: 'blur(6px)',
-            ease: 'power2.out',
-        });
-
-        // gsap.to('.hero-btn', {
-        //     y: -9,
-        //     repeat: -1,
-        //     yoyo: true,
-        //     duration: 1.8,
-        //     ease: 'power1.inOut',
+        // const splitHeader = SplitText.create('.header', {
+        //     type: 'words',
+        //     mask: 'words',
         // });
+        //
+        // gsap.from(splitHeader.words, {
+        //     duration: 1.5,
+        //     y: 80,
+        //     autoAlpha: 0,
+        //     opacity: 0,
+        //     stagger: 0.05,
+        //     filter: 'blur(6px)',
+        //     ease: 'power2.out',
+        // });
+        //
+        // // gsap.to('.hero-btn', {
+        // //     y: -9,
+        // //     repeat: -1,
+        // //     yoyo: true,
+        // //     duration: 1.8,
+        // //     ease: 'power1.inOut',
+        // // });
 
         // Animate gradient orbs
         gsap.to('.gradient-orb-1', {
@@ -62,34 +62,37 @@ const Hero = () => {
                     role="status"
                     aria-label="Featured announcement"
                 >
-                    <Star className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" />
+                    <Star
+                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300"/>
                     <span className="relative z-10">Unleash Your Creativity</span>
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine" />
+                    <span
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine"/>
                 </Badge>
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
-                    <h1 
+                    <h1
                         id="hero-title"
                         className="header font-bold tracking-tight text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white relative"
                     >
-                        <span className="relative header">
-                            Premium Templates to{' '}
-                            <span className="text-gradient-primary relative">
-                                Elevate
-                                <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-xl rounded-lg" />
-                            </span>{' '}
-                            Your Projects
-                        </span>
+                                <span className="relative header">
+                                    Premium Templates to{' '}
+                                    <span className="text-gradient-primary relative">
+                                        Elevate
+                                        <div
+                                            className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-xl rounded-lg"/>
+                                    </span>{' '}
+                                    Your Projects
+                                </span>
                     </h1>
-                    
-                    <p 
+
+                    <p
                         className="header text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
                         <span className="block mt-2 text-sm text-secondary/80">
-                            Join 10,000+ developers who trust our templates
-                        </span>
+                                    Join 10,000+ developers who trust our templates
+                                </span>
                     </p>
                 </div>
 
@@ -101,11 +104,13 @@ const Hero = () => {
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             Browse Templates
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                            <ArrowRight
+                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"/>
                         </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                        <div
+                            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"/>
                     </button>
-                    
+
                     <button
                         className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Demo"
@@ -113,7 +118,7 @@ const Hero = () => {
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             View Demo
-                            <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                            <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"/>
                         </span>
                     </button>
                 </div>
@@ -122,7 +127,7 @@ const Hero = () => {
                     <div className="flex items-center gap-2">
                         <div className="flex -space-x-2">
                             {[...Array(4)].map((_, i) => (
-                                <div 
+                                <div
                                     key={i}
                                     className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-primary flex items-center justify-center text-white text-xs font-bold"
                                 >
@@ -133,7 +138,7 @@ const Hero = () => {
                         <span>10K+ Happy Customers</span>
                     </div>
                     <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <Star className="w-4 h-4 text-yellow-400 fill-current"/>
                         <span>4.9/5 Rating</span>
                     </div>
                 </div>

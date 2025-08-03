@@ -11,11 +11,9 @@ export default async function RootLayout(
         children: React.ReactNode;
     }>) {
     const user = await authenticateUser();
-
-    if (!user) redirect("/signin");
     return (
         <div className="relative px-4 md:px-0 z-10 flex flex-col min-h-screen">
-            <Navbar user={user && user}/>
+            <Navbar user={user!}/>
 
             <div id="main-content" className="flex-1 flex flex-col items-center gap-3 justify-start">
                 {children}

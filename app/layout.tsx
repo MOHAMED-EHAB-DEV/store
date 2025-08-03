@@ -72,9 +72,9 @@ export default function RootLayout(
     }>) {
     return (
         <html lang="en" className="scroll-smooth">
-                <head>
-  		<link rel="preload" as="image" href="/assets/Icons/wh.avif" type="image/avif">
-	</head>
+        <head>
+            <link rel="preload" as="image" href="/assets/Icons/wh.avif" type="image/avif" />
+        </head>
         <body
             className={`${Roboto.className} antialiased scroll-smooth bg-primary text-white`}
         >

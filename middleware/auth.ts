@@ -30,7 +30,7 @@ export async function authenticateUser() {
 
         if (!user) throw new Error("User not found");
 
-        return user;
+        return user as IUser;
     } catch (error) {
         console.log(`Error while authenticating user: ${error}`);
         return null;

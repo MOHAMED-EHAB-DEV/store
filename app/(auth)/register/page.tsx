@@ -1,5 +1,6 @@
 import Logo from "@/components/ui/Logo";
 import RegisterForm from "@/components/Forms/RegisterForm";
+import Link from "next/link";
 
 const Page = () => {
     return (
@@ -11,6 +12,8 @@ const Page = () => {
                 </div>
 
                 <RegisterForm />
+
+                <div>Have an account? <Link href="/signin" className="text-gradient-purple">Signin Here</Link></div>
             </div>
         </div>
     )

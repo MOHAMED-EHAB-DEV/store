@@ -23,10 +23,10 @@ export default async function Home() {
                             key={id} 
                             className="flex w-full md:w-1/4 h-full flex-col gap-1 items-center justify-center text-center"
                         >
-                            <h2 className="font-paras font-medium text-2xl md:text-3xl tracking-tight header">
+                            <h2 className="font-paras font-medium text-2xl md:text-3xl tracking-tight">
                                 {title}
                             </h2>
-                            <p className="font-medium text-base text-center font-paras header text-secondary shadow-none">
+                            <p className="font-medium text-base text-center font-paras text-secondary shadow-none">
                                 {desc}
                             </p>
                         </article>
@@ -52,8 +52,8 @@ export default async function Home() {
             <FramerFeatures />
             <CodedFeatures />
             <FigmaFeatures />
-            <AboutMe />
             <Testimonials />
+            <AboutMe />
             <Cta />
         </main>
     );

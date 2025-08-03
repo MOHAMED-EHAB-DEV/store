@@ -195,7 +195,7 @@ const FeaturedTemplates = () => {
                                 <button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
                                     Buy Now
                                 </button>
-                                <button className="px-4 py-3 border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
+                                <button aria-label="Live Demo" className="px-4 py-3 border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
                                     <ExternalLink className="w-5 h-5" />
                                 </button>
                             </div>

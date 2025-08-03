@@ -61,47 +61,42 @@
         hover:shadow-lg hover:shadow-purple-500/25;
     }
 
-    .btn-secondary {
-        @apply bg-gradient-to-r from-gray-700 to-gray-800 text-white
-        hover:from-gray-600 hover:to-gray-700;
-    }
+    /*.btn-success {*/
+    /*    @apply bg-gradient-to-r from-green-500 to-teal-500 text-white*/
+    /*    hover:shadow-lg hover:shadow-green-500/25;*/
+    /*}*/
 
-    .btn-success {
-        @apply bg-gradient-to-r from-green-500 to-teal-500 text-white
-        hover:shadow-lg hover:shadow-green-500/25;
-    }
+    /*.btn-warning {*/
+    /*    @apply bg-gradient-to-r from-yellow-500 to-orange-500 text-white*/
+    /*    hover:shadow-lg hover:shadow-yellow-500/25;*/
+    /*}*/
 
-    .btn-warning {
-        @apply bg-gradient-to-r from-yellow-500 to-orange-500 text-white
-        hover:shadow-lg hover:shadow-yellow-500/25;
-    }
-
-    .btn-danger {
-        @apply bg-gradient-to-r from-red-500 to-pink-500 text-white
-        hover:shadow-lg hover:shadow-red-500/25;
-    }
+    /*.btn-danger {*/
+    /*    @apply bg-gradient-to-r from-red-500 to-pink-500 text-white*/
+    /*    hover:shadow-lg hover:shadow-red-500/25;*/
+    /*}*/
 
     /* Card components */
-    .card {
-        @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02];
-    }
+    /*.card {*/
+    /*    @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02];*/
+    /*}*/
 
-    .card-glass {
-        @apply  hover:bg-white/15;
-    }
+    /*.card-glass {*/
+    /*    @apply  hover:bg-white/15;*/
+    /*}*/
 
-    .card-gradient {
-        @apply relative overflow-hidden;
-    }
+    /*.card-gradient {*/
+    /*    @apply relative overflow-hidden;*/
+    /*}*/
 
-    .card-gradient::before {
-        @apply absolute inset-0 opacity-10 transition-opacity duration-300;
-        content: '';
-    }
+    /*.card-gradient::before {*/
+    /*    @apply absolute inset-0 opacity-10 transition-opacity duration-300;*/
+    /*    content: '';*/
+    /*}*/
 
-    .card-gradient:hover::before {
-        @apply opacity-20;
-    }
+    /*.card-gradient:hover::before {*/
+    /*    @apply opacity-20;*/
+    /*}*/
 }
 
 @layer utilities {
@@ -348,9 +343,9 @@
         @apply px-4 py-2 text-base;
     }
 
-    .card {
-        @apply p-4;
-    }
+    /*.card {*/
+    /*    @apply p-4;*/
+    /*}*/
 }
 
 /* High contrast mode support */

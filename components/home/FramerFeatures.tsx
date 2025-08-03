@@ -119,7 +119,10 @@ const FramerFeatures = () => {
                                 loop
                                 autoPlay
                                 className="absolute top-0 left-0 w-full h-full object-cover"
-                            />
+
+                            >
+                                <track />
+                            </video>
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
                             <div className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
                                 <h1 className="text-white font-medium text-base md:text-2xl">

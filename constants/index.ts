@@ -7,6 +7,8 @@ import {
     MousePointer,
     Smartphone,
     Code2,
+    LayoutDashboard,
+    Settings
 } from "lucide-react"
 
 const NavigationLinks = [
@@ -260,6 +262,19 @@ const socialImgs = [
     },
 ];
 
+const DashboardSidebarLinks = [
+    {
+        Icon: LayoutDashboard,
+        text: "Dashboard",
+        link: "/dashboard",
+    },
+    {
+        Icon: Settings,
+        text: "Settings",
+        link: "/settings",
+    }
+]
+
 export {
     NavigationLinks,
     HeroItems,
@@ -268,4 +283,5 @@ export {
     codeFeatures,
     figmaFeatures,
     socialImgs,
+    DashboardSidebarLinks,
 }

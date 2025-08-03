@@ -19,6 +19,7 @@
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "critters": "^0.0.25",
     "embla-carousel-react": "^8.6.0",
     "gsap": "^3.13.0",
     "jsonwebtoken": "^9.0.2",

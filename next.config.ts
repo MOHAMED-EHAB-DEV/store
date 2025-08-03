@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
     experimental: {
         optimizePackageImports: ["gsap", "lucide-react", "motion"],
         inlineCss: true,
-        optimizeCss: true
+        optimizeCss: true,
     },
     typescript: {
         ignoreBuildErrors: true

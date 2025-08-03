@@ -2,7 +2,6 @@ import React from "react";
 import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";
 import {authenticateUser} from "@/middleware/auth";
-import {redirect} from "next/navigation";
 
 export default async function RootLayout(
     {

@@ -2,6 +2,7 @@ import {NextResponse} from "next/server";
 import {connectToDatabase} from "@/lib/database";
 import {authenticateUser} from "@/middleware/auth";
 import User from "@/lib/models/User";
+import revalidate from "@/actions/revalidateTag";
 
 export async function POST(req: Request) {
     try {
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
 
         if (!currentUser) return NextResponse.json({error: "No Session, User not found"}, {status: 404});
 
-        const dtUser = User.findOne({_id: currentUser?.id});
+        const dtUser = await User.findOne({email: currentUser?.email});
         if (!dtUser) return NextResponse.json({error: "User not found", success: false,}, {status: 404});
 
         // @ts-ignore
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
         if (name) newUser.name = name;
 
         const updatedUser = await User.findByIdAndUpdate(
-            currentUser?.id,
+            dtUser?._id,
             {$set: {...newUser}},
             {runValidators: true, new: true}
         );
@@ -32,6 +33,9 @@ export async function POST(req: Request) {
                 {status: 404}
             );
         }
+
+        // await revalidate("/");
+        await revalidate("/settings");
 
         return NextResponse.json({
             success: true,

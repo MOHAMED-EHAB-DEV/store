@@ -2,11 +2,11 @@
 
 import {gsap} from 'gsap';
 import {useGSAP} from '@gsap/react';
-import {SplitText} from 'gsap/SplitText';
+// import {SplitText} from 'gsap/SplitText';
 import {Star, ArrowRight, Sparkles} from 'lucide-react';
 import {Badge} from '@/components/ui/badge';
 
-gsap.registerPlugin(SplitText);
+// gsap.registerPlugin(SplitText);
 
 const Hero = () => {
     useGSAP(() => {

@@ -99,7 +99,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
         }
     };
 
-    const handleSubmit = async (e: ChangeEvent<HTMLInputElement>) => {
+    const handleSubmit = async (e: FormEventHandler<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         try {

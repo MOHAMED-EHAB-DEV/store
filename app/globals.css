@@ -16,37 +16,77 @@
 
 @layer base {
     :root {
-        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         --gradient-warning: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
         --gradient-info: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        font-size: 16px;
+        color-scheme: light dark;
+        color: var(--color-primary);
+        background-color: #f7f8fa;
     }
-
+    html {
+        font-size: 16px;
+        font-family: var(--font-paras), system-ui, sans-serif;
+        color: var(--color-primary);
+        background-color: #f7f8fa;
+    }
+    body {
+        font-size: 1rem;
+        color: var(--color-primary);
+        background-color: #f7f8fa;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+    h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--color-primary);
+    }
+    h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-primary);
+    }
+    h4, h5, h6 {
+        font-weight: 500;
+        color: var(--color-primary);
+    }
+    a {
+        color: #6366f1;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    a:hover {
+        color: #f5576c;
+    }
+    ::selection {
+        background: #6366f1;
+        color: #fff;
+    }
     * {
         scroll-behavior: smooth;
+        box-sizing: border-box;
     }
-
     .will-change {
         will-change: transform, opacity;
     }
-
     @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
+        *, *::before, *::after {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
             scroll-behavior: auto !important;
         }
     }
-
-    /**:focus-visible {*/
-    /*    outline: 2px solid #667eea;*/
-    /*    outline-offset: 2px;*/
-    /*}*/
 }
 
 @layer components {

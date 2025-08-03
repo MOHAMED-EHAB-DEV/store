@@ -1,4 +1,3 @@
-// @/lib/services/UserService.ts
 import User from "@/lib/models/User";
 import { connectToDatabase, measureQuery } from "@/lib/database";
 import { Types } from "mongoose";

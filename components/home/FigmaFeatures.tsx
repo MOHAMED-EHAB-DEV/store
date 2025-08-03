@@ -10,56 +10,56 @@ import {figmaFeatures} from "@/constants";
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 const FigmaFeatures = () => {
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: '.figma-section',
-            start: 'top bottom',
-            end: 'bottom 20%',
-            onEnter: () => {
-                const figmaTl = gsap.timeline();
-
-                const figmaChars = document.querySelectorAll('.figma-title .char');
-                figmaTl.fromTo(
-                    figmaChars,
-                    { opacity: 0, y: 100, rotationX: -90 },
-                    {
-                        duration: 0.8,
-                        y: 0,
-                        opacity: 1,
-                        rotationX: 0,
-                        stagger: 0.02,
-                        ease: 'power3.out',
-                    }
-                );
-
-                figmaTl.fromTo(
-                    '.figma-feature',
-                    { opacity: 0, x: -50 },
-                    {
-                        duration: 1,
-                        x: 0,
-                        opacity: 1,
-                        stagger: 0.1,
-                        ease: 'power2.out',
-                    },
-                    '-=0.3'
-                );
-
-                figmaTl.fromTo(
-                    '.figma-preview',
-                    { opacity: 0, scale: 0.8, rotation: -5 },
-                    {
-                        duration: 1.2,
-                        scale: 1,
-                        opacity: 1,
-                        rotation: 0,
-                        ease: 'power3.out',
-                    },
-                    '-=0.5'
-                );
-            },
-        });
-    });
+    // useGSAP(() => {
+    //     ScrollTrigger.create({
+    //         trigger: '.figma-section',
+    //         start: 'top bottom',
+    //         end: 'bottom 20%',
+    //         onEnter: () => {
+    //             const figmaTl = gsap.timeline();
+    //
+    //             const figmaChars = document.querySelectorAll('.figma-title .char');
+    //             figmaTl.fromTo(
+    //                 figmaChars,
+    //                 { opacity: 0, y: 100, rotationX: -90 },
+    //                 {
+    //                     duration: 0.8,
+    //                     y: 0,
+    //                     opacity: 1,
+    //                     rotationX: 0,
+    //                     stagger: 0.02,
+    //                     ease: 'power3.out',
+    //                 }
+    //             );
+    //
+    //             figmaTl.fromTo(
+    //                 '.figma-feature',
+    //                 { opacity: 0, x: -50 },
+    //                 {
+    //                     duration: 1,
+    //                     x: 0,
+    //                     opacity: 1,
+    //                     stagger: 0.1,
+    //                     ease: 'power2.out',
+    //                 },
+    //                 '-=0.3'
+    //             );
+    //
+    //             figmaTl.fromTo(
+    //                 '.figma-preview',
+    //                 { opacity: 0, scale: 0.8, rotation: -5 },
+    //                 {
+    //                     duration: 1.2,
+    //                     scale: 1,
+    //                     opacity: 1,
+    //                     rotation: 0,
+    //                     ease: 'power3.out',
+    //                 },
+    //                 '-=0.5'
+    //             );
+    //         },
+    //     });
+    // });
 
     return (
         <section className="figma-section relative z-10 px-4 py-6">

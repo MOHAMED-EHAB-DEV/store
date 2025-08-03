@@ -90,7 +90,7 @@ const Hero = () => {
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
-                        <span className="block mt-2 text-sm text-secondary/80">
+                        <span className="block mt-2 text-sm text-secondary">
                                     Join 10,000+ developers who trust our templates
                                 </span>
                     </p>
@@ -135,11 +135,11 @@ const Hero = () => {
                                 </div>
                             ))}
                         </div>
-                        <span>10K+ Happy Customers</span>
+                        <span className="text-secondary">10K+ Happy Customers</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-400 fill-current"/>
-                        <span>4.9/5 Rating</span>
+                        <span className="text-secondary">4.9/5 Rating</span>
                     </div>
                 </div>
             </div>

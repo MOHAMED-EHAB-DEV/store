@@ -12,20 +12,182 @@ export interface ITemplate extends Document {
     author: ObjectId;
     downloads: number;
     averageRating: number;
+    isActive: boolean; // Add for soft delete
 }
 
 const TemplateSchema = new Schema<ITemplate>({
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    content: { type: String, required: true },
-    price: { type: Number, default: 0 },
-    thumbnail: { type: String },
-    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
-    tags: [String],
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    downloads: { type: Number, default: 0 },
-    averageRating: { type: Number, default: 0 },
-}, { timestamps: true });
+    title: { 
+        type: String, 
+        required: true,
+        text: true, // Text search index
+        index: true
+    },
+    description: { 
+        type: String, 
+        required: true,
+        text: true // Text search index
+    },
+    content: { 
+        type: String, 
+        required: true,
+        select: false // Don't include by default (large field)
+    },
+    price: { 
+        type: Number, 
+        default: 0,
+        min: 0,
+        index: true // For price range queries
+    },
+    thumbnail: { type: String, required: true },
+    categories: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Category",
+        index: true // For category filtering
+    }],
+    tags: [{ 
+        type: String,
+        lowercase: true,
+        trim: true
+    }],
+    author: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User",
+        required: true,
+        index: true // For author queries
+    },
+    downloads: { 
+        type: Number, 
+        default: 0,
+        min: 0,
+        index: true // For popular templates
+    },
+    averageRating: { 
+        type: Number, 
+        default: 0,
+        min: 0,
+        max: 5,
+        index: true // For rating-based sorting
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+        index: true // For filtering active templates
+    }
+}, { 
+    timestamps: true,
+    versionKey: false,
+    // Optimizations
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+// Compound indexes for common query patterns
+TemplateSchema.index({ isActive: 1, price: 1, averageRating: -1 }); // Active paid templates by rating
+TemplateSchema.index({ isActive: 1, downloads: -1, createdAt: -1 }); // Popular templates
+TemplateSchema.index({ author: 1, isActive: 1, createdAt: -1 }); // Author's templates
+TemplateSchema.index({ categories: 1, isActive: 1, averageRating: -1 }); // Category templates by rating
+TemplateSchema.index({ tags: 1, isActive: 1 }); // Tag-based search
+TemplateSchema.index({ price: 1, isActive: 1 }); // Price filtering
+TemplateSchema.index({ createdAt: -1, isActive: 1 }); // Recent templates
+
+// Text search index for title and description
+TemplateSchema.index({ 
+    title: 'text', 
+    description: 'text',
+    tags: 'text'
+}, {
+    weights: {
+        title: 10,
+        description: 5,
+        tags: 1
+    }
+});
+
+// Virtual for review count (if needed)
+TemplateSchema.virtual('reviewCount', {
+    ref: 'Review',
+    localField: '_id',
+    foreignField: 'template',
+    count: true
+});
+
+// Static methods for optimized queries
+TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0) {
+    return this.find({ isActive: true })
+        .select('title description thumbnail price downloads averageRating author categories')
+        .populate('author', 'name avatar')
+        .populate('categories', 'name slug')
+        .sort({ downloads: -1, averageRating: -1 })
+        .limit(limit)
+        .skip(skip)
+        .lean();
+};
+
+TemplateSchema.statics.findByCategory = function(categoryId: string, limit = 20, skip = 0) {
+    return this.find({ 
+        categories: categoryId, 
+        isActive: true 
+    })
+        .select('title description thumbnail price downloads averageRating author')
+        .populate('author', 'name avatar')
+        .sort({ averageRating: -1, downloads: -1 })
+        .limit(limit)
+        .skip(skip)
+        .lean();
+};
+
+TemplateSchema.statics.searchTemplates = function(searchTerm: string, limit = 20, skip = 0) {
+    return this.find({
+        $text: { $search: searchTerm },
+        isActive: true
+    }, {
+        score: { $meta: 'textScore' }
+    })
+        .select('title description thumbnail price downloads averageRating author categories')
+        .populate('author', 'name avatar')
+        .populate('categories', 'name slug')
+        .sort({ score: { $meta: 'textScore' }, averageRating: -1 })
+        .limit(limit)
+        .skip(skip)
+        .lean();
+};
+
+TemplateSchema.statics.findFreeTemplates = function(limit = 20, skip = 0) {
+    return this.find({ 
+        price: 0, 
+        isActive: true 
+    })
+        .select('title description thumbnail downloads averageRating author categories')
+        .populate('author', 'name avatar')
+        .populate('categories', 'name slug')
+        .sort({ downloads: -1, averageRating: -1 })
+        .limit(limit)
+        .skip(skip)
+        .lean();
+};
+
+TemplateSchema.statics.getTemplateStats = function() {
+    return this.aggregate([
+        { $match: { isActive: true } },
+        {
+            $group: {
+                _id: null,
+                totalTemplates: { $sum: 1 },
+                totalDownloads: { $sum: '$downloads' },
+                averagePrice: { $avg: '$price' },
+                averageRating: { $avg: '$averageRating' }
+            }
+        }
+    ]);
+};
+
+// Pre-save middleware for tag normalization
+TemplateSchema.pre('save', function(next) {
+    if (this.isModified('tags')) {
+        this.tags = this.tags.map((tag: string) => tag.toLowerCase().trim());
+    }
+    next();
+});
 
 const Template: Model<ITemplate> = mongoose.models.Template || mongoose.model<ITemplate>("Template", TemplateSchema);
 

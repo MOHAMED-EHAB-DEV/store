@@ -13,7 +13,7 @@ const FigmaFeatures = () => {
     useGSAP(() => {
         ScrollTrigger.create({
             trigger: '.figma-section',
-            start: 'top top',
+            start: 'top bottom',
             end: 'bottom 20%',
             onEnter: () => {
                 const figmaTl = gsap.timeline();

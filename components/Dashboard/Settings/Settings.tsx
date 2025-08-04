@@ -11,6 +11,7 @@ import {whatLoseWhenDeleteMyAccount} from "@/constants";
 import {toast} from "sonner";
 import {Eye, EyeOff, Lock, Mail, X} from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
+import revalidate from "@/actions/revalidateTag";
 
 const Settings = ({userId}: {userId: string}) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +45,7 @@ const Settings = ({userId}: {userId: string}) => {
 
             if (response.success) {
                 toast(response.message);
+                await revalidate("/");
                 router.push("/");
             } else {
                 toast(response.message);

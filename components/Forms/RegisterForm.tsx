@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {passwordRequirements} from "@/constants"
+import revalidate from "@/actions/revalidateTag";
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -58,6 +59,7 @@ const RegisterForm = () => {
         // navigate("/verify-email", { state: { email: formData.email } });
 
         // Redirect to Main Page
+        await revalidate("/")
         router.push('/');
     };
 

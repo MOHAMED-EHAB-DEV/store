@@ -9,7 +9,7 @@ import {
     Code2,
     LayoutDashboard,
     Settings
-} from "lucide-react"
+} from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
     {

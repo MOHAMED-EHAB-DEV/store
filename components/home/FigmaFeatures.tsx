@@ -3,7 +3,7 @@
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { TextPlugin, ScrollTrigger } from 'gsap/all';
-import { Download, Play, Figma } from 'lucide-react';
+import { Download, Figma } from '@/components/ui/svgs/Icons';
 import SplitText from '../ui/SplitText';
 import {figmaFeatures} from "@/constants";
 

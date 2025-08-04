@@ -1,5 +1,5 @@
 import React from 'react';
-import {Menu} from "lucide-react";
+import {Menu} from "@/components/ui/svgs/Icons";
 import Image from "next/image";
 import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
 

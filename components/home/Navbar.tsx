@@ -1,7 +1,7 @@
 'use client';
 
 import {useState, useEffect, Suspense} from 'react';
-import {MenuIcon, XIcon} from 'lucide-react';
+import {Menu, X} from '@/components/ui/svgs/Icons';
 import {motion} from "motion/react";
 import {useRouter} from "next/navigation";
 import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
@@ -83,7 +83,7 @@ const MobileDrawer = () => {
     return (
         <div className="relative sm:hidden block ml-2 self-end">
             <button aria-label="Menu Button" className="p-2 bg-transparent" onClick={() => setIsOpen(true)}>
-                <MenuIcon/>
+                <Menu/>
             </button>
 
             {isOpen && (
@@ -114,7 +114,7 @@ const MobileDrawer = () => {
                     >
                         <div className="p-4 flex flex-col h-full gap-4">
                             <button className="p-2 mb-2" onClick={() => setIsOpen(false)}>
-                                <XIcon/>
+                                <X/>
                             </button>
                             <ul className="flex flex-col">
                                 {NavigationLinks.map(({id, link, text}) => (

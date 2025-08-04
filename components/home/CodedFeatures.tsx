@@ -1,6 +1,6 @@
 'use client';
 
-import {Code2} from "lucide-react";
+import {Code2} from "@/components/ui/svgs/Icons";
 import {useGSAP} from "@gsap/react"
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";

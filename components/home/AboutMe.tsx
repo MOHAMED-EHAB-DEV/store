@@ -14,7 +14,7 @@ import {
     Sparkles,
     Rocket,
     Target
-} from 'lucide-react';
+} from '@/components/ui/svgs/Icons';
 
 const stats = [
     {label: "Templates Created", value: "10+", icon: Code},

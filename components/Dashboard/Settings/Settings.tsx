@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import {whatLoseWhenDeleteMyAccount} from "@/constants";
 import {toast} from "sonner";
-import {Eye, EyeOff, Lock, Mail, X} from "lucide-react";
+import {Eye, EyeOff, Lock, Mail, X} from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
 
 const Settings = ({userId}: {userId: string}) => {

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Check, Eye, EyeOff, Lock} from "lucide-react";
+import {Check, Eye, EyeOff, Lock} from "@/components/ui/svgs/Icons";
 import {passwordRequirements} from "@/constants";
 import {toast} from "sonner";
 

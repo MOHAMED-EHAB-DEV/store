@@ -9,7 +9,7 @@ import {
 import {
     Settings,
     LogOut,
-} from "lucide-react";
+} from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
 import revalidate from "@/actions/revalidateTag";
 

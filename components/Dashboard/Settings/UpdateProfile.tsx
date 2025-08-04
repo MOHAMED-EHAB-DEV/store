@@ -7,7 +7,7 @@ import {toast} from "sonner";
 import {isBase64Image} from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import {useRouter} from "next/navigation";
-import {User} from "lucide-react";
+import {User} from "@/components/ui/svgs/Icons";
 
 const UpdateProfile = ({user}: { user: IUser }) => {
     const [files, setFiles] = useState<File[]>([]);

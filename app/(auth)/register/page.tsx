@@ -1,7 +1,7 @@
 import Logo from "@/components/ui/Logo";
 import RegisterForm from "@/components/Forms/RegisterForm";
 import Link from "next/link";
-import {ArrowLeft} from "lucide-react";
+import {ArrowLeft} from "@/components/ui/svgs/Icons";
 
 const Page = () => {
     return (

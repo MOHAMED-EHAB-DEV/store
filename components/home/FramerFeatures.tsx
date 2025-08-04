@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useMemo } from "react";
 import { Badge } from "../ui/badge";
-import { Framer, Layers } from "lucide-react";
+import { Framer, Layers } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
 import { featuresBusinessSales } from "@/constants";
 import VerticalMarquee from "@/components/ui/marquee";

@@ -3,7 +3,7 @@
 import {gsap} from 'gsap';
 import {useGSAP} from '@gsap/react';
 // import {SplitText} from 'gsap/SplitText';
-import {Star, ArrowRight, Sparkles} from 'lucide-react';
+import {Star, ArrowRight, Sparkles} from '@/components/ui/svgs/Icons';
 import {Badge} from '@/components/ui/badge';
 
 // gsap.registerPlugin(SplitText);

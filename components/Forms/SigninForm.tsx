@@ -6,7 +6,7 @@ import {
     Lock,
     Eye,
     EyeOff,
-} from "lucide-react";
+} from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
 import revalidate from "@/actions/revalidateTag";
 

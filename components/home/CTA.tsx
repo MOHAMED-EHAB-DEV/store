@@ -3,7 +3,7 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/svgs/Icons";
 
 gsap.registerPlugin(ScrollTrigger);
 

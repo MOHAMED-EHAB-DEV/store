@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Star, ExternalLink, Code, Palette, Zap, Heart } from 'lucide-react';
+import { Star, ExternalLink, Code, Palette, Zap, Heart } from '@/components/ui/svgs/Icons';
 
 const templates = [
     {

@@ -1,5 +1,5 @@
 import React, {MouseEvent as ReactMouseEvent, useState} from 'react';
-import {X, ChevronUp, ChevronDown, LogOut} from "lucide-react";
+import {X, ChevronUp, ChevronDown, LogOut} from "@/components/ui/svgs/Icons";
 import Logo from "@/components/ui/Logo";
 import {DashboardSidebarLinks} from "@/constants";
 import {useRouter, usePathname} from "next/navigation";

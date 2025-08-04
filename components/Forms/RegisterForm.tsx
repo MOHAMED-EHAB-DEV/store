@@ -8,7 +8,7 @@ import {
     EyeOff,
     User,
     Check,
-} from "lucide-react";
+} from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {passwordRequirements} from "@/constants"

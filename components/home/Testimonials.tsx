@@ -3,7 +3,7 @@
 import {useEffect, useRef} from "react";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
-import { Star } from "lucide-react";
+import { Star } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);

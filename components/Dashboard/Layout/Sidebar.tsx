@@ -50,7 +50,7 @@ const Sidebar = ({open, setOpen, title, user}: {
                 </button>
 
                 <div className="flex items-center gap-4">
-                    <Logo/>
+                    <Logo onClick={() => router.push("/")}/>
                     <h1 className="text-white font-bold text-2xl">{title}</h1>
                 </div>
 

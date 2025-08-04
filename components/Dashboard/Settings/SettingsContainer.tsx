@@ -3,6 +3,8 @@
 import {useState} from 'react'
 import Profile from "@/components/Dashboard/Settings/Profile";
 import {capitalizeFirstChar} from "@/lib/utils";
+import ChangePassword from "@/components/Dashboard/Settings/ChangePassword";
+import Settings from "@/components/Dashboard/Settings/Settings";
 
 const Cases = ["profile", "change-password", "settings",];
 
@@ -12,9 +14,9 @@ const SettingsContainer = ({user}:{user:IUser}) => {
     const renderSection = () => {
         switch (selectedSection) {
             case "settings":
-                return <p>Settings</p>;
+                return <Settings userId={user._id as string} />;
             case "change-password":
-                return <p>Change Password</p>;
+                return <ChangePassword user={user} />;
             case "profile":
                 return <Profile user={user}/>;
             default:

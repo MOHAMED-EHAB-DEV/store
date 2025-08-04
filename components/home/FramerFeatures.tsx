@@ -168,7 +168,6 @@ const FramerFeatures = () => {
                                 alt="publish"
                                 width={150}
                                 height={150}
-                                placeholder="blur"
                             />
                             <Image
                                 src="/assets/Icons/smCursor.avif"
@@ -176,7 +175,6 @@ const FramerFeatures = () => {
                                 width={25}
                                 height={25}
                                 className="absolute bottom-0 right-24"
-                                placeholder="blur"
                             />
                         </div>
                         <div className="flex flex-col gap-1">

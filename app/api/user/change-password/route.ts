@@ -4,7 +4,6 @@ import { connectToDatabase } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import { UserService } from "@/lib/services/UserService";
 
-// Types for better type safety
 interface PasswordUpdateRequest {
     email: string;
     password: string;
@@ -20,7 +19,6 @@ interface ApiResponse {
     };
 }
 
-// Validation helper
 function validatePasswordUpdateRequest(body: any): body is PasswordUpdateRequest {
     return (
         body &&
@@ -57,13 +55,12 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     const startTime = Date.now();
     
     try {
-        // Parse and validate request body
         const body = await req.json();
         
         if (!validatePasswordUpdateRequest(body)) {
             return NextResponse.json({
                 success: false,
-                message: "Invalid request. Email, current password, and new password (min 8 chars) are required."
+                message: "Invalid request. current password, and new password (min 8 chars) are required."
             }, { status: 400 });
         }
 
@@ -77,10 +74,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             }, { status: 429 });
         }
 
-        // Establish database connection
         await connectToDatabase();
-
-        // Authenticate current session
         const sessionUser = await authenticateUser();
 
         if (!sessionUser) {
@@ -96,7 +90,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             { 
                 select: '_id email password name',
                 includePassword: true, // This will bypass cache for security
-                lean: true 
+                lean: true,
             }
         );
 
@@ -116,7 +110,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         }
 
         // Verify current password (use await for proper error handling)
-        const isValidPassword = await bcrypt.compare(password, dbUser.password as string);
+        const isValidPassword = await bcrypt.compare(password, dbUser.password! as string);
         
         if (!isValidPassword) {
             return NextResponse.json({
@@ -126,7 +120,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         }
 
         // Additional security: prevent setting same password
-        const isSamePassword = await bcrypt.compare(newPassword, dbUser.password as string);
+        const isSamePassword = await bcrypt.compare(newPassword, dbUser.password! as string);
         if (isSamePassword) {
             return NextResponse.json({
                 success: false,
@@ -135,7 +129,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         }
 
         // Hash new password with optimal salt rounds for performance
-        const saltRounds = 12; // Good balance of security and performance
+        const saltRounds = 12;
         const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
         // Update password using UserService
@@ -150,8 +144,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             }
         );
 
-        // UserService.updateUser already clears the cache, so no need to call clearUserCache again
-
         const duration = Date.now() - startTime;
 
         return NextResponse.json({
@@ -159,7 +151,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             message: "Password updated successfully.",
             data: {
                 user: updatedUser,
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
             },
             performance: {
                 duration

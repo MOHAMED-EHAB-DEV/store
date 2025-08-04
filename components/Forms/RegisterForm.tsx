@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import {passwordRequirements} from "@/constants"
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -59,25 +60,6 @@ const RegisterForm = () => {
         // Redirect to Main Page
         router.push('/');
     };
-
-    const passwordRequirements = [
-        {
-            text: "At least 8 characters",
-            met: formData.password.length >= 8,
-        },
-        {
-            text: "Contains uppercase letter",
-            met: /[A-Z]/.test(formData.password),
-        },
-        {
-            text: "Contains lowercase letter",
-            met: /[a-z]/.test(formData.password),
-        },
-        {
-            text: "Contains number",
-            met: /\d/.test(formData.password),
-        },
-    ];
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -148,7 +130,7 @@ const RegisterForm = () => {
                 {/* Password requirements */}
                 {formData.password && (
                     <div className="mt-3 space-y-2">
-                        {passwordRequirements.map((req, index) => (
+                        {passwordRequirements(formData.password).map((req, index) => (
                             <div
                                 key={index}
                                 className={`flex items-center text-sm ${

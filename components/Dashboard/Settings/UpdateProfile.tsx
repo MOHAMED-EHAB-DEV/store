@@ -3,10 +3,11 @@
 import {useState, useRef, ChangeEvent} from "react";
 import Image from "next/image";
 import {useUploadThing} from "@/hooks/useUploadthing";
-import {toast} from "sonner"
+import {toast} from "sonner";
 import {isBase64Image} from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import {useRouter} from "next/navigation";
+import {User} from "lucide-react";
 
 const UpdateProfile = ({user}: { user: IUser }) => {
     const [files, setFiles] = useState<File[]>([]);
@@ -110,7 +111,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                     avatar: image,
                 })
             }).then((res) => res.json());
-            toast("Update Successful");
+            toast("Profile updated successfully!");
             router.refresh();
 
             return response;
@@ -122,8 +123,9 @@ const UpdateProfile = ({user}: { user: IUser }) => {
     };
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-8 border border-white/10 rounded-md">
+            <h1 className="text-white font-bold text-3xl">Update Profile</h1>
             <div className="flex flex-col justify-center gap-2">
-                <label htmlFor="image" className="text-white font-semibold text-lg">Profile Picture</label>
+                <label htmlFor="image" className="text-gray-300 font-medium text-sm">Profile Picture</label>
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 flex items-center justify-center">
                         <Image
@@ -131,7 +133,6 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                             alt={user?.name}
                             width={32}
                             height={32}
-                            placeholder="blur"
                             className="w-full h-full object-contain rounded-full"
                         />
                     </div>
@@ -149,11 +150,14 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                 </div>
             </div>
             <div className="flex flex-col gap-2 justify-center">
-                <label className="text-white font-semibold text-lg" htmlFor="name">Name</label>
-                <input type="text" className="bg-glass rounded-sm px-4 py-2" name="name" placeholder="Enter your name" value={name} onChange={(e: ChangeEvent) => setName(e.target.value! as string)}/>
+                <label className="text-gray-300 font-medium text-sm" htmlFor="name">Name</label>
+                <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20"/>
+                    <input type="text" className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm" name="name" placeholder="Enter your name" value={name} onChange={(e: ChangeEvent) => setName(e.target.value! as string)}/>
+                </div>
             </div>
 
-            <button className={`self-end btn btn-primary ${isLoading && "disabled:pointer-events-none opacity-50"}`} type="submit">
+            <button disabled={isLoading} className={`self-end btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed`} type="submit">
                 {isLoading ? "Updating Profile": "Update Profile"}
             </button>
         </form>

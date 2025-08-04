@@ -62,8 +62,9 @@ export default function VerticalMarquee(
                         <Image
                             src={iconPath}
                             alt=""
-                            placeholder='blur'
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
+                            width={28}
+                            height={28}
                         />
                         <span
                             className="whitespace-nowrap w-full bg-primary px-3 py-2 rounded-full font-medium text-sm">

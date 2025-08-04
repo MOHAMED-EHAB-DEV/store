@@ -86,16 +86,15 @@ const Code = ({className}: Props) => (
     </svg>
 )
 const Palette = ({className}: Props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
-        <circle cx="13.5" cy="6.5" r=".5"/>
-        <circle cx="17.5" cy="10.5" r=".5"/>
-        <circle cx="8.5" cy="7.5" r=".5"/>
-        <circle cx="6.5" cy="12.5" r=".5"/>
         <path
-            d="M12 2a10 10 0 1 0 10 10c0-4-2.8-6-4.8-6-1.6 0-2.2 1.4-3.1 2.7-.9 1.3-1.9 2.3-4.1 2.3-2 0-4-1.5-4-4 0-2 1.5-4 4-4z"/>
+            d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/>
+        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+        <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
     </svg>
 )
 const Zap = ({className}: Props) => (
@@ -175,27 +174,24 @@ const Heart = ({className}: Props) => (
     </svg>
 )
 const Sparkles = ({className}: Props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
-        <path d="M5 3v4"/>
-        <path d="M3 5h4"/>
-        <path d="M19 14v4"/>
-        <path d="M17 16h4"/>
-        <path d="M11 21v-4"/>
-        <path d="M9 19h4"/>
-        <path d="m14 5-4 8-4-8 4-2z"/>
+        <path
+            d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>
+        <path d="M20 2v4"/>
+        <path d="M22 4h-4"/>
+        <circle cx="4" cy="20" r="2"/>
     </svg>
 )
 const Rocket = ({className}: Props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
-        <path d="M6 15a6 6 0 0 0 9 0L21 3l-12 6a6 6 0 0 0-3 6Z"/>
-        <path d="M9 9l3 3"/>
-        <path d="M8 15h1v1H8v-1z"/>
+        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
     </svg>
 )
 const Target = ({className}: Props) => (
@@ -208,7 +204,7 @@ const Target = ({className}: Props) => (
         <circle cx="12" cy="12" r="2"/>
     </svg>
 )
-export const Blocks = ({ className }: Props) => (
+export const Blocks = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"

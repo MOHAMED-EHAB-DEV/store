@@ -45,7 +45,7 @@ const AboutMe = () => {
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col gap-4 items-center justify-center">
             <div className="text-center mb-16">
-                <Badge className="mb-4 bg-gradient-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
+                <Badge className="mb-4 hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] bg-gradient-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
                     <Sparkles className="w-4 h-4 mr-2"/>
                     About the Creator
                 </Badge>

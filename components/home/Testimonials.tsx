@@ -75,6 +75,7 @@ export default function Testimonials() {
                                         alt="Testimonials"
                                         width={48}
                                         height={48}
+                                        placeholder="blur"
                                     />
                                 </div>
                                 <div>

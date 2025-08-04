@@ -1,6 +1,7 @@
 'use client';
 
 import {motion, useAnimationControls} from 'framer-motion';
+import Image from 'next/image';
 import {useEffect, useMemo} from 'react';
 
 interface VerticalMarqueeProps {
@@ -58,9 +59,10 @@ export default function VerticalMarquee(
             >
                 {marqueeItems.map(({iconPath, text}, i) => (
                     <span key={i} className="flex items-center w-full shrink-0">
-                        <img
+                        <Image
                             src={iconPath}
                             alt=""
+                            placeholder='blur'
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
                         />
                         <span

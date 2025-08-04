@@ -131,6 +131,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                             alt={user?.name}
                             width={32}
                             height={32}
+                            placeholder="blur"
                             className="w-full h-full object-contain rounded-full"
                         />
                     </div>
@@ -149,7 +150,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
             </div>
             <div className="flex flex-col gap-2 justify-center">
                 <label className="text-white font-semibold text-lg" htmlFor="name">Name</label>
-                <input type="text" className="bg-glass rounded-sm px-4 py-2" name="name" placeholder="Enter your name" value={name} onChange={(e: ChangeEvent) => setName(e.target.value as string)}/>
+                <input type="text" className="bg-glass rounded-sm px-4 py-2" name="name" placeholder="Enter your name" value={name} onChange={(e: ChangeEvent) => setName(e.target.value! as string)}/>
             </div>
 
             <button className={`self-end btn btn-primary ${isLoading && "disabled:pointer-events-none opacity-50"}`} type="submit">

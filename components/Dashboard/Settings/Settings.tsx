@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, memo} from "react";
 import {
     Dialog,
     DialogContent,
@@ -7,9 +7,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import {passwordRequirements, whatLoseWhenDeleteMyAccount} from "@/constants";
+import {whatLoseWhenDeleteMyAccount} from "@/constants";
 import {toast} from "sonner";
-import {Check, Eye, EyeOff, Lock, Mail, X} from "lucide-react";
+import {Eye, EyeOff, Lock, Mail, X} from "lucide-react";
 import {useRouter} from "next/navigation";
 
 const Settings = ({userId}: {userId: string}) => {
@@ -165,4 +165,4 @@ const Settings = ({userId}: {userId: string}) => {
         </div>
     )
 }
-export default Settings
+export default Settings;

@@ -1,21 +1,13 @@
 import Hero from "@/components/home/Hero";
 import {HeroItems} from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
-import dynamic from "next/dynamic";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
-// import AboutMe from "@/components/home/AboutMe";
-// import FramerFeatures from "@/components/home/FramerFeatures";
-// import CodedFeatures from "@/components/home/CodedFeatures";
-// import FigmaFeatures from "@/components/home/FigmaFeatures";
-// import Testimonials from "@/components/home/Testimonials";
-// import Cta from "@/components/home/CTA";
-
-const FramerFeatures = dynamic(() => import("@/components/home/FramerFeatures"));
-const CodedFeatures = dynamic(() => import("@/components/home/CodedFeatures"));
-const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
-const Testimonials = dynamic(() => import("@/components/home/Testimonials"));
-const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
-const Cta = dynamic(() => import("@/components/home/CTA"));
+import AboutMe from "@/components/home/AboutMe";
+import FramerFeatures from "@/components/home/FramerFeatures";
+import CodedFeatures from "@/components/home/CodedFeatures";
+import FigmaFeatures from "@/components/home/FigmaFeatures";
+import Testimonials from "@/components/home/Testimonials";
+import Cta from "@/components/home/CTA";
 
 export default async function Home() {
     return (

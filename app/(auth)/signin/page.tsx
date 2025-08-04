@@ -1,7 +1,7 @@
 import Logo from "@/components/ui/Logo";
 import SigninForm from "@/components/Forms/SigninForm";
 import Link from "next/link";
-import {ArrowLeft} from "lucide-react";
+import {ArrowLeft} from "@/components/ui/svgs/Icons";
 
 const Page = () => {
     return (

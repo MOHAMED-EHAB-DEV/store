@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
         optimizePackageImports: ["gsap", "motion"],
         inlineCss: true,
         optimizeCss: true,
+        cssChunking: true,
     },
     typescript: {
         ignoreBuildErrors: true
@@ -19,6 +20,11 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+    compiler: {
+        reactRemoveProperties: { properties: ['^data-test', '^data-vitest'] },
+        removeConsole: { exclude: ['error'] },
+    },
+    crossOrigin: 'anonymous',
 };
 
 export default nextConfig;

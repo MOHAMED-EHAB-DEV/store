@@ -87,7 +87,7 @@ interface HorizontialMarqueeProps {
     direction?: 'left' | 'right';
 }
 
-export function HorizontialMarquee(
+export default function HorizontialMarquee(
     {
         items,
         speed = 20,

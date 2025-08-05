@@ -1,11 +1,14 @@
 'use client';
 
-import {useEffect} from "react";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {HorizontialMarquee} from "@/components/ui/marquee";
+import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const HorizontialMarquee = dynamic(() => import("../ui/marquee"), {
+    ssr: false,
+});
 
 const testimonials = [
     {
@@ -32,7 +35,6 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-
     return (
         <section className="testimonials-section relative z-10 p-6">
             <div className="max-w-7xl mx-auto">
@@ -41,42 +43,6 @@ export default function Testimonials() {
                         Loved by <span className="text-gradient">Creators Worldwide</span>
                     </h2>
                 </div>
-
-                {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-8">*/}
-                {/*    {testimonials.map((testimonial, index) => (*/}
-                {/*        <div*/}
-                {/*            key={testimonial.name}*/}
-                {/*            className="testimonial-card glass p-6 rounded-2xl transition-all duration-500"*/}
-                {/*        >*/}
-                {/*            <div className="flex items-center mb-4">*/}
-                {/*                <div*/}
-                {/*                    className="w-12 h-12 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold mr-4"*/}
-                {/*                >*/}
-                {/*                    <Image*/}
-                {/*                        src={testimonial.avatar}*/}
-                {/*                        alt="Testimonials"*/}
-                {/*                        width={48}*/}
-                {/*                        height={48}*/}
-                {/*                    />*/}
-                {/*                </div>*/}
-                {/*                <div>*/}
-                {/*                    <div className="font-semibold text-white">*/}
-                {/*                        {testimonial.name}*/}
-                {/*                    </div>*/}
-                {/*                    <div className="text-gray-400 text-sm">*/}
-                {/*                        {testimonial.role}*/}
-                {/*                    </div>*/}
-                {/*                </div>*/}
-                {/*                <div className="ml-auto flex text-gold">*/}
-                {/*                    {[...Array(5)].map((_, i) => (*/}
-                {/*                        <Star key={i} className="w-4 h-4 fill-current"/>*/}
-                {/*                    ))}*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*            <p className="text-gray-300">{testimonial.text}</p>*/}
-                {/*        </div>*/}
-                {/*    ))}*/}
-                {/*</div>*/}
 
                 <div className="w-full grid grid-rows-3 gap-2">
                     <HorizontialMarquee items={testimonials} />

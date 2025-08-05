@@ -35,13 +35,12 @@ const ProfileDropdown = ({userImage, username, userEmail}: {
     }
     return (
         <DropdownMenu open={open} onOpenChange={isOpen}>
-            <DropdownMenuTrigger className="items-center w-10 outline-none justify-center flex cursor-pointer">
+            <DropdownMenuTrigger className="items-center relative w-10 outline-none justify-center flex cursor-pointer">
                 <Image
                     src={userImage === "" ? "/assets/Icons/profile.svg" : userImage as string}
                     alt={`${username} Profile`}
-                    width={30}
-                    height={30}
-                    className="p-[1px] rounded-full transition-all duration-500 w-full h-full border hover:border-white"
+                    layout="fill"
+                    className="p-[1px] rounded-full w-full h-full"
                 />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="flex flex-col items-center justify-center bg-dark border-dark">

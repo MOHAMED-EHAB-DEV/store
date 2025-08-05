@@ -258,7 +258,7 @@ CategorySchema.pre('validate', async function(next) {
     next();
 });
 
-// Prevent deletion if category has templates
+// Prevent deletion if category has template
 CategorySchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {
         const Template = mongoose.model('Template');

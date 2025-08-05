@@ -1,3 +1,5 @@
+import {ObjectId} from "mongoose";
+
 declare type IUser = {
     _id: string;
     name: string;
@@ -14,13 +16,15 @@ declare type ITemplate = {
     title: string;
     description: string;
     thumbnail: string;
+    demoLink: string;
     price: number;
     content: string;
     categories: string[];
     tags: string[];
-    author: string;
+    author: ObjectId;
     downloads: number;
     averageRating: number;
+    isActive: boolean;
 }
 
 declare type IOrder = {

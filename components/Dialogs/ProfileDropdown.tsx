@@ -35,7 +35,7 @@ const ProfileDropdown = ({userImage, username, userEmail}: {
     }
     return (
         <DropdownMenu open={open} onOpenChange={isOpen}>
-            <DropdownMenuTrigger className="items-center relative w-10 outline-none justify-center flex cursor-pointer">
+            <DropdownMenuTrigger className="items-center relative w-10 h-10 outline-none justify-center flex cursor-pointer">
                 <Image
                     src={userImage === "" ? "/assets/Icons/profile.svg" : userImage as string}
                     alt={`${username} Profile`}

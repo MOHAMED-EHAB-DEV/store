@@ -5,6 +5,7 @@ export interface ITemplate extends Document {
     title: string;
     description: string;
     thumbnail: string;
+    demoLink: string;
     price: number;
     content: string;
     categories: string[];
@@ -59,7 +60,7 @@ const TemplateSchema = new Schema<ITemplate>({
         type: Number, 
         default: 0,
         min: 0,
-        index: true // For popular templates
+        index: true // For popular template
     },
     averageRating: { 
         type: Number, 
@@ -71,7 +72,11 @@ const TemplateSchema = new Schema<ITemplate>({
     isActive: {
         type: Boolean,
         default: true,
-        index: true // For filtering active templates
+        index: true // For filtering active template
+    },
+    demoLink: {
+        type: String,
+        required: true,
     }
 }, { 
     timestamps: true,
@@ -82,13 +87,13 @@ const TemplateSchema = new Schema<ITemplate>({
 });
 
 // Compound indexes for common query patterns
-TemplateSchema.index({ isActive: 1, price: 1, averageRating: -1 }); // Active paid templates by rating
-TemplateSchema.index({ isActive: 1, downloads: -1, createdAt: -1 }); // Popular templates
-TemplateSchema.index({ author: 1, isActive: 1, createdAt: -1 }); // Author's templates
-TemplateSchema.index({ categories: 1, isActive: 1, averageRating: -1 }); // Category templates by rating
+TemplateSchema.index({ isActive: 1, price: 1, averageRating: -1 }); // Active paid template by rating
+TemplateSchema.index({ isActive: 1, downloads: -1, createdAt: -1 }); // Popular template
+TemplateSchema.index({ author: 1, isActive: 1, createdAt: -1 }); // Author's template
+TemplateSchema.index({ categories: 1, isActive: 1, averageRating: -1 }); // Category template by rating
 TemplateSchema.index({ tags: 1, isActive: 1 }); // Tag-based search
 TemplateSchema.index({ price: 1, isActive: 1 }); // Price filtering
-TemplateSchema.index({ createdAt: -1, isActive: 1 }); // Recent templates
+TemplateSchema.index({ createdAt: -1, isActive: 1 }); // Recent template
 
 // Text search index for title and description
 TemplateSchema.index({ 

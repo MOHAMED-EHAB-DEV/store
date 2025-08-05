@@ -68,7 +68,7 @@ OrderSchema.statics.findUserOrders = function(userId: string, limit = 20, skip =
         user: userId,
         paymentStatus: { $in: ['completed', 'pending'] }
     })
-        .select('templates totalAmount paymentStatus paymentMethod currency createdAt')
+        .select('template totalAmount paymentStatus paymentMethod currency createdAt')
         .populate('templates', 'title thumbnail price')
         .sort({ createdAt: -1 })
         .limit(limit)
@@ -142,10 +142,10 @@ OrderSchema.statics.getRevenueStats = function(startDate?: Date, endDate?: Date)
 OrderSchema.statics.getTemplatePopularityStats = function(limit = 20) {
     return this.aggregate([
         { $match: { paymentStatus: 'completed' } },
-        { $unwind: '$templates' },
+        { $unwind: '$template' },
         {
             $group: {
-                _id: '$templates',
+                _id: '$template',
                 purchaseCount: { $sum: 1 },
                 totalRevenue: { $sum: '$totalAmount' }
             }
@@ -190,7 +190,7 @@ OrderSchema.post('save', async function() {
     if (this.paymentStatus === 'completed' && this.isModified('paymentStatus')) {
         try {
             const Template = mongoose.model('Template');
-            // Increment download count for all templates in the order
+            // Increment download count for all template in the order
             await Template.updateMany(
                 { _id: { $in: this.templates } },
                 { $inc: { downloads: 1 } }

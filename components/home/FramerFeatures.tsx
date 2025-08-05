@@ -5,7 +5,7 @@ import { Badge } from "../ui/badge";
 import { Framer, Layers } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
 import { featuresBusinessSales } from "@/constants";
-import VerticalMarquee from "@/components/ui/marquee";
+import {VerticalMarquee} from "@/components/ui/marquee";
 
 const FramerFeatures = () => {
     const scrollableRef = useRef(null);

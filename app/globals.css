@@ -355,3 +355,29 @@
         @apply bg-black border-white;
     }
 }
+
+@keyframes left-infinite-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-left-infinite-scroll {
+    animation: left-infinite-scroll 200s linear infinite;
+}
+
+@keyframes right-infinite-scroll {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.animate-right-infinite-scroll {
+    animation: right-infinite-scroll 200s linear infinite;
+}

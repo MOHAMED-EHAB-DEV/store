@@ -79,7 +79,8 @@ const Hero = () => {
                                     <span className="relative">
                                         Elevate
                                         <div
-                                            className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-xl rounded-lg"/>
+                                            aria-hidden="true"
+                                            className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-xl rounded-lg"/>
                                     </span>{' '}
                                     Your Projects
                                 </span>

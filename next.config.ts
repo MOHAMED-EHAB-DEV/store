@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
         optimizePackageImports: ["gsap", "motion"],
         inlineCss: true,
         optimizeCss: true,
+        esmExternals: true,
     },
     typescript: {
         ignoreBuildErrors: true
@@ -18,6 +19,7 @@ const nextConfig: NextConfig = {
                 pathname: "/**",
             },
         ],
+        formats: ['image/avif', 'image/webp']
     },
 };
 

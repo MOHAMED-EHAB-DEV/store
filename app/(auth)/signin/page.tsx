@@ -8,7 +8,7 @@ const Page = () => {
         <div className="min-h-screen h-full min-w-screen flex flex-col gap-4 items-center justify-center">
             <Link
                 href="/"
-                className="inline-flex items-center -translate-x-25 text-gray-400 hover:text-white mb-8 transition-colors group"
+                className="inline-flex items-center left-1/2 text-gray-400 hover:text-white mb-8 transition-colors group"
             >
                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                 Back to Home

@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, useEffect, Suspense} from 'react';
+import {useState, Suspense} from 'react';
 import {Menu, X} from '@/components/ui/svgs/Icons';
 import {motion} from "motion/react";
 import {useRouter} from "next/navigation";
@@ -8,15 +8,10 @@ import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
 import {NavigationLinks} from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
-import UILoader from "@/components/ui/UILoader";
+import Loader from "@/components/ui/Loader";
 
 const Navbar = ({user}: { user: IUser | undefined }) => {
-    const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     return (
         <div
@@ -30,7 +25,7 @@ const Navbar = ({user}: { user: IUser | undefined }) => {
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
                 </nav>
-                <MobileDrawer/>
+                <MobileDrawer user={user}/>
                 {!user ? <div className="hidden sm:flex flex-1 gap-2 items-center justify-end">
                     <Link
                         className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
@@ -49,7 +44,7 @@ const Navbar = ({user}: { user: IUser | undefined }) => {
                         Get Started
                     </Link>
                 </div> : (
-                    <Suspense fallback={<UILoader/>}>
+                    <Suspense fallback={<Loader/>}>
                         <div className="flex md:flex-1 items-center justify-end">
                             <ProfileDropdown username={user.name} userImage={user.avatar as String}
                                              userEmail={user.email} userRole={user?.role as String}/>
@@ -79,7 +74,7 @@ const NavbarItem = ({text, link}: { text: string, link: string }) => {
     );
 };
 
-const MobileDrawer = () => {
+const MobileDrawer = ({user}: { user: IUser | undefined }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -130,20 +125,24 @@ const MobileDrawer = () => {
                                         </Link>
                                     </li>
                                 ))}
-                                <Link
-                                    className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white text-center font-semibold text-lg shadow-lg"
-                                    aria-label="Signin button"
-                                    href="/signin"
-                                >
-                                    Signin
-                                </Link>
-                                <Link
-                                    className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                                    aria-label="Signup button"
-                                    href="/register"
-                                >
-                                    Get Started
-                                </Link>
+                                {!user && (
+                                    <>
+                                        <Link
+                                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white text-center font-semibold text-lg shadow-lg"
+                                            aria-label="Signin button"
+                                            href="/signin"
+                                        >
+                                            Signin
+                                        </Link>
+                                        <Link
+                                            className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                                            aria-label="Signup button"
+                                            href="/register"
+                                        >
+                                            Get Started
+                                        </Link>
+                                    </>
+                                )}
                             </ul>
                         </div>
                     </motion.div>

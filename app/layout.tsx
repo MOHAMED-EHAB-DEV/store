@@ -11,7 +11,7 @@ import {cn} from "@/lib/utils";
 
 gsap.registerPlugin(useGSAP);
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 export const viewport = {
     width: 'device-width',

@@ -98,7 +98,7 @@ export function HorizontialMarquee(
     const animationClasses = direction === "left" ? "animate-left-infinite-scroll" : "animate-right-infinite-scroll";
     return (
         <div
-            className={cn("w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_64px,_black_calc(100%-64px),transparent_100%)] md:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]", className)}>
+            className={cn("w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_32px,_black_calc(100%-32px),transparent_100%)] md:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]", className)}>
             <div className={cn(animationClasses, `flex items-center gap-4 justify-center md:justify-start`)}>
                 {[...items, ...items, ...items, ...items, ...items, ...items, ...items, ...items].map((testimonial, i) => (
                     <div

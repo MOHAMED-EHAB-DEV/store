@@ -1,7 +1,7 @@
 import React, {MouseEvent as ReactMouseEvent, useState} from 'react';
 import {X, ChevronUp, ChevronDown, LogOut} from "@/components/ui/svgs/Icons";
 import Logo from "@/components/ui/Logo";
-import {AdminSidebarLinks} from "@/constants";
+import {DashboardSidebarLinks} from "@/constants";
 import {useRouter, usePathname} from "next/navigation";
 import Image from "next/image";
 import {
@@ -55,8 +55,11 @@ const Sidebar = ({open, setOpen, title, user}: {
                 </div>
 
                 <div className="flex flex-col gap-1 md:mt-14 mt-10">
-                    {AdminSidebarLinks.map(({Icon, text, link}, idx) => (
-                        <div key={idx} onClick={() => router.push(link)}
+                    {DashboardSidebarLinks.map(({Icon, text, link}, idx) => (
+                        <div key={idx} onClick={() => {
+                            setIsOpen(false);
+                            router.push(link);
+                        }}
                              className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path === link ? "bg-white/10" : "hover:bg-white/10"}`}>
                             <Icon className="w-5 h-5 text-white"/>
                             <span className={`text-white text-sm ${path === link && "font-bold"}`}>{text}</span>

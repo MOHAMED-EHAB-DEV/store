@@ -130,18 +130,20 @@ const MobileDrawer = () => {
                                         </Link>
                                     </li>
                                 ))}
-                                <button
+                                <Link
                                     className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                                     aria-label="Signin button"
+                                    href="/signin"
                                 >
                                     Signin
-                                </button>
-                                <button
+                                </Link>
+                                <Link
                                     className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                                     aria-label="Signup button"
+                                    href="/register"
                                 >
                                     Get Started
-                                </button>
+                                </Link>
                             </ul>
                         </div>
                     </motion.div>

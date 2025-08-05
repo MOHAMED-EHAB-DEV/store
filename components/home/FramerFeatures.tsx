@@ -67,7 +67,7 @@ const FramerFeatures = () => {
                                     }}
                                 >
                                     <span className="opacity-60 z-10 text-white font-medium">
-                                        5000$+
+                                        4999$+
                                     </span>
                                     <div
                                         className={`${

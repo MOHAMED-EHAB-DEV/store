@@ -103,7 +103,7 @@ export function HorizontialMarquee(
                 {[...items, ...items, ...items, ...items, ...items, ...items, ...items, ...items].map((testimonial, i) => (
                     <div
                         key={i}
-                        className="testimonial-card flex flex-col justify-center items-center gap-5 w-80 h-64 glass p-6 rounded-2xl transition-all duration-500"
+                        className="testimonial-card flex flex-col justify-center items-center gap-5 w-80 h-58 glass p-6 rounded-2xl transition-all duration-500"
                     >
                         <div className="flex gap-4 justify-center items-center">
                             <div className="flex gap-2 justify-center items-center">

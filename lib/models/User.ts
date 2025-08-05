@@ -23,7 +23,7 @@ const UserSchema = new Schema<IUser>({
         index: true // Primary lookup field
     },
     password: { type: String, required: true, select: false }, // Don't include in queries by default
-    avatar: { type: String, default: "" },
+    avatar: { type: String, default: "user", enum: ["user", "admin"] },
     role: { 
         type: String, 
         enum: ["user", "admin"], 

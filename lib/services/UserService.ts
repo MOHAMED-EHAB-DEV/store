@@ -2,7 +2,6 @@ import User from "@/lib/models/User";
 import { connectToDatabase, measureQuery } from "@/lib/database";
 import { Types } from "mongoose";
 
-// Types
 interface CachedUser {
   _id: string;
   name: string;

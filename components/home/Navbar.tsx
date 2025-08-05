@@ -50,7 +50,7 @@ const Navbar = ({user}: { user: IUser | undefined }) => {
                     <Suspense fallback={<UILoader/>}>
                         <div className="flex md:flex-1 items-center justify-end">
                             <ProfileDropdown username={user.name} userImage={user.avatar as String}
-                                             userEmail={user.email}/>
+                                             userEmail={user.email} userRole={user?.role as String}/>
                         </div>
                     </Suspense>
                 )}

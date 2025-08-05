@@ -8,7 +8,8 @@ import {
     Smartphone,
     Code2,
     LayoutDashboard,
-    Settings
+    Settings,
+    Templates,
 } from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
@@ -275,6 +276,19 @@ const DashboardSidebarLinks = [
     }
 ];
 
+const AdminSidebarLinks = [
+    {
+        Icon: LayoutDashboard,
+        text: "Dashboard",
+        link: "/admin/dashboard",
+    },
+    {
+        Icon: Templates,
+        text: "Templates",
+        link: "/admin/templates",
+    }
+];
+
 const passwordRequirements = (password: string) => [
     {
         text: "At least 8 characters",
@@ -311,4 +325,5 @@ export {
     DashboardSidebarLinks,
     passwordRequirements,
     whatLoseWhenDeleteMyAccount,
+    AdminSidebarLinks,
 }

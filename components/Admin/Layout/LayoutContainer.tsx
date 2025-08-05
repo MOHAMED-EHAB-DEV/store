@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import {ArrowLeftToLine} from "@/components/ui/svgs/Icons";
-import Sidebar from "@/components/Dashboard/Layout/Sidebar";
+import Sidebar from "@/components/Admin/Layout/Sidebar";
 import {usePathname} from "next/navigation";
 import {capitalizeFirstChar} from "@/lib/utils";
 

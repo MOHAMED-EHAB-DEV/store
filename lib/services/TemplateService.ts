@@ -233,6 +233,14 @@ class TemplateServiceClass {
     }
 
     /**
+     * Get All Templates or specific Templates by query and sort it by pagination
+     */
+    async getTemplates(query= {}, limit=10, skip=0) {
+        await connectToDatabase();
+        return Template.find(query).limit(10).skip(skip).lean();
+    }
+
+    /**
      * Get template stats
      */
     async getStats() {

@@ -126,7 +126,7 @@ CategorySchema.statics.findCategoryBySlug = function(slug: string) {
 CategorySchema.statics.findMainCategories = function() {
     return this.find({ 
         isActive: true, 
-        parentCategory: null 
+        parentCategory: null
     })
         .select('name slug description templateCount sortOrder')
         .sort({ sortOrder: 1, name: 1 })

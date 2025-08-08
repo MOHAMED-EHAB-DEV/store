@@ -8,7 +8,7 @@ import {capitalizeFirstChar} from "@/lib/utils";
 
 const LayoutContainer = ({children, user}: Readonly<{children: React.ReactNode, user: IUser}>) => {
     const [open, setOpen] = useState(false);
-    const title = capitalizeFirstChar(usePathname().split("/")[1]);
+    const title = capitalizeFirstChar(usePathname().split("/")[1].split("-")[1]);
 
     return (
         <div className="lg:w-[calc(100%-18rem)] w-full ms-auto">

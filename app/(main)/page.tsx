@@ -8,6 +8,7 @@ import CodedFeatures from "@/components/home/CodedFeatures";
 import FigmaFeatures from "@/components/home/FigmaFeatures";
 import Testimonials from "@/components/home/Testimonials";
 import Cta from "@/components/home/CTA";
+import revalidate from "@/actions/revalidateTag";
 
 export default async function Home() {
     return (

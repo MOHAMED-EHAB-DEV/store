@@ -61,7 +61,7 @@ const CodedFeatures = () => {
         });
     })
     return (
-        <section className="code-section relative z-10 px-6 py-32 ">
+        <section className="code-section relative z-10 px-6 py-32">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="code-title text-5xl md:text-6xl font-bold text-white mb-8 font-paras">
@@ -101,7 +101,8 @@ const CodedFeatures = () => {
                 </div>
 
                 <div
-                    className="code-preview bg-white/10 border border-white/20 backdrop-blur-lg p-8 rounded-3xl max-w-4xl mx-auto">
+                    className="code-preview bg-white/10 border relative border-white/20 backdrop-blur-lg p-8 rounded-3xl max-w-4xl mx-auto"
+                >
                     <div className="bg-gray-900 rounded-2xl p-6 font-mono text-sm">
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex space-x-2">

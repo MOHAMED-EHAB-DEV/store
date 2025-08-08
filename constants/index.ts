@@ -10,6 +10,8 @@ import {
     LayoutDashboard,
     Settings,
     Templates,
+    Instagram,
+    Linkedin,
 } from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
@@ -253,12 +255,12 @@ const figmaFeatures = [
 const socialImgs = [
     {
         name: "insta",
-        imgPath: "/assets/Icons/insta.png",
+        Icon: Instagram,
         link: "https://www.instagram.com/__m4_e__/"
     },
     {
         name: "linkedin",
-        imgPath: "/assets/Icons/linkedin.png",
+        Icon: Linkedin,
         link: "https://www.linkedin.com/in/1-mohammed"
     },
 ];
@@ -266,8 +268,8 @@ const socialImgs = [
 const DashboardSidebarLinks = [
     {
         Icon: LayoutDashboard,
-        text: "Dashboard",
-        link: "/dashboard",
+        text: "Purchased Templates",
+        link: "/purchased-templates",
     },
     {
         Icon: Settings,

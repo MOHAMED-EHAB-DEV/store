@@ -1,4 +1,4 @@
-import Templates from "@/components/Admin/Templates";
+import Templates from "@/components/Dashboard/Templates";
 import {TemplateService} from "@/lib/services/TemplateService";
 import {CategoryService} from "@/lib/services/CategoryService";
 import {serializeCategory, serializeTemplate} from "@/lib/utils";
@@ -11,10 +11,10 @@ const Page = async () => {
     const categories = rawCategories.map(serializeCategory);
     return (
         <div className="grid grid-rows-[auto_1fr] h-full w-full p-8 gap-10">
-            <h1 className="text-white font-bold text-3xl">Templates</h1>
+            <h1 className="text-white font-bold text-3xl">Purchased Templates</h1>
 
             <Templates templates={templates} categories={categories} />
         </div>
     )
-};
+}
 export default Page;

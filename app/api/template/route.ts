@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { TemplateService } from '@/lib/services/TemplateService';
 import { authenticateUser } from "@/middleware/auth";
 import { UserService } from "@/lib/services/UserService";
-import { slugify } from '@/lib/utils/slugify';
-import { markdownToHtml } from '@/lib/utils/markdownToHtml';
 
 export async function POST(req: NextRequest) {
     try {
@@ -20,14 +18,8 @@ export async function POST(req: NextRequest) {
         if (dtUser.role !== "admin")
             return NextResponse.json({ success: false, message: "Invalid access, User isn't admin" }, { status: 401 });
 
-        // ✨ Add slug and HTML content
-        const slug = slugify(body.title || "template");
-        const contentHtml = markdownToHtml(body.markdown || "");
-
         const created = await TemplateService.createTemplate({
             ...body,
-            slug,
-            contentHtml,
         });
 
         return NextResponse.json({ success: true, data: created }, { status: 200 });

@@ -1,5 +1,6 @@
 import React from 'react'
 import {cn} from "@/lib/utils";
+// import Image from "next/image";
 
 const Logo = ({ onClick, className="" } : { onClick?: () => void, className?: string, }) => {
     return (
@@ -12,6 +13,13 @@ const Logo = ({ onClick, className="" } : { onClick?: () => void, className?: st
                 <div className="w-3 h-3 bg-white" />
                 <div className="w-3 h-3 bg-white" />
             </div>
+            {/*<Image*/}
+            {/*    src="/assets/Icons/Logo.svg"*/}
+            {/*    alt="Logo"*/}
+            {/*    layout="fill"*/}
+            {/*    className="w-full h-full object-cover"*/}
+            {/*    priority*/}
+            {/*/>*/}
         </div>
     )
 }

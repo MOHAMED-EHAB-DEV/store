@@ -41,7 +41,7 @@ export const metadata: Metadata = {
         siteName: "Mohammed Ehab Templates",
         images: [
             {
-                url: "/assets/images/Logo.png",
+                url: "/assets/Icons/Logo.svg",
                 width: 1200,
                 height: 630,
                 alt: "Mohammed Ehab Premium Templates",
@@ -54,10 +54,10 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Mohammed Ehab - Premium Templates Store",
         description: "Premium, responsive web templates for modern businesses and creators",
-        images: ["/assets/images/Logo.png"],
+        images: ["/assets/Icons/Logo.svg"],
         creator: "@__M__O__H__",
     },
-    icons: "/assets/images/Logo.png",
+    icons: "/assets/Icons/Logo.svg",
     verification: {
         google: process.env.google_verification_code!,
     },

@@ -254,12 +254,12 @@ const figmaFeatures = [
 
 const socialImgs = [
     {
-        name: "insta",
+        name: "Instagram",
         Icon: Instagram,
         link: "https://www.instagram.com/__m4_e__/"
     },
     {
-        name: "linkedin",
+        name: "Linkedin",
         Icon: Linkedin,
         link: "https://www.linkedin.com/in/1-mohammed"
     },

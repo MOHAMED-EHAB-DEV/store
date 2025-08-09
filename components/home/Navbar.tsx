@@ -9,9 +9,11 @@ import {NavigationLinks} from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import Loader from "@/components/ui/Loader";
+import {useUser} from "@/Context/UserContext";
 
-const Navbar = ({user}: { user: IUser | undefined }) => {
+const Navbar = () => {
     const router = useRouter();
+    const {user} = useUser();
 
     return (
         <div
@@ -25,12 +27,11 @@ const Navbar = ({user}: { user: IUser | undefined }) => {
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
                 </nav>
-                <MobileDrawer user={user}/>
+                <MobileDrawer user={user?.user}/>
                 {!user ? <div className="hidden sm:flex flex-1 gap-2 items-center justify-end">
                     <Link
                         className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                         aria-label="Signin button"
-                        // onClick={() => router.push("/signin")}
                         href="/signin"
                     >
                         Signin
@@ -38,7 +39,6 @@ const Navbar = ({user}: { user: IUser | undefined }) => {
                     <Link
                         className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
                         aria-label="Signup button"
-                        // onClick={() => router.push("/register")}
                         href="/register"
                     >
                         Get Started
@@ -46,8 +46,8 @@ const Navbar = ({user}: { user: IUser | undefined }) => {
                 </div> : (
                     <Suspense fallback={<Loader/>}>
                         <div className="flex md:flex-1 items-center justify-end">
-                            <ProfileDropdown username={user.name} userImage={user.avatar as String}
-                                             userEmail={user.email} userRole={user?.role as String}/>
+                            <ProfileDropdown username={user?.name} userImage={user?.avatar as String}
+                                             userEmail={user?.email} userRole={user?.role as String}/>
                         </div>
                     </Suspense>
                 )}

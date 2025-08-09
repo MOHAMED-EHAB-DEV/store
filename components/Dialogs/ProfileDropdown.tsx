@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
 import revalidate from "@/actions/revalidateTag";
+import {toast} from "sonner";
 
 const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
     userImage: String,
@@ -30,7 +31,12 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
             const response = await fetch("/api/user/logout");
 
             const data = await response.json();
-            if (data?.success) await revalidate("/");
+            if (!data.success)
+                throw new Error(data.message);
+            toast("Successfully LoggedOut");
+            setTimeout(() => {
+                window.location.href = `/`;
+            }, 100);
         } catch (err) {
             console.log(err);
         }

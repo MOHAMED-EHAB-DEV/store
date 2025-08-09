@@ -5,9 +5,10 @@ import {useGSAP} from "@gsap/react";
 import {Roboto} from "@/lib/fonts";
 import {Analytics} from "@vercel/analytics/next";
 import {SpeedInsights} from "@vercel/speed-insights/next";
-import { Toaster } from "@/components/ui/sonner";
+import {Toaster} from "@/components/ui/sonner";
 import Head from 'next/head';
 import {cn} from "@/lib/utils";
+import Providers from "./Providers";
 
 gsap.registerPlugin(useGSAP);
 
@@ -73,58 +74,60 @@ export default function RootLayout(
         children: React.ReactNode;
     }>) {
     return (
-        <html lang="en" className="scroll-smooth">
-        <Head>
-            <link rel="preload" as="image" href="/assets/Icons/cursor.avif" type="image/avif" />
-            <link rel="preload" as="image" href="/assets/Icons/publish.webp" type="image/webp" />
-        </Head>
-        <body
-            className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className)}
-        >
-        <Toaster />
-        <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-black px-4 py-2 rounded-md z-50 transition-all duration-200"
-        >
-            Skip to main content
-        </a>
+        <Providers>
+            <html lang="en" className="scroll-smooth">
+            <Head>
+                <link rel="preload" as="image" href="/assets/Icons/cursor.avif" type="image/avif"/>
+                <link rel="preload" as="image" href="/assets/Icons/publish.webp" type="image/webp"/>
+            </Head>
+            <body
+                className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className)}
+            >
+            <Toaster/>
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-black px-4 py-2 rounded-md z-50 transition-all duration-200"
+            >
+                Skip to main content
+            </a>
 
-        <div className="min-h-screen w-full relative overflow-x-hidden">
-            {/* Enhanced background with multiple gradients */}
-            <div className="fixed inset-0 -z-10">
-                {/* Primary background */}
-                <div className="absolute inset-0 bg-primary"/>
+            <div className="min-h-screen w-full relative overflow-x-hidden">
+                {/* Enhanced background with multiple gradients */}
+                <div className="fixed inset-0 -z-10">
+                    {/* Primary background */}
+                    <div className="absolute inset-0 bg-primary"/>
 
-                {/* Gradient overlays */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary via-dark to-primary opacity-90"/>
+                    {/* Gradient overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-dark to-primary opacity-90"/>
 
-                {/* Animated gradient orbs */}
-                <div
-                    className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-transparent rounded-full blur-3xl animate-float"/>
-                <div
-                    className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-bl from-blue-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl animate-float"
-                    style={{animationDelay: '2s'}}/>
-                <div
-                    className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-green-500/15 via-teal-500/10 to-transparent rounded-full blur-3xl animate-float"
-                    style={{animationDelay: '4s'}}/>
+                    {/* Animated gradient orbs */}
+                    <div
+                        className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-transparent rounded-full blur-3xl animate-float"/>
+                    <div
+                        className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-bl from-blue-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl animate-float"
+                        style={{animationDelay: '2s'}}/>
+                    <div
+                        className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-green-500/15 via-teal-500/10 to-transparent rounded-full blur-3xl animate-float"
+                        style={{animationDelay: '4s'}}/>
 
-                {/* Subtle radial gradient pattern */}
-                <div
-                    className="absolute inset-0 opacity-30"
-                    style={{
-                        backgroundImage: `radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                    {/* Subtle radial gradient pattern */}
+                    <div
+                        className="absolute inset-0 opacity-30"
+                        style={{
+                            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
                                             radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
                                             radial-gradient(circle at 50% 50%, rgba(119, 255, 198, 0.05) 0%, transparent 50%)`
-                    }}
-                />
+                        }}
+                    />
+                </div>
+
+                {children}
             </div>
 
-            {children}
-        </div>
-
-        <Analytics/>
-        <SpeedInsights/>
-        </body>
-        </html>
+            <Analytics/>
+            <SpeedInsights/>
+            </body>
+            </html>
+        </Providers>
     );
 }

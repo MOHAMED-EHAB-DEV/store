@@ -10,17 +10,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import revalidate from "@/actions/revalidateTag";
 import {Home} from "@/components/ui/svgs/Icons";
+import {useUser} from "@/Context/UserContext";
+import {toast} from "sonner";
 
-const Sidebar = ({open, setOpen, title, user}: {
+const Sidebar = ({open, setOpen, title}: {
     open: Boolean,
-    user: IUser,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    title: String
+    title: String,
 }) => {
     const router = useRouter();
     const path = usePathname();
+    const {user} = useUser();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +32,12 @@ const Sidebar = ({open, setOpen, title, user}: {
             const response = await fetch("/api/user/logout");
 
             const data = await response.json();
-            if (data?.success) await revalidate("/");
+            if (!data.success)
+                throw new Error(data.message);
+            toast("Successfully LoggedOut");
+            setTimeout(() => {
+                window.location.href = `/`;
+            }, 100);
         } catch (err) {
             console.log(err);
         }

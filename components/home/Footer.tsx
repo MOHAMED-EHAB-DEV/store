@@ -13,8 +13,7 @@ const Footer = () => {
                     </div>
                     <div className="flex gap-2 w-fit flex-row items-center justify-center">
                         {socialImgs.map((socialImg, index) => (
-                            <a key={index} target="_blank" href={socialImg.link} className="icon">
-                                {/*<Image src={socialImg.imgPath} alt="social icon" width={25} height={25} />*/}
+                            <a key={index} target="_blank" href={socialImg.link} className="icon" aria-label={socialImg.name}>
                                 <socialImg.Icon />
                             </a>
                         ))}

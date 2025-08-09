@@ -23,7 +23,7 @@ const NavigationLinks = [
     {
         id: 1,
         text: "Templates",
-        link: "/template",
+        link: "/templates",
     },
     {
         id: 2,

@@ -20,9 +20,9 @@ const Page = () => {
                 </div>
 
                 <SigninForm />
-
-                <div>Don't have an account? <Link href="/register" className="text-gradient-purple">Register Here</Link></div>
             </div>
+
+            <div className="mt-4">Don't have an account? <Link href="/register" className="text-gradient-purple">Register Here</Link></div>
         </div>
     )
 }

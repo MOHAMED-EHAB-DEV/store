@@ -74,16 +74,14 @@ const Hero = () => {
                         id="hero-title"
                         className="font-bold tracking-tight text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white relative"
                     >
-                                <span className="relative">
                                     Premium Templates to{' '}
                                     <span className="relative">
                                         Elevate
                                         <div
                                             aria-hidden="true"
-                                            className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-xl rounded-lg"/>
+                                            className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
                                     </span>{' '}
                                     Your Projects
-                                </span>
                     </h1>
 
                     <p

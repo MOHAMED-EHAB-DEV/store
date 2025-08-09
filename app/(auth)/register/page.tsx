@@ -25,9 +25,9 @@ const Page = () => {
                     </div>
     
                     <RegisterForm />
+                    <div>Have an account? <Link href="/signin" className="text-gradient-purple">Signin Here</Link></div>
                 </div>
     
-                <div className="mt-4">Have an account? <Link href="/signin" className="text-gradient-purple">Signin Here</Link></div>
             </div>
         </>
     )

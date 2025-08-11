@@ -15,6 +15,8 @@ import {
     Rocket,
     Target
 } from '@/components/ui/svgs/Icons';
+import CountUp from '../ui/CountUp';
+import Link from 'next/link';
 
 const stats = [
     {label: "Templates Created", value: "10+", icon: Code},
@@ -45,7 +47,7 @@ const AboutMe = () => {
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col gap-4 items-center justify-center">
             <div className="text-center mb-16">
-                <Badge className="mb-4 hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] bg-gradient-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
+                <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-gradient-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
                     <Sparkles className="w-4 h-4 mr-2"/>
                     About the Creator
                 </Badge>
@@ -119,14 +121,19 @@ const AboutMe = () => {
                                 Ready to elevate your project with premium templates?
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3">
-                                <button
-                                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300">
+                                <Link
+                                    href="/templates"
+                                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
+                                >
                                     Browse Templates
-                                </button>
-                                <button
-                                    className="flex-1 border border-white/20 text-white py-3 px-6 rounded-xl hover:bg-white/10 transition-colors duration-200">
-                                    Get in Touch
-                                </button>
+                                </Link>
+                                <Link
+                                    href="https://mohammedehab.vercel.app/"
+                                    target="_blank"
+                                    className="flex-1 border border-white/20 text-white py-3 px-6 rounded-xl hover:bg-white/10 transition-colors duration-200"
+                                >
+                                    Portfolio
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -145,7 +152,15 @@ const AboutMe = () => {
                                         className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     <div className="relative z-10 text-center">
                                         <Icon className="w-8 h-8 text-cyan-400 mx-auto mb-3"/>
-                                        <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                                        {/* <div className="text-3xl font-bold text-white mb-1">{stat.value}</div> */}
+                                        <div className="text-3xl flex justify-center items-center gap-[0.5px] font-bold text-white mb-1">
+                                            <CountUp 
+                                                from={0}
+                                                to={parseInt(stat.value.replace(/\D/g, '').replace("K", "000"))}
+                                                direction='up'
+                                                duration={2}
+                                            />{stat.value.includes("%") && "%"}{stat.value.includes("K") && "K"}{stat.value.includes("+") && "+"}
+                                        </div>
                                         <div className="text-gray-300 text-sm">{stat.label}</div>
                                     </div>
                                 </div>
@@ -166,7 +181,12 @@ const AboutMe = () => {
                                     <div key={index} className="group">
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-white font-medium">{skill.name}</span>
-                                            <span className="text-gray-300 text-sm">{skill.level}%</span>
+                                            <span className="text-gray-300 text-sm"><CountUp 
+                                                from={0}
+                                                to={skill.level}
+                                                direction='up'
+                                                duration={2}
+                                            />%</span>
                                         </div>
                                         <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
                                             <div

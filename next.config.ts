@@ -2,7 +2,7 @@ import type {NextConfig} from "next";
 
 const nextConfig: NextConfig = {
     experimental: {
-        optimizePackageImports: ["gsap", "motion"],
+        optimizePackageImports: ["gsap", "motion", "ogl"],
         inlineCss: true,
         optimizeCss: true,
         esmExternals: true,

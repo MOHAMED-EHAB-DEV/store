@@ -1,4 +1,5 @@
 import mongoose, {Document, Model, Schema, ObjectId} from "mongoose";
+import "./Category";
 
 export interface ITemplate extends Document {
     _id: string;
@@ -119,7 +120,7 @@ TemplateSchema.virtual('reviewCount', {
 // Static methods for optimized queries
 TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0) {
     return this.find({ isActive: true })
-        .select('title description thumbnail price downloads averageRating author categories')
+        .select('title description thumbnail demoLink price downloads averageRating author tags categories')
         .populate('author', 'name avatar')
         .populate('categories', 'name slug')
         .sort({ downloads: -1, averageRating: -1 })

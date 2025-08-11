@@ -12,6 +12,9 @@ import {
     Templates,
     Instagram,
     Linkedin,
+    Zap,
+    Code,
+    ExternalLink,
 } from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
@@ -316,6 +319,9 @@ const whatLoseWhenDeleteMyAccount = [
     "You’ll lose access to your saved template and account-related features."
 ];
 
+const Gradients = ["from-blue-500 via-purple-500 to-pink-500", "from-green-500 via-teal-500 to-blue-500", "from-orange-500 via-red-500 to-pink-500", "from-purple-500 via-indigo-500 to-blue-500"]
+const Icons = [Zap, ExternalLink, Palette, Code];
+
 export {
     NavigationLinks,
     HeroItems,
@@ -328,4 +334,6 @@ export {
     passwordRequirements,
     whatLoseWhenDeleteMyAccount,
     AdminSidebarLinks,
+    Gradients,
+    Icons,
 }

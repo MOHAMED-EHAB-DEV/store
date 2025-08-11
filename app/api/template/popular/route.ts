@@ -7,5 +7,5 @@ export async function GET(req: NextRequest) {
     const skip = parseInt(searchParams.get('skip') || '0');
 
     const templates = await TemplateService.getPopularTemplates(limit, skip);
-    return NextResponse.json(templates);
+    return NextResponse.json({success: true, data: templates}, {status: 200});
 }

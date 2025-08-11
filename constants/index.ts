@@ -322,6 +322,27 @@ const whatLoseWhenDeleteMyAccount = [
 const Gradients = ["from-blue-500 via-purple-500 to-pink-500", "from-green-500 via-teal-500 to-blue-500", "from-orange-500 via-red-500 to-pink-500", "from-purple-500 via-indigo-500 to-blue-500"]
 const Icons = [Zap, ExternalLink, Palette, Code];
 
+const testimonials = [
+    {
+        avatar: "/assets/images/client1.png",
+        name: "Sarah Johnson",
+        rating: 4,
+        text: "This service transformed our workflow and saved us countless hours!",
+    },
+    {
+        avatar: "/assets/images/client2.png",
+        name: "Mike Anderson",
+        rating: 5,
+        text: "The UI and experience were smooth and intuitive. Highly recommend!",
+    },
+    {
+        avatar: "/assets/images/client3.png",
+        name: "Emily Carter",
+        rating: 4,
+        text: "A seamless experience with great support. Worth every penny!",
+    },
+];
+
 export {
     NavigationLinks,
     HeroItems,
@@ -336,4 +357,5 @@ export {
     AdminSidebarLinks,
     Gradients,
     Icons,
+    testimonials,
 }

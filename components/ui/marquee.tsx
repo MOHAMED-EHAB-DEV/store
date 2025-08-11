@@ -2,7 +2,7 @@
 
 import {motion, useAnimationControls} from 'framer-motion';
 import Image from 'next/image';
-import {useEffect, useMemo, useRef} from 'react';
+import {useEffect, useMemo} from 'react';
 import {Star} from "@/components/ui/svgs/Icons";
 import {cn} from "@/lib/utils";
 

@@ -28,8 +28,9 @@ const WhyUs = () => {
                     alt="Cursor Icon"
                     width={350}
                     height={350}
-		        loading="lazy"
+		            loading="lazy"
                     className="w-1/2 md:w-full"
+                    quality="80"
                 />
             </div>
         </div>

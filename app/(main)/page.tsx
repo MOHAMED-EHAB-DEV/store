@@ -7,39 +7,12 @@ import FramerFeatures from "@/components/home/FramerFeatures";
 import CodedFeatures from "@/components/home/CodedFeatures";
 import FigmaFeatures from "@/components/home/FigmaFeatures";
 import Testimonials from "@/components/home/Testimonials";
-import {Gradients} from "@/constants";
 import Cta from "@/components/home/CTA";
 
-async function getTemplates() {
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}api/template/popular?limit=4`, {
-            method: "GET",
-            next: {revalidate: 24 * 60 * 60}, // Revalidates in 24 hours
-        });
-        const data = await response.json();
-
-        if (data?.success) {
-            return data?.data.map((template, idx) => {
-                return {
-                    // TODO: Add Logic to get the reviews of a specific template from Reviews using templateId
-                    ...template,
-                    reviews: 0,
-                    gradient: Gradients[idx],
-                };
-            });
-        } else {
-            return [];
-        }
-    } catch (err) {
-        console.log(`error getting templates: ${err}`)
-        return [];
-    }
-}
-
 export default async function Home() {
-    const templates = await getTemplates();
     return (
-        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5" role="main">
+        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5"
+              role="main">
             <div className="w-full flex flex-col items-center justify-center relative overflow-hidden">
                 <Hero/>
                 <section
@@ -86,7 +59,7 @@ export default async function Home() {
                 </div>
             </div>
 
-            <FeaturedTemplates templates={templates} />
+            <FeaturedTemplates/>
             <WhyUs/>
             <FramerFeatures/>
             <CodedFeatures/>

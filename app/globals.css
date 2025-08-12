@@ -42,6 +42,10 @@
             scroll-behavior: auto !important;
         }
     }
+
+    html, body {
+        overflow-x: hidden;
+    }
 }
 
 @layer components {

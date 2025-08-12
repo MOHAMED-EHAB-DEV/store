@@ -1,5 +1,5 @@
 import Hero from "@/components/home/Hero";
-import { HeroItems } from "@/constants";
+import {HeroItems} from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import AboutMe from "@/components/home/AboutMe";
@@ -7,14 +7,14 @@ import FramerFeatures from "@/components/home/FramerFeatures";
 import CodedFeatures from "@/components/home/CodedFeatures";
 import FigmaFeatures from "@/components/home/FigmaFeatures";
 import Testimonials from "@/components/home/Testimonials";
-import { Gradients } from "@/constants";
+import {Gradients} from "@/constants";
 import Cta from "@/components/home/CTA";
 
 async function getTemplates() {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}api/template/popular?limit=4`, {
             method: "GET",
-            next: { revalidate: 24 * 60 * 60 }, // Revalidates in 24 hours
+            next: {revalidate: 24 * 60 * 60}, // Revalidates in 24 hours
         });
         const data = await response.json();
 
@@ -39,14 +39,14 @@ async function getTemplates() {
 export default async function Home() {
     const templates = await getTemplates();
     return (
-        <main className="flex flex-col items-center justify-center gap-24" role="main">
-            <div className="w-full flex flex-col items-center justify-center relative">
-                <Hero />
+        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5" role="main">
+            <div className="w-full flex flex-col items-center justify-center relative overflow-hidden">
+                <Hero/>
                 <section
                     className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full "
                     aria-label="Key features overview"
                 >
-                    {HeroItems.map(({ id, title, desc }) => (
+                    {HeroItems.map(({id, title, desc}) => (
                         <article
                             key={id}
                             className="flex w-full md:w-1/4 h-full flex-col gap-1 items-center justify-center text-center"
@@ -64,32 +64,36 @@ export default async function Home() {
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     {/* Main gradient orb */}
                     <div
-                        className="gradient-orb-1 absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-500/30 via-pink-500/20 to-cyan-500/10 rounded-full blur-3xl" />
+                        className="gradient-orb-1 absolute -top-32 -right-32 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96bg-gradient-to-br from-purple-500/30 via-pink-500/20 to-cyan-500/10rounded-full blur-3xl"
+                    />
 
                     {/* Secondary gradient orb */}
                     <div
-                        className="gradient-orb-2 absolute -bottom-32 -left-32 w-80 h-80 bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl" />
+                        className="gradient-orb-2 absolute -bottom-32 -left-32 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl"
+                    />
 
                     {/* Floating particles */}
                     <div
-                        className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-float opacity-60" />
+                        className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-float opacity-60"/>
                     <div
                         className="absolute top-3/4 right-1/4 w-1 h-1 bg-pink-400 rounded-full animate-float opacity-40"
-                        style={{ animationDelay: '1s' }} />
+                        style={{animationDelay: '1s'}}
+                    />
                     <div
                         className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-float opacity-50"
-                        style={{ animationDelay: '2s' }} />
+                        style={{animationDelay: '2s'}}
+                    />
                 </div>
             </div>
 
             <FeaturedTemplates templates={templates} />
-            <WhyUs />
-            <FramerFeatures />
-            <CodedFeatures />
-            <FigmaFeatures />
-            <Testimonials />
-            <AboutMe />
-            <Cta />
+            <WhyUs/>
+            <FramerFeatures/>
+            <CodedFeatures/>
+            <FigmaFeatures/>
+            <Testimonials/>
+            <AboutMe/>
+            <Cta/>
         </main>
     );
 }

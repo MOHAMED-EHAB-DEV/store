@@ -286,4 +286,6 @@ export const Roboto = localFont({
         },
     ],
     variable: '--roboto',
+    display: "swap",
+    preload: true,
 });

@@ -22,7 +22,7 @@ const Template = ({template, idx}: { template: ITemplate, idx: number }) => {
             className={`absolute inset-0 bg-gradient-to-br ${template.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
 
         {/* Featured Badge */}
-        {template.categories.some(({name}) => name?.toLowerCase() === "featured") && (
+        {template.categories.some(({name}:{name: string}) => name?.toLowerCase() === "featured") && (
             <div className="absolute top-4 left-4 z-10">
                 <Badge
                     className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black border-none">

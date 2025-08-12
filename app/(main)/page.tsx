@@ -11,9 +11,9 @@ import Cta from "@/components/home/CTA";
 
 export default async function Home() {
     return (
-        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5"
+        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5 md:px-0"
               role="main">
-            <div className="w-full flex flex-col items-center justify-center relative overflow-hidden">
+            <div className="w-full flex flex-col items-center justify-center relative">
                 <Hero/>
                 <section
                     className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full "

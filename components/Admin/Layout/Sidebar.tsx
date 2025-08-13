@@ -11,17 +11,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {Home} from "@/components/ui/svgs/Icons";
-import {useUser} from "@/Context/UserContext";
 import {toast} from "sonner";
 
-const Sidebar = ({open, setOpen, title}: {
+const Sidebar = ({open, setOpen, title, user}: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     title: String,
+    user: IUser,
 }) => {
     const router = useRouter();
     const path = usePathname();
-    const {user} = useUser();
 
     const [isOpen, setIsOpen] = useState(false);
 

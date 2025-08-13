@@ -72,8 +72,8 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        id="hero-title"
-                        className="font-bold tracking-tight text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white relative"
+                        // id="hero-title"
+                        className="font-bold text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white"
                     >
                                     Premium Templates to{' '}
                                     <span className="relative">
@@ -84,7 +84,6 @@ const Hero = () => {
                                     </span>{' '}
                                     Your Projects
                     </h1>
-
                     <p
                         className="text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
                         aria-describedby="hero-title"

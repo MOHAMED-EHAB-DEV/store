@@ -1,5 +1,5 @@
 import {ReactNode} from 'react';
-import {UserProvider} from "@/Context/UserContext";
+import {UserProvider} from "@/context/UserContext";
 
 const Providers = ({children}: {children: ReactNode}) => {
     return (

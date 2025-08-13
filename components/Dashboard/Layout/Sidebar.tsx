@@ -12,16 +12,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Home} from "@/components/ui/svgs/Icons";
 import {toast} from "sonner";
-import {useUser} from "@/Context/UserContext";
 
-const Sidebar = ({open, setOpen, title}: {
+const Sidebar = ({open, setOpen, title, user}: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     title: String,
+    user: IUser,
 }) => {
     const router = useRouter();
     const path = usePathname();
-    const {user} = useUser();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -34,7 +33,7 @@ const Sidebar = ({open, setOpen, title}: {
             const data = await response.json();
             if (!data.success)
                 throw new Error(data.message);
-            toast("Successfully LoggedOut");
+            toast("Successfully Logged out");
             setTimeout(() => {
                 window.location.href = `/`;
             }, 100);
@@ -92,7 +91,7 @@ const Sidebar = ({open, setOpen, title}: {
                         <div className="flex gap-1 items-center">
                             <h1 className="text-md font-semibold text-white">{user?.name}</h1>
                         </div>
-                        {isOpen ? <ChevronUp size={17}/> : <ChevronDown size={17}/>}
+                        {isOpen ? <ChevronUp/> : <ChevronDown/>}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-dark">
                         <DropdownMenuItem onClick={() => router.push("/")} className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">

@@ -9,7 +9,7 @@ import {NavigationLinks} from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import Loader from "@/components/ui/Loader";
-import {useUser} from "@/Context/UserContext";
+import {useUser} from "@/context/UserContext";
 
 const Navbar = () => {
     const router = useRouter();

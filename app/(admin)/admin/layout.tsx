@@ -1,14 +1,21 @@
 import React from "react";
 import LayoutContainer from "@/components/Admin/Layout/LayoutContainer";
+import {authenticateUser} from "@/middleware/auth";
+import {redirect} from "next/navigation";
 
-export default function RootLayout(
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout(
     {
         children,
     }: Readonly<{
         children: React.ReactNode;
     }>) {
+    const user = await authenticateUser();
+
+    if (!user) redirect("/");
     return (
-        <LayoutContainer>
+        <LayoutContainer user={user}>
             {children}
         </LayoutContainer>
     )

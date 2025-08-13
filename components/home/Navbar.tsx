@@ -17,7 +17,7 @@ const Navbar = () => {
 
     return (
         <div
-            className={`z-50 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-800 ease-in-out translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg`}
+            className={`z-50 overflow-x-hidden w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-800 ease-in-out translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8">
                 <Logo onClick={() => router.push("/")} className="flex-1"/>

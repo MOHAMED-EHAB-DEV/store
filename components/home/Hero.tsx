@@ -56,7 +56,7 @@ const Hero = () => {
             aria-labelledby="hero-title"
             role="banner"
         >
-            <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
+            <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10 overflow-x-hidden">
                 <Badge
                     variant="secondary"
                     className="hero-badge relative bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-white border border-yellow-500/50 rounded-full px-6 py-3 font-semibold overflow-hidden hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] transition-all duration-500 group"

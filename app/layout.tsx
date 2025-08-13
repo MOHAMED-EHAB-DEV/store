@@ -89,7 +89,7 @@ export default function RootLayout(
                 Skip to main content
             </a>
 
-            <div className="min-h-screen w-full relative overflow-x-hidden">
+            <div className="min-h-screen h-full w-full relative overflow-x-hidden">
                 {/* Enhanced background with multiple gradients */}
                 <div className="fixed inset-0 -z-10">
                     {/* Primary background */}

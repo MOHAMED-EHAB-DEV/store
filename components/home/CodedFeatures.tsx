@@ -15,7 +15,7 @@ const CodedFeatures = () => {
         ScrollTrigger.create({
             trigger: ".code-section",
             start: "top bottom",
-            end: "bottom 40%",
+            end: "bottom 50%",
             onEnter: () => {
                 const codeTl = gsap.timeline();
 

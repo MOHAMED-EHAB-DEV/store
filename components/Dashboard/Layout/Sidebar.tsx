@@ -65,7 +65,7 @@ const Sidebar = ({open, setOpen, title, user}: {
                             setIsOpen(false);
                             router.push(link);
                         }}
-                             className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path === link ? "bg-white/10" : "hover:bg-white/10"}`}>
+                             className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path.includes(link) ? "bg-white/10" : "hover:bg-white/10"}`}>
                             <Icon className="w-5 h-5 text-white"/>
                             <span className={`text-white text-sm ${path === link && "font-bold"}`}>{text}</span>
                         </div>

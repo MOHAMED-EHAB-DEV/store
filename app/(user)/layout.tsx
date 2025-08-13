@@ -5,14 +5,13 @@ import {redirect} from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-
-export default function RootLayout(
+export default async function RootLayout(
     {
         children,
     }: Readonly<{
         children: React.ReactNode;
     }>) {
-    const user = authenticateUser();
+    const user = await authenticateUser();
 
     if (!user) redirect("/");
     return (

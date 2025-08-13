@@ -55,6 +55,11 @@ const Hero = () => {
             className="relative flex items-center justify-center gap-3 min-h-screen overflow-x-hidden pt-36 sm:pt-46 md:pt-36 h-full w-full"
             aria-labelledby="hero-title"
             role="banner"
+            style={{
+                // Reserve space to prevent layout shifts without changing appearance
+                contain: 'layout',
+                willChange: 'auto'
+            }}
         >
             <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10 overflow-x-hidden">
                 <Badge
@@ -62,6 +67,11 @@ const Hero = () => {
                     className="hero-badge relative bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-white border border-yellow-500/50 rounded-full px-6 py-3 font-semibold overflow-hidden hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] transition-all duration-500 group"
                     role="status"
                     aria-label="Featured announcement"
+                    style={{
+                        // Prevent layout shift during font load without changing size
+                        fontDisplay: 'swap',
+                        contain: 'layout style'
+                    }}
                 >
                     <Star
                         className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300"/>
@@ -100,6 +110,11 @@ const Hero = () => {
                         className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
                         href="/templates"
+                        style={{
+                            contain: 'layout style',
+                            backfaceVisibility: 'hidden',
+                            fontDisplay: 'swap'
+                        }}
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             Browse Templates
@@ -123,7 +138,7 @@ const Hero = () => {
                     {/*</Link>*/}
                 </div>
 
-                <div className="flex items-center gap-6 mt-8 text-sm text-secondary/80">
+                <div className="flex items-center gap-6 mt-8 text-sm text-secondary/80" style={{ contain: 'layout' }}>
                     <div className="flex items-center gap-2">
                         <div className="flex -space-x-2">
                             {[...Array(4)].map((_, i) => (

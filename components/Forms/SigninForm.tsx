@@ -8,7 +8,7 @@ import {
     EyeOff,
 } from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
-import revalidate from "@/actions/revalidateTag";
+import {useUser} from "@/context/UserContext";
 
 const SigninForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +19,7 @@ const SigninForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const {setReload} = useUser();
 
     const router = useRouter();
 
@@ -45,8 +45,8 @@ const SigninForm = () => {
         const data = await response.json();
 
         if (data?.success) {
+            setReload(prev => !prev);
             router.push('/');
-            await revalidate("/");
         } else {
             setError(true);
             setErrorMessage("Invalid email or password");

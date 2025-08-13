@@ -1,8 +1,8 @@
 "use client";
-import {createContext, useContext, useState, useEffect, ReactNode, Context} from "react";
+import {createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction} from "react";
 import {useRouter} from "next/navigation";
 
-const UserContext: Context<{user: IUser}> = createContext({});
+const UserContext: Context<{user: IUser, setUser: Dispatch<SetStateAction<IUser | null>>, setReload: Dispatch<SetStateAction<boolean>>}> = createContext({});
 
 export function UserProvider({ children } : {children: ReactNode}) {
     const router = useRouter();

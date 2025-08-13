@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {passwordRequirements} from "@/constants"
-import revalidate from "@/actions/revalidateTag";
+import {passwordRequirements} from "@/constants";
+import {useUser} from "@/context/UserContext";
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +25,7 @@ const RegisterForm = () => {
     });
     const [loading, setLoading] = useState(false);
     const [agreed, setAgreed] = useState(false);
+    const {setReload} = useUser();
 
     const router = useRouter();
 
@@ -59,7 +60,7 @@ const RegisterForm = () => {
         // navigate("/verify-email", { state: { email: formData.email } });
 
         // Redirect to Main Page
-        await revalidate("/")
+        setReload(prev => !prev);
         router.push('/');
     };
 

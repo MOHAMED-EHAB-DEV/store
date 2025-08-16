@@ -7,6 +7,7 @@ import {Heart, Star, ExternalLink} from "@/components/ui/svgs/Icons";
 import {capitalizeFirstChar} from "@/lib/utils";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const Template = ({template, idx, showPrice=false, showActionButtons=false}: { template: ITemplate, idx: number, showPrice: Boolean, showActionButtons: Boolean}) => {
     const [hoveredTemplate, setHoveredTemplate] = useState<number | null>(null);
@@ -34,7 +35,7 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
         )}
 
         {/* Template Image Placeholder */}
-        {!template.thumbnail && (
+        {!template.thumbnail ? (
             <div
                 className="relative h-64 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
                 <div
@@ -46,14 +47,24 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
                 </div>
 
                 {/* Hover Overlay */}
-                {/*<div className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${*/}
-                {/*    hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'*/}
-                {/*}`}>*/}
-                {/*    <button className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2">*/}
-                {/*        <ExternalLink className="w-4 h-4" />*/}
-                {/*        Preview*/}
-                {/*    </button>*/}
-                {/*</div>*/}
+                <div className={`absolute inset-0 z-20 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${
+                    hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'
+                }`}>
+                    <Link href={template.demoLink} className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2">
+                        <ExternalLink className="w-4 h-4" />
+                        Preview
+                    </Link>
+                </div>
+            </div>
+        ) : (
+            <div className="w-full h-64 relative">
+                <Image
+                    src={template.thumbnail}
+                    alt={template.title}
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-contain"
+                />
             </div>
         )}
 

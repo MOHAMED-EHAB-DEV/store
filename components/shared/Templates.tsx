@@ -2,6 +2,7 @@
 
 import {useState, useEffect} from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
+import Template from "@/components/shared/Template";
 
 declare type selected = {
     selected: boolean,
@@ -28,6 +29,10 @@ const Templates = ({templates, categories}: { templates: ITemplate[], categories
         <div className="flex flex-col gap-5">
             <FilterOptions categories={selectedCategories} setCategories={setSelectedCategories} search={searchQuery}
                            setSearch={setSearchQuery} tags={selectedTags} setTags={setSelectedTags}/>
+
+            <div className="flex items-center justify-center flex-wrap gap-6">
+                {templates.map((template, idx) => <Template showActionButtons={true} showPrice={true} key={template._id} template={template} idx={idx} />)}
+            </div>
         </div>
     )
 }

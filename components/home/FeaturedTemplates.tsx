@@ -2,7 +2,6 @@ import {Badge} from '@/components/ui/badge';
 import Link from "next/link";
 import {Star} from '@/components/ui/svgs/Icons';
 import Template from "@/components/shared/Template";
-import {Gradients} from "@/constants";
 
 async function getTemplates() {
     try {
@@ -13,14 +12,7 @@ async function getTemplates() {
         const data = await response.json();
 
         if (data?.success) {
-            return data?.data?.map((template: ITemplate, idx: number) => {
-                return {
-                    // TODO: Add Logic to get the reviews of a specific template from Reviews using templateId
-                    ...template,
-                    reviews: 0,
-                    gradient: Gradients[idx],
-                };
-            });
+            return data?.data;
         } else {
             return [];
         }

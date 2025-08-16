@@ -69,7 +69,7 @@ const FilterOptions = ({
                         {isCategoriesOpen ? <ChevronUp /> : <ChevronDown />}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[250px] p-0">
+                <PopoverContent className="w-[250px] p-0 bg-dark">
                     <div className="p-2 flex items-center justify-between border-b border-border">
                         <Button
                             variant="ghost"
@@ -124,7 +124,7 @@ const FilterOptions = ({
                         {isTagsOpen ? <ChevronUp /> : <ChevronDown />}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[250px] p-0">
+                <PopoverContent className="w-[250px] p-0 bg-dark">
                     <div className="p-2 flex items-center justify-between border-b border-border">
                         <Button
                             variant="ghost"

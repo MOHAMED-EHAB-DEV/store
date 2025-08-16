@@ -16,6 +16,7 @@ export interface ITemplate extends Document {
     downloads: number;
     averageRating: number;
     isActive: boolean; // Add for soft delete
+    builtWith: "framer" | "figma" | "coded";
 }
 
 const TemplateSchema = new Schema<ITemplate>({
@@ -79,11 +80,17 @@ const TemplateSchema = new Schema<ITemplate>({
     demoLink: {
         type: String,
         required: true,
+    },
+    builtWith: {
+        type: String,
+        default: "coded",
+        enum: ["coded", "figma", "framer"],
+        required: true,
+        index: true,
     }
 }, { 
     timestamps: true,
     versionKey: false,
-    // Optimizations
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
@@ -121,7 +128,7 @@ TemplateSchema.virtual('reviewCount', {
 // Static methods for optimized queries
 TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0) {
     return this.find({ isActive: true })
-        .select('title description thumbnail demoLink price downloads averageRating author tags categories')
+        .select('title description thumbnail demoLink price downloads averageRating author tags builtWith categories')
         .populate('author', 'name avatar')
         .populate('categories', 'name slug')
         .sort({ downloads: -1, averageRating: -1 })
@@ -143,17 +150,16 @@ TemplateSchema.statics.findByCategory = function(categoryId: string, limit = 20,
         .lean();
 };
 
-TemplateSchema.statics.searchTemplates = function(searchTerm: string, limit = 20, skip = 0) {
-    return this.find({
-        $text: { $search: searchTerm },
-        isActive: true
-    }, {
-        score: { $meta: 'textScore' }
-    })
-        .select('title description thumbnail price downloads averageRating author categories')
-        .populate('author', 'name avatar')
-        .populate('categories', 'name slug')
-        .sort({ score: { $meta: 'textScore' }, averageRating: -1 })
+TemplateSchema.statics.searchTemplates = function (
+    query,
+    limit = 20,
+    skip = 0
+) {
+    return this.find(query, query.search ? { score: { $meta: "textScore" } } : {})
+        .select("title description thumbnail price downloads averageRating builtWith author categories")
+        .populate("author", "name avatar")
+        .populate("categories", "name slug")
+        .sort(search ? { score: { $meta: "textScore" }, averageRating: -1 } : { averageRating: -1 })
         .limit(limit)
         .skip(skip)
         .lean();
@@ -164,7 +170,7 @@ TemplateSchema.statics.findFreeTemplates = function(limit = 20, skip = 0) {
         price: 0, 
         isActive: true 
     })
-        .select('title description thumbnail downloads averageRating author categories')
+        .select('title description thumbnail downloads averageRating builtWith author categories')
         .populate('author', 'name avatar')
         .populate('categories', 'name slug')
         .sort({ downloads: -1, averageRating: -1 })

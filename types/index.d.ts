@@ -25,6 +25,7 @@ declare type ITemplate = {
     downloads: number;
     averageRating: number;
     isActive: boolean;
+    builtWith: "framer" | "figma" | "coded";
 }
 
 declare type IOrder = {

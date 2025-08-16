@@ -3,16 +3,17 @@
 import {useState} from 'react';
 import {Icons} from "@/constants";
 import {Badge} from "@/components/ui/badge";
-import {Heart, Star} from "@/components/ui/svgs/Icons";
+import {Heart, Star, ExternalLink} from "@/components/ui/svgs/Icons";
 import {capitalizeFirstChar} from "@/lib/utils";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 
-const Template = ({template, idx}: { template: ITemplate, idx: number }) => {
+const Template = ({template, idx, showPrice=false, showActionButtons=false}: { template: ITemplate, idx: number, showPrice: Boolean, showActionButtons: Boolean}) => {
     const [hoveredTemplate, setHoveredTemplate] = useState<number | null>(null);
     const router = useRouter();
     const Icon = Icons[idx];
     return <div
-        className="group relative overflow-hidden cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
+        className="group relative overflow-hidden w-[600px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
         onMouseEnter={() => setHoveredTemplate(template._id)}
         onMouseLeave={() => setHoveredTemplate(null)}
         onClick={() => router.push(`/templates/${template._id}`)}
@@ -22,7 +23,7 @@ const Template = ({template, idx}: { template: ITemplate, idx: number }) => {
             className={`absolute inset-0 bg-gradient-to-br ${template.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
 
         {/* Featured Badge */}
-        {template.categories.some(({name}:{name: string}) => name?.toLowerCase() === "featured") && (
+        {template.categories.some(({name}: { name: string }) => name?.toLowerCase() === "featured") && (
             <div className="absolute top-4 left-4 z-10">
                 <Badge
                     className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black border-none">
@@ -63,9 +64,11 @@ const Template = ({template, idx}: { template: ITemplate, idx: number }) => {
                     <h3 className="text-xl font-bold text-white mb-1">{template.title}</h3>
                     <p className="text-gray-300 text-sm">{template.description}</p>
                 </div>
-                {/*<div className="text-right">*/}
-                {/*    <div className="text-2xl font-bold text-white">${template.price}</div>*/}
-                {/*</div>*/}
+                {showPrice && (
+                    <div className="text-right">
+                        <div className="text-2xl font-bold text-white">{template.price === 0 ? `Free` : `$${template.price}`}</div>
+                    </div>
+                )}
             </div>
 
             {/* Rating */}
@@ -97,15 +100,20 @@ const Template = ({template, idx}: { template: ITemplate, idx: number }) => {
                 </div>
 
                 {/* Action Buttons */}
-                {/*<div className="flex gap-3">*/}
-                {/*    <button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300">*/}
-                {/*        Buy Now*/}
-                {/*    </button>*/}
-                {/*</div>*/}
-                {/*<Link href={template.demoLink} aria-label="Live Demo"*/}
-                {/*      className="px-4 py-3 border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">*/}
-                {/*    <ExternalLink className="w-5 h-5" />*/}
-                {/*</Link>*/}
+                {showActionButtons && (
+                    <div className="flex gap-3">
+                        <div className="flex gap-3">
+                            <button
+                                className="px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
+                                Buy Now
+                            </button>
+                        </div>
+                        <Link href={template.demoLink} aria-label="Live Demo" target="_blank"
+                              className="px-4 py-3 border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
+                            <ExternalLink className="w-5 h-5"/>
+                        </Link>
+                    </div>
+                )}
             </div>
         </div>
     </div>

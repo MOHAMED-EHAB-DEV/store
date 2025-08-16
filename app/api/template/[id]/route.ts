@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { TemplateService } from '@/lib/services/TemplateService';
+import Review from "@/lib/models/Review";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+    const {id} = await params;
     try {
-        const id = params.id;
-        const template = await TemplateService.findById(id);
-        return NextResponse.json({success: true, data: template,}, {status: 200});
+        const [template, totalReviews] = await Promise.all([
+            TemplateService.findById(
+                id,
+                {
+                    includeContent: true,
+                    lean: true,
+                    select: "_id title description thumbnail price averageRating downloads categories tags demoLink createdAt",
+                }
+            ),
+            Review.countDocuments({template: id})
+        ]);
+        return NextResponse.json({success: true, data: {...template, reviews: totalReviews},}, {status: 200});
     } catch (err) {
         console.log(`Error while getting the template: ${err}`);
         return NextResponse.json({message: err, success: false}, {status: 500})

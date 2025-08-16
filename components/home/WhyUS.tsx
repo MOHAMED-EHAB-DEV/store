@@ -24,12 +24,11 @@ const WhyUs = () => {
             </div>
             <div className="flex items-center justify-center w-full md:w-1/4">
                 <Image
-                    src="/assets/Icons/cursor.avif"
+                    src="/assets/Icons/cursor.webp"
                     alt="Cursor Icon"
                     width={330}
                     height={330}
                     className="w-1/2 md:w-full"
-                    quality="80"
                     placeholder="blur"
                     blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAfEAACAgIBBQAAAAAAAAAAAAABAgMEAAVBERIxQqH/xAAUAQEAAAAAAAAAAAAAAAAAAAAC/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECIRESMf/aAAwDAQACEQMRAD8Age8p11sT6/Y26wuwOyxzo/cCo9X6fD54PBDGMUns88Cqo//Z"
                 />

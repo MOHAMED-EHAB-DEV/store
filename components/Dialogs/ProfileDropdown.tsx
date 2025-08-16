@@ -72,7 +72,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
                     <LayoutDashboard className="text-gray-400 w-16 h-16"/>
                     <span className="text-white font-medium text-md">Dashboard</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/settings')} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                <DropdownMenuItem onClick={() => router.push('/dashboard/settings')} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
                     <Settings className="text-gray-400 w-16 h-16"/>
                     <span className="text-white font-medium text-md">Settings</span>
                 </DropdownMenuItem>

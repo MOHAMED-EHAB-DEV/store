@@ -15,15 +15,11 @@ export async function POST(req: Request) {
         const dtUser = await User.findOne({email: currentUser?.email});
         if (!dtUser) return NextResponse.json({error: "User not found", success: false,}, {status: 404});
 
-        // @ts-ignore
-        let newUser: IUser = {};
-
-        if (avatar) newUser.avatar = avatar;
-        if (name) newUser.name = name;
-
         const updatedUser = await User.findByIdAndUpdate(
-            dtUser?._id,
-            {$set: {...newUser}},
+            dtUser._id,
+            {
+                $set: {name, avatar},
+            },
             {runValidators: true, new: true}
         );
 
@@ -34,7 +30,6 @@ export async function POST(req: Request) {
             );
         }
 
-        // await revalidate("/");
         await revalidate("/settings");
 
         return NextResponse.json({
@@ -42,7 +37,11 @@ export async function POST(req: Request) {
             data: updatedUser,
             message: "User updated Successfully"
         }, {status: 200});
-    } catch (err) {
-        return NextResponse.json({success: false, message: err}, {status: 400});
+    } catch (err: any) {
+        console.log("Update user error:", err);
+        return NextResponse.json(
+            {success: false, message: err.message || "Something went wrong"},
+            {status: 400}
+        );
     }
 }

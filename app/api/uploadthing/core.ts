@@ -13,7 +13,7 @@ export const ourFileRouter = {
              * For full list of options and defaults, see the File Route API reference
              * @see https://docs.uploadthing.com/file-routes#route-config
              */
-            maxFileSize: "2MB",
+            maxFileSize: "4MB",
             maxFileCount: 1,
         },
     })
@@ -30,9 +30,9 @@ export const ourFileRouter = {
         })
         .onUploadComplete(async ({ metadata, file }) => {
             // This code RUNS ON YOUR SERVER after upload
-            console.log("Upload complete for userId:", metadata.userId);
-
-            console.log("file url", file.ufsUrl);
+            // console.log("Upload complete for userId:", metadata.userId);
+            //
+            // console.log("file url", file.ufsUrl);
 
             // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
             return { uploadedBy: metadata.userId };

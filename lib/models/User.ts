@@ -13,22 +13,22 @@ export interface IUser extends Document {
 }
 
 const UserSchema = new Schema<IUser>({
-    name: { type: String, required: true, index: true }, // Index for search
+    name: { type: String, required: true, index: true },
     email: { 
         type: String, 
         required: true, 
         unique: true,
-        lowercase: true, // Normalize email
+        lowercase: true,
         trim: true,
-        index: true // Primary lookup field
+        index: true
     },
-    password: { type: String, required: true, select: false }, // Don't include in queries by default
-    avatar: { type: String, default: "user", enum: ["user", "admin"] },
+    password: { type: String, required: true, select: false },
+    avatar: { type: String, default: "user" },
     role: { 
         type: String, 
         enum: ["user", "admin"], 
         default: "user",
-        index: true // For role-based queries
+        index: true
     },
     purchasedTemplates: [{ 
         type: mongoose.Schema.Types.ObjectId, 
@@ -42,8 +42,7 @@ const UserSchema = new Schema<IUser>({
 }, { 
     timestamps: true, 
     strict: true,
-    // Optimization options
-    versionKey: false, // Remove __v field
+    versionKey: false,
     toJSON: { 
         transform: function(doc, ret) {
             delete ret.password; // Never return password

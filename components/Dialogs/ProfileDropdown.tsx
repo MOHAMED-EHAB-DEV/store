@@ -15,7 +15,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 
 const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
-    userImage: String,
+    userImage: string,
     username: String,
     userEmail: String,
     userRole: String,
@@ -44,7 +44,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
         <DropdownMenu open={open} onOpenChange={isOpen}>
             <DropdownMenuTrigger className="items-center w-10 h-10 outline-none justify-center flex cursor-pointer">
                 <Image
-                    src={userImage === "" ? "/assets/Icons/profile.svg" : userImage as string}
+                    src={userImage === "" ? "/assets/Icons/profile.svg" : userImage}
                     alt={`${username} Profile`}
                     width={50}
                     height={50}
@@ -55,7 +55,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
                 <DropdownMenuItem className="flex items-center flex-row gap-6 p-6 pr-28">
                     <div className="items-center w-10 justify-center flex">
                         <Image
-                            src={userImage === "" ? "/assets/Icons/profile.svg" : userImage as string}
+                            src={userImage === "" ? "/assets/Icons/profile.svg" : userImage}
                             alt={`${username} Profile`}
                             width={30}
                             height={30}

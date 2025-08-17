@@ -20,14 +20,6 @@ export function isBase64Image(imageData: string) {
   return base64Regex.test(imageData);
 }
 
-export function generateSlug(text: string): string {
-    return text
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumerics with dashes
-        .replace(/^-+|-+$/g, ''); // Trim leading/trailing dashes
-}
-
 export const serializeTemplate = (doc: ITemplate) => ({
     ...doc,
     _id: `${doc._id}`,

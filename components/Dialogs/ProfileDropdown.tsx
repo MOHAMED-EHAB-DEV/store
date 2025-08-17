@@ -12,7 +12,6 @@ import {
     LayoutDashboard,
 } from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
-import revalidate from "@/actions/revalidateTag";
 import {toast} from "sonner";
 
 const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
@@ -47,8 +46,8 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
                 <Image
                     src={userImage === "" ? "/assets/Icons/profile.svg" : userImage as string}
                     alt={`${username} Profile`}
-                    width={45}
-                    height={45}
+                    width={50}
+                    height={50}
                     className="p-[1px] rounded-full w-full h-full"
                 />
             </DropdownMenuTrigger>

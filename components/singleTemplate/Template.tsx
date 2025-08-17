@@ -17,6 +17,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                         width={400}
                         height={400}
                         className="w-full max-w-[350px] rounded-xl shadow-lg"
+                        priority
                     />
                 </div>
 
@@ -33,7 +34,7 @@ const Template = async ({template}: { template: ITemplate }) => {
 
                     {/* Tags */}
                     <div>
-                        <h4 className="text-white/60 text-sm font-semibold mb-2">Tags</h4>
+                        <h2 className="text-white/60 text-sm font-semibold mb-2">Tags</h2>
                         <div className="flex flex-wrap gap-2">
                             {template.tags?.map((tag: string, idx: number) => (
                                 <span
@@ -48,7 +49,7 @@ const Template = async ({template}: { template: ITemplate }) => {
 
                     {/* Categories */}
                     <div>
-                        <h4 className="text-white/60 text-sm font-semibold mb-2">Categories</h4>
+                        <h3 className="text-white/60 text-sm font-semibold mb-2">Categories</h3>
                         <div className="flex flex-wrap gap-2">
                             {template.categories?.map((cat: any) => (
                                 <span

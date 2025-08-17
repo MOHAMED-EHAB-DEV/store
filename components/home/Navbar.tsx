@@ -87,7 +87,7 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                 <div>
                     <div
                         onClick={() => setIsOpen(false)}
-                        className="fixed inset-0 z-40 w-screen h-screen bg-black/40 backdrop-blur-lg"
+                        className="fixed inset-0 z-[1000000] w-screen h-screen bg-black/40 backdrop-blur-lg"
                     ></div>
 
                     <motion.div

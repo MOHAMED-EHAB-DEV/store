@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
                 {
                     includeContent: true,
                     lean: true,
-                    select: "_id title description thumbnail price averageRating downloads categories tags demoLink createdAt",
+                    select: "_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt",
                 }
             ),
             Review.countDocuments({template: id})

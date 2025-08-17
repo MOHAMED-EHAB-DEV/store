@@ -6,31 +6,35 @@ import Markdown from "./Markdown";
 
 const Template = async ({template}: { template: ITemplate }) => {
     return (
-        <div className="flex flex-col gap-8 px-6 md:px-24 py-12 text-white">
+        <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 text-white">
             {/* Top Section */}
-            <div className="grid grid-cols-1 md:grid-cols-[30%_1fr_20%] gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr_22%] gap-8 items-start">
                 {/* Thumbnail */}
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center lg:justify-start">
                     <Image
-                        src={template.thumbnail}
+                        src={template?.thumbnail}
                         alt={template.title}
                         width={400}
                         height={400}
-                        className="w-full max-w-[350px] rounded-xl shadow-lg"
+                        className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[350px] rounded-xl shadow-lg object-cover"
                         priority
                     />
                 </div>
 
                 {/* Template Info */}
-                <div className="flex flex-col gap-6">
-                    <div className="flex justify-between items-center">
-                        <h1 className="text-4xl font-bold font-paras">{template.title}</h1>
-                        <span className="text-2xl font-bold text-gradient-primary">
-                          {template.price === 0 ? "Free" : `$${template.price}`}
-                        </span>
+                <div className="flex flex-col gap-6 break-words">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                        <h1 className="text-3xl sm:text-4xl font-bold font-paras text-center sm:text-left break-words">
+                            {template.title}
+                        </h1>
+                        <span className="text-xl sm:text-2xl font-bold text-gradient-primary text-center sm:text-right break-words">
+      {template.price === 0 ? "Free" : `$${template.price}`}
+    </span>
                     </div>
 
-                    <p className="text-gray-300 leading-relaxed">{template.description}</p>
+                    <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-words">
+                        {template.description}
+                    </p>
 
                     {/* Tags */}
                     <div>
@@ -39,47 +43,25 @@ const Template = async ({template}: { template: ITemplate }) => {
                             {template.tags?.map((tag: string, idx: number) => (
                                 <span
                                     key={idx}
-                                    className="py-1 px-2 bg-white/20 rounded-md text-xs text-white/80"
+                                    className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
                                 >
-                                  #{tag}
-                                </span>
+          #{tag}
+        </span>
                             ))}
                         </div>
-                    </div>
-
-                    {/* Categories */}
-                    <div>
-                        <h3 className="text-white/60 text-sm font-semibold mb-2">Categories</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {template.categories?.map((cat: any) => (
-                                <span
-                                    key={cat._id}
-                                    className="py-1 px-2 bg-white/20 rounded-md text-xs text-white/80"
-                                >
-                                  {cat.name}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Built With */}
-                    <div>
-                        <h4 className="text-white/60 text-sm font-semibold mb-2">Built With</h4>
-                        <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
-                          {template.builtWith}
-                        </span>
                     </div>
                 </div>
 
-                {/* Right Panel (Ratings, Downloads, Actions) */}
-                <div className="flex flex-col gap-6 items-center">
+
+                {/* Right Panel */}
+                <div className="flex flex-row lg:flex-col justify-between lg:justify-start gap-6 items-center lg:items-center">
                     {/* Rating */}
                     <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
                             {[...Array(5)].map((_, i) => (
                                 <Star
                                     key={i}
-                                    className={`w-5 h-5 ${
+                                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
                                         i < Math.floor(template.averageRating)
                                             ? "text-yellow-400 fill-current"
                                             : "text-gray-600"
@@ -87,40 +69,40 @@ const Template = async ({template}: { template: ITemplate }) => {
                                 />
                             ))}
                         </div>
-                        <span className="text-lg font-semibold">
-                                {template.averageRating?.toFixed(1)}
-                            </span>
-                        <span className="text-gray-400 text-sm">
-                          {template.reviewCount ?? 0} reviews
-                        </span>
+                        <span className="text-base sm:text-lg font-semibold">
+              {template.averageRating?.toFixed(1)}
+            </span>
+                        <span className="text-gray-400 text-xs sm:text-sm">
+              {template.reviewCount ?? 0} reviews
+            </span>
                     </div>
 
                     {/* Downloads */}
                     <div className="flex flex-col items-center">
-                        <Download className="text-gray-400 w-5 h-5"/>
-                        <span className="text-gray-400 text-sm">
-                          {template.downloads} downloads
-                        </span>
+                        <Download className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="text-gray-400 text-xs sm:text-sm">
+              {template.downloads} downloads
+            </span>
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex flex-col gap-3 w-full items-center">
-                        <button
-                            className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300">
+                    <div className="flex flex-col gap-3 w-full max-w-[250px]">
+                        <button className="w-full px-5 py-2.5 sm:py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base">
                             {template.price === 0 ? "Download" : "Buy Now"}
                         </button>
                         <Link
                             href={template.demoLink}
                             target="_blank"
-                            className="px-6 py-3 w-full border border-white/20 rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition"
+                            className="px-5 py-2.5 sm:py-3 w-full border border-white/20 rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition text-sm sm:text-base"
                         >
-                            <ExternalLink className="w-4 h-4"/>
+                            <ExternalLink className="w-4 h-4" />
                             Live Demo
                         </Link>
                     </div>
                 </div>
             </div>
 
+            {/* Content */}
             <Markdown content={template.content} />
             {/*/!* Content & TOC *!/*/}
             {/*<div className="grid grid-cols-1 md:grid-cols-[1fr_2px_20%] border-t border-white/10 pt-8 gap-8">*/}

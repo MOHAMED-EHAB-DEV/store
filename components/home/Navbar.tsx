@@ -19,38 +19,40 @@ const Navbar = () => {
         <div
             className={`z-50 overflow-x-hidden w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-800 ease-in-out translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg`}
         >
-            <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center py-8">
-                <Logo onClick={() => router.push("/")} className="flex-1"/>
+            <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between py-8">
+                <Logo onClick={() => router.push("/")} />
 
-                <nav className="sm:flex hidden flex-row gap-6 items-center justify-center">
+                <nav className="sm:flex hidden md:flex-1 flex-row gap-6 items-center justify-center">
                     {NavigationLinks.map(({id, text, link}) => (
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
                 </nav>
-                <MobileDrawer user={user?.user}/>
-                {!user ? <div className="hidden sm:flex flex-1 gap-2 items-center justify-end">
-                    <Link
-                        className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                        aria-label="Signin button"
-                        href="/signin"
-                    >
-                        Signin
-                    </Link>
-                    <Link
-                        className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                        aria-label="Signup button"
-                        href="/register"
-                    >
-                        Get Started
-                    </Link>
-                </div> : (
-                    <Suspense fallback={<Loader/>}>
-                        <div className="flex md:flex-1 items-center justify-end">
-                            <ProfileDropdown username={user?.name} userImage={user?.avatar as String}
-                                             userEmail={user?.email} userRole={user?.role as String}/>
-                        </div>
-                    </Suspense>
-                )}
+                <div className="flex gap-2">
+                    <MobileDrawer user={user?.user}/>
+                    {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
+                        <Link
+                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                            aria-label="Signin button"
+                            href="/signin"
+                        >
+                            Signin
+                        </Link>
+                        <Link
+                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
+                            aria-label="Signup button"
+                            href="/register"
+                        >
+                            Get Started
+                        </Link>
+                    </div> : (
+                        <Suspense fallback={<Loader/>}>
+                            <div className="flex items-center justify-end">
+                                <ProfileDropdown username={user?.name} userImage={user?.avatar as String}
+                                                 userEmail={user?.email} userRole={user?.role as String}/>
+                            </div>
+                        </Suspense>
+                    )}
+                </div>
             </div>
         </div>
     );

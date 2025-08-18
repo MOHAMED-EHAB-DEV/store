@@ -1,6 +1,7 @@
 "use client";
 
 import gsap from "gsap";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 import { Sparkles } from "@/components/ui/svgs/Icons";
@@ -45,14 +46,10 @@ const Cta = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         {/* Button Gradient */}
-                        <button className="
-                            bg-gradient-to-r from-cyan-500 to-blue-500
-                            hover:from-blue-500 hover:to-cyan-500
-                            hover:shadow-[0_0_25px_rgba(0,180,255,0.6)]
-                            btn">
+                        <Link href="/templates" className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-blue-500 hover:to-cyan-500 hover:shadow-[0_0_25px_rgba(0,180,255,0.6)] btn">
                             Get Started Now
-                            <Sparkles className="w-5 h-5 ml-2 transition-transform" />
-                        </button>
+                            <Sparkles className="w-5 h-5 ml-2 transition-transform group-hover:rotate-12" />
+                        </Link>
                         <div className="text-gray-400 text-sm">
                             No risk – 30-day money-back guarantee
                         </div>

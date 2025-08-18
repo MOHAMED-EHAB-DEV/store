@@ -19,7 +19,8 @@ const nextConfig: NextConfig = {
                 pathname: "/**",
             },
         ],
-        formats: ['image/avif', 'image/webp']
+        formats: ['image/avif', 'image/webp'],
+        domains: ["utfs.io"]
     },
 };
 

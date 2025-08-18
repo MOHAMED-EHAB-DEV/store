@@ -25,41 +25,41 @@ export default function Markdown({content}: DocPageProps) {
     return (
         <div className="flex flex-col md:flex-row w-full mx-auto p-4">
             {/* Markdown Content */}
-            <div className="md:w-4/5 md:pr-6 prose dark:prose-invert max-w-none">
+            <div className="md:w-4/5 md:pr-6 prose dark:prose-invert max-w-none text-gray-500">
                 <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeSlug, rehypePrism]}
                     components={{
                         h1: ({node, ...props}) => (
-                            <h1 className="text-3xl font-bold text-white mt-6 mb-4" {...props} />
+                            <h1 className="text-3xl font-bold my-5" {...props} />
                         ),
                         h2: ({node, ...props}) => (
-                            <h2 className="text-2xl font-semibold text-white mt-5 mb-3" {...props} />
+                            <h2 className="text-2xl font-semibold my-4" {...props} />
                         ),
                         h3: ({node, ...props}) => (
-                            <h3 className="text-xl font-semibold text-white mt-4 mb-2" {...props} />
+                            <h3 className="text-xl font-semibold my-3" {...props} />
                         ),
                         p: ({node, ...props}) => (
-                            <p className="text-gray-300 leading-relaxed mb-4" {...props} />
+                            <p className="leading-relaxed mb-4" {...props} />
                         ),
                         a: ({node, ...props}) => (
                             <a
-                                className="text-blue-400 hover:underline"
+                                className="hover:text-blue-400 hover:underline"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 {...props}
                             />
                         ),
                         ul: ({node, ...props}) => (
-                            <ul className="list-disc pl-6 mb-4 space-y-2 text-gray-300" {...props} />
+                            <ul className="list-disc pl-6 mb-4 space-y-2" {...props} />
                         ),
                         ol: ({node, ...props}) => (
-                            <ol className="list-decimal pl-6 mb-4 space-y-2 text-gray-300" {...props} />
+                            <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />
                         ),
                         li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
                         blockquote: ({node, ...props}) => (
                             <blockquote
-                                className="border-l-4 border-blue-500 pl-4 italic text-gray-400 my-4"
+                                className="border-l-4 border-blue-500 pl-4 italic my-4"
                                 {...props}
                             />
                         ),

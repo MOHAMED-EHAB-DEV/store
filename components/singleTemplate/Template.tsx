@@ -28,8 +28,8 @@ const Template = async ({template}: { template: ITemplate }) => {
                             {template.title}
                         </h1>
                         <span className="text-xl sm:text-2xl font-bold text-gradient-primary text-center sm:text-right break-words">
-      {template.price === 0 ? "Free" : `$${template.price}`}
-    </span>
+                          {template.price === 0 ? "Free" : `$${template.price}`}
+                        </span>
                     </div>
 
                     <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-words">
@@ -45,12 +45,40 @@ const Template = async ({template}: { template: ITemplate }) => {
                                     key={idx}
                                     className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
                                 >
-          #{tag}
-        </span>
+                                  #{tag}
+                                </span>
                             ))}
                         </div>
                     </div>
+
+                    {/* Categories */}
+                    <div>
+                        <h4 className="text-white/60 text-sm font-semibold mb-2">
+                            Categories
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                            {template.categories?.map((cat: any) => (
+                                <span
+                                    key={cat._id}
+                                    className="py-1 px-2 bg-white/20 rounded-md text-xs text-white/80"
+                                >
+                                  {cat.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Built With */}
+                    <div>
+                        <h4 className="text-white/60 text-sm font-semibold mb-2">
+                            Built With
+                        </h4>
+                        <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
+                          {template.builtWith}
+                        </span>
+                    </div>
                 </div>
+
 
 
                 {/* Right Panel */}
@@ -70,19 +98,19 @@ const Template = async ({template}: { template: ITemplate }) => {
                             ))}
                         </div>
                         <span className="text-base sm:text-lg font-semibold">
-              {template.averageRating?.toFixed(1)}
-            </span>
+                          {template.averageRating?.toFixed(1)}
+                        </span>
                         <span className="text-gray-400 text-xs sm:text-sm">
-              {template.reviewCount ?? 0} reviews
-            </span>
+                          {template.reviewCount ?? 0} reviews
+                        </span>
                     </div>
 
                     {/* Downloads */}
                     <div className="flex flex-col items-center">
                         <Download className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                         <span className="text-gray-400 text-xs sm:text-sm">
-              {template.downloads} downloads
-            </span>
+                          {template.downloads} downloads
+                        </span>
                     </div>
 
                     {/* Buttons */}

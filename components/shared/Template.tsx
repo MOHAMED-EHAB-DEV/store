@@ -14,7 +14,7 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
     const router = useRouter();
     const Icon = Icons[idx];
     return <div
-        className="group relative overflow-hidden w-[600px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
+        className="group relative overflow-hidden w-full md:w-[600px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
         onMouseEnter={() => setHoveredTemplate(template._id)}
         onMouseLeave={() => setHoveredTemplate(null)}
         onClick={() => router.push(`/templates/${template._id}`)}

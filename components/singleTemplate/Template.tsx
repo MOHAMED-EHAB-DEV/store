@@ -6,7 +6,7 @@ import Markdown from "./Markdown";
 
 const Template = async ({template}: { template: ITemplate }) => {
     return (
-        <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 text-white">
+        <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 w-screen text-white">
             {/* Top Section */}
             <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr_22%] gap-8 items-start">
                 {/* Thumbnail */}
@@ -22,7 +22,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                 </div>
 
                 {/* Template Info */}
-                <div className="flex flex-col gap-6 break-words">
+                <div className="flex flex-col gap-6">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                         <h1 className="text-3xl sm:text-4xl font-bold font-paras text-center sm:text-left break-words">
                             {template.title}
@@ -32,7 +32,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                         </span>
                     </div>
 
-                    <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-words">
+                    <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-all">
                         {template.description}
                     </p>
 
@@ -82,7 +82,7 @@ const Template = async ({template}: { template: ITemplate }) => {
 
 
                 {/* Right Panel */}
-                <div className="flex flex-row lg:flex-col justify-between lg:justify-start gap-6 items-center lg:items-center">
+                <div className="flex flex-row flex-wrap lg:flex-col justify-between lg:justify-start gap-6 items-center lg:items-center">
                     {/* Rating */}
                     <div className="flex flex-col items-center">
                         <div className="flex items-center gap-1 sm:gap-2">

@@ -23,47 +23,48 @@ const TemplateSchema = new Schema<ITemplate>({
     title: { 
         type: String, 
         required: true,
-        text: true, // Text search index
+        text: true,
         index: true
     },
     description: { 
         type: String, 
         required: true,
-        text: true // Text search index
+        text: true,
     },
     content: { 
         type: String, 
         required: true,
-        select: false // Don't include by default (large field)
+        select: false,
     },
     price: { 
-        type: Number, 
+        type: Number,
         default: 0,
         min: 0,
-        index: true // For price range queries
+        index: true,
     },
     thumbnail: { type: String, required: true },
     categories: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Category",
-        index: true // For category filtering
+        index: true,
     }],
     tags: [{ 
         type: String,
         lowercase: true,
-        trim: true
+        trim: true,
+        index: true,
     }],
     author: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "User",
         required: true,
-        index: true // For author queries
+        select: false,
     },
     downloads: { 
         type: Number, 
         default: 0,
         min: 0,
-        index: true // For popular template
+        index: true,
     },
     averageRating: { 
         type: Number, 

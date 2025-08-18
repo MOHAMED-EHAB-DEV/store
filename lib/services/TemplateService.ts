@@ -86,7 +86,7 @@ class TemplateServiceClass {
             categories: template.categories,
             demoLink: template.demoLink,
             tags: template.tags,
-            author: template.author,
+            // author: template.author,
             isActive: template.isActive,
             createdAt: template.createdAt,
             updatedAt: template.updatedAt,
@@ -117,7 +117,7 @@ class TemplateServiceClass {
         try {
             const {ttl = this.defaultTTL} = cacheOptions;
             const {
-                select = "_id title description thumbnail price averageRating downloads categories tags author isActive createdAt updatedAt",
+                select = "_id title description thumbnail price averageRating downloads categories tags isActive createdAt updatedAt",
                 lean = true,
                 includeContent = true,
             } = options;
@@ -135,7 +135,7 @@ class TemplateServiceClass {
                 `findTemplateById_${templateId}`,
                 Template.findById(templateId)
                     .select(selectFields)
-                    .populate("author", "name avatar")
+                    // .populate("author", "name avatar")
                     .populate("categories", "name slug")
                     .lean(lean)
             );
@@ -178,7 +178,7 @@ class TemplateServiceClass {
     ) {
         try {
             const {
-                select = "_id title description thumbnail price averageRating downloads categories tags author isActive updatedAt",
+                select = "_id title description thumbnail price averageRating downloads categories tags isActive updatedAt",
                 lean = true,
             } = options;
 

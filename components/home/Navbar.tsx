@@ -17,17 +17,17 @@ const Navbar = () => {
 
     return (
         <div
-            className={`z-50 overflow-x-hidden w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-800 ease-in-out translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg`}
+            className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-800 ease-in-out translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between py-8">
-                <Logo onClick={() => router.push("/")} />
+                <Logo onClick={() => router.push("/")} className={!user && "flex-1"} />
 
-                <nav className="sm:flex hidden md:flex-1 flex-row gap-6 items-center justify-center">
+                <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-6 items-center justify-center`}>
                     {NavigationLinks.map(({id, text, link}) => (
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
                 </nav>
-                <div className="flex gap-2">
+                <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
                     <MobileDrawer user={user?.user}/>
                     {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
                         <Link
@@ -47,7 +47,7 @@ const Navbar = () => {
                     </div> : (
                         <Suspense fallback={<Loader/>}>
                             <div className="flex items-center justify-end">
-                                <ProfileDropdown username={user?.name} userImage={user?.avatar as String}
+                                <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
                                                  userEmail={user?.email} userRole={user?.role as String}/>
                             </div>
                         </Suspense>
@@ -89,11 +89,11 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                 <div>
                     <div
                         onClick={() => setIsOpen(false)}
-                        className="fixed inset-0 z-[1000000] w-screen h-screen bg-black/40 backdrop-blur-lg"
+                        className="fixed inset-0 z-50 w-screen h-screen bg-black/40 backdrop-blur-lg"
                     ></div>
 
                     <motion.div
-                        className="fixed top-0 right-0 h-screen w-2/4 bg-dark shadow-lg z-50"
+                        className="fixed top-0 right-0 h-screen w-2/4 bg-dark shadow-lg z-[9999999]"
                         variants={{
                             hidden: {x: "100%", opacity: 0},
                             visible: {

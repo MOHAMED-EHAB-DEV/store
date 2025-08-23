@@ -1,4 +1,3 @@
-// components/TocHighlight.client.tsx
 'use client';
 import { useEffect } from 'react';
 

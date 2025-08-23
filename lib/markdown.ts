@@ -1,4 +1,3 @@
-// lib/markdown.server.ts
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
@@ -114,7 +113,7 @@ export async function mdToHtmlAndHeadings(content: string) {
         .process(content);
 
     // Extract headings for TOC using regex from raw markdown for reliability
-    const headingMatches = [...content.matchAll(/^(#{1,6})\s+(.*)$/gm)];
+    const headingMatches = [...content?.matchAll(/^(#{1,6})\s+(.*)$/gm)];
     const headings = headingMatches.map((m) => {
         const level = m[1].length;
         const text = m[2].trim();

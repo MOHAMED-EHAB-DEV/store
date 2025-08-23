@@ -2,10 +2,6 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { marked } from "marked";
 
-export function generateMarkdownPreview(markdown: string): string {
-    return marked.parse(markdown) as string;
-}
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

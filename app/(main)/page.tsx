@@ -1,4 +1,5 @@
 import * as motion from "motion/react-client";
+import Image from "next/image";
 import Hero from "@/components/home/Hero";
 import {HeroItems} from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
@@ -33,7 +34,6 @@ export default async function Home() {
                         };
                         return <motion.div
                             key={id}
-                            // initial={{opacity: 0, y: 20}}
                             initial={initialView}
                             whileInView={{opacity: 1, y: 0, x: 0,}}
                             viewport={{margin: "-100px"}}
@@ -77,6 +77,13 @@ export default async function Home() {
                         </motion.div>
                     })}
                 </section>
+                <img
+                    src="https://utfs.io/f/DNPuOAX887NySw6xNrAjbTdO9U4BFDk6gyGZXVJPvx5hrpCz"
+                    alt="demo"
+                    width={500}
+                    height={500}
+                    className="w-[calc(100dvw-100px)] h-full object-contain rounded-xl transition-all border border-border/50 hover:border-accent/30"
+                />
                 {/* Enhanced background effects */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     {/* Main gradient orb */}

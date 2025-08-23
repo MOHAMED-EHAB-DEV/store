@@ -79,7 +79,6 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        // id="hero-title"
                         className="font-bold header opacity-0 text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white"
                     >
                                     Premium Templates to{' '}

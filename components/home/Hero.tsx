@@ -1,38 +1,45 @@
 'use client';
 
 import {gsap} from 'gsap';
-import {useGSAP} from '@gsap/react';
+import {useLayoutEffect} from "react";
 import {Star, ArrowRight, Sparkles} from '@/components/ui/svgs/Icons';
 import {Badge} from '@/components/ui/badge';
 import Link from "next/link";
+import {SplitText, ScrollTrigger} from 'gsap/all';
 
-// import {SplitText} from 'gsap/SplitText';
-// gsap.registerPlugin(SplitText);
+gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const Hero = () => {
-    useGSAP(() => {
-        // const splitHeader = SplitText.create('.header', {
-        //     type: 'words',
-        //     mask: 'words',
-        // });
-        //
-        // gsap.from(splitHeader.words, {
-        //     duration: 1.5,
-        //     y: 80,
-        //     autoAlpha: 0,
-        //     opacity: 0,
-        //     stagger: 0.05,
-        //     filter: 'blur(6px)',
-        //     ease: 'power2.out',
-        // });
-        //
-        // // gsap.to('.hero-btn', {
-        // //     y: -9,
-        // //     repeat: -1,
-        // //     yoyo: true,
-        // //     duration: 1.8,
-        // //     ease: 'power1.inOut',
-        // // });
+    useLayoutEffect(() => {
+        const splitHeader = SplitText.create('.header', {
+            type: 'words',
+            mask: 'words',
+        });
+
+        gsap.set('.header', { opacity: 1, });
+
+        gsap.from(splitHeader.words, {
+            duration: 1.5,
+            y: 80,
+            autoAlpha: 0,
+            opacity: 0,
+            stagger: 0.08,
+            filter: 'blur(6px)',
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.header',
+                start: 'top 80%', // when top of header hits 80% viewport
+                toggleActions: 'play none none none', // only play once
+            },
+        });
+
+        gsap.to('.hero-btn', {
+            y: -9,
+            repeat: -1,
+            yoyo: true,
+            duration: 1.8,
+            ease: 'power1.inOut',
+        });
 
         // Animate gradient orbs
         gsap.to('.gradient-orb-1', {
@@ -73,7 +80,7 @@ const Hero = () => {
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
                         // id="hero-title"
-                        className="font-bold text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white"
+                        className="font-bold header opacity-0 text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white"
                     >
                                     Premium Templates to{' '}
                                     <span className="relative">
@@ -85,7 +92,7 @@ const Hero = () => {
                                     Your Projects
                     </h1>
                     <p
-                        className="text-base md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
+                        className="text-base header opacity-0 md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.

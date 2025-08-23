@@ -1,6 +1,8 @@
 'use client';
 
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Badge } from "../ui/badge";
 import { Framer, Layers } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
@@ -26,10 +28,54 @@ const FramerFeatures = () => {
         };
     }, []);
 
+    useLayoutEffect(() => {
+        // Animate section header
+        gsap.from(".framer-header", {
+            scrollTrigger: {
+                trigger: ".framer-header",
+                start: "top 85%",
+            },
+            opacity: 0,
+            y: 40,
+            duration: 1,
+            ease: "power3.out",
+        });
+
+        // Animate all feature cards
+        gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%",
+                },
+                opacity: 0,
+                y: 60,
+                duration: 1,
+                delay: i * 0.1,
+                ease: "power3.out",
+            });
+        });
+
+        // Animate videos
+        gsap.utils.toArray<HTMLElement>(".feature-video").forEach((video, i) => {
+            gsap.from(video, {
+                scrollTrigger: {
+                    trigger: video,
+                    start: "top 85%",
+                },
+                opacity: 0,
+                scale: 0.95,
+                duration: 1.2,
+                delay: i * 0.15,
+                ease: "power3.out",
+            });
+        });
+    }, []);
+
     return (
         <section className="flex flex-col w-full h-full items-center justify-center gap-6">
             {/* Header Section */}
-            <div className="flex flex-col items-center justify-center gap-2">
+            <div className="flex flex-col items-center justify-center gap-2 framer-header">
                 <Badge
                     variant="outline"
                     className="bg-transparent relative hover:shadow-[0_0_25px_#746D91]"
@@ -49,7 +95,7 @@ const FramerFeatures = () => {
                 <div className="grid gap-6 auto-rows-auto">
                     {/* Pricing Card */}
                     <div
-                        className="flex flex-col gap-8 border w-full p-12 justify-center rounded-lg bg-dark"
+                        className="flex flex-col gap-8 border w-full p-12 justify-center rounded-lg bg-dark feature-card"
                         style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         ref={scrollableRef}
                     >
@@ -110,7 +156,7 @@ const FramerFeatures = () => {
 
                     <div className="flex flex-col md:flex-row gap-5">
                         <div
-                            className="relative flex flex-col justify-end w-full md:w-1/2 h-[50dvh] rounded-lg overflow-hidden border p-6"
+                            className="relative flex flex-col justify-end w-full md:w-1/2 h-[50dvh] rounded-lg overflow-hidden border p-6 feature-video"
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video
@@ -133,7 +179,7 @@ const FramerFeatures = () => {
                         </div>
 
                         <div
-                            className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6"
+                            className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6 feature-video"
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video
@@ -159,7 +205,7 @@ const FramerFeatures = () => {
 
                 <div className="w-full grid gap-6 auto-rows-auto">
                     <div
-                        className="flex w-full p-7 flex-col justify-center gap-2 border bg-dark rounded-lg"
+                        className="flex w-full p-7 flex-col justify-center gap-2 border bg-dark rounded-lg feature-card"
                         style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                     >
                         <div className="w-full flex items-center justify-center relative">
@@ -188,7 +234,7 @@ const FramerFeatures = () => {
                     </div>
 
                     <div
-                        className="p-6 flex flex-col border justify-center gap-3 bg-dark rounded-lg"
+                        className="p-6 flex flex-col border justify-center gap-3 bg-dark rounded-lg feature-card"
                         style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                     >
                         <div className="flex flex-col gap-1">

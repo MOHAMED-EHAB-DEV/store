@@ -1,52 +1,52 @@
 'use client';
 
+import {useLayoutEffect} from "react";
+import {gsap} from "gsap";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {Badge} from '@/components/ui/badge';
 import {
     Code,
-    Palette,
-    Zap,
-    Award,
-    Users,
-    Download,
-    Star,
     Coffee,
-    Heart,
     Sparkles,
-    Rocket,
-    Target
 } from '@/components/ui/svgs/Icons';
 import CountUp from '../ui/CountUp';
 import Link from 'next/link';
+import {stats, skills, badges} from "@/constants";
 
-const stats = [
-    {label: "Templates Created", value: "10+", icon: Code},
-    {label: "Happy Customers", value: "1K+", icon: Users},
-    {label: "Downloads", value: "2K+", icon: Download},
-    {label: "5-Star Reviews", value: "98%", icon: Star}
-];
-
-const skills = [
-    {name: "React & Next.js", level: 95, color: "from-blue-500 to-cyan-500"},
-    // {name: "UI/UX Design", level: 90, color: "from-purple-500 to-pink-500"},
-    {name: "Tailwind CSS", level: 98, color: "from-green-500 to-teal-500"},
-    {name: "Framer Motion", level: 85, color: "from-orange-500 to-red-500"},
-    {name: "Figma Design", level: 92, color: "from-indigo-500 to-purple-500"},
-    {name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500"},
-];
-
-const badges = [
-    {text: "Top Seller", icon: Award, gradient: "from-yellow-400 to-orange-500"},
-    {text: "Design Expert", icon: Palette, gradient: "from-purple-500 to-pink-500"},
-    {text: "Code Wizard", icon: Zap, gradient: "from-blue-500 to-cyan-500"},
-    {text: "Innovation Leader", icon: Rocket, gradient: "from-green-500 to-teal-500"},
-    {text: "Customer Favorite", icon: Heart, gradient: "from-red-500 to-pink-500"},
-    {text: "Quality Focused", icon: Target, gradient: "from-indigo-500 to-purple-500"}
-];
+gsap.registerPlugin(ScrollTrigger);
 
 const AboutMe = () => {
+    useLayoutEffect(() => {
+        // Animate header
+        gsap.from(".about-header", {
+            scrollTrigger: {
+                trigger: ".about-header",
+                start: "top 70%",
+                toggleActions: "play none none none",
+            },
+            y: 40,
+            opacity: 0,
+            duration: 1.5,
+            ease: "power3.out",
+        });
+
+        // Animate all cards
+        gsap.from(".about-card", {
+            scrollTrigger: {
+                trigger: ".about-card",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power2.out",
+        });
+    }, []);
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col gap-4 items-center justify-center">
-            <div className="text-center mb-16">
+            <div className="text-center mb-16 about-header">
                 <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-gradient-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
                     <Sparkles className="w-4 h-4 mr-2"/>
                     About the Creator
@@ -66,7 +66,7 @@ const AboutMe = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-8">
-                    <div className="relative overflow-hidden rounded-3xl glass-strong p-8">
+                    <div className="relative overflow-hidden rounded-3xl glass-strong p-8 about-card">
                         <div
                             className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-teal-500/20 to-cyan-500/20"></div>
                         <div className="relative z-10 flex items-center gap-6 mb-6">
@@ -113,7 +113,7 @@ const AboutMe = () => {
                         })}
                     </div>
 
-                    <div className="relative overflow-hidden rounded-2xl glass-strong p-6 w-full mx-auto">
+                    <div className="about-card relative overflow-hidden rounded-2xl glass-strong p-6 w-full mx-auto">
                         <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-500/20"></div>
                         <div className="relative z-10 text-center">
                             <h4 className="text-xl font-bold text-white mb-3">Let's Build Something Amazing</h4>
@@ -154,7 +154,7 @@ const AboutMe = () => {
                                         <Icon className="w-8 h-8 text-cyan-400 mx-auto mb-3"/>
                                         {/* <div className="text-3xl font-bold text-white mb-1">{stat.value}</div> */}
                                         <div className="text-3xl flex justify-center items-center gap-[0.5px] font-bold text-white mb-1">
-                                            <CountUp 
+                                            <CountUp
                                                 from={0}
                                                 to={parseInt(stat.value.replace(/\D/g, '').replace("K", "000"))}
                                                 direction='up'
@@ -168,7 +168,7 @@ const AboutMe = () => {
                         })}
                     </div>
 
-                    <div className="relative overflow-hidden rounded-3xl glass-strong p-8">
+                    <div className="about-card relative overflow-hidden rounded-3xl glass-strong p-8">
                         <div
                             className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20"></div>
                         <div className="relative z-10">
@@ -181,7 +181,7 @@ const AboutMe = () => {
                                     <div key={index} className="group">
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-white font-medium">{skill.name}</span>
-                                            <span className="text-gray-300 text-sm"><CountUp 
+                                            <span className="text-gray-300 text-sm"><CountUp
                                                 from={0}
                                                 to={skill.level}
                                                 direction='up'

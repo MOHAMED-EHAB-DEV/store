@@ -32,15 +32,18 @@ const FeaturedTemplates = async () => {
                     <Star className="w-4 h-4 mr-2"/>
                     Featured Templates
                 </Badge>
-                <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-paras">
+                <h2 className="text-4xl header opacity-0 md:text-6xl font-bold text-white mb-6 font-paras">
                     Handpicked{' '}
                     <span
-                        className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+                        className="relative">
                         Premium
+                        <div
+                            aria-hidden="true"
+                            className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
                     </span>{' '}
                     Templates
                 </h2>
-                <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
+                <p className="text-gray-300 header opacity-0 text-lg md:text-xl max-w-2xl mx-auto">
                     Discover our most popular and highest-rated templates, crafted with attention to detail and
                     optimized for performance.
                 </p>

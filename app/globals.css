@@ -29,17 +29,21 @@
         --border: var(--color-border);
         --accent: var(--color-accent);
     }
+
     ::selection {
         background: #6366f1;
         color: #fff;
     }
+
     * {
         scroll-behavior: smooth;
         box-sizing: border-box;
     }
+
     .will-change {
         will-change: transform, opacity;
     }
+
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
             animation-duration: 0.01ms !important;
@@ -51,6 +55,93 @@
 
     html, body {
         overflow-x: hidden;
+    }
+
+    /* Put this inside your @layer base (replace the previous block) */
+
+    /* basic pre/code */
+    .markdown-body pre {
+        border-radius: 0.5rem;
+        overflow: auto;
+        padding: 1rem;
+        position: relative; /* kept here */
+    }
+
+    .markdown-body code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+        font-size: 0.9rem;
+    }
+
+    /* headings & text (no responsive variants inside @apply) */
+    .markdown-body h1 {
+        @apply text-xl font-bold my-5;
+    }
+    @media (min-width: 768px) {
+        .markdown-body h1 {
+            @apply text-3xl;
+        }
+    }
+
+    .markdown-body h2 {
+        @apply text-lg font-semibold my-4;
+    }
+    @media (min-width: 768px) {
+        .markdown-body h2 {
+            @apply text-2xl;
+        }
+    }
+
+    /* use text-base instead of text-md (text-md is invalid) */
+    .markdown-body h3 {
+        @apply text-base font-semibold my-3;
+    }
+    @media (min-width: 768px) {
+        .markdown-body h3 {
+            @apply text-xl;
+        }
+    }
+
+    .markdown-body p {
+        @apply leading-relaxed mb-4;
+    }
+
+    .markdown-body a {
+        @apply hover:text-blue-400 hover:underline;
+    }
+
+    .markdown-body ul {
+        @apply list-disc pl-6 mb-4 space-y-2;
+    }
+
+    .markdown-body ol {
+        @apply list-decimal pl-6 mb-4 space-y-2;
+    }
+
+    .markdown-body li {
+        @apply leading-relaxed;
+    }
+
+    .markdown-body blockquote {
+        @apply border-l-4 border-blue-500 pl-4 italic my-4;
+    }
+
+    /* inline-code: we add a class "inline-code" in the processor */
+    .markdown-body code.inline-code {
+        @apply bg-gray-800 text-pink-400 px-1.5 py-0.5 rounded text-sm;
+    }
+
+    /* Shiki output wrapper */
+    .markdown-body .shiki {
+        @apply rounded-lg p-4 mb-4 overflow-x-auto;
+        white-space: pre;
+    }
+
+    /* copy button area */
+    .markdown-body pre {
+        position: relative;
+    }
+    .markdown-body pre .copy-btn {
+        @apply absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded;
     }
 }
 
@@ -66,42 +157,34 @@
         hover:shadow-lg hover:shadow-purple-500/25;
     }
 
-    /*.btn-success {*/
-    /*    @apply bg-gradient-to-r from-green-500 to-teal-500 text-white*/
-    /*    hover:shadow-lg hover:shadow-green-500/25;*/
-    /*}*/
-
-    /*.btn-warning {*/
-    /*    @apply bg-gradient-to-r from-yellow-500 to-orange-500 text-white*/
-    /*    hover:shadow-lg hover:shadow-yellow-500/25;*/
-    /*}*/
-
-    /*.btn-danger {*/
-    /*    @apply bg-gradient-to-r from-red-500 to-pink-500 text-white*/
-    /*    hover:shadow-lg hover:shadow-red-500/25;*/
-    /*}*/
-
-    /* Card components */
-    /*.card {*/
-    /*    @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02];*/
-    /*}*/
-
-    /*.card-glass {*/
-    /*    @apply  hover:bg-white/15;*/
-    /*}*/
-
-    /*.card-gradient {*/
-    /*    @apply relative overflow-hidden;*/
-    /*}*/
-
-    /*.card-gradient::before {*/
-    /*    @apply absolute inset-0 opacity-10 transition-opacity duration-300;*/
-    /*    content: '';*/
-    /*}*/
-
-    /*.card-gradient:hover::before {*/
-    /*    @apply opacity-20;*/
-    /*}*/
+    .btn-success {
+        @apply bg-gradient-to-r from-green-500 to-teal-500 text-white
+        hover:shadow-lg hover:shadow-green-500/25;
+    }
+    .btn-warning {
+        @apply bg-gradient-to-r from-yellow-500 to-orange-500 text-white
+        hover:shadow-lg hover:shadow-yellow-500/25;
+    }
+    .btn-danger {
+        @apply bg-gradient-to-r from-red-500 to-pink-500 text-white
+        hover:shadow-lg hover:shadow-red-500/25;
+    }
+    .card {
+        @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02];
+    }
+    .card-glass {
+        @apply  hover:bg-white/15;
+    }
+    .card-gradient {
+        @apply relative overflow-hidden;
+    }
+    .card-gradient::before {
+        @apply absolute inset-0 opacity-10 transition-opacity duration-300;
+        content: '';
+    }
+    .card-gradient:hover::before {
+        @apply opacity-20;
+    }
 }
 
 @layer utilities {
@@ -389,33 +472,33 @@
 }
 
 @keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .animate-gradient {
-  background-size: 300% 300%;
-  animation: gradientMove 6s ease infinite;
+    background-size: 300% 300%;
+    animation: gradientMove 6s ease infinite;
 }
 
 @keyframes twinkle {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.1);
-  }
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
 }
 
 .animate-twinkle {
-  animation: twinkle 1.8s ease-in-out infinite;
+    animation: twinkle 1.8s ease-in-out infinite;
 }

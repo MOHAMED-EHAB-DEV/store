@@ -77,12 +77,16 @@ export default async function Home() {
                         </motion.div>
                     })}
                 </section>
-                <img
-                    src="https://utfs.io/f/DNPuOAX887NySw6xNrAjbTdO9U4BFDk6gyGZXVJPvx5hrpCz"
+                <Image
+                    src="/assets/images/Preview.webp"
                     alt="demo"
-                    width={500}
-                    height={500}
+                    width={1400}
+                    height={1400}
                     className="w-[calc(100dvw-100px)] h-full object-contain rounded-xl transition-all border border-border/50 hover:border-accent/30"
+                    quality={100}
+                    priority
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAdEAACAgEFAAAAAAAAAAAAAAACAwABIQQFEXHB/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAXEQEBAQEAAAAAAAAAAAAAAAABAgAR/9oADAMBAAIRAxEAPwCAWjSHthvWwhcN8Wojz3WPYiJXVPcjAg7/2Q=="
                 />
                 {/* Enhanced background effects */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">

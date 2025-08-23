@@ -2,7 +2,7 @@ import sharp from "sharp";
 import fs from "fs";
 
 async function generateBlurDataURL() {
-    const imageBuffer = fs.readFileSync("./public/assets/Icons/cursor.avif");
+    const imageBuffer = fs.readFileSync("./public/assets/images/Preview.webp");
 
     const smallBuffer = await sharp(imageBuffer)
         .resize(8, 8) // tiny size for blur

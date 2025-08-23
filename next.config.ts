@@ -1,8 +1,12 @@
 import type {NextConfig} from "next";
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
     experimental: {
-        optimizePackageImports: ["gsap", "motion", "ogl"],
+        optimizePackageImports: ["gsap", "motion"],
         inlineCss: true,
         optimizeCss: true,
         esmExternals: true,
@@ -23,4 +27,5 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+// export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

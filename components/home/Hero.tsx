@@ -97,8 +97,8 @@ const Hero = () => {
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
                         <span className="block mt-2 text-sm text-secondary">
-                                    Join 10,000+ developers who trust our templates
-                                </span>
+                            Join 10,000+ developers who trust our templates
+                        </span>
                     </p>
                 </div>
 

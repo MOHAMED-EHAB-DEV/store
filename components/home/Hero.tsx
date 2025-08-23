@@ -92,7 +92,7 @@ const Hero = () => {
                                     Your Projects
                     </h1>
                     <p
-                        className="text-base header opacity-0 md:text-lg lg:text-xl w-[calc(100%-40px)] md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
+                        className="text-base header opacity-0 md:text-lg lg:text-xl w-full md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.

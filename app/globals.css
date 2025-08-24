@@ -17,6 +17,33 @@
     --font-paras: "Parastoo", serif;
 }
 
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5b5cf6 0%, #7c3aed 100%);
+}
+
+/* Firefox scrollbar styling */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #6366f1 rgba(15, 23, 42, 0.1);
+}
+
 @layer base {
     :root {
         --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
@@ -314,7 +341,6 @@
     }
 
     .animate-gradient {
-        background-size: 400% 400%;
         animation: gradient 4s ease infinite;
     }
 

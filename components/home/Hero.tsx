@@ -6,6 +6,7 @@ import {Star, ArrowRight, Sparkles} from '@/components/ui/svgs/Icons';
 import {Badge} from '@/components/ui/badge';
 import Link from "next/link";
 import {SplitText, ScrollTrigger} from 'gsap/all';
+import TrustSignals from '@/components/ui/TrustSignals';
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -135,24 +136,9 @@ const Hero = () => {
                     {/*</Link>*/}
                 </div>
 
-                <div className="flex items-center gap-6 mt-8 text-sm text-secondary/80">
-                    <div className="flex items-center gap-2">
-                        <div className="flex -space-x-2">
-                            {[...Array(4)].map((_, i) => (
-                                <div
-                                    key={i}
-                                    className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-primary flex items-center justify-center text-white text-xs font-bold"
-                                >
-                                    {String.fromCharCode(65 + i)}
-                                </div>
-                            ))}
-                        </div>
-                        <span className="text-medium-contrast font-medium">10K+ Happy Customers</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current"/>
-                        <span className="text-medium-contrast font-medium">4.9/5 Rating</span>
-                    </div>
+                {/* Trust Signals */}
+                <div className="mt-12 w-full max-w-4xl">
+                    <TrustSignals variant="horizontal" className="justify-center" />
                 </div>
             </div>
         </section>

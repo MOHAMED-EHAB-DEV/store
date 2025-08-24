@@ -5,7 +5,7 @@ type Props = {
     content: string;
 };
 
-export default async function Markdown({ content}: Props) {
+export default async function Markdown({ content }: Props) {
     const { html, headings } = await mdToHtmlAndHeadings(content);
 
     return (

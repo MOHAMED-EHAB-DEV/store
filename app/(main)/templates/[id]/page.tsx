@@ -3,7 +3,7 @@ import Template from "@/components/singleTemplate/Template";
 
 const getTemplate = async (id: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}api/template/${id}`);
+        const response = await fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'}/api/template/${id}`);
         const data = await response.json();
 
         return data.success ? data.data : {};

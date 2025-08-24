@@ -9,12 +9,17 @@ import {useRouter} from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-const Template = ({template, idx, showPrice=false, showActionButtons=false}: { template: ITemplate, idx: number, showPrice: Boolean, showActionButtons: Boolean}) => {
+const Template = ({template, idx, showPrice = false, showActionButtons = false}: {
+    template: ITemplate,
+    idx: number,
+    showPrice: Boolean,
+    showActionButtons: Boolean
+}) => {
     const [hoveredTemplate, setHoveredTemplate] = useState<number | null>(null);
     const router = useRouter();
     const Icon = Icons[idx];
     return <div
-        className="group relative overflow-hidden w-full md:w-[600px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
+        className="group relative overflow-hidden w-full cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
         onMouseEnter={() => setHoveredTemplate(template._id)}
         onMouseLeave={() => setHoveredTemplate(null)}
         onClick={() => router.push(`/templates/${template._id}`)}
@@ -47,11 +52,13 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
                 </div>
 
                 {/* Hover Overlay */}
-                <div className={`absolute inset-0 z-20 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${
-                    hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'
-                }`}>
-                    <Link href={template.demoLink} className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2">
-                        <ExternalLink className="w-4 h-4" />
+                <div
+                    className={`absolute inset-0 z-20 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${
+                        hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                    <Link href={template.demoLink}
+                          className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2">
+                        <ExternalLink className="w-4 h-4"/>
                         Preview
                     </Link>
                 </div>
@@ -73,11 +80,12 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
             <div className="flex items-start justify-between mb-3">
                 <div>
                     <h3 className="text-xl font-bold text-white mb-1">{template.title}</h3>
-                    <p className="text-gray-300 text-sm">{template.description}</p>
+                    <p className="text-gray-300 text-sm">{template.description?.slice(0, 100)}...</p>
                 </div>
                 {showPrice && (
                     <div className="text-right">
-                        <div className="text-2xl font-bold text-white">{template.price === 0 ? `Free` : `$${template.price}`}</div>
+                        <div
+                            className="text-2xl font-bold text-white">{template.price === 0 ? `Free` : `$${template.price}`}</div>
                     </div>
                 )}
             </div>
@@ -101,7 +109,7 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
 
             <div className="flex justify-between items-center">
                 {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex items-center flex-wrap gap-2 mb-4">
                     {template.tags.map((tag: string) => (
                         <Badge key={tag} variant="secondary"
                                className="bg-white/10 text-gray-300 border-white/20">
@@ -112,18 +120,10 @@ const Template = ({template, idx, showPrice=false, showActionButtons=false}: { t
 
                 {/* Action Buttons */}
                 {showActionButtons && (
-                    <div className="flex gap-3">
-                        <div className="flex gap-3">
-                            <button
-                                className="px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
-                                Buy Now
-                            </button>
-                        </div>
-                        <Link href={template.demoLink} aria-label="Live Demo" target="_blank"
-                              className="px-4 py-3 border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
-                            <ExternalLink className="w-5 h-5"/>
-                        </Link>
-                    </div>
+                    <Link href={template.demoLink} aria-label="Live Demo" target="_blank"
+                          className="px-4 py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
+                        <ExternalLink className="w-5 h-5"/>
+                    </Link>
                 )}
             </div>
         </div>

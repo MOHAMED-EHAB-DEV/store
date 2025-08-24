@@ -9,7 +9,6 @@ import {Toaster} from "@/components/ui/sonner";
 import Head from 'next/head';
 import {cn} from "@/lib/utils";
 import Providers from "./Providers";
-import BackToTop from "@/components/ui/BackToTop";
 
 gsap.registerPlugin(useGSAP);
 
@@ -125,7 +124,6 @@ export default function RootLayout(
 
             <Analytics/>
             <SpeedInsights/>
-            <BackToTop />
             </body>
             </html>
         </Providers>

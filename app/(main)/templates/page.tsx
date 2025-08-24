@@ -4,7 +4,7 @@ import {CategoryService} from "@/lib/services/CategoryService";
 import {serializeCategory, serializeTemplate} from "@/lib/utils";
 
 const Page = async () => {
-    const rawTemplates = await TemplateService.getPopularTemplates(15, 0);
+    const rawTemplates = await TemplateService.getPopularTemplates(100, 0);
     const rawCategories = await CategoryService.getMainCategories();
 
     const templates = rawTemplates.map(serializeTemplate);

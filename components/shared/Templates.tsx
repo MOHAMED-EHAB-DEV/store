@@ -38,7 +38,7 @@ const Templates = ({templates, categories}: { templates: ITemplate[], categories
                     ))}
                 </div>
             }>
-                <div className="flex items-center justify-center flex-wrap gap-6">
+                <div className="grid grid-cols-3 gap-4">
                     {templates.map((template, idx) => <Template showActionButtons={true} showPrice={true} key={template._id} template={template} idx={idx} />)}
                 </div>
             </Suspense>

@@ -44,9 +44,16 @@ export default async function Home() {
                             }}
                             className="group relative overflow-hidden md:w-1/4 w-full rounded-2xl bg-card/70 backdrop-blur-md border border-border/60 p-8 hover:border-accent/40 hover:bg-card/80 transition-all duration-500 hover:shadow-2xl hover:shadow-accent/10 hover:-translate-y-2"
                         >
-                            {/* Glow effect on hover */}
+                            {/* Enhanced glow effect on hover */}
                             <div
-                                className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                                className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
+
+                            {/* Floating particles effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-60 transition-opacity duration-700">
+                                <div className="absolute top-4 right-4 w-1 h-1 bg-accent rounded-full animate-ping" style={{animationDelay: '0s'}} />
+                                <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-primary rounded-full animate-pulse" style={{animationDelay: '0.5s'}} />
+                                <div className="absolute top-1/3 right-1/3 w-0.5 h-0.5 bg-accent rounded-full animate-twinkle" style={{animationDelay: '1s'}} />
+                            </div>
 
                             {/* Content */}
                             <div className="relative z-10">

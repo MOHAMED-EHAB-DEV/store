@@ -54,11 +54,11 @@ export default async function Home() {
                                     {/*<div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-2xl group-hover:bg-accent/20 transition-colors duration-300">*/}
                                     {/*    {valueProp.icon}*/}
                                     {/*</div>*/}
-                                    <h3 className="text-lg font-paras font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
+                                    <h3 className="text-xl font-paras font-bold text-high-contrast group-hover:text-accent transition-colors duration-300 leading-snug">
                                         {title}
                                     </h3>
                                 </div>
-                                <p className="text-muted-foreground leading-relaxed">
+                                <p className="text-medium-contrast leading-loose text-base font-medium">
                                     {desc}
                                 </p>
                             </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";
+import BackToTop from "@/components/ui/BackToTop";
 
 export default function RootLayout(
     {

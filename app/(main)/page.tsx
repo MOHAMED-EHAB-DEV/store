@@ -42,7 +42,7 @@ export default async function Home() {
                                 scale: 1.02,
                                 transition: {duration: 0.2}
                             }}
-                            className="group relative overflow-hidden md:w-1/4 w-full rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 p-6 hover:border-accent/30 transition-all duration-300"
+                            className="group relative overflow-hidden md:w-1/4 w-full rounded-2xl bg-card/70 backdrop-blur-md border border-border/60 p-8 hover:border-accent/40 hover:bg-card/80 transition-all duration-500 hover:shadow-2xl hover:shadow-accent/10 hover:-translate-y-2"
                         >
                             {/* Glow effect on hover */}
                             <div

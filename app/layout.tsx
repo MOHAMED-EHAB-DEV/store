@@ -103,19 +103,19 @@ export default function RootLayout(
                         className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-transparent rounded-full blur-3xl animate-float"/>
                     <div
                         className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-bl from-blue-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl animate-float"
-                        className="gradient-orb-2 absolute -bottom-32 -left-32 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl transform-gpu will-change-transform"
+                        style={{animationDelay: '2s'}}/>
                     <div
                         className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-green-500/15 via-teal-500/10 to-transparent rounded-full blur-3xl animate-float"
                         style={{animationDelay: '4s'}}/>
 
-                        className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-float opacity-60 transform-gpu will-change-transform"/>
+                    {/* Subtle radial gradient pattern */}
                     <div
-                        className="absolute top-3/4 right-1/4 w-1 h-1 bg-pink-400 rounded-full animate-float opacity-40 transform-gpu will-change-transform"
+                        className="absolute inset-0 opacity-30"
                         style={{
                             backgroundImage: `radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
                                             radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-                        className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-float opacity-50 transform-gpu will-change-transform"
-                        className="gradient-orb-1 absolute -top-32 -right-32 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 bg-gradient-to-br from-purple-500/30 via-pink-500/20 to-cyan-500/10 rounded-full blur-3xl transform-gpu will-change-transform"
+                                            radial-gradient(circle at 50% 50%, rgba(119, 255, 198, 0.05) 0%, transparent 50%)`
+                        }}
                     />
                 </div>
 

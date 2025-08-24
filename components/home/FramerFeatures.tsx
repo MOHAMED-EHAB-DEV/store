@@ -255,6 +255,21 @@ const FramerFeatures = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Strategic CTA */}
+            <div className="text-center mt-16 px-6">
+                <a
+                    href="/templates"
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                    aria-label="Browse Framer templates"
+                >
+                    <span className="relative z-10 flex items-center gap-2">
+                        <Framer className="w-6 h-6"/>
+                        Explore Framer Templates
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                </a>
+            </div>
         </section>
     );
 };

@@ -158,18 +158,6 @@
         font-weight: 500;
     }
 
-    /* Improved text contrast */
-    .text-high-contrast {
-        color: #FFFFFF;
-    }
-
-    .text-medium-contrast {
-        color: var(--color-muted-foreground);
-    }
-
-    .text-low-contrast {
-        color: var(--color-secondary);
-    }
 
     /* Put this inside your @layer base (replace the previous block) */
 

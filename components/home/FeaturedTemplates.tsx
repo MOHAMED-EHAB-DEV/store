@@ -27,7 +27,7 @@ async function getTemplates() {
 const FeaturedTemplates = async () => {
     const templates: ITemplate[] = await getTemplates();
     return (
-        <section className="w-full max-w-7xl mx-auto px-4 py-24 relative">
+        <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 relative">
             {/* Section Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
             <div className="relative z-10">

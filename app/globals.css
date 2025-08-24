@@ -479,6 +479,19 @@
     .border-brand {
         @apply border-white/10 hover:border-accent/30;
     }
+
+    /* Custom text contrast classes */
+    .text-high-contrast {
+        color: #FFFFFF;
+    }
+
+    .text-medium-contrast {
+        color: var(--color-muted-foreground);
+    }
+
+    .text-low-contrast {
+        color: var(--color-secondary);
+    }
 }
 
 /* Enhanced animations */

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowUp } from '@/components/ui/svgs/Icons';
+import { ChevronUp } from '@/components/ui/svgs/Icons';
 
 const BackToTop = () => {
     const [isVisible, setIsVisible] = useState(false);

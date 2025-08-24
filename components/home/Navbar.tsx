@@ -34,7 +34,9 @@ const Navbar = () => {
                     : 'bg-primary/50 backdrop-blur-lg shadow-lg border border-white/5'
             }`}
         >
-            <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between py-8">
+            <div className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+                scrolled ? 'py-6' : 'py-8'
+            }`}>
                 <Logo onClick={() => router.push("/")} className={!user && "flex-1"} />
 
                 <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-6 items-center justify-center`}>

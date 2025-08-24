@@ -85,7 +85,7 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        className="font-bold header opacity-0 text-3xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-high-contrast leading-none tracking-tighter"
+                        className="font-bold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
                     >
                                     Premium Templates to{' '}
                                     <span className="relative">
@@ -97,7 +97,7 @@ const Hero = () => {
                                     Your Projects
                     </h1>
                     <p
-                        className="text-lg header opacity-0 md:text-xl lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed"
+                        className="text-base sm:text-lg header opacity-0 md:text-xl lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
@@ -107,7 +107,7 @@ const Hero = () => {
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-6">
+                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-8 px-4 sm:px-0">
                     <Link
                         className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"

@@ -1,4 +1,5 @@
 import React from 'react';
+import {toast} from "sonner";
 import Template from "@/components/singleTemplate/Template";
 
 const getTemplate = async (id: string) => {
@@ -9,6 +10,7 @@ const getTemplate = async (id: string) => {
         return data.success ? data.data : {};
     } catch (err) {
         console.log(`Error while trying to get template: ${id}`);
+        toast.error("Failed to load the template. Please try again.");
         return {};
     }
 }

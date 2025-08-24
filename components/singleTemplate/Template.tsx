@@ -31,7 +31,6 @@ const Template = async ({ template }: { template: ITemplate }) => {
                             {template.price === 0 ? "Free" : `$${template.price}`}
                         </span>
                     </div>
-
                     <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-all">
                         {template.description}
                     </p>

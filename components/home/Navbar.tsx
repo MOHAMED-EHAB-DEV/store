@@ -153,22 +153,24 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                                 ))}
                                 {!user && (
                                     <>
-                                        <Link
-                                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-6 py-3 rounded-full text-white text-center font-medium backdrop-blur-sm mb-2"
-                                            aria-label="Sign In button"
-                                            href="/signin"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            Sign In
-                                        </Link>
-                                        <Link
-                                            className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold shadow-xl hover:shadow-purple-500/25"
-                                            aria-label="Get Started button"
-                                            href="/register"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            Get Started
-                                        </Link>
+                                        <div className="flex flex-col gap-3 mt-6">
+                                            <Link
+                                                className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-8 py-4 rounded-full text-white text-center font-medium backdrop-blur-sm active:scale-95"
+                                                aria-label="Sign In button"
+                                                href="/signin"
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                Sign In
+                                            </Link>
+                                            <Link
+                                                className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-4 rounded-full text-white font-bold shadow-xl hover:shadow-purple-500/25 active:scale-95"
+                                                aria-label="Get Started button"
+                                                href="/register"
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                Get Started
+                                            </Link>
+                                        </div>
                                     </>
                                 )}
                             </ul>

@@ -1,8 +1,8 @@
 'use client';
 
 import {useLayoutEffect} from "react";
-import {gsap} from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
+// import {gsap} from "gsap";
+// import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {Badge} from '@/components/ui/badge';
 import {
     Code,
@@ -13,36 +13,79 @@ import CountUp from '../ui/CountUp';
 import Link from 'next/link';
 import {stats, skills, badges} from "@/constants";
 
-gsap.registerPlugin(ScrollTrigger);
+// gsap.registerPlugin(ScrollTrigger);
 
 const AboutMe = () => {
-    useLayoutEffect(() => {
-        // Animate header
-        gsap.from(".about-header", {
-            scrollTrigger: {
-                trigger: ".about-header",
-                start: "top 70%",
-                toggleActions: "play none none none",
-            },
-            y: 40,
-            opacity: 0,
-            duration: 1.5,
-            ease: "power3.out",
-        });
+    // useLayoutEffect(() => {
+    //     // Animate header
+    //     gsap.from(".about-header", {
+    //         scrollTrigger: {
+    //             trigger: ".about-header",
+    //             start: "top 70%",
+    //             toggleActions: "play none none none",
+    //         },
+    //         y: 40,
+    //         opacity: 0,
+    //         duration: 1.5,
+    //         ease: "power3.out",
+    //     });
+    //
+    //     // Animate all cards
+    //     gsap.from(".about-card", {
+    //         scrollTrigger: {
+    //             trigger: ".about-card",
+    //             start: "top 80%",
+    //             toggleActions: "play none none none",
+    //         },
+    //         y: 50,
+    //         opacity: 0,
+    //         duration: 1,
+    //         stagger: 0.2,
+    //         ease: "power2.out",
+    //     });
+    // }, []);
 
-        // Animate all cards
-        gsap.from(".about-card", {
-            scrollTrigger: {
-                trigger: ".about-card",
-                start: "top 80%",
-                toggleActions: "play none none none",
-            },
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: "power2.out",
-        });
+    useLayoutEffect(() => {
+        let ctx: gsap.Context | null = null;
+
+        (async () => {
+            const gsapModule = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            const gsap = gsapModule.gsap || gsapModule;
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            ctx = gsap.context(() => {
+                // Animate header
+                gsap.from(".about-header", {
+                    scrollTrigger: {
+                        trigger: ".about-header",
+                        start: "top 65%",
+                        toggleActions: "play none none none",
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: "power3.out",
+                });
+
+                // Animate all cards
+                gsap.from(".about-card", {
+                    scrollTrigger: {
+                        trigger: ".about-card",
+                        start: "top 75%",
+                        toggleActions: "play none none none",
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: "power2.out",
+                });
+            });
+        })();
+
+        return () => ctx?.revert();
     }, []);
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col gap-4 items-center justify-center">

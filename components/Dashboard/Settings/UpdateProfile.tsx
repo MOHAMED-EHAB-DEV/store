@@ -101,8 +101,6 @@ const UpdateProfile = ({user}: { user: IUser }) => {
             <div className="flex flex-col justify-center gap-2">
                 <label htmlFor="image" className="text-gray-300 font-medium text-sm">Profile Picture</label>
                 <div className="flex flex-col items-center gap-3">
-                    {/*<div className="w-8 h-8 flex items-center justify-center self-start">*/}
-                    {/*</div>*/}
                     <Dropzone
                         accept={{'image/*': ['.png', '.jpg', '.jpeg']}}
                         onDrop={handleImage}
@@ -112,6 +110,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                         }}
                         src={files}
                         maxFiles={1}
+                        className="hover:bg-primary"
                     >
                         <DropzoneEmptyState/>
                         <DropzoneContent>

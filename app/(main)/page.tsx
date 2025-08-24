@@ -18,12 +18,12 @@ const isMobile =
 
 export default async function Home() {
     return (
-        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5 md:px-0"
+        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw]  md:px-0"
               role="main">
             <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
                 <Hero/>
                 <section
-                    className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full "
+                    className="flex flex-col md:flex-row gap-6 md:gap-10 items-center justify-center w-full px-2 sm:px-4 md:px-0"
                     aria-label="Key features overview"
                 >
                     {HeroItems.map(({id, title, desc}, idx) => {
@@ -42,11 +42,18 @@ export default async function Home() {
                                 scale: 1.02,
                                 transition: {duration: 0.2}
                             }}
-                            className="group relative overflow-hidden md:w-1/4 w-full rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 p-6 hover:border-accent/30 transition-all duration-300"
+                            className="group relative overflow-hidden md:w-1/4 w-full rounded-2xl bg-card/70 backdrop-blur-md border border-border/60 p-8 hover:border-accent/40 hover:bg-card/80 transition-all duration-500 hover:shadow-2xl hover:shadow-accent/10 hover:-translate-y-2"
                         >
-                            {/* Glow effect on hover */}
+                            {/* Enhanced glow effect on hover */}
                             <div
-                                className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                                className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
+
+                            {/* Floating particles effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-60 transition-opacity duration-700">
+                                <div className="absolute top-4 right-4 w-1 h-1 bg-accent rounded-full animate-ping" style={{animationDelay: '0s'}} />
+                                <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-primary rounded-full animate-pulse" style={{animationDelay: '0.5s'}} />
+                                <div className="absolute top-1/3 right-1/3 w-0.5 h-0.5 bg-accent rounded-full animate-twinkle" style={{animationDelay: '1s'}} />
+                            </div>
 
                             {/* Content */}
                             <div className="relative z-10">
@@ -54,11 +61,11 @@ export default async function Home() {
                                     {/*<div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-2xl group-hover:bg-accent/20 transition-colors duration-300">*/}
                                     {/*    {valueProp.icon}*/}
                                     {/*</div>*/}
-                                    <h3 className="text-lg font-paras font-semibold text-foreground group-hover:text-accent transition-colors duration-300">
+                                    <h3 className="text-xl font-paras font-bold text-high-contrast group-hover:text-accent transition-colors duration-300 leading-snug">
                                         {title}
                                     </h3>
                                 </div>
-                                <p className="text-muted-foreground leading-relaxed">
+                                <p className="text-medium-contrast leading-loose text-base font-medium">
                                     {desc}
                                 </p>
                             </div>
@@ -82,7 +89,7 @@ export default async function Home() {
                     alt="demo"
                     width={1400}
                     height={1400}
-                    className="w-[calc(100dvw-100px)] h-full object-contain rounded-xl transition-all border border-border/50 hover:border-accent/30"
+                    className="w-[calc(100dvw-30px)] md:w-[calc(100dvw-80px)] h-full object-contain rounded-xl transition-all border border-border/50 hover:border-accent/30"
                     quality={100}
                     priority
                     placeholder="blur"

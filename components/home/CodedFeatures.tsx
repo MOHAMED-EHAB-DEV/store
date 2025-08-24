@@ -1,65 +1,70 @@
 'use client';
 
+import { useEffect } from "react";
 import {Code2} from "@/components/ui/svgs/Icons";
-import {useGSAP} from "@gsap/react"
-import gsap from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {TextPlugin} from "gsap/TextPlugin";
 import SplitText from "../ui/SplitText";
 import { codeFeatures } from "@/constants";
 
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
 const CodedFeatures = () => {
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: ".code-section",
-            start: "top bottom",
-            end: "bottom 50%",
-            onEnter: () => {
-                const codeTl = gsap.timeline();
+    useEffect(() => {
+        (async () => {
+            const mod = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            const { TextPlugin } = await import("gsap/TextPlugin");
 
-                const codeChars = document.querySelectorAll(".code-title .char");
-                codeTl.fromTo(
-                    codeChars,
-                    {opacity: 0, y: 100, rotationX: -90},
-                    {
-                        duration: 0.8,
-                        y: 0,
-                        opacity: 1,
-                        rotationX: 0,
-                        stagger: 0.02,
-                        ease: "power3.out",
-                    },
-                );
+            const gsap = mod.gsap || mod.default;
+            gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-                codeTl.fromTo(
-                    ".code-feature",
-                    {opacity: 0, y: 50},
-                    {
-                        duration: 1,
-                        y: 0,
-                        opacity: 1,
-                        stagger: 0.1,
-                        ease: "power2.out",
-                    },
-                    "-=0.3",
-                );
+            ScrollTrigger.create({
+                trigger: ".code-section",
+                start: "top bottom",
+                end: "bottom 50%",
+                onEnter: () => {
+                    const codeTl = gsap.timeline();
 
-                codeTl.fromTo(
-                    ".code-preview",
-                    {opacity: 0, y: 100},
-                    {
-                        duration: 1.2,
-                        y: 0,
-                        opacity: 1,
-                        ease: "power3.out",
-                    },
-                    "-=0.5",
-                );
-            },
-        });
-    })
+                    const codeChars = document.querySelectorAll(".code-title .char");
+                    codeTl.fromTo(
+                        codeChars,
+                        { opacity: 0, y: 100, rotationX: -90 },
+                        {
+                            duration: 0.8,
+                            y: 0,
+                            opacity: 1,
+                            rotationX: 0,
+                            stagger: 0.02,
+                            ease: "power3.out",
+                        }
+                    );
+
+                    codeTl.fromTo(
+                        ".code-feature",
+                        { opacity: 0, y: 50 },
+                        {
+                            duration: 1,
+                            y: 0,
+                            opacity: 1,
+                            stagger: 0.1,
+                            ease: "power2.out",
+                        },
+                        "-=0.3"
+                    );
+
+                    codeTl.fromTo(
+                        ".code-preview",
+                        { opacity: 0, y: 100 },
+                        {
+                            duration: 1.2,
+                            y: 0,
+                            opacity: 1,
+                            ease: "power3.out",
+                        },
+                        "-=0.5"
+                    );
+                },
+            });
+        })();
+    }, []);
+
     return (
         <section className="code-section relative z-10 px-6 py-32">
             <div className="max-w-7xl mx-auto">
@@ -159,17 +164,17 @@ const CodedFeatures = () => {
                         </div>
                     </div>
                     <div className="text-center mt-8">
-                        <button
-                            className="btn bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold
-              shadow-[0_0_0_0_rgba(255,200,0,0.4)] hover:shadow-[0_0_32px_-4px_rgba(255,220,0,0.55)] focus:outline-none focus:ring-4 focus:ring-yellow-400/40
-              active:scale-95"
-                            aria-label="Explore premium code templates"
+                        <a
+                            href="/templates"
+                            className="group relative inline-flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                            aria-label="Browse code templates"
                         >
-                            <span
-                                className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"/>
-                            <Code2 className="w-5 h-5"/>
-                            <span>Explore Premium Templates</span>
-                        </button>
+                            <span className="relative z-10 flex items-center gap-2">
+                                <Code2 className="w-5 h-5"/>
+                                Browse Code Templates
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                        </a>
                     </div>
                 </div>
             </div>

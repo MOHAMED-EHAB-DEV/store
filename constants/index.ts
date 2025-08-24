@@ -279,12 +279,12 @@ const DashboardSidebarLinks = [
     {
         Icon: LayoutDashboard,
         text: "Purchased Templates",
-        link: "/purchased-templates",
+        link: "/dashboard/purchased-templates",
     },
     {
         Icon: Settings,
         text: "Settings",
-        link: "/settings",
+        link: "/dashboard/settings",
     }
 ];
 
@@ -333,21 +333,51 @@ const testimonials = [
     {
         avatar: "/assets/images/client1.png",
         name: "Sarah Johnson",
-        rating: 4,
-        text: "This service transformed our workflow and saved us countless hours!",
+        rating: 5,
+        text: "These templates helped us launch our startup website in just 2 days. Amazing quality and support!",
     },
     {
         avatar: "/assets/images/client2.png",
         name: "Mike Anderson",
         rating: 5,
-        text: "The UI and experience were smooth and intuitive. Highly recommend!",
+        text: "As a freelancer, these templates save me weeks of development time. My clients love the results!",
     },
     {
         avatar: "/assets/images/client3.png",
         name: "Emily Carter",
-        rating: 4,
-        text: "A seamless experience with great support. Worth every penny!",
+        rating: 5,
+        text: "The code quality is exceptional. Clean, modern, and perfectly documented. Highly recommended!",
     },
+    {
+        avatar: "/assets/images/client1.png",
+        name: "David Kim",
+        rating: 5,
+        text: "Best investment for our agency. We've used these templates for 10+ client projects successfully.",
+    },
+    {
+        avatar: "/assets/images/client2.png",
+        name: "Lisa Rodriguez",
+        rating: 4,
+        text: "Professional designs that actually convert. Our conversion rate increased by 40% after switching.",
+    },
+    {
+        avatar: "/assets/images/client3.png",
+        name: "James Wilson",
+        rating: 5,
+        text: "Outstanding templates! The Figma files are perfectly organized and the code is production-ready.",
+    },
+    {
+        avatar: "/assets/images/client1.png",
+        name: "Anna Thompson",
+        rating: 5,
+        text: "These templates are a game-changer for small businesses. Professional results without the cost.",
+    },
+    {
+        avatar: "/assets/images/client2.png",
+        name: "Robert Chen",
+        rating: 4,
+        text: "Excellent customer support and regular updates. The templates keep getting better over time.",
+    }
 ];
 
 // About Me

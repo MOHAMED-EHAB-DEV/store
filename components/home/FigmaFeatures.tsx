@@ -1,65 +1,74 @@
 'use client';
 
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { TextPlugin, ScrollTrigger } from 'gsap/all';
-import { Download, Figma } from '@/components/ui/svgs/Icons';
+import {useEffect} from "react";
+import { Figma } from '@/components/ui/svgs/Icons';
 import SplitText from '../ui/SplitText';
 import {figmaFeatures} from "@/constants";
 
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
+let gsap: any;
+let ScrollTrigger: any;
 
 const FigmaFeatures = () => {
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: '.figma-section',
-            start: 'top bottom',
-            end: 'bottom 30%',
-            onEnter: () => {
-                const figmaTl = gsap.timeline();
+    useEffect(() => {
+        (async () => {
+            const mod = await import("gsap");
+            const { ScrollTrigger: ST, TextPlugin } = await import("gsap/all");
 
-                const figmaChars = document.querySelectorAll('.figma-title .char');
-                figmaTl.fromTo(
-                    figmaChars,
-                    { opacity: 0, y: 100, rotationX: -90 },
-                    {
-                        duration: 0.8,
-                        y: 0,
-                        opacity: 1,
-                        rotationX: 0,
-                        stagger: 0.02,
-                        ease: 'power3.out',
-                    }
-                );
+            gsap = mod.gsap || mod.default;
+            ScrollTrigger = ST;
 
-                figmaTl.fromTo(
-                    '.figma-feature',
-                    { opacity: 0, x: -50 },
-                    {
-                        duration: 1,
-                        x: 0,
-                        opacity: 1,
-                        stagger: 0.1,
-                        ease: 'power2.out',
-                    },
-                    '-=0.3'
-                );
+            gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-                figmaTl.fromTo(
-                    '.figma-preview',
-                    { opacity: 0, scale: 0.8, rotation: -5 },
-                    {
-                        duration: 1.2,
-                        scale: 1,
-                        opacity: 1,
-                        rotation: 0,
-                        ease: 'power3.out',
-                    },
-                    '-=0.5'
-                );
-            },
-        });
-    });
+            ScrollTrigger.create({
+                trigger: ".figma-section",
+                start: "top bottom",
+                end: "bottom 30%",
+                onEnter: () => {
+                    const figmaTl = gsap.timeline();
+
+                    const figmaChars = document.querySelectorAll(".figma-title .char");
+                    figmaTl.fromTo(
+                        figmaChars,
+                        { opacity: 0, y: 100, rotationX: -90 },
+                        {
+                            duration: 0.8,
+                            y: 0,
+                            opacity: 1,
+                            rotationX: 0,
+                            stagger: 0.02,
+                            ease: "power3.out",
+                        }
+                    );
+
+                    figmaTl.fromTo(
+                        ".figma-feature",
+                        { opacity: 0, x: -50 },
+                        {
+                            duration: 1,
+                            x: 0,
+                            opacity: 1,
+                            stagger: 0.1,
+                            ease: "power2.out",
+                        },
+                        "-=0.3"
+                    );
+
+                    figmaTl.fromTo(
+                        ".figma-preview",
+                        { opacity: 0, scale: 0.8, rotation: -5 },
+                        {
+                            duration: 1.2,
+                            scale: 1,
+                            opacity: 1,
+                            rotation: 0,
+                            ease: "power3.out",
+                        },
+                        "-=0.5"
+                    );
+                },
+            });
+        })();
+    }, []);
 
     return (
         <section className="figma-section relative z-10 px-4 py-6">
@@ -90,10 +99,18 @@ const FigmaFeatures = () => {
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <button className="flex gap-2 items-center justify-center bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold btn">
-                                <Download className="w-5 h-5 mr-2" />
-                                Browse Figma Templates
-                            </button>
+                            <a
+                                href="/templates"
+                                className="group relative inline-flex items-center justify-center bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-400 hover:via-red-400 hover:to-pink-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                                aria-label="Browse Figma templates"
+                            >
+                                <span className="relative z-10 flex items-center gap-2">
+                                    {/*<Download className="w-5 h-5" />*/}
+                                    <Figma className="w-5 h-5" />
+                                    Browse Figma Templates
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                            </a>
                             {/*<button className="flex gap-2 items-center justify-center glass hover:bg-white/15 text-foreground font-medium px-5 sm:px-6 py-3 rounded-lg transition-all duration-300 hover:backdrop-blur-xl">*/}
                             {/*    <Play className="w-5 h-5 mr-2" />*/}
                             {/*    Watch Tutorial*/}

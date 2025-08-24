@@ -27,14 +27,17 @@ async function getTemplates() {
 const FeaturedTemplates = async () => {
     const templates: ITemplate[] = await getTemplates();
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 py-16">
-            {/* Section Header */}
-            <div className="text-center mb-16">
-                <Badge className="mb-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none px-4 py-2">
-                    <Star className="w-4 h-4 mr-2"/>
-                    Featured Templates
-                </Badge>
-                <h2 className="text-4xl header opacity-0 md:text-6xl font-bold text-white mb-6 font-paras">
+        <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 relative">
+            {/* Section Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
+            <div className="relative z-10">
+                {/* Section Header */}
+                <div className="text-center mb-20">
+                    <Badge className="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
+                        <Star className="w-5 h-5 mr-2 animate-pulse"/>
+                        Featured Templates
+                    </Badge>
+                    <h2 className="text-4xl header opacity-0 md:text-5xl lg:text-6xl xl:text-7xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
                     Handpicked{' '}
                     <span
                         className="relative">
@@ -45,15 +48,15 @@ const FeaturedTemplates = async () => {
                     </span>{' '}
                     Templates
                 </h2>
-                <p className="text-gray-300 header opacity-0 text-lg md:text-xl max-w-2xl mx-auto">
+                    <p className="text-medium-contrast header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
                     Discover our most popular and highest-rated templates, crafted with attention to detail and
                     optimized for performance.
-                </p>
-            </div>
+                    </p>
+                </div>
 
-            {/* Templates Grid */}
-            <Suspense fallback={
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                {/* Templates Grid */}
+                <Suspense fallback={
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-12">
                     {[...Array(4)].map((_, idx) => (
                         <TemplateSkeleton key={idx} />
                     ))}
@@ -64,7 +67,7 @@ const FeaturedTemplates = async () => {
                         <span className="text-secondary opacity-70 font-medium text-md text-center w-full self-center">Sorry, We couldn't find any templates at the moment. Please check back later or Contact our Support.</span>
                     </div>
                     : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-12">
                             {templates.map((template, idx) => (
                                 <Template template={template} idx={idx} key={template._id}/>
                             ))}
@@ -73,14 +76,16 @@ const FeaturedTemplates = async () => {
                 }
             </Suspense>
 
-            {/* View All Button */}
-            <div className="text-center mt-12">
-                <Link href="/templates"
-                      className="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105">
-                    View All Templates
-                </Link>
+                {/* View All Button */}
+                <div className="text-center mt-16">
+                    <Link href="/templates"
+                          className="group relative inline-flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                        <span className="relative z-10">View All Templates</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                    </Link>
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 

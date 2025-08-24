@@ -1,8 +1,8 @@
 'use client';
-
-import TestimonialItem from "@/components/ui/TestimonialItem";
 import { testimonials } from "@/constants";
-import HorizontialMarquee from "@/components/ui/marquee";
+import dynamic from "next/dynamic";
+
+const HorizontialMarquee = dynamic(() => import("@/components/ui/marquee"), {ssr: false});
 
 export default function Testimonials() {
     return (

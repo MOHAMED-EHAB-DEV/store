@@ -1,8 +1,6 @@
 'use client';
 
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Badge } from "../ui/badge";
 import { Framer, Layers } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
@@ -29,47 +27,59 @@ const FramerFeatures = () => {
     }, []);
 
     useLayoutEffect(() => {
-        // Animate section header
-        gsap.from(".framer-header", {
-            scrollTrigger: {
-                trigger: ".framer-header",
-                start: "top 85%",
-            },
-            opacity: 0,
-            y: 40,
-            duration: 1,
-            ease: "power3.out",
-        });
+        let ctx: gsap.Context | null = null;
 
-        // Animate all feature cards
-        gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: "top 85%",
-                },
-                opacity: 0,
-                y: 60,
-                duration: 1,
-                delay: i * 0.1,
-                ease: "power3.out",
-            });
-        });
+        (async () => {
+            const { gsap } = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            gsap.registerPlugin(ScrollTrigger);
 
-        // Animate videos
-        gsap.utils.toArray<HTMLElement>(".feature-video").forEach((video, i) => {
-            gsap.from(video, {
-                scrollTrigger: {
-                    trigger: video,
-                    start: "top 85%",
-                },
-                opacity: 0,
-                scale: 0.95,
-                duration: 1.2,
-                delay: i * 0.15,
-                ease: "power3.out",
+            ctx = gsap.context(() => {
+                // Animate section header
+                gsap.from(".framer-header", {
+                    scrollTrigger: {
+                        trigger: ".framer-header",
+                        start: "top 85%",
+                    },
+                    opacity: 0,
+                    y: 40,
+                    duration: 1,
+                    ease: "power3.out",
+                });
+
+                // Animate all feature cards
+                gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 85%",
+                        },
+                        opacity: 0,
+                        y: 60,
+                        duration: 1,
+                        delay: i * 0.1,
+                        ease: "power3.out",
+                    });
+                });
+
+                // Animate videos
+                gsap.utils.toArray<HTMLElement>(".feature-video").forEach((video, i) => {
+                    gsap.from(video, {
+                        scrollTrigger: {
+                            trigger: video,
+                            start: "top 85%",
+                        },
+                        opacity: 0,
+                        scale: 0.95,
+                        duration: 1.2,
+                        delay: i * 0.15,
+                        ease: "power3.out",
+                    });
+                });
             });
-        });
+        })();
+
+        return () => ctx?.revert();
     }, []);
 
     return (
@@ -254,6 +264,21 @@ const FramerFeatures = () => {
                         />
                     </div>
                 </div>
+            </div>
+
+            {/* Strategic CTA */}
+            <div className="text-center mt-16 px-6">
+                <a
+                    href="/templates"
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                    aria-label="Browse Framer templates"
+                >
+                    <span className="relative z-10 flex items-center gap-2">
+                        <Framer className="w-6 h-6"/>
+                        Explore Framer Templates
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                </a>
             </div>
         </section>
     );

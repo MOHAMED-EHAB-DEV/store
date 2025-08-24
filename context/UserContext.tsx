@@ -2,7 +2,18 @@
 import {createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction} from "react";
 import {useRouter} from "next/navigation";
 
-const UserContext: Context<{user: IUser, setUser: Dispatch<SetStateAction<IUser | null>>, setReload: Dispatch<SetStateAction<boolean>>}> = createContext({});
+interface IUserContext {
+  user: IUser | null;
+  setUser: Dispatch<SetStateAction<IUser | null>>;
+  setReload: Dispatch<SetStateAction<boolean>>;
+}
+
+const UserContext = createContext<IUserContext>({
+  user: null,
+  setUser: () => {},    // no-op fallback
+  setReload: () => {},  // no-op fallback
+});
+
 
 export function UserProvider({ children } : {children: ReactNode}) {
     const router = useRouter();

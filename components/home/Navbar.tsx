@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, Suspense} from 'react';
+import {useState, Suspense, useEffect} from 'react';
 import {Menu, X} from '@/components/ui/svgs/Icons';
 import {motion} from "motion/react";
 import {useRouter} from "next/navigation";
@@ -14,10 +14,25 @@ import {useUser} from "@/context/UserContext";
 const Navbar = () => {
     const router = useRouter();
     const {user} = useUser();
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const isScrolled = window.scrollY > 50;
+            setScrolled(isScrolled);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <div
-            className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-800 ease-in-out translate-y-0 opacity-100 bg-primary/70 backdrop-blur-lg shadow-lg`}
+            className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-500 ease-in-out translate-y-0 opacity-100 ${
+                scrolled 
+                    ? 'bg-primary/90 backdrop-blur-xl shadow-xl border border-white/10' 
+                    : 'bg-primary/50 backdrop-blur-lg shadow-lg'
+            }`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between py-8">
                 <Logo onClick={() => router.push("/")} className={!user && "flex-1"} />

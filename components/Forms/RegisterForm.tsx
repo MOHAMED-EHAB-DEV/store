@@ -77,7 +77,11 @@ const RegisterForm = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
+                        className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
+                            formData.name 
+                                ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500' 
+                                : 'border-white/10 focus:ring-gold focus:border-transparent'
+                        }`}
                         placeholder="Enter your full name"
                         required
                     />
@@ -95,7 +99,13 @@ const RegisterForm = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
+                        className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
+                            formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                                ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500' 
+                                : formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                                ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
+                                : 'border-white/10 focus:ring-gold focus:border-transparent'
+                        }`}
                         placeholder="Enter your email"
                         required
                     />
@@ -113,7 +123,13 @@ const RegisterForm = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
+                        className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
+                            formData.password && formData.password.length >= 8
+                                ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500' 
+                                : formData.password && formData.password.length < 8
+                                ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
+                                : 'border-white/10 focus:ring-gold focus:border-transparent'
+                        }`}
                         placeholder="Create a strong password"
                         required
                     />
@@ -164,7 +180,13 @@ const RegisterForm = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
+                        className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
+                            formData.confirmPassword && formData.password === formData.confirmPassword
+                                ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500' 
+                                : formData.confirmPassword && formData.password !== formData.confirmPassword
+                                ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
+                                : 'border-white/10 focus:ring-gold focus:border-transparent'
+                        }`}
                         placeholder="Confirm your password"
                         required
                     />

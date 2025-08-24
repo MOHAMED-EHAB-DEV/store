@@ -2,6 +2,8 @@ import {Badge} from '@/components/ui/badge';
 import Link from "next/link";
 import {Star} from '@/components/ui/svgs/Icons';
 import Template from "@/components/shared/Template";
+import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
+import {Suspense} from "react";
 
 async function getTemplates() {
     try {
@@ -50,18 +52,26 @@ const FeaturedTemplates = async () => {
             </div>
 
             {/* Templates Grid */}
-            {!templates || templates.length === 0 ?
-                <div className="flex items-center justify-center">
-                    <span className="text-secondary opacity-70 font-medium text-md text-center w-full self-center">Sorry, We couldn’t find any templates at the moment. Please check back later or Contact our Support.</span>
+            <Suspense fallback={
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                    {[...Array(4)].map((_, idx) => (
+                        <TemplateSkeleton key={idx} />
+                    ))}
                 </div>
-                : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                        {templates.map((template, idx) => (
-                            <Template template={template} idx={idx} key={template._id}/>
-                        ))}
+            }>
+                {!templates || templates.length === 0 ?
+                    <div className="flex items-center justify-center">
+                        <span className="text-secondary opacity-70 font-medium text-md text-center w-full self-center">Sorry, We couldn't find any templates at the moment. Please check back later or Contact our Support.</span>
                     </div>
-                )
-            }
+                    : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                            {templates.map((template, idx) => (
+                                <Template template={template} idx={idx} key={template._id}/>
+                            ))}
+                        </div>
+                    )
+                }
+            </Suspense>
 
             {/* View All Button */}
             <div className="text-center mt-12">

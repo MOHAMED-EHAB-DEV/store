@@ -114,7 +114,7 @@ const Hero = () => {
                         href="/templates"
                     >
                         <span className="relative z-10 flex items-center gap-2">
-                            Browse Templates
+                            Explore Templates
                             <ArrowRight
                                 className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"/>
                         </span>

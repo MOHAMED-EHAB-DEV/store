@@ -37,7 +37,7 @@ const FeaturedTemplates = async () => {
                         <Star className="w-5 h-5 mr-2 animate-pulse"/>
                         Featured Templates
                     </Badge>
-                    <h2 className="text-4xl header opacity-0 md:text-6xl lg:text-7xl font-bold text-white mb-8 font-paras leading-tight">
+                    <h2 className="text-4xl header opacity-0 md:text-5xl lg:text-6xl xl:text-7xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
                     Handpicked{' '}
                     <span
                         className="relative">
@@ -48,7 +48,7 @@ const FeaturedTemplates = async () => {
                     </span>{' '}
                     Templates
                 </h2>
-                    <p className="text-gray-300 header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-medium-contrast header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
                     Discover our most popular and highest-rated templates, crafted with attention to detail and
                     optimized for performance.
                     </p>

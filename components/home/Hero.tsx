@@ -63,6 +63,12 @@ const Hero = () => {
             aria-labelledby="hero-title"
             role="banner"
         >
+            {/* Enhanced Background Layer */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+
             <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
                 <Badge
                     variant="secondary"

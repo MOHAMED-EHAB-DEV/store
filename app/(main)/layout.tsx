@@ -2,6 +2,7 @@ import React from "react";
 import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";
 import BackToTop from "@/components/ui/BackToTop";
+import StickyCTA from "@/components/ui/StickyCTA";
 
 export default function RootLayout(
     {
@@ -19,6 +20,7 @@ export default function RootLayout(
 
             <Footer/>
             <BackToTop/>
+            <StickyCTA/>
         </div>
     )
 }

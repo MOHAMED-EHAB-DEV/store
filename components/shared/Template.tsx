@@ -1,15 +1,15 @@
 "use client";
 
-import {useState} from 'react';
-import {Icons} from "@/constants";
-import {Badge} from "@/components/ui/badge";
-import {Heart, Star, ExternalLink} from "@/components/ui/svgs/Icons";
-import {capitalizeFirstChar} from "@/lib/utils";
-import {useRouter} from "next/navigation";
+import { useState } from 'react';
+import { Icons } from "@/constants";
+import { Badge } from "@/components/ui/badge";
+import { Heart, Star, ExternalLink } from "@/components/ui/svgs/Icons";
+import { capitalizeFirstChar } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-const Template = ({template, idx, showPrice = false, showActionButtons = false}: {
+const Template = ({ template, idx, showPrice = false, showActionButtons = false }: {
     template: ITemplate,
     idx: number,
     showPrice: Boolean,
@@ -29,11 +29,11 @@ const Template = ({template, idx, showPrice = false, showActionButtons = false}:
             className={`absolute inset-0 bg-gradient-to-br ${template.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
 
         {/* Featured Badge */}
-        {template.categories.some(({name}: { name: string }) => name?.toLowerCase() === "featured") && (
+        {template.categories.some(({ name }: { name: string }) => name?.toLowerCase() === "featured") && (
             <div className="absolute top-4 left-4 z-10">
                 <Badge
                     className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black border-none">
-                    <Heart className="w-3 h-3 mr-1"/>
+                    <Heart className="w-3 h-3 mr-1" />
                     Featured
                 </Badge>
             </div>
@@ -47,32 +47,29 @@ const Template = ({template, idx, showPrice = false, showActionButtons = false}:
                     className={`absolute inset-0 bg-gradient-to-br ${template.gradient} opacity-30`}></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-6xl text-white/20">
-                        {template.Icon && <Icon/>}
+                        {template.Icon && <Icon />}
                     </div>
                 </div>
 
                 {/* Hover Overlay */}
                 <div
-                    className={`absolute inset-0 z-20 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${
-                        hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'
-                    }`}>
+                    className={`absolute inset-0 z-20 bg-black/50 flex items-center justify-center transition-opacity duration-300 ${hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'
+                        }`}>
                     <Link href={template.demoLink}
-                          className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2">
-                        <ExternalLink className="w-4 h-4"/>
+                        className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center gap-2">
+                        <ExternalLink className="w-4 h-4" />
                         Preview
                     </Link>
                 </div>
             </div>
         ) : (
-            <div className="w-full h-64 relative">
-                <Image
-                    src={template.thumbnail}
-                    alt={template.title}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                />
-            </div>
+            <Image
+                src={template.thumbnail}
+                alt={template.title}
+                width={200}
+                height={200}
+                className="w-full h-72 object-contain"
+            />
         )}
 
         {/* Template Info */}
@@ -99,7 +96,7 @@ const Template = ({template, idx, showPrice = false, showActionButtons = false}:
                             className={`w-4 h-4 ${i < Math.floor(template.averageRating)
                                 ? 'text-yellow-400 fill-current'
                                 : 'text-gray-600'
-                            }`}
+                                }`}
                         />
                     ))}
                 </div>
@@ -112,7 +109,7 @@ const Template = ({template, idx, showPrice = false, showActionButtons = false}:
                 <div className="flex items-center flex-wrap gap-2 mb-4">
                     {template.tags.map((tag: string) => (
                         <Badge key={tag} variant="secondary"
-                               className="bg-white/10 text-gray-300 border-white/20">
+                            className="bg-white/10 text-gray-300 border-white/20">
                             {capitalizeFirstChar(tag)}
                         </Badge>
                     ))}
@@ -121,8 +118,8 @@ const Template = ({template, idx, showPrice = false, showActionButtons = false}:
                 {/* Action Buttons */}
                 {showActionButtons && (
                     <Link href={template.demoLink} aria-label="Live Demo" target="_blank"
-                          className="px-4 py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
-                        <ExternalLink className="w-5 h-5"/>
+                        className="px-4 py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200">
+                        <ExternalLink className="w-5 h-5" />
                     </Link>
                 )}
             </div>

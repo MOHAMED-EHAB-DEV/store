@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {Download, ExternalLink, Star} from "@/components/ui/svgs/Icons";
+import { Download, ExternalLink, Star } from "@/components/ui/svgs/Icons";
 import Markdown from "./Markdown";
 
-const Template = async ({template}: { template: ITemplate }) => {
+const Template = async ({ template }: { template: ITemplate }) => {
     return (
         <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 w-screen text-white">
             {/* Top Section */}
@@ -28,7 +28,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                             {template.title}
                         </h1>
                         <span className="text-xl sm:text-2xl font-bold text-gradient-primary text-center sm:text-right break-words">
-                          {template.price === 0 ? "Free" : `$${template.price}`}
+                            {template.price === 0 ? "Free" : `$${template.price}`}
                         </span>
                     </div>
 
@@ -37,19 +37,21 @@ const Template = async ({template}: { template: ITemplate }) => {
                     </p>
 
                     {/* Tags */}
-                    <div>
-                        <h2 className="text-white/60 text-sm font-semibold mb-2">Tags</h2>
-                        <div className="flex flex-wrap gap-2">
-                            {template.tags?.map((tag: string, idx: number) => (
-                                <span
-                                    key={idx}
-                                    className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
-                                >
-                                  #{tag}
-                                </span>
-                            ))}
+                    {template.tags && template.tags.length > 0 && (
+                        <div>
+                            <h2 className="text-white/60 text-sm font-semibold mb-2">Tags</h2>
+                            <div className="flex flex-wrap gap-2">
+                                {template.tags?.map((tag: string, idx: number) => (
+                                    <span
+                                        key={idx}
+                                        className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
+                                    >
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Categories */}
                     <div>
@@ -62,7 +64,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                                     key={cat._id}
                                     className="py-1 px-2 bg-white/20 rounded-md text-xs text-white/80"
                                 >
-                                  {cat.name}
+                                    {cat.name}
                                 </span>
                             ))}
                         </div>
@@ -74,7 +76,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                             Built With
                         </h4>
                         <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
-                          {template.builtWith}
+                            {template.builtWith}
                         </span>
                     </div>
                 </div>
@@ -89,19 +91,18 @@ const Template = async ({template}: { template: ITemplate }) => {
                             {[...Array(5)].map((_, i) => (
                                 <Star
                                     key={i}
-                                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                        i < Math.floor(template.averageRating)
+                                    className={`w-4 h-4 sm:w-5 sm:h-5 ${i < Math.floor(template.averageRating)
                                             ? "text-yellow-400 fill-current"
                                             : "text-gray-600"
-                                    }`}
+                                        }`}
                                 />
                             ))}
                         </div>
                         <span className="text-base sm:text-lg font-semibold">
-                          {template.averageRating?.toFixed(1)}
+                            {template.averageRating?.toFixed(1)}
                         </span>
                         <span className="text-gray-400 text-xs sm:text-sm">
-                          {template.reviewCount ?? 0} reviews
+                            {template.reviewCount ?? 0} reviews
                         </span>
                     </div>
 
@@ -109,7 +110,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                     <div className="flex flex-col items-center">
                         <Download className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                         <span className="text-gray-400 text-xs sm:text-sm">
-                          {template.downloads} downloads
+                            {template.downloads} downloads
                         </span>
                     </div>
 

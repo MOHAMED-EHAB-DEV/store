@@ -9,6 +9,7 @@ import {Toaster} from "@/components/ui/sonner";
 import Head from 'next/head';
 import {cn} from "@/lib/utils";
 import Providers from "./Providers";
+import BackToTop from "@/components/ui/BackToTop";
 
 gsap.registerPlugin(useGSAP);
 
@@ -89,7 +90,7 @@ export default function RootLayout(
                 Skip to main content
             </a>
 
-            <div className="min-h-screen h-full w-full relative overflow-x-hidden">
+            <div className="min-h-screen min-w-screen h-full w-full relative overflow-x-hidden">
                 {/* Enhanced background with multiple gradients */}
                 <div className="fixed inset-0 -z-10">
                     {/* Primary background */}
@@ -124,6 +125,7 @@ export default function RootLayout(
 
             <Analytics/>
             <SpeedInsights/>
+            <BackToTop />
             </body>
             </html>
         </Providers>

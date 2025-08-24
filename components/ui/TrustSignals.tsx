@@ -48,11 +48,11 @@ const TrustSignals: React.FC<TrustSignalsProps> = ({
     const getContainerClass = () => {
         switch (variant) {
             case 'vertical':
-                return 'flex flex-col gap-4';
+                return 'flex flex-col gap-2';
             case 'grid':
-                return 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4';
+                return 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2';
             default:
-                return 'flex flex-wrap justify-center gap-4 md:gap-8';
+                return 'flex w-full flex-wrap justify-center gap-2 md:gap-4';
         }
     };
 

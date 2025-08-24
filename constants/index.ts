@@ -279,12 +279,12 @@ const DashboardSidebarLinks = [
     {
         Icon: LayoutDashboard,
         text: "Purchased Templates",
-        link: "/purchased-templates",
+        link: "/dashboard/purchased-templates",
     },
     {
         Icon: Settings,
         text: "Settings",
-        link: "/settings",
+        link: "/dashboard/settings",
     }
 ];
 

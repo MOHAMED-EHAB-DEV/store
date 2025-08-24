@@ -60,7 +60,7 @@ const Hero = () => {
 
     return (
         <section
-            className="relative flex items-center justify-center gap-3 min-h-screen overflow-x-hidden pt-36 sm:pt-46 md:pt-36 h-full w-full"
+            className="relative flex items-center justify-center gap-3 min-h-screen overflow-x-hidden pb-4 pt-36 sm:pt-46 md:pt-36 h-full w-full"
             aria-labelledby="hero-title"
             role="banner"
         >
@@ -108,7 +108,7 @@ const Hero = () => {
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-8 px-4 sm:px-0">
+                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
                     <Link
                         className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
@@ -137,7 +137,7 @@ const Hero = () => {
                 </div>
 
                 {/* Trust Signals */}
-                <div className="mt-12 w-full max-w-4xl">
+                <div className="mt-4 w-full max-w-4xl">
                     <TrustSignals variant="horizontal" className="justify-center" />
                 </div>
             </div>

@@ -1,8 +1,6 @@
 'use client';
 
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Badge } from "../ui/badge";
 import { Framer, Layers } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
@@ -29,47 +27,59 @@ const FramerFeatures = () => {
     }, []);
 
     useLayoutEffect(() => {
-        // Animate section header
-        gsap.from(".framer-header", {
-            scrollTrigger: {
-                trigger: ".framer-header",
-                start: "top 85%",
-            },
-            opacity: 0,
-            y: 40,
-            duration: 1,
-            ease: "power3.out",
-        });
+        let ctx: gsap.Context | null = null;
 
-        // Animate all feature cards
-        gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: "top 85%",
-                },
-                opacity: 0,
-                y: 60,
-                duration: 1,
-                delay: i * 0.1,
-                ease: "power3.out",
-            });
-        });
+        (async () => {
+            const { gsap } = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            gsap.registerPlugin(ScrollTrigger);
 
-        // Animate videos
-        gsap.utils.toArray<HTMLElement>(".feature-video").forEach((video, i) => {
-            gsap.from(video, {
-                scrollTrigger: {
-                    trigger: video,
-                    start: "top 85%",
-                },
-                opacity: 0,
-                scale: 0.95,
-                duration: 1.2,
-                delay: i * 0.15,
-                ease: "power3.out",
+            ctx = gsap.context(() => {
+                // Animate section header
+                gsap.from(".framer-header", {
+                    scrollTrigger: {
+                        trigger: ".framer-header",
+                        start: "top 85%",
+                    },
+                    opacity: 0,
+                    y: 40,
+                    duration: 1,
+                    ease: "power3.out",
+                });
+
+                // Animate all feature cards
+                gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 85%",
+                        },
+                        opacity: 0,
+                        y: 60,
+                        duration: 1,
+                        delay: i * 0.1,
+                        ease: "power3.out",
+                    });
+                });
+
+                // Animate videos
+                gsap.utils.toArray<HTMLElement>(".feature-video").forEach((video, i) => {
+                    gsap.from(video, {
+                        scrollTrigger: {
+                            trigger: video,
+                            start: "top 85%",
+                        },
+                        opacity: 0,
+                        scale: 0.95,
+                        duration: 1.2,
+                        delay: i * 0.15,
+                        ease: "power3.out",
+                    });
+                });
             });
-        });
+        })();
+
+        return () => ctx?.revert();
     }, []);
 
     return (

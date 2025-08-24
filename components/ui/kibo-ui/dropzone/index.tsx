@@ -133,7 +133,7 @@ export const DropzoneContent = ({
   return (
     <div className={cn('flex flex-col items-center justify-center', className)}>
       <div className={`flex ${!children ? "size-8" : "w-20 h-20"} items-center justify-center rounded-md bg-muted text-muted-foreground`}>
-          {children ? children : <Upload size={16} />}
+          {children ? children : <Upload />}
       </div>
       <p className="my-2 w-full truncate font-medium text-sm">
         {src.length > maxLabelItems
@@ -186,7 +186,7 @@ export const DropzoneEmptyState = ({
   return (
     <div className={cn('flex flex-col items-center justify-center', className)}>
       <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
-        <Upload size={16} />
+        <Upload />
       </div>
       <p className="my-2 w-full truncate text-wrap font-medium text-sm">
         Upload {maxFiles === 1 ? 'a file' : 'files'}

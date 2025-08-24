@@ -118,7 +118,7 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                         variants={{
                             hidden: {x: "100%", opacity: 0},
                             visible: {
-                                x: 0,
+                                x: 5,
                                 opacity: 1,
                                 transition: {type: "spring", stiffness: 400, damping: 30},
                             },

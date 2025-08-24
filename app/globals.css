@@ -176,40 +176,19 @@
 
     /* headings & text (no responsive variants inside @apply) */
     .markdown-body h1 {
-        @apply text-2xl font-bold my-6 leading-tight;
-    }
-    @media (min-width: 768px) {
-        .markdown-body h1 {
-            @apply text-4xl leading-tight;
-        }
+        @apply text-2xl font-bold my-6 leading-tight md:text-4xl;
     }
 
     .markdown-body h2 {
-        @apply text-xl font-semibold my-5 leading-snug;
-    }
-    @media (min-width: 768px) {
-        .markdown-body h2 {
-            @apply text-3xl leading-snug;
-        }
+        @apply text-xl font-semibold my-5 leading-snug md:text-3xl;
     }
 
     .markdown-body h3 {
-        @apply text-lg font-semibold my-4 leading-snug;
-    }
-    @media (min-width: 768px) {
-        .markdown-body h3 {
-            @apply text-2xl leading-snug;
-        }
+        @apply text-lg font-semibold my-4 leading-snug md:text-2xl;
     }
 
     .markdown-body p {
-        @apply leading-relaxed mb-6 text-base;
-    }
-
-    @media (min-width: 768px) {
-        .markdown-body p {
-            @apply text-lg leading-loose;
-        }
+        @apply leading-relaxed mb-6 text-base md:text-lg;
     }
 
     .markdown-body a {
@@ -254,9 +233,7 @@
 
 @layer components {
     .btn {
-        @apply flex gap-2 items-center justify-center cursor-pointer
-        font-semibold px-6 py-3 rounded-full transition-all duration-300
-        transform hover:scale-105 text-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-white;
+        @apply flex gap-2 items-center justify-center cursor-pointer font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 text-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 text-white md:px-4 md:py-2 md:text-base;
     }
 
     .btn-primary {
@@ -279,7 +256,7 @@
     }
 
     .card {
-        @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02];
+        @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] md:p-4;
     }
     .card-glass {
         @apply  hover:bg-white/15;
@@ -465,7 +442,7 @@
     }
 
     .text-brand-secondary {
-        @apply text-medium-contrast;
+        @apply text-muted-foreground;
     }
 
     .bg-brand-primary {
@@ -485,7 +462,7 @@
         color: #FFFFFF;
     }
 
-    .text-medium-contrast {
+    .text-muted-foreground {
         color: var(--color-muted-foreground);
     }
 
@@ -582,17 +559,6 @@
 
 .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Responsive utilities */
-@media (max-width: 768px) {
-    .btn {
-        @apply px-4 py-2 text-base;
-    }
-
-    /*.card {*/
-    /*    @apply p-4;*/
-    /*}*/
 }
 
 /* High contrast mode support */

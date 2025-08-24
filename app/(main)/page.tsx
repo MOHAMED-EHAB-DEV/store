@@ -18,7 +18,7 @@ const isMobile =
 
 export default async function Home() {
     return (
-        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw] px-5 md:px-0"
+        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw]  md:px-0"
               role="main">
             <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
                 <Hero/>
@@ -89,7 +89,7 @@ export default async function Home() {
                     alt="demo"
                     width={1400}
                     height={1400}
-                    className="w-[calc(100dvw-100px)] h-full object-contain rounded-xl transition-all border border-border/50 hover:border-accent/30"
+                    className="w-[calc(100dvw-30px)] md:w-[calc(100dvw-80px)] h-full object-contain rounded-xl transition-all border border-border/50 hover:border-accent/30"
                     quality={100}
                     priority
                     placeholder="blur"

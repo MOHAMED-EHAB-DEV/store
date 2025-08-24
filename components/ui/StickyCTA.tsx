@@ -1,25 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Star } from '@/components/ui/svgs/Icons';
 import Link from 'next/link';
 
 const StickyCTA = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [isDismissed, setIsDismissed] = useState(false);
+    const lastScrollY = useRef(0);
 
     useEffect(() => {
         const handleScroll = () => {
-            // Show after scrolling 500px down
-            if (window.pageYOffset > 500 && !isDismissed) {
+            if (isDismissed) return;
+
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > 700 && currentScrollY > lastScrollY.current) {
                 setIsVisible(true);
-            } else if (window.pageYOffset <= 500) {
-                setIsVisible(false);
             }
+
+            lastScrollY.current = currentScrollY;
         };
 
-        window.addEventListener('scroll', handleScroll);
-
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isDismissed]);
 
@@ -39,20 +42,20 @@ const StickyCTA = () => {
                                 Join 10,000+ developers building faster with our templates
                             </span>
                         </div>
-                        
+
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/templates"
                                 className="group bg-white text-purple-600 hover:bg-gray-100 font-bold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg"
                             >
                                 <span className="flex items-center gap-2">
-                                    Browse Templates
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                      Browse Templates
+                                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                                 </span>
                             </Link>
                             <button
                                 onClick={() => setIsDismissed(true)}
-                                className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-all duration-200"
+                                className="text-white/70 hover:text-white px-4 py-2 rounded-full hover:bg-white/10 transition-all duration-200"
                                 aria-label="Dismiss sticky CTA"
                             >
                                 ✕

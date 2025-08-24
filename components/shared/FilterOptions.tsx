@@ -1,55 +1,56 @@
 import {Dispatch, SetStateAction, useState} from "react";
-import { Search, ChevronDown, ChevronUp, } from "@/components/ui/svgs/Icons";
+import {Search, ChevronDown, ChevronUp,} from "@/components/ui/svgs/Icons";
 import {
     Popover,
     PopoverTrigger,
     PopoverContent,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import {Button} from "@/components/ui/button";
+import {Checkbox} from "@/components/ui/checkbox";
 import {
     Command,
     CommandGroup,
     CommandItem,
 } from "@/components/ui/command";
 
-const FilterOptions = ({
-                           search,
-                           setSearch,
-                           categories,
-                           setCategories,
-                           tags,
-                           setTags,
-                       }: {
-    search: string;
-    setSearch: Dispatch<SetStateAction<string>>;
-    categories: ICategory[];
-    setCategories: Dispatch<SetStateAction<ICategory[]>>;
-    tags: { tag: string; selected: boolean }[];
-    setTags: Dispatch<SetStateAction<{ tag: string; selected: boolean }[]>>;
-}) => {
+const FilterOptions = (
+    {
+        search,
+        setSearch,
+        categories,
+        setCategories,
+        tags,
+        setTags,
+    }: {
+        search: string;
+        setSearch: Dispatch<SetStateAction<string>>;
+        categories: ICategory[];
+        setCategories: Dispatch<SetStateAction<ICategory[]>>;
+        tags: { tag: string; selected: boolean }[];
+        setTags: Dispatch<SetStateAction<{ tag: string; selected: boolean }[]>>;
+    }) => {
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
     const [isTagsOpen, setIsTagsOpen] = useState(false);
 
     const handleClearAllTags = () => {
-        setTags(tags.map(tag => ({ ...tag, selected: false })));
+        setTags(tags.map(tag => ({...tag, selected: false})));
     };
 
     const handleSelectAllTags = () => {
-        setTags(tags.map(tag => ({ ...tag, selected: true })));
+        setTags(tags.map(tag => ({...tag, selected: true})));
     };
 
     const handleClearAllCategories = () => {
-        setCategories(categories.map(category => ({ ...category, selected: false })));
+        setCategories(categories.map(category => ({...category, selected: false})));
     }
 
     const handleSelectAllCategories = () => {
-        setCategories(categories.map(category => ({ ...category, selected: true })));
+        setCategories(categories.map(category => ({...category, selected: true})));
     }
     return (
         <div className="w-full flex gap-3 items-center flex-wrap">
             <div className="relative w-1/10 flex-1">
-                <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"/>
                 <input
                     type="text"
                     value={search}
@@ -62,11 +63,12 @@ const FilterOptions = ({
 
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button onClick={() => setIsCategoriesOpen(!isCategoriesOpen)} variant="outline" className="min-w-[250px] flex gap-2 outline-none focus:outline-none border-none items-center bg-conic-300 text-white">
+                    <Button onClick={() => setIsCategoriesOpen(!isCategoriesOpen)} variant="outline"
+                            className="min-w-[250px] flex gap-2 outline-none focus:outline-none border-none items-center hover:bg-primary bg-conic-300 text-white">
                         {categories.filter((c) => c.selected).length > 0
                             ? `${categories.filter((c) => c.selected).length} Category(s) selected`
                             : "Select Category"}
-                        {isCategoriesOpen ? <ChevronUp /> : <ChevronDown />}
+                        {isCategoriesOpen ? <ChevronUp/> : <ChevronDown/>}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[250px] p-0 bg-dark">
@@ -117,11 +119,12 @@ const FilterOptions = ({
             </Popover>
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="outline" onClick={() => setIsTagsOpen(!isTagsOpen)} className="min-w-[250px] flex gap-2 items-center outline-none focus:outline-none border-none bg-conic-300 text-white">
+                    <Button variant="outline" onClick={() => setIsTagsOpen(!isTagsOpen)}
+                            className="min-w-[250px] flex gap-2 items-center outline-none focus:outline-none border-none hover:bg-primary bg-conic-300 text-white">
                         {tags.filter((t) => t.selected).length > 0
                             ? `${tags.filter((t) => t.selected).length} tag(s) selected`
                             : "Select Tags"}
-                        {isTagsOpen ? <ChevronUp /> : <ChevronDown />}
+                        {isTagsOpen ? <ChevronUp/> : <ChevronDown/>}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[250px] p-0 bg-dark">

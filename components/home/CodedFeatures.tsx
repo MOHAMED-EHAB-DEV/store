@@ -1,65 +1,70 @@
 'use client';
 
+import { useEffect } from "react";
 import {Code2} from "@/components/ui/svgs/Icons";
-import {useGSAP} from "@gsap/react"
-import gsap from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {TextPlugin} from "gsap/TextPlugin";
 import SplitText from "../ui/SplitText";
 import { codeFeatures } from "@/constants";
 
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
-
 const CodedFeatures = () => {
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: ".code-section",
-            start: "top bottom",
-            end: "bottom 50%",
-            onEnter: () => {
-                const codeTl = gsap.timeline();
+    useEffect(() => {
+        (async () => {
+            const mod = await import("gsap");
+            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+            const { TextPlugin } = await import("gsap/TextPlugin");
 
-                const codeChars = document.querySelectorAll(".code-title .char");
-                codeTl.fromTo(
-                    codeChars,
-                    {opacity: 0, y: 100, rotationX: -90},
-                    {
-                        duration: 0.8,
-                        y: 0,
-                        opacity: 1,
-                        rotationX: 0,
-                        stagger: 0.02,
-                        ease: "power3.out",
-                    },
-                );
+            const gsap = mod.gsap || mod.default;
+            gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-                codeTl.fromTo(
-                    ".code-feature",
-                    {opacity: 0, y: 50},
-                    {
-                        duration: 1,
-                        y: 0,
-                        opacity: 1,
-                        stagger: 0.1,
-                        ease: "power2.out",
-                    },
-                    "-=0.3",
-                );
+            ScrollTrigger.create({
+                trigger: ".code-section",
+                start: "top bottom",
+                end: "bottom 50%",
+                onEnter: () => {
+                    const codeTl = gsap.timeline();
 
-                codeTl.fromTo(
-                    ".code-preview",
-                    {opacity: 0, y: 100},
-                    {
-                        duration: 1.2,
-                        y: 0,
-                        opacity: 1,
-                        ease: "power3.out",
-                    },
-                    "-=0.5",
-                );
-            },
-        });
-    })
+                    const codeChars = document.querySelectorAll(".code-title .char");
+                    codeTl.fromTo(
+                        codeChars,
+                        { opacity: 0, y: 100, rotationX: -90 },
+                        {
+                            duration: 0.8,
+                            y: 0,
+                            opacity: 1,
+                            rotationX: 0,
+                            stagger: 0.02,
+                            ease: "power3.out",
+                        }
+                    );
+
+                    codeTl.fromTo(
+                        ".code-feature",
+                        { opacity: 0, y: 50 },
+                        {
+                            duration: 1,
+                            y: 0,
+                            opacity: 1,
+                            stagger: 0.1,
+                            ease: "power2.out",
+                        },
+                        "-=0.3"
+                    );
+
+                    codeTl.fromTo(
+                        ".code-preview",
+                        { opacity: 0, y: 100 },
+                        {
+                            duration: 1.2,
+                            y: 0,
+                            opacity: 1,
+                            ease: "power3.out",
+                        },
+                        "-=0.5"
+                    );
+                },
+            });
+        })();
+    }, []);
+
     return (
         <section className="code-section relative z-10 px-6 py-32">
             <div className="max-w-7xl mx-auto">

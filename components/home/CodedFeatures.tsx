@@ -159,17 +159,17 @@ const CodedFeatures = () => {
                         </div>
                     </div>
                     <div className="text-center mt-8">
-                        <button
-                            className="btn bg-gradient-to-r from-gold to-yellow-400 hover:from-yellow-400 hover:to-gold
-              shadow-[0_0_0_0_rgba(255,200,0,0.4)] hover:shadow-[0_0_32px_-4px_rgba(255,220,0,0.55)] focus:outline-none focus:ring-4 focus:ring-yellow-400/40
-              active:scale-95"
-                            aria-label="Explore premium code templates"
+                        <a
+                            href="/templates"
+                            className="group relative inline-flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                            aria-label="Browse code templates"
                         >
-                            <span
-                                className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"/>
-                            <Code2 className="w-5 h-5"/>
-                            <span>Explore Premium Templates</span>
-                        </button>
+                            <span className="relative z-10 flex items-center gap-2">
+                                <Code2 className="w-5 h-5"/>
+                                Browse Code Templates
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                        </a>
                     </div>
                 </div>
             </div>

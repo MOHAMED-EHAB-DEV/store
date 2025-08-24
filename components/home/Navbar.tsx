@@ -48,15 +48,15 @@ const Navbar = () => {
                     <MobileDrawer user={user?.user}/>
                     {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
                         <Link
-                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none hover:bg-glass px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                            aria-label="Signin button"
+                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-6 py-3 rounded-full text-white font-medium text-base backdrop-blur-sm"
+                            aria-label="Sign In button"
                             href="/signin"
                         >
-                            Signin
+                            Sign In
                         </Link>
                         <Link
-                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-500 border-none bg-gradient-to-r from-emerald-400 to-teal-500 px-6 py-3 rounded-full text-white font-semibold text-lg shadow-lg"
-                            aria-label="Signup button"
+                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
+                            aria-label="Get Started button"
                             href="/register"
                         >
                             Get Started

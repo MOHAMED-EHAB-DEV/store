@@ -23,7 +23,7 @@ export default async function Home() {
             <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
                 <Hero/>
                 <section
-                    className="flex flex-col md:flex-row gap-5 md:gap-10 items-center justify-center w-full "
+                    className="flex flex-col md:flex-row gap-6 md:gap-10 items-center justify-center w-full px-2 sm:px-4 md:px-0"
                     aria-label="Key features overview"
                 >
                     {HeroItems.map(({id, title, desc}, idx) => {

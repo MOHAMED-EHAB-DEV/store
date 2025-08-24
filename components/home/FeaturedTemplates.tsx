@@ -27,7 +27,10 @@ async function getTemplates() {
 const FeaturedTemplates = async () => {
     const templates: ITemplate[] = await getTemplates();
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 py-16">
+        <section className="w-full max-w-7xl mx-auto px-4 py-24 relative">
+            {/* Section Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
+            <div className="relative z-10">
             {/* Section Header */}
             <div className="text-center mb-16">
                 <Badge className="mb-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none px-4 py-2">
@@ -80,7 +83,8 @@ const FeaturedTemplates = async () => {
                     View All Templates
                 </Link>
             </div>
-        </div>
+            </div>
+        </section>
     );
 };
 

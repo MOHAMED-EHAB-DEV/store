@@ -31,13 +31,13 @@ const FeaturedTemplates = async () => {
             {/* Section Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
             <div className="relative z-10">
-            {/* Section Header */}
-            <div className="text-center mb-16">
-                <Badge className="mb-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none px-4 py-2">
-                    <Star className="w-4 h-4 mr-2"/>
-                    Featured Templates
-                </Badge>
-                <h2 className="text-4xl header opacity-0 md:text-6xl font-bold text-white mb-6 font-paras">
+                {/* Section Header */}
+                <div className="text-center mb-20">
+                    <Badge className="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
+                        <Star className="w-5 h-5 mr-2 animate-pulse"/>
+                        Featured Templates
+                    </Badge>
+                    <h2 className="text-4xl header opacity-0 md:text-6xl lg:text-7xl font-bold text-white mb-8 font-paras leading-tight">
                     Handpicked{' '}
                     <span
                         className="relative">
@@ -48,11 +48,11 @@ const FeaturedTemplates = async () => {
                     </span>{' '}
                     Templates
                 </h2>
-                <p className="text-gray-300 header opacity-0 text-lg md:text-xl max-w-2xl mx-auto">
+                    <p className="text-gray-300 header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed">
                     Discover our most popular and highest-rated templates, crafted with attention to detail and
                     optimized for performance.
-                </p>
-            </div>
+                    </p>
+                </div>
 
             {/* Templates Grid */}
             <Suspense fallback={

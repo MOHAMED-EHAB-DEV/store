@@ -8,8 +8,8 @@ import AboutMe from "@/components/home/AboutMe";
 import FramerFeatures from "@/components/home/FramerFeatures";
 import CodedFeatures from "@/components/home/CodedFeatures";
 import FigmaFeatures from "@/components/home/FigmaFeatures";
-import BackToTop from "@/components/ui/BackToTop";
 import Testimonials from "@/components/home/Testimonials";
+import StickyCTA from "@/components/ui/StickyCTA";
 import Cta from "@/components/home/CTA";
 
 const isMobile =
@@ -21,7 +21,7 @@ export default async function Home() {
     return (
         <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw]  md:px-0"
               role="main">
-            <BackToTop />
+            <StickyCTA/>
             <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
                 <Hero/>
                 <section

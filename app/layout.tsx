@@ -7,6 +7,7 @@ import {Analytics} from "@vercel/analytics/next";
 import {SpeedInsights} from "@vercel/speed-insights/next";
 import {Toaster} from "@/components/ui/sonner";
 import Head from 'next/head';
+import BackToTop from "@/components/ui/BackToTop";
 import {cn} from "@/lib/utils";
 import Providers from "./Providers";
 
@@ -124,6 +125,7 @@ export default function RootLayout(
 
             <Analytics/>
             <SpeedInsights/>
+            <BackToTop />
             </body>
             </html>
         </Providers>

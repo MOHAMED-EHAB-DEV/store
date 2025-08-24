@@ -85,7 +85,7 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        className="font-bold header opacity-0 text-3xl md:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-white"
+                        className="font-bold header opacity-0 text-3xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl w-full md:w-2/3 text-center font-paras text-high-contrast leading-none tracking-tighter"
                     >
                                     Premium Templates to{' '}
                                     <span className="relative">
@@ -97,11 +97,11 @@ const Hero = () => {
                                     Your Projects
                     </h1>
                     <p
-                        className="text-base header opacity-0 md:text-lg lg:text-xl w-full md:w-1/3 font-medium text-center font-paras text-secondary leading-relaxed"
+                        className="text-lg header opacity-0 md:text-xl lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed"
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
-                        <span className="block mt-2 text-sm text-secondary">
+                        <span className="block mt-3 text-base md:text-lg text-low-contrast font-normal">
                             Join 10,000+ developers who trust our templates
                         </span>
                     </p>
@@ -147,11 +147,11 @@ const Hero = () => {
                                 </div>
                             ))}
                         </div>
-                        <span className="text-secondary">10K+ Happy Customers</span>
+                        <span className="text-medium-contrast font-medium">10K+ Happy Customers</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-400 fill-current"/>
-                        <span className="text-secondary">4.9/5 Rating</span>
+                        <span className="text-medium-contrast font-medium">4.9/5 Rating</span>
                     </div>
                 </div>
             </div>

@@ -30,8 +30,8 @@ const Navbar = () => {
         <div
             className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-500 ease-in-out translate-y-0 opacity-100 ${
                 scrolled 
-                    ? 'bg-primary/90 backdrop-blur-xl shadow-xl border border-white/10' 
-                    : 'bg-primary/50 backdrop-blur-lg shadow-lg'
+                    ? 'bg-primary/90 backdrop-blur-xl shadow-xl'
+                    : 'bg-primary/40 backdrop-blur-lg shadow-lg'
             }`}
         >
             <div className="mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between py-8">

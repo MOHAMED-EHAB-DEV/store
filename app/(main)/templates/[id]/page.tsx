@@ -1,5 +1,4 @@
 import React from 'react';
-import {toast} from "sonner";
 import Template from "@/components/singleTemplate/Template";
 
 const getTemplate = async (id: string) => {

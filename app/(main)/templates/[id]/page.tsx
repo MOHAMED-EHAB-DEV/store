@@ -9,8 +9,7 @@ const getTemplate = async (id: string) => {
 
         return data.success ? data.data : {};
     } catch (err) {
-        console.log(`Error while trying to get template: ${id}`);
-        toast.error("Failed to load the template. Please try again.");
+        console.log(`Error while trying to get template: ${err}`);
         return {};
     }
 }

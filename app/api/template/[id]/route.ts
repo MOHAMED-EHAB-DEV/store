@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { TemplateService } from '@/lib/services/TemplateService';
 import Review from "@/lib/models/Review";
+import {connectToDatabase} from "@/lib/database";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     const {id} = await params;
     try {
+        await connectToDatabase();
+
         const [template, totalReviews] = await Promise.all([
             TemplateService.findById(
                 id,

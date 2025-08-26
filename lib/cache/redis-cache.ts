@@ -65,7 +65,7 @@ class RedisCacheManager {
         try {
             const config: RedisConfig = {
                 host: process.env.REDIS_HOST || 'localhost',
-                port: parseInt(process.env.REDIS_PORT || '6379'),
+                port: parseInt(process.env.REDIS_PORT || '18802'),
                 password: process.env.REDIS_PASSWORD,
                 db: parseInt(process.env.REDIS_DB || '0'),
                 maxRetriesPerRequest: 3,

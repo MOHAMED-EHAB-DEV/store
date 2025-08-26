@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect, Suspense} from 'react';
+import React, {useState, useEffect, Suspense, useRef} from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
@@ -16,6 +16,7 @@ const Templates = ({initialData, categories, isHome = false}: {
     categories: ICategory[],
     isHome?: Boolean
 }) => {
+    const isFirstRender = useRef(true);
     const [templates, setTemplates] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -49,6 +50,10 @@ const Templates = ({initialData, categories, isHome = false}: {
     const [selectedTags, setSelectedTags] = useState<{ tag: string; selected: boolean }[]>(uniqueTags);
 
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
         const fetchTemplates = async () => {
             setIsLoading(true);
             try {

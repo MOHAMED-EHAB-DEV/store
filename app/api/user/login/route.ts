@@ -1,170 +1,270 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { connectToDatabase, measureQuery } from "@/lib/database";
-import { UserService } from "@/lib/services/UserService";
+import { connectToDatabase } from "@/lib/database";
+import User from "@/lib/models/User";
+import { 
+    withAPIMiddleware, 
+    createAPIResponse, 
+    createErrorResponse,
+    RateLimiter
+} from '@/lib/utils/api-helpers';
 
-// Types for better type safety
+// Enhanced types for better type safety
 interface LoginRequest {
     email: string;
     password: string;
+    rememberMe?: boolean;
 }
 
-interface ApiResponse {
-    success: boolean;
+interface LoginResponse {
     message: string;
-    user?: {
+    user: {
+        id: string;
         name: string;
         email: string;
         role: string;
+        avatar?: string;
+        lastLogin: Date;
     };
-    performance?: {
-        duration: number;
-    };
+    expiresIn: string;
 }
 
-// Validation helper
-function validateLoginRequest(body: any): body is LoginRequest {
-    return (
-        body &&
-        typeof body.email === 'string' &&
-        typeof body.password === 'string' &&
-        body.email.length > 0 &&
-        body.password.length > 0 &&
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email) // Basic email validation
-    );
-}
-
-// Rate limiting for login attempts
-const loginAttempts = new Map<string, { count: number; resetTime: number }>();
-
-function checkRateLimit(identifier: string, maxAttempts = 5, windowMs = 15 * 60 * 1000): boolean {
-    const now = Date.now();
-    const attempts = loginAttempts.get(identifier);
-
-    if (!attempts || now > attempts.resetTime) {
-        loginAttempts.set(identifier, { count: 1, resetTime: now + windowMs });
-        return true;
+// Comprehensive validation helper
+function validateLoginRequest(body: any): { isValid: boolean; data?: LoginRequest; error?: string } {
+    if (!body || typeof body !== 'object') {
+        return { isValid: false, error: 'Request body is required' };
     }
 
-    if (attempts.count >= maxAttempts) {
-        return false;
+    const { email, password, rememberMe } = body;
+
+    // Email validation
+    if (!email || typeof email !== 'string') {
+        return { isValid: false, error: 'Email is required' };
     }
 
-    attempts.count++;
-    return true;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return { isValid: false, error: 'Invalid email format' };
+    }
+
+    if (email.length > 254) {
+        return { isValid: false, error: 'Email too long' };
+    }
+
+    // Password validation
+    if (!password || typeof password !== 'string') {
+        return { isValid: false, error: 'Password is required' };
+    }
+
+    if (password.length < 6) {
+        return { isValid: false, error: 'Password too short' };
+    }
+
+    if (password.length > 128) {
+        return { isValid: false, error: 'Password too long' };
+    }
+
+    // RememberMe validation
+    if (rememberMe !== undefined && typeof rememberMe !== 'boolean') {
+        return { isValid: false, error: 'RememberMe must be boolean' };
+    }
+
+    return {
+        isValid: true,
+        data: {
+            email: email.toLowerCase().trim(),
+            password,
+            rememberMe: rememberMe || false
+        }
+    };
 }
 
-export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
+// Enhanced rate limiting specifically for login attempts
+function checkLoginRateLimit(identifier: string): {
+    allowed: boolean;
+    remaining: number;
+    resetTime: number;
+    lockDuration?: number;
+} {
+    // More aggressive rate limiting for login
+    // 5 attempts per 15 minutes per IP
+    const ipLimit = RateLimiter.check(identifier, 5, 15 * 60 * 1000);
+    
+    if (!ipLimit.allowed) {
+        return {
+            allowed: false,
+            remaining: ipLimit.remaining,
+            resetTime: ipLimit.resetTime,
+            lockDuration: 15 * 60 * 1000 // 15 minutes
+        };
+    }
+
+    return ipLimit;
+}
+
+async function loginHandler(req: NextRequest): Promise<NextResponse> {
     const startTime = Date.now();
 
     try {
         // Parse and validate request body
-        const body = await req.json();
-
-        if (!validateLoginRequest(body)) {
-            return NextResponse.json({
-                success: false,
-                message: "Invalid request. Valid email and password are required."
-            }, { status: 400 });
+        let body;
+        try {
+            body = await req.json();
+        } catch (error) {
+            return createErrorResponse('Invalid JSON in request body', 400);
         }
 
-        const { email, password } = body;
-        const normalizedEmail = email.toLowerCase().trim();
+        const validation = validateLoginRequest(body);
+        if (!validation.isValid) {
+            return createErrorResponse(validation.error!, 400);
+        }
 
-        // Rate limiting by IP
-        const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-        if (!checkRateLimit(clientIP)) {
-            return NextResponse.json({
-                success: false,
-                message: "Too many login attempts. Please try again in 15 minutes."
-            }, { status: 429 });
+        const { email, password, rememberMe } = validation.data!;
+
+        // Enhanced rate limiting by IP and email
+        const clientIP = req.headers.get('x-forwarded-for') || 
+                        req.headers.get('x-real-ip') || 
+                        req.headers.get('cf-connecting-ip') || 'unknown';
+        
+        const ipRateLimit = checkLoginRateLimit(clientIP);
+        if (!ipRateLimit.allowed) {
+            return createErrorResponse(
+                `Too many login attempts. Try again in ${Math.ceil((ipRateLimit.resetTime - Date.now()) / 60000)} minutes.`,
+                429,
+                { 
+                    resetTime: ipRateLimit.resetTime,
+                    lockDuration: ipRateLimit.lockDuration
+                }
+            );
+        }
+
+        // Email-based rate limiting (3 attempts per email per 10 minutes)
+        const emailRateLimit = RateLimiter.check(`email:${email}`, 3, 10 * 60 * 1000);
+        if (!emailRateLimit.allowed) {
+            return createErrorResponse(
+                'Too many failed attempts for this email. Please try again later.',
+                429,
+                { resetTime: emailRateLimit.resetTime }
+            );
         }
 
         // Connect to database
         await connectToDatabase();
 
-        // Find user with password using UserService
-        const user = await UserService.findByEmail(
-            normalizedEmail,
-            {
-                select: '_id name email password role avatar',
-                includePassword: true, // This bypasses cache for security
-                lean: true
-            }
-        );
+        // Check for expired locks and clean them up
+        await User.cleanupExpiredLocks();
+
+        // Find user with password and security fields
+        const user = await User.findByEmailWithPassword(email);
 
         if (!user) {
-            return NextResponse.json({
-                success: false,
-                message: "User not Found"
-            }, { status: 401 });
+            // Consistent timing to prevent user enumeration
+            await bcrypt.compare(password, '$2a$10$dummy.hash.to.prevent.timing.attacks');
+            return createErrorResponse('Invalid email or password', 401);
+        }
+
+        // Check if account is locked
+        if (user.lockUntil && user.lockUntil > new Date()) {
+            const lockTimeRemaining = Math.ceil((user.lockUntil.getTime() - Date.now()) / 60000);
+            return createErrorResponse(
+                `Account temporarily locked. Try again in ${lockTimeRemaining} minutes.`,
+                423, // 423 Locked
+                { lockUntil: user.lockUntil }
+            );
         }
 
         // Verify password
-        const validPassword = await bcrypt.compare(password, user?.password! as string);
+        const isValidPassword = await bcrypt.compare(password, user.password);
 
-        if (!validPassword) {
-            return NextResponse.json({
-                success: false,
-                message: "Invalid Password"
-            }, { status: 401 });
+        if (!isValidPassword) {
+            // Increment failed login attempts
+            await User.incrementLoginAttempts(user._id);
+            
+            return createErrorResponse('Invalid email or password', 401);
         }
 
-        // Generate JWT token
+        // Check if email is verified (if you have email verification)
+        if (!user.isEmailVerified) {
+            return createErrorResponse(
+                'Please verify your email address before logging in',
+                403,
+                { needsEmailVerification: true }
+            );
+        }
+
+        // Reset login attempts and update last login
+        await User.resetLoginAttempts(user._id);
+
+        // Generate JWT token with appropriate expiration
+        const tokenExpiration = rememberMe ? '30d' : '7d';
         const token = jwt.sign(
             {
                 id: user._id,
                 email: user.email,
-                avatar: user.avatar
+                role: user.role,
+                avatar: user.avatar,
+                iat: Math.floor(Date.now() / 1000)
             },
-            process.env.JWT_SECRET! as string,
-            { expiresIn: "7d" }
+            process.env.JWT_SECRET!,
+            { expiresIn: tokenExpiration }
         );
-
-        // Update last login using UserService
-        await UserService.updateUser(user._id.toString(), {
-            lastLogin: new Date()
-        });
 
         const duration = Date.now() - startTime;
 
-        // Create response
-        const response = NextResponse.json({
+        // Prepare response data
+        const responseData: LoginResponse = {
             message: "Login successful",
             user: {
+                id: user._id.toString(),
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                avatar: user.avatar,
+                lastLogin: new Date()
             },
-            success: true,
-            performance: {
-                duration
-            }
-        }, { status: 200 });
+            expiresIn: tokenExpiration
+        };
 
-        // Set secure cookie
-        response.cookies.set("token", token, {
+        // Create response with secure cookie
+        const response = createAPIResponse(responseData, {
+            performance: { duration }
+        });
+
+        // Set secure HTTP-only cookie
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60,
+            sameSite: "lax" as const,
+            maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days or 7 days
             path: "/",
-        });
+        };
+
+        response.cookies.set("token", token, cookieOptions);
+
+        // Set security headers
+        response.headers.set('X-Content-Type-Options', 'nosniff');
+        response.headers.set('X-Frame-Options', 'DENY');
+        response.headers.set('X-XSS-Protection', '1; mode=block');
+
+        // Log successful login (for security monitoring)
+        console.log(`✅ Successful login: ${email} from IP: ${clientIP}`);
 
         return response;
 
     } catch (error) {
         console.error('Login error:', error);
-
-        const duration = Date.now() - startTime;
-
-        return NextResponse.json({
-            success: false,
-            message: "Internal server error",
-            performance: {
-                duration
-            }
-        }, { status: 500 });
+        
+        // Security: Don't expose internal errors
+        return createErrorResponse(
+            'An unexpected error occurred. Please try again.',
+            500
+        );
     }
 }
+
+// Export with specialized middleware for login
+export const POST = withAPIMiddleware(loginHandler, {
+    // No caching for login (security)
+    // Custom validation is handled inside the function for better control
+});

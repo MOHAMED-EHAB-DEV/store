@@ -95,7 +95,7 @@ const TemplateSchema = new Schema<ITemplate>({
         index: true
     },
     averageRating: { 
-        type: Number, 
+        type: Number,
         default: 0,
         min: 0,
         max: 5,
@@ -155,7 +155,7 @@ TemplateSchema.index({ reviewCount: -1, isActive: 1 }); // Most reviewed
 
 // Text search index with optimized weights
 TemplateSchema.index({ 
-    title: 'text', 
+    title: 'text',
     description: 'text',
     tags: 'text'
 }, {
@@ -167,14 +167,15 @@ TemplateSchema.index({
     name: 'template_search_index'
 });
 
+// Disabled right now
 // TTL index for soft-deleted templates (cleanup after 6 months)
-TemplateSchema.index(
-    { updatedAt: 1 }, 
-    { 
-        expireAfterSeconds: 6 * 30 * 24 * 60 * 60,
-        partialFilterExpression: { isActive: false }
-    }
-);
+// TemplateSchema.index(
+//     { updatedAt: 1 },
+//     {
+//         expireAfterSeconds: 6 * 30 * 24 * 60 * 60,
+//         partialFilterExpression: { isActive: false }
+//     }
+// );
 
 // Virtual for popularity score calculation
 TemplateSchema.virtual('popularityScore').get(function() {
@@ -211,17 +212,18 @@ TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, use
         { $sort: { popularityScore: -1, createdAt: -1 } },
         { $skip: skip },
         { $limit: limit },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'author',
-                foreignField: '_id',
-                as: 'author',
-                pipeline: [
-                    { $project: { name: 1, avatar: 1 } }
-                ]
-            }
-        },
+        // Commented because there are no authors
+        // {
+        //     $lookup: {
+        //         from: 'users',
+        //         localField: 'author',
+        //         foreignField: '_id',
+        //         as: 'author',
+        //         pipeline: [
+        //             { $project: { name: 1, avatar: 1 } }
+        //         ]
+        //     }
+        // },
         {
             $lookup: {
                 from: 'categories',
@@ -233,7 +235,7 @@ TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, use
                 ]
             }
         },
-        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        // { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
         {
             $project: {
                 title: 1,

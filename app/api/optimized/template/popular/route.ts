@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/database-optimized';
 import Template from '@/lib/models/optimized/Template';
 import { 
-    withAPIMiddleware, 
-    validatePagination, 
+    withAPIMiddleware,
+    validatePagination,
     createAPIResponse,
-    createErrorResponse
+    createErrorResponse,
 } from '@/lib/utils/api-helpers';
 
 // Cache key generator for popular templates

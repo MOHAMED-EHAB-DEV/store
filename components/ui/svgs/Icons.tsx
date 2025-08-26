@@ -143,9 +143,9 @@ const Download = ({className}: Props) => (
         <line x1="12" y1="15" x2="12" y2="3"/>
     </svg>
 )
-const Star = ({className}: Props) => (
+const Star = ({className, isActive=false}: {className: string, isActive: Boolean}) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         viewBox="0 0 24 24" fill={isActive ? "yellow" : "none"} stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
         <polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5 12 2"/>
@@ -215,7 +215,7 @@ export const Blocks = ({className}: Props) => (
         <rect x="3" y="14" width="7" height="7" rx="1"/>
     </svg>
 );
-export const Shield = ({ className }: Props) => (
+export const Shield = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -223,7 +223,7 @@ export const Shield = ({ className }: Props) => (
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
     </svg>
 );
-const Cpu = ({ className }: Props) => (
+const Cpu = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -240,7 +240,7 @@ const Cpu = ({ className }: Props) => (
         <path d="M21 15h2"/>
     </svg>
 )
-const Layers = ({ className }: Props) => (
+const Layers = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -250,7 +250,7 @@ const Layers = ({ className }: Props) => (
         <polyline points="2 12 12 17 22 12"/>
     </svg>
 );
-const MousePointer = ({ className }: Props) => (
+const MousePointer = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -259,7 +259,7 @@ const MousePointer = ({ className }: Props) => (
     </svg>
 )
 
-const Smartphone = ({ className }: Props) => (
+const Smartphone = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -268,7 +268,7 @@ const Smartphone = ({ className }: Props) => (
         <path d="M12 18h.01"/>
     </svg>
 )
-const Code2 = ({ className }: Props) => (
+const Code2 = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -279,7 +279,7 @@ const Code2 = ({ className }: Props) => (
     </svg>
 )
 
-const LayoutDashboard = ({ className }: Props) => (
+const LayoutDashboard = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -291,7 +291,7 @@ const LayoutDashboard = ({ className }: Props) => (
     </svg>
 )
 
-const Settings = ({ className }: Props) => (
+const Settings = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -311,7 +311,7 @@ const Settings = ({ className }: Props) => (
              0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
     </svg>
 );
-const ExternalLink = ({className}:Props) => (
+const ExternalLink = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -320,14 +320,14 @@ const ExternalLink = ({className}:Props) => (
         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
     </svg>
 );
-const Framer = ({className}:Props) => (
+const Framer = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
         <path d="M5 16V9h14V2H5l14 14h-7m-7 0 7 7v-7m-7 0h7"/>
     </svg>
 );
-const LogOut = ({className}:Props) => (
+const LogOut = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -336,7 +336,7 @@ const LogOut = ({className}:Props) => (
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
     </svg>
 );
-const ArrowLeftToLine = ({className}:Props) => (
+const ArrowLeftToLine = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -345,7 +345,7 @@ const ArrowLeftToLine = ({className}:Props) => (
         <path d="M7 12h14"/>
     </svg>
 );
-const ArrowRight = ({className}:Props) => (
+const ArrowRight = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -353,7 +353,7 @@ const ArrowRight = ({className}:Props) => (
         <path d="m12 5 7 7-7 7"/>
     </svg>
 );
-const ChevronDown = ({className}:Props) => (
+const ChevronDown = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -367,7 +367,7 @@ const ChevronUp = ({className}: Props) => (
         <path d="m18 15-6-6-6 6"/>
     </svg>
 );
-const Menu = ({className}:Props) => (
+const Menu = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -376,14 +376,14 @@ const Menu = ({className}:Props) => (
         <path d="M4 6h16"/>
     </svg>
 );
-const Play = ({className}:Props) => (
+const Play = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
         <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>
     </svg>
 );
-const Figma = ({className}:Props) => (
+const Figma = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -394,7 +394,7 @@ const Figma = ({className}:Props) => (
         <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/>
     </svg>
 );
-const Templates = ({className}:Props) => (
+const Templates = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -403,7 +403,7 @@ const Templates = ({className}:Props) => (
         <rect width="5" height="7" x="16" y="14" rx="1"/>
     </svg>
 );
-const Search = ({className}:Props) => (
+const Search = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -411,7 +411,7 @@ const Search = ({className}:Props) => (
         <circle cx="11" cy="11" r="8"/>
     </svg>
 );
-const Linkedin = ({className}:Props) => (
+const Linkedin = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -420,7 +420,7 @@ const Linkedin = ({className}:Props) => (
         <circle cx="4" cy="4" r="2"/>
     </svg>
 );
-const Instagram = ({className}:Props) => (
+const Instagram = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
@@ -429,13 +429,46 @@ const Instagram = ({className}:Props) => (
         <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
     </svg>
 );
-const Upload = ({className}:Props) => (
+const Upload = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
          className={className}>
         <path d="M12 3v12"/>
         <path d="m17 8-5-5-5 5"/>
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    </svg>
+);
+const NextJS = ({className}: Props) => (
+    <svg viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"
+         fill="#ffffff" className={className}>
+        <path
+            d="M119.616813,0.0688905149 C119.066276,0.118932037 117.314565,0.294077364 115.738025,0.419181169 C79.3775171,3.69690087 45.3192571,23.3131775 23.7481916,53.4631946 C11.7364614,70.2271045 4.05395894,89.2428829 1.15112414,109.384595 C0.12512219,116.415429 0,118.492153 0,128.025062 C0,137.557972 0.12512219,139.634696 1.15112414,146.665529 C8.10791789,194.730411 42.3163245,235.11392 88.7116325,250.076335 C97.0197458,252.753556 105.778299,254.580072 115.738025,255.680985 C119.616813,256.106338 136.383187,256.106338 140.261975,255.680985 C157.453763,253.779407 172.017986,249.525878 186.382014,242.194795 C188.584164,241.068861 189.00958,240.768612 188.709286,240.518404 C188.509091,240.36828 179.124927,227.782837 167.86393,212.570214 L147.393939,184.922273 L121.743891,146.965779 C107.630108,126.098464 96.0187683,109.034305 95.9186706,109.034305 C95.8185728,109.009284 95.7184751,125.873277 95.6684262,146.465363 C95.5933529,182.52028 95.5683284,183.971484 95.1178886,184.82219 C94.4672532,186.048207 93.9667644,186.548623 92.915738,187.099079 C92.114956,187.499411 91.4142717,187.574474 87.6355816,187.574474 L83.3063539,187.574474 L82.1552297,186.848872 C81.4044966,186.373477 80.8539589,185.747958 80.4785924,185.022356 L79.9530792,183.896422 L80.0031281,133.729796 L80.0782014,83.5381493 L80.8539589,82.5623397 C81.25435,82.0369037 82.1051808,81.3613431 82.7057674,81.0360732 C83.7317693,80.535658 84.1321603,80.4856165 88.4613881,80.4856165 C93.5663734,80.4856165 94.4172043,80.6857826 95.7434995,82.1369867 C96.1188661,82.5373189 110.007429,103.454675 126.623656,128.650581 C143.239883,153.846488 165.962072,188.250034 177.122972,205.139048 L197.392766,235.839522 L198.418768,235.163961 C207.502639,229.259062 217.112023,220.852086 224.719453,212.09482 C240.910264,193.504394 251.345455,170.835585 254.848876,146.665529 C255.874878,139.634696 256,137.557972 256,128.025062 C256,118.492153 255.874878,116.415429 254.848876,109.384595 C247.892082,61.3197135 213.683675,20.9362052 167.288368,5.97379012 C159.105376,3.32158945 150.396872,1.49507389 140.637341,0.394160408 C138.234995,0.143952798 121.693842,-0.131275573 119.616813,0.0688905149 L119.616813,0.0688905149 Z M172.017986,77.4831252 C173.219159,78.0836234 174.195112,79.2345784 174.545455,80.435575 C174.74565,81.0861148 174.795699,94.9976579 174.74565,126.348671 L174.670577,171.336 L166.73783,159.17591 L158.780059,147.01582 L158.780059,114.313685 C158.780059,93.1711423 158.880156,81.2862808 159.030303,80.7108033 C159.430694,79.3096407 160.306549,78.2087272 161.507722,77.5581875 C162.533724,77.0327515 162.909091,76.98271 166.837928,76.98271 C170.541544,76.98271 171.19218,77.0327515 172.017986,77.4831252 Z"
+            fill="#fff"></path>
+    </svg>
+);
+const Vite = ({className}: Props) => (
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className={className}>
+        <path
+            d="M29.8836 6.146L16.7418 29.6457c-.2714.4851-.9684.488-1.2439.0052L2.0956 6.1482c-.3-.5262.1498-1.1635.746-1.057l13.156 2.3516a.7144.7144 0 00.2537-.0004l12.8808-2.3478c.5942-.1083 1.0463.5241.7515 1.0513z"
+            fill="url(#paint0_linear)"></path>
+        <path
+            d="M22.2644 2.0069l-9.7253 1.9056a.3571.3571 0 00-.2879.3294l-.5982 10.1038c-.014.238.2045.4227.4367.3691l2.7077-.6248c.2534-.0585.4823.1647.4302.4194l-.8044 3.9393c-.0542.265.1947.4918.4536.4132l1.6724-.5082c.2593-.0787.5084.1487.4536.414l-1.2784 6.1877c-.08.387.4348.598.6495.2662L16.5173 25 24.442 9.1848c.1327-.2648-.096-.5667-.387-.5106l-2.787.5379c-.262.0505-.4848-.1934-.4109-.4497l1.8191-6.306c.074-.2568-.1496-.5009-.4118-.4495z"
+            fill="url(#paint1_linear)"></path>
+        <defs id="defs50">
+            <linearGradient id="paint0_linear" x1="6.0002" y1="32.9999" x2="235" y2="344"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="matrix(.07142 0 0 .07142 1.3398 1.8944)">
+                <stop stopColor="#41D1FF" id="stop38"></stop>
+                <stop offset="1" stopColor="#BD34FE" id="stop40"></stop>
+            </linearGradient>
+            <linearGradient id="paint1_linear" x1="194.651" y1="8.8182" x2="236.076" y2="292.989"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="matrix(.07142 0 0 .07142 1.3398 1.8944)">
+                <stop stopColor="#FFEA83" id="stop43"></stop>
+                <stop offset=".0833" stopColor="#FFDD35" id="stop45"></stop>
+                <stop offset="1" stopColor="#FFA800" id="stop47"></stop>
+            </linearGradient>
+        </defs>
     </svg>
 )
 export {
@@ -484,4 +517,6 @@ export {
     Linkedin,
     Instagram,
     Upload,
+    NextJS,
+    Vite,
 }

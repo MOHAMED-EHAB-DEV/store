@@ -22,6 +22,10 @@ import {
     Download,
     Star,
     Target,
+    Framer,
+    Figma,
+    Vite,
+    NextJS,
 } from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
@@ -406,6 +410,25 @@ const badges = [
     {text: "Quality Focused", icon: Target, gradient: "from-indigo-500 to-purple-500"}
 ];
 
+const builtWithOptions = [
+    {
+        Icon: Framer,
+        text: "Framer"
+    },
+    {
+        Icon: Figma,
+        text: "Figma"
+    },
+    {
+        Icon: Vite,
+        text: "Vite"
+    },
+    {
+        Icon: NextJS,
+        text: "Next.js"
+    },
+]
+
 export {
     NavigationLinks,
     HeroItems,
@@ -424,4 +447,5 @@ export {
     stats,
     badges,
     skills,
+    builtWithOptions,
 }

@@ -28,13 +28,10 @@ export async function connectToDatabase() {
             bufferCommands: false,
             // Connection pool optimization
             maxPoolSize: 10, // Maintain up to 10 socket connections
-            minPoolSize: 5,  // Maintain a minimum of 5 socket connections
-            serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+            serverSelectionTimeoutMS: 30000, // Keep trying to send operations for 5 seconds
+            socketTimeoutMS: 60000, // Close sockets after 45 seconds of inactivity
             connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
             family: 4, // Use IPv4, skip trying IPv6
-            maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
-            heartbeatFrequencyMS: 10000, // Send a ping every 10 seconds
             // Performance optimizations
             retryWrites: true,
             readPreference: 'secondaryPreferred', // Read from secondary when possible

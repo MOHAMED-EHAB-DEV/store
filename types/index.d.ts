@@ -4,11 +4,17 @@ declare type IUser = {
     _id: string;
     name: string;
     email: string;
+    password: string;
     avatar?: string;
     role: string;
     createdAt: Date;
     purchasedTemplates: String[];
-    favorites: String[]
+    favorites: String[];
+    updatedAt: Date;
+    lastLogin?: Date;
+    isEmailVerified: boolean;
+    loginAttempts: number;
+    lockUntil?: Date;
 }
 
 declare type ITemplate = {
@@ -24,8 +30,14 @@ declare type ITemplate = {
     author: ObjectId;
     downloads: number;
     averageRating: number;
-    isActive: boolean;
-    builtWith: "framer" | "figma" | "coded";
+    isActive: boolean; // Add for soft delete
+    builtWith: "framer" | "figma" | "vite";
+    views: number;
+    reviewCount: number;
+    isFeatured: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    lastViewedAt: Date;
 }
 
 declare type IOrder = {

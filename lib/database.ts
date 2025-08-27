@@ -53,6 +53,7 @@ export async function connectToDatabase() {
 
     if (!cached.promise) {
         const opts = {
+<<<<<<< HEAD
             // Connection pool optimization - CRITICAL for performance
             maxPoolSize: 10, // Maximum number of connections
             minPoolSize: 2,  // Minimum number of connections
@@ -66,6 +67,15 @@ export async function connectToDatabase() {
             bufferCommands: false, // Disable mongoose buffering
             bufferMaxEntries: 0, // Disable mongoose buffering
             
+=======
+            bufferCommands: false,
+            // Connection pool optimization
+            maxPoolSize: 10, // Maintain up to 10 socket connections
+            serverSelectionTimeoutMS: 30000, // Keep trying to send operations for 5 seconds
+            socketTimeoutMS: 60000, // Close sockets after 45 seconds of inactivity
+            connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+            family: 4, // Use IPv4, skip trying IPv6
+>>>>>>> refs/remotes/origin/main
             // Performance optimizations
             retryWrites: true,
             readPreference: 'primaryPreferred', // Read from primary, fallback to secondary

@@ -15,12 +15,20 @@ class APICache {
     static get(key: string): any | null {
         const entry = this.cache.get(key);
         if (!entry) return null;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
         if (Date.now() - entry.timestamp > entry.ttl) {
             this.cache.delete(key);
             return null;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
         return entry.data;
     }
 
@@ -28,7 +36,11 @@ class APICache {
         // LRU behavior
         if (this.cache.size >= this.maxSize) {
             const firstKey = this.cache.keys().next().value;
+<<<<<<< HEAD
             this.cache.delete(firstKey);
+=======
+            this.cache.delete(firstKey as string);
+>>>>>>> refs/remotes/origin/main
         }
 
         this.cache.set(key, {
@@ -130,6 +142,7 @@ export function validatePagination(req: NextRequest): {
     page: number;
 } {
     const { searchParams } = new URL(req.url);
+<<<<<<< HEAD
     
     let limit = parseInt(searchParams.get('limit') || '20');
     let page = parseInt(searchParams.get('page') || '1');
@@ -140,6 +153,18 @@ export function validatePagination(req: NextRequest): {
     
     const skip = (page - 1) * limit;
     
+=======
+
+    let limit = parseInt(searchParams.get('limit') || '20');
+    let page = parseInt(searchParams.get('page') || '1');
+
+    // Enforce limits
+    limit = Math.min(Math.max(1, limit), 100); // Between 1 and 100
+    page = Math.max(1, page); // At least 1
+
+    const skip = (page - 1) * limit;
+
+>>>>>>> refs/remotes/origin/main
     return { limit, skip, page };
 }
 
@@ -151,11 +176,19 @@ export function validateSort(
         const { searchParams } = new URL(req.url);
         const sort = searchParams.get('sort') || defaultSort;
         const order = searchParams.get('order') === 'asc' ? 'asc' : 'desc';
+<<<<<<< HEAD
         
         if (!allowedFields.includes(sort)) {
             return { sort: defaultSort, order: 'desc' };
         }
         
+=======
+
+        if (!allowedFields.includes(sort)) {
+            return { sort: defaultSort, order: 'desc' };
+        }
+
+>>>>>>> refs/remotes/origin/main
         return { sort, order };
     };
 }
@@ -189,7 +222,11 @@ class PerformanceMonitor {
         options: { cacheHit?: boolean; rateLimited?: boolean } = {}
     ) {
         const duration = Date.now() - timer.startTime;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
         this.metrics.push({
             route: timer.route,
             method: timer.method,
@@ -213,7 +250,11 @@ class PerformanceMonitor {
     static getStats(minutes: number = 5) {
         const cutoff = Date.now() - minutes * 60 * 1000;
         const recentMetrics = this.metrics.filter(m => m.timestamp > cutoff);
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
         if (recentMetrics.length === 0) {
             return { totalRequests: 0, averageResponseTime: 0, errorRate: 0 };
         }
@@ -302,8 +343,13 @@ export function withAPIMiddleware(
         try {
             // Rate limiting
             if (options.rateLimit) {
+<<<<<<< HEAD
                 const clientIP = req.headers.get('x-forwarded-for') || 
                                req.headers.get('x-real-ip') || 'unknown';
+=======
+                const clientIP = req.headers.get('x-forwarded-for') ||
+                    req.headers.get('x-real-ip') || 'unknown';
+>>>>>>> refs/remotes/origin/main
                 const rateLimitResult = RateLimiter.check(
                     clientIP,
                     options.rateLimit.maxRequests,
@@ -317,7 +363,11 @@ export function withAPIMiddleware(
                         429,
                         { resetTime: rateLimitResult.resetTime }
                     );
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> refs/remotes/origin/main
                     PerformanceMonitor.endTimer(timer, 429, { rateLimited });
                     return response;
                 }
@@ -331,17 +381,28 @@ export function withAPIMiddleware(
 
             // Caching for GET requests
             if (req.method === 'GET' && options.cache) {
+<<<<<<< HEAD
                 const cacheKey = options.cache.keyGenerator ? 
                     options.cache.keyGenerator(req) : 
                     req.nextUrl.pathname + req.nextUrl.search;
                 
+=======
+                const cacheKey = options.cache.keyGenerator ?
+                    options.cache.keyGenerator(req) :
+                    req.nextUrl.pathname + req.nextUrl.search;
+
+>>>>>>> refs/remotes/origin/main
                 const cachedData = APICache.get(cacheKey);
                 if (cachedData) {
                     cacheHit = true;
                     const response = NextResponse.json(cachedData);
                     response.headers.set('X-Cache', 'HIT');
                     response.headers.set('Cache-Control', `public, max-age=${Math.floor(options.cache.ttl / 1000)}`);
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> refs/remotes/origin/main
                     PerformanceMonitor.endTimer(timer, 200, { cacheHit });
                     return response;
                 }
@@ -362,10 +423,17 @@ export function withAPIMiddleware(
 
             // Cache successful GET responses
             if (req.method === 'GET' && options.cache && response.status === 200) {
+<<<<<<< HEAD
                 const cacheKey = options.cache.keyGenerator ? 
                     options.cache.keyGenerator(req) : 
                     req.nextUrl.pathname + req.nextUrl.search;
                 
+=======
+                const cacheKey = options.cache.keyGenerator ?
+                    options.cache.keyGenerator(req) :
+                    req.nextUrl.pathname + req.nextUrl.search;
+
+>>>>>>> refs/remotes/origin/main
                 try {
                     const responseData = await response.clone().json();
                     APICache.set(cacheKey, responseData, options.cache.ttl);
@@ -389,4 +457,8 @@ export function withAPIMiddleware(
 }
 
 // Export utilities
+<<<<<<< HEAD
 export { APICache, RateLimiter, PerformanceMonitor };
+=======
+export { APICache, RateLimiter, PerformanceMonitor };
+>>>>>>> refs/remotes/origin/main

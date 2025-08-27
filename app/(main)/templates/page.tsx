@@ -14,7 +14,7 @@ const Page = async () => {
               role="main">
             <h1 className="text-white text-4xl font-bold">Templates</h1>
 
-            <Templates templates={templates} categories={categories} />
+            <Templates initialData={templates} categories={categories} isHome={true} />
         </main>
     )
 }

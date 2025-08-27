@@ -16,6 +16,7 @@ export interface ITemplate extends Document {
     downloads: number;
     views: number; // Add for analytics
     averageRating: number;
+<<<<<<< HEAD
     reviewCount: number; // Denormalized for performance
     isActive: boolean;
     isFeatured: boolean; // Add for promotion
@@ -23,33 +24,44 @@ export interface ITemplate extends Document {
     createdAt: Date;
     updatedAt: Date;
     lastViewedAt: Date; // For trending calculations
+=======
+    isActive: boolean; // Add for soft delete
+    builtWith: "framer" | "figma" | "vite" | "next.js";
+    views: number;
+    reviewCount: number;
+    isFeatured: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    lastViewedAt: Date;
+>>>>>>> refs/remotes/origin/main
 }
 
 const TemplateSchema = new Schema<ITemplate>({
-    title: { 
-        type: String, 
+    title: {
+        type: String,
         required: true,
         trim: true,
         maxlength: 200,
         text: true,
         index: true
     },
-    description: { 
-        type: String, 
+    description: {
+        type: String,
         required: true,
         trim: true,
         maxlength: 2000,
         text: true,
     },
-    content: { 
-        type: String, 
+    content: {
+        type: String,
         required: true,
         select: false, // Don't include by default for performance
     },
-    price: { 
+    price: {
         type: Number,
         default: 0,
         min: 0,
+<<<<<<< HEAD
         max: 9999.99,
         index: true,
     },
@@ -65,25 +77,42 @@ const TemplateSchema = new Schema<ITemplate>({
     },
     categories: [{ 
         type: mongoose.Schema.Types.ObjectId, 
+=======
+        max: 9999.9,
+        index: true,
+    },
+    thumbnail: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    categories: [{
+        type: mongoose.Schema.Types.ObjectId,
+>>>>>>> refs/remotes/origin/main
         ref: "Category",
         index: true,
     }],
-    tags: [{ 
+    tags: [{
         type: String,
         lowercase: true,
         trim: true,
         maxlength: 50,
         index: true,
     }],
-    author: { 
-        type: mongoose.Schema.Types.ObjectId, 
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
+<<<<<<< HEAD
         index: true,
         select: false, // Don't include by default
+=======
+        select: false,
+        index: true,
+>>>>>>> refs/remotes/origin/main
     },
-    downloads: { 
-        type: Number, 
+    downloads: {
+        type: Number,
         default: 0,
         min: 0,
         index: true,
@@ -94,12 +123,21 @@ const TemplateSchema = new Schema<ITemplate>({
         min: 0,
         index: true
     },
+<<<<<<< HEAD
     averageRating: { 
         type: Number, 
         default: 0,
         min: 0,
         max: 5,
         index: true
+=======
+    averageRating: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+        index: true,
+>>>>>>> refs/remotes/origin/main
     },
     reviewCount: {
         type: Number,
@@ -110,8 +148,18 @@ const TemplateSchema = new Schema<ITemplate>({
     isActive: {
         type: Boolean,
         default: true,
+<<<<<<< HEAD
         index: true
     },
+=======
+        index: true,
+    },
+    demoLink: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+>>>>>>> refs/remotes/origin/main
     isFeatured: {
         type: Boolean,
         default: false,
@@ -119,8 +167,7 @@ const TemplateSchema = new Schema<ITemplate>({
     },
     builtWith: {
         type: String,
-        default: "coded",
-        enum: ["coded", "figma", "framer"],
+        enum: ["vite", "figma", "framer", "next.js"],
         required: true,
         index: true,
     },
@@ -128,6 +175,7 @@ const TemplateSchema = new Schema<ITemplate>({
         type: Date,
         default: Date.now,
         index: true
+<<<<<<< HEAD
     }
 }, { 
     timestamps: true,
@@ -140,6 +188,18 @@ const TemplateSchema = new Schema<ITemplate>({
 });
 
 // CRITICAL: Optimized compound indexes for maximum query performance
+=======
+    },
+}, {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
+    minimize: false,
+    autoIndex: process.env.NODE_ENV !== 'production',
+});
+
+>>>>>>> refs/remotes/origin/main
 TemplateSchema.index({ isActive: 1, isFeatured: -1, averageRating: -1 }); // Featured templates
 TemplateSchema.index({ isActive: 1, price: 1, downloads: -1 }); // Free/paid popular templates
 TemplateSchema.index({ isActive: 1, downloads: -1, averageRating: -1 }); // Most popular
@@ -153,9 +213,15 @@ TemplateSchema.index({ price: 1, isActive: 1, averageRating: -1 }); // Price fil
 TemplateSchema.index({ views: -1, isActive: 1 }); // Most viewed
 TemplateSchema.index({ reviewCount: -1, isActive: 1 }); // Most reviewed
 
+<<<<<<< HEAD
 // Text search index with optimized weights
 TemplateSchema.index({ 
     title: 'text', 
+=======
+// Text search index for title and description
+TemplateSchema.index({
+    title: 'text',
+>>>>>>> refs/remotes/origin/main
     description: 'text',
     tags: 'text'
 }, {
@@ -165,6 +231,7 @@ TemplateSchema.index({
         description: 1
     },
     name: 'template_search_index'
+<<<<<<< HEAD
 });
 
 // TTL index for soft-deleted templates (cleanup after 6 months)
@@ -193,6 +260,25 @@ TemplateSchema.virtual('popularityScore').get(function() {
 });
 
 // OPTIMIZED Static methods with aggressive performance optimizations
+=======
+});
+
+TemplateSchema.virtual('popularityScore').get(function() {
+    const now = Date.now();
+    const daysSinceCreated = (now - this.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceViewed = (now - this.lastViewedAt.getTime()) / (1000 * 60 * 60 * 24);
+
+    // Combine downloads, rating, recency, and views for popularity
+    return (
+        this.downloads * 2 +
+        this.averageRating * 20 +
+        this.views * 0.5 +
+        Math.max(0, 30 - daysSinceViewed) * 2 + // Recency boost
+        (this.isFeatured ? 100 : 0) // Featured boost
+    ) / Math.max(1, daysSinceCreated * 0.1); // Age penalty
+});
+
+>>>>>>> refs/remotes/origin/main
 TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, useCache = true) {
     return this.aggregate([
         { $match: { isActive: true } },
@@ -259,11 +345,19 @@ TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, use
 
 TemplateSchema.statics.findByCategory = function(categoryId: string, limit = 20, skip = 0) {
     return this.aggregate([
+<<<<<<< HEAD
         { 
             $match: { 
                 categories: new mongoose.Types.ObjectId(categoryId), 
                 isActive: true 
             } 
+=======
+        {
+            $match: {
+                categories: new mongoose.Types.ObjectId(categoryId),
+                isActive: true
+            }
+>>>>>>> refs/remotes/origin/main
         },
         { $sort: { averageRating: -1, downloads: -1 } },
         { $skip: skip },
@@ -304,7 +398,10 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
     minRating?: number;
     sortBy?: 'popular' | 'recent' | 'rating' | 'price' | 'downloads';
 }, limit = 20, skip = 0) {
+<<<<<<< HEAD
     
+=======
+>>>>>>> refs/remotes/origin/main
     const {
         search,
         categories = [],
@@ -323,8 +420,13 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
     }
 
     if (categories.length > 0) {
+<<<<<<< HEAD
         matchStage.categories = { 
             $in: categories.map(id => new mongoose.Types.ObjectId(id)) 
+=======
+        matchStage.categories = {
+            $in: categories.map(id => new mongoose.Types.ObjectId(id))
+>>>>>>> refs/remotes/origin/main
         };
     }
 
@@ -362,7 +464,11 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
             sortStage = { downloads: -1, averageRating: -1 };
             break;
         default: // popular
+<<<<<<< HEAD
             sortStage = search ? 
+=======
+            sortStage = search ?
+>>>>>>> refs/remotes/origin/main
                 { score: { $meta: 'textScore' }, averageRating: -1, downloads: -1 } :
                 { downloads: -1, averageRating: -1 };
     }
@@ -458,6 +564,7 @@ TemplateSchema.statics.findFreeTemplates = function(limit = 20, skip = 0) {
     ]);
 };
 
+<<<<<<< HEAD
 TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
     const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     
@@ -507,6 +614,8 @@ TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
     ]);
 };
 
+=======
+>>>>>>> refs/remotes/origin/main
 TemplateSchema.statics.getTemplateStats = function() {
     return this.aggregate([
         {
@@ -575,11 +684,67 @@ TemplateSchema.statics.getTemplateStats = function() {
     ]);
 };
 
+<<<<<<< HEAD
 // Instance methods for performance
 TemplateSchema.methods.incrementViews = function(amount = 1) {
     return this.constructor.findByIdAndUpdate(
         this._id,
         { 
+=======
+TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
+    const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+    return this.aggregate([
+        { $match: { isActive: true, lastViewedAt: { $gte: cutoffDate } } },
+        {
+            $addFields: {
+                trendingScore: {
+                    $multiply: [
+                        '$views',
+                        {
+                            $divide: [
+                                { $subtract: [Date.now(), '$lastViewedAt'] },
+                                days * 24 * 60 * 60 * 1000
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        { $sort: { trendingScore: -1, views: -1 } },
+        { $limit: limit },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'author',
+                foreignField: '_id',
+                as: 'author',
+                pipeline: [{ $project: { name: 1, avatar: 1 } }]
+            }
+        },
+        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        {
+            $project: {
+                title: 1,
+                description: 1,
+                thumbnail: 1,
+                price: 1,
+                downloads: 1,
+                views: 1,
+                averageRating: 1,
+                author: 1,
+                builtWith: 1,
+                trendingScore: 1
+            }
+        }
+    ]);
+};
+
+TemplateSchema.methods.incrementViews = function(amount = 1) {
+    return this.constructor.findByIdAndUpdate(
+        this._id,
+        {
+>>>>>>> refs/remotes/origin/main
             $inc: { views: amount },
             $set: { lastViewedAt: new Date() }
         },
@@ -587,6 +752,7 @@ TemplateSchema.methods.incrementViews = function(amount = 1) {
     );
 };
 
+<<<<<<< HEAD
 TemplateSchema.methods.incrementDownloads = function(amount = 1) {
     return this.constructor.findByIdAndUpdate(
         this._id,
@@ -596,6 +762,9 @@ TemplateSchema.methods.incrementDownloads = function(amount = 1) {
 };
 
 // Pre-save middleware for optimization
+=======
+// Pre-save middleware for tag normalization
+>>>>>>> refs/remotes/origin/main
 TemplateSchema.pre('save', function(next) {
     if (this.isModified('tags')) {
         // Normalize tags and remove duplicates
@@ -604,12 +773,19 @@ TemplateSchema.pre('save', function(next) {
     next();
 });
 
+<<<<<<< HEAD
 // Index management for production
+=======
+>>>>>>> refs/remotes/origin/main
 TemplateSchema.post('init', function() {
     if (process.env.NODE_ENV === 'production') {
         // Ensure critical indexes exist
         this.collection.createIndex(
+<<<<<<< HEAD
             { isActive: 1, downloads: -1, averageRating: -1 }, 
+=======
+            { isActive: 1, downloads: -1, averageRating: -1 },
+>>>>>>> refs/remotes/origin/main
             { background: true }
         );
     }
@@ -617,9 +793,16 @@ TemplateSchema.post('init', function() {
 
 const Template: Model<ITemplate> = mongoose.models.Template || mongoose.model<ITemplate>("Template", TemplateSchema);
 
+<<<<<<< HEAD
 // Create indexes in development
+=======
+>>>>>>> refs/remotes/origin/main
 if (process.env.NODE_ENV !== 'production') {
     Template.syncIndexes().catch(console.error);
 }
 
+<<<<<<< HEAD
 export default Template;
+=======
+export default Template;
+>>>>>>> refs/remotes/origin/main

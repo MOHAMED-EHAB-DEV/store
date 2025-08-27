@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Download, ExternalLink, Star } from "@/components/ui/svgs/Icons";
 import Markdown from "./Markdown";
+import {capitalizeFirstChar} from "@/lib/utils";
 
 const Template = async ({ template }: { template: ITemplate }) => {
     return (
@@ -75,7 +76,7 @@ const Template = async ({ template }: { template: ITemplate }) => {
                             Built With
                         </h4>
                         <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
-                            {template.builtWith}
+                            {capitalizeFirstChar(template.builtWith as string)}
                         </span>
                     </div>
                 </div>

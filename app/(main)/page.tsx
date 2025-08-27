@@ -86,7 +86,7 @@ export default async function Home() {
                         </motion.div>
                     })}
                 </section>
-                <Image
+                {/* <Image
                     src="/assets/images/Preview.webp"
                     alt="demo"
                     width={1400}
@@ -96,7 +96,7 @@ export default async function Home() {
                     priority
                     placeholder="blur"
                     blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAdEAACAgEFAAAAAAAAAAAAAAACAwABIQQFEXHB/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAXEQEBAQEAAAAAAAAAAAAAAAABAgAR/9oADAMBAAIRAxEAPwCAWjSHthvWwhcN8Wojz3WPYiJXVPcjAg7/2Q=="
-                />
+                /> */}
                 {/* Enhanced background effects */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     {/* Main gradient orb */}

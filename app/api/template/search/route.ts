@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/database';
 import Template from '@/lib/models/Template';
+<<<<<<< HEAD
 import { 
     withAPIMiddleware, 
     validatePagination, 
@@ -9,6 +10,15 @@ import {
 } from '@/lib/utils/api-helpers';
 
 // Validation schema for search parameters
+=======
+import {
+    withAPIMiddleware,
+    validatePagination,
+    createAPIResponse,
+    createErrorResponse
+} from '@/lib/utils/api-helpers';
+
+>>>>>>> refs/remotes/origin/main
 function validateSearchParams(req: NextRequest): {
     isValid: boolean;
     params?: any;
@@ -16,6 +26,7 @@ function validateSearchParams(req: NextRequest): {
 } {
     try {
         const { searchParams } = new URL(req.url);
+<<<<<<< HEAD
         
         const search = searchParams.get('search')?.trim() || '';
         const categories = searchParams.get('categories')?.split(',').map(id => id.trim()).filter(Boolean) || [];
@@ -78,11 +89,79 @@ function validateSearchParams(req: NextRequest): {
             return { isValid: false, error: 'Search term too long (max 100 characters)' };
         }
 
+=======
+
+        const search = searchParams.get('search')?.trim() || '';
+        const categories = searchParams.get('categories')?.split(',').map(id => id.trim()).filter(Boolean) || [];
+        const tags = searchParams.get('tags')?.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean) || [];
+        const builtWith = searchParams.get('builtWith')?.split(',').map(tech => tech.trim()).filter(Boolean) || [];
+        const sortBy = searchParams.get('sortBy') || 'popular';
+
+        // Price range validation
+        const minPrice = searchParams.get('minPrice');
+        const maxPrice = searchParams.get('maxPrice');
+        const priceRange: { min?: number; max?: number } = {};
+
+        if (minPrice !== null) {
+            const min = parseFloat(minPrice);
+            if (isNaN(min) || min < 0) {
+                return { isValid: false, error: 'Invalid minPrice parameter' };
+            }
+            priceRange.min = min;
+        }
+
+        if (maxPrice !== null) {
+            const max = parseFloat(maxPrice);
+            if (isNaN(max) || max < 0) {
+                return { isValid: false, error: 'Invalid maxPrice parameter' };
+            }
+            priceRange.max = max;
+        }
+
+        if (priceRange.min !== undefined && priceRange.max !== undefined && priceRange.min > priceRange.max) {
+            return { isValid: false, error: 'minPrice cannot be greater than maxPrice' };
+        }
+
+        // Rating validation
+        const minRating = searchParams.get('minRating');
+        let minRatingValue: number | undefined;
+        if (minRating !== null) {
+            const rating = parseFloat(minRating);
+            if (isNaN(rating) || rating < 0 || rating > 5) {
+                return { isValid: false, error: 'minRating must be between 0 and 5' };
+            }
+            minRatingValue = rating;
+        }
+
+        // Sort validation
+        const allowedSortBy = ['popular', 'recent', 'rating', 'price', 'downloads'];
+        if (!allowedSortBy.includes(sortBy)) {
+            return { isValid: false, error: `sortBy must be one of: ${allowedSortBy.join(', ')}` };
+        }
+
+        // BuiltWith validation
+        const allowedBuiltWith = ['vite', 'figma', 'framer', "next.js"];
+        for (const tech of builtWith) {
+            if (!allowedBuiltWith.includes(tech)) {
+                return { isValid: false, error: `builtWith must contain only: ${allowedBuiltWith.join(', ')}` };
+            }
+        }
+
+        // Limit search term length
+        if (search.length > 100) {
+            return { isValid: false, error: 'Search term too long (max 100 characters)' };
+        }
+
+>>>>>>> refs/remotes/origin/main
         // Limit array sizes
         if (categories.length > 20) {
             return { isValid: false, error: 'Too many categories (max 20)' };
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
         if (tags.length > 20) {
             return { isValid: false, error: 'Too many tags (max 20)' };
         }
@@ -107,7 +186,11 @@ function validateSearchParams(req: NextRequest): {
 // Generate cache key for search results
 function generateCacheKey(req: NextRequest): string {
     const { searchParams } = new URL(req.url);
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> refs/remotes/origin/main
     // Create a consistent key from search parameters
     const params = [
         searchParams.get('search') || '',
@@ -121,7 +204,11 @@ function generateCacheKey(req: NextRequest): string {
         searchParams.get('page') || '1',
         searchParams.get('limit') || '20'
     ].join('|');
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> refs/remotes/origin/main
     return `template_search:${Buffer.from(params).toString('base64')}`;
 }
 
@@ -223,4 +310,8 @@ export const GET = withAPIMiddleware(searchTemplatesHandler, {
         const validation = validateSearchParams(req);
         return validation.isValid;
     }
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> refs/remotes/origin/main

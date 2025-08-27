@@ -1,62 +1,73 @@
 'use client';
 
-import {gsap} from 'gsap';
 import {useLayoutEffect} from "react";
 import {Star, ArrowRight, Sparkles} from '@/components/ui/svgs/Icons';
 import {Badge} from '@/components/ui/badge';
 import Link from "next/link";
-import {SplitText, ScrollTrigger} from 'gsap/all';
 import TrustSignals from '@/components/ui/TrustSignals';
-
-gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const Hero = () => {
     useLayoutEffect(() => {
-        const splitHeader = SplitText.create('.header', {
-            type: 'words',
-            mask: 'words',
-        });
+        let ctx: any = null;
 
-        gsap.set('.header', { opacity: 1, });
+        (async () => {
+            const { gsap } = await import('gsap');
+            const { SplitText, ScrollTrigger } = await import('gsap/all');
 
-        gsap.from(splitHeader.words, {
-            duration: 1.5,
-            y: 80,
-            autoAlpha: 0,
-            opacity: 0,
-            stagger: 0.08,
-            filter: 'blur(6px)',
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: '.header',
-                start: 'top 80%', // when top of header hits 80% viewport
-                toggleActions: 'play none none none', // only play once
-            },
-        });
+            gsap.registerPlugin(SplitText, ScrollTrigger);
 
-        gsap.to('.hero-btn', {
-            y: -9,
-            repeat: -1,
-            yoyo: true,
-            duration: 1.8,
-            ease: 'power1.inOut',
-        });
+            ctx = gsap.context(() => {
+                const splitHeader = SplitText.create('.header', {
+                    type: 'words',
+                    mask: 'words',
+                });
 
-        // Animate gradient orbs
-        gsap.to('.gradient-orb-1', {
-            rotation: 360,
-            duration: 20,
-            repeat: -1,
-            ease: 'none',
-        });
+                gsap.set('.header', { opacity: 1, });
 
-        gsap.to('.gradient-orb-2', {
-            rotation: -360,
-            duration: 25,
-            repeat: -1,
-            ease: 'none',
-        });
-    });
+                gsap.from(splitHeader.words, {
+                    duration: 1.5,
+                    y: 80,
+                    autoAlpha: 0,
+                    opacity: 0,
+                    stagger: 0.08,
+                    filter: 'blur(6px)',
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '.header',
+                        start: 'top 80%', // when top of header hits 80% viewport
+                        toggleActions: 'play none none none', // only play once
+                    },
+                });
+
+                gsap.to('.hero-btn', {
+                    y: -9,
+                    repeat: -1,
+                    yoyo: true,
+                    duration: 1.8,
+                    ease: 'power1.inOut',
+                });
+
+                // Animate gradient orbs
+                gsap.to('.gradient-orb-1', {
+                    rotation: 360,
+                    duration: 20,
+                    repeat: -1,
+                    ease: 'none',
+                });
+
+                gsap.to('.gradient-orb-2', {
+                    rotation: -360,
+                    duration: 25,
+                    repeat: -1,
+                    ease: 'none',
+                });
+            });
+        })();
+
+        return () => {
+            ctx?.revert?.();
+        };
+    }, []);
 
     return (
         <section

@@ -8,7 +8,23 @@ import { ProductSchema } from "@/components/seo/StructuredData";
 
 const Template = async ({ template }: { template: ITemplate }) => {
     return (
-        <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 w-screen text-white">
+        <>
+            <ProductSchema
+                name={template.title}
+                description={template.description}
+                image={template.thumbnail}
+                sku={template._id}
+                brand="MHD Store"
+                price={template.price}
+                currency="USD"
+                availability="InStock"
+                url={`https://mhd-store.vercel.app/templates/${template._id}`}
+                aggregateRating={template.averageRating ? {
+                    ratingValue: template.averageRating,
+                    reviewCount: template.reviewCount || 0
+                } : undefined}
+            />
+            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 w-screen text-white">
             {/* Top Section */}
             <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr_22%] gap-8 items-start">
                 {/* Thumbnail */}
@@ -193,7 +209,8 @@ const Template = async ({ template }: { template: ITemplate }) => {
             {/*        <span className="text-gray-400 text-sm">Template Author</span>*/}
             {/*    </div>*/}
             {/*</div>*/}
-        </div>
+            </div>
+        </>
     );
 };
 

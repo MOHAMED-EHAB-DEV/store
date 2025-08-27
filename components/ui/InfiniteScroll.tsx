@@ -1,8 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import { Observer } from "gsap/Observer";
-
-gsap.registerPlugin(Observer);
 
 interface InfiniteScrollItem {
   content: React.ReactNode;

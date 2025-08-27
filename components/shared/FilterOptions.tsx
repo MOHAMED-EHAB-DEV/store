@@ -118,9 +118,11 @@ const FilterOptions = (
                         </h4>
                         <div className="flex flex-wrap gap-2">
                             {categories?.map((cat: any, idx) => (
-                                <span
+                                <button
                                     key={cat._id}
-                                    className={`py-2 px-3 cursor-pointer ${cat.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm`}
+                                    type="button"
+                                    className={`py-2 px-3 ${cat.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                    aria-pressed={cat.selected}
                                     onClick={() => {
                                         const updated = [...categories];
                                         updated[idx].selected = !updated[idx].selected;
@@ -128,7 +130,7 @@ const FilterOptions = (
                                     }}
                                 >
                             {cat.name}
-                        </span>
+                        </button>
                             ))}
                         </div>
                     </div>
@@ -386,6 +388,7 @@ const FilterOptions = (
                                     <div className="flex flex-col">
                                         <label htmlFor="minPrice" className="text-secondary text-xs font-black">min.</label>
                                         <input
+                                            id="minPrice"
                                             type="number"
                                             value={minPrice}
                                             onChange={(e) => handlePriceChange("min", e.target.value)}
@@ -396,8 +399,9 @@ const FilterOptions = (
                                     </div>
                                     <span className="text-white/60">-</span>
                                     <div className="flex flex-col">
-                                        <label htmlFor="minPrice" className="text-secondary text-xs font-black">min.</label>
+                                        <label htmlFor="maxPrice" className="text-secondary text-xs font-black">max.</label>
                                         <input
+                                            id="maxPrice"
                                             type="number"
                                             value={maxPrice}
                                             onChange={(e) => handlePriceChange("max", e.target.value)}

@@ -131,6 +131,20 @@ export default function RootLayout(
             <Analytics/>
             <SpeedInsights/>
             <BackToTop />
+            <OrganizationSchema
+                name="MHD Store - Premium Templates"
+                url="https://mhd-store.vercel.app"
+                logo="https://mhd-store.vercel.app/assets/Icons/Logo.svg"
+                sameAs={[
+                    "https://twitter.com/__M__O__H__",
+                    "https://github.com/mohamedhw",
+                ]}
+                contactPoint={{
+                    telephone: "+1-555-0123",
+                    contactType: "Customer Service",
+                    email: "support@mhd-store.com"
+                }}
+            />
             </body>
             </html>
         </Providers>

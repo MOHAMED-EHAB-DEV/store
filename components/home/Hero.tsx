@@ -5,8 +5,6 @@ import { Star, ArrowRight, Sparkles } from '@/components/ui/svgs/Icons';
 import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
 import TrustSignals from '@/components/ui/TrustSignals';
-import Image from "next/image";
-
 
 const Hero = () => {
     useLayoutEffect(() => {

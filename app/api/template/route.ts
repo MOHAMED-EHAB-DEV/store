@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { TemplateService } from '@/lib/services/TemplateService';
 import { authenticateUser } from "@/middleware/auth";
 import { UserService } from "@/lib/services/UserService";
+import Template from '@/lib/models/Template';
 
 export async function POST(req: NextRequest) {
     try {
@@ -25,6 +26,16 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, data: created }, { status: 200 });
     } catch (err) {
         console.error("Error creating template:", err);
+        return NextResponse.json({ message: "Internal Server Error", success: false }, { status: 500 });
+    }
+}
+
+export async function GET(req: Request) {
+    try {
+        const templates = await Template.find({});
+        return NextResponse.json({ success: true, data: templates }, { status: 200 });
+    } catch (err) {
+        console.error("Error fetching templates:", err);
         return NextResponse.json({ message: "Internal Server Error", success: false }, { status: 500 });
     }
 }

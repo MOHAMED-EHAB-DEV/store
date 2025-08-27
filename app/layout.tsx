@@ -1,7 +1,5 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import {gsap} from "gsap";
-import {useGSAP} from "@gsap/react";
 import {Roboto} from "@/lib/fonts";
 import {Analytics} from "@vercel/analytics/next";
 import {SpeedInsights} from "@vercel/speed-insights/next";
@@ -11,8 +9,6 @@ import BackToTop from "@/components/ui/BackToTop";
 import {cn} from "@/lib/utils";
 import Providers from "./Providers";
 import { OrganizationSchema } from "@/components/seo/StructuredData";
-
-gsap.registerPlugin(useGSAP);
 
 export const viewport = {
     width: 'device-width',

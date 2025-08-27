@@ -1,34 +1,45 @@
 "use client";
 
-import gsap from "gsap";
+import { useLayoutEffect } from "react";
 import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/all";
 import { Sparkles } from "@/components/ui/svgs/Icons";
 import TrustSignals from "@/components/ui/TrustSignals";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Cta = () => {
-    useGSAP(() => {
-        ScrollTrigger.create({
-            trigger: ".cta-section",
-            start: "top 80%",
-            onEnter: () => {
-                gsap.fromTo(
-                    ".cta-content",
-                    { opacity: 0, scale: 0.9, y: 50 },
-                    {
-                        duration: 1.2,
-                        scale: 1,
-                        opacity: 1,
-                        y: 0,
-                        ease: "power3.out",
+    useLayoutEffect(() => {
+        let ctx: any = null;
+
+        (async () => {
+            const { gsap } = await import('gsap');
+            const { ScrollTrigger } = await import('gsap/all');
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            ctx = gsap.context(() => {
+                ScrollTrigger.create({
+                    trigger: ".cta-section",
+                    start: "top 80%",
+                    onEnter: () => {
+                        gsap.fromTo(
+                            ".cta-content",
+                            { opacity: 0, scale: 0.9, y: 50 },
+                            {
+                                duration: 1.2,
+                                scale: 1,
+                                opacity: 1,
+                                y: 0,
+                                ease: "power3.out",
+                            },
+                        );
                     },
-                );
-            },
-        });
-    });
+                });
+            });
+        })();
+
+        return () => {
+            ctx?.revert?.();
+        };
+    }, []);
 
     return (
         <section className="cta-section relative z-10 px-6 py-20">
@@ -54,9 +65,9 @@ const Cta = () => {
                             </span>
                             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                         </Link>
-                        <div className="mt-8">
-                            <TrustSignals variant="horizontal" className="justify-center" />
-                        </div>
+                        {/*<div className="mt-8">*/}
+                        {/*    <TrustSignals variant="horizontal" className="justify-center" />*/}
+                        {/*</div>*/}
                     </div>
                 </div>
             </div>

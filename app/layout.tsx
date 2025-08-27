@@ -1,7 +1,5 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import {gsap} from "gsap";
-import {useGSAP} from "@gsap/react";
 import {Roboto} from "@/lib/fonts";
 import {Analytics} from "@vercel/analytics/next";
 import {SpeedInsights} from "@vercel/speed-insights/next";
@@ -10,8 +8,7 @@ import Head from 'next/head';
 import BackToTop from "@/components/ui/BackToTop";
 import {cn} from "@/lib/utils";
 import Providers from "./Providers";
-
-gsap.registerPlugin(useGSAP);
+import { PersonSchema } from "@/components/SEO/StructuredData";
 
 export const viewport = {
     width: 'device-width',
@@ -78,6 +75,10 @@ export default function RootLayout(
             <Head>
                 <link rel="preload" as="image" href="/assets/Icons/cursor.avif" type="image/avif"/>
                 <link rel="preload" as="image" href="/assets/Icons/publish.webp" type="image/webp"/>
+                <link rel="preload" as="font" href="/assets/fonts/Parastoo/Parastoo-VariableFont_wght.ttf" type="font/ttf" crossOrigin="anonymous"/>
+                <link rel="preload" as="font" href="/assets/fonts/Parastoo/static/Parastoo-Regular.ttf" type="font/ttf" crossOrigin="anonymous"/>
+                <link rel="preload" as="font" href="/assets/fonts/Parastoo/static/Parastoo-Medium.ttf" type="font/ttf" crossOrigin="anonymous"/>
+                <link rel="preload" as="font" href="/assets/fonts/Parastoo/static/Parastoo-Bold.ttf" type="font/ttf" crossOrigin="anonymous"/>
             </Head>
             <body
                 className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className)}
@@ -126,6 +127,16 @@ export default function RootLayout(
             <Analytics/>
             <SpeedInsights/>
             <BackToTop />
+            <PersonSchema
+                name="Mohammed Ehab - Premium Templates"
+                url="https://mhd-store.vercel.app"
+                image="https://mhd-store.vercel.app/assets/Icons/Logo.svg"
+                sameAs={[
+                    "https://twitter.com/__M__O__H__",
+                    "https://github.com/MOHAMED-EHAB-DEV",
+                    "https://www.linkedin.com/in/1-mohammed",
+                ]}
+            />
             </body>
             </html>
         </Providers>

@@ -211,9 +211,10 @@ const RegisterForm = () => {
                     )}
             </div>
 
-            <div className="flex items-start">
+            <label className="flex items-start" htmlFor="agree-terms">
                 <input
                     type="checkbox"
+                    id="agree-terms"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
                     className="w-4 h-4 rounded border-gray-600 text-gold focus:ring-gold focus:ring-offset-0 bg-transparent mt-1"
@@ -229,7 +230,7 @@ const RegisterForm = () => {
                   Privacy Policy
                 </Link>
               </span>
-            </div>
+            </label>
 
             <button
                 type="submit"

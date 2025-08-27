@@ -49,8 +49,11 @@ const Sidebar = ({open, setOpen, title, user}: {
             } `}
         >
             <div className="">
-                <button onClick={() => setOpen(false)}
-                        className="bg-transparent cursor-pointer flex items-center justify-center lg:hidden rounded-full absolute top-2 end-2 p-4">
+                <button
+                    onClick={() => setOpen(false)}
+                    className="bg-transparent cursor-pointer flex items-center justify-center lg:hidden rounded-full absolute top-2 end-2 p-4"
+                    aria-label="Close sidebar"
+                >
                     <X/>
                 </button>
 
@@ -61,14 +64,19 @@ const Sidebar = ({open, setOpen, title, user}: {
 
                 <div className="flex flex-col gap-1 md:mt-14 mt-10">
                     {DashboardSidebarLinks.map(({Icon, text, link}, idx) => (
-                        <div key={idx} onClick={() => {
-                            setIsOpen(false);
-                            router.push(link);
-                        }}
-                             className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path.includes(link) ? "bg-white/10" : "hover:bg-white/10"}`}>
+                        <button
+                            key={idx}
+                            type="button"
+                            aria-current={path === link ? "page" : undefined}
+                            onClick={() => {
+                                setIsOpen(false);
+                                router.push(link);
+                            }}
+                            className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path.includes(link) ? "bg-white/10" : "hover:bg-white/10"}`}
+                        >
                             <Icon className="w-5 h-5 text-white"/>
                             <span className={`text-white text-sm ${path === link && "font-bold"}`}>{text}</span>
-                        </div>
+                        </button>
                     ))}
                 </div>
             </div>
@@ -94,12 +102,14 @@ const Sidebar = ({open, setOpen, title, user}: {
                         {isOpen ? <ChevronUp/> : <ChevronDown/>}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-dark">
-                        <DropdownMenuItem onClick={() => router.push("/")} className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                            <Home />
+                        <DropdownMenuItem onClick={() => router.push("/")}
+                                          className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                            <Home/>
                             <span className="text-white font-medium text-md">Home</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleLogout} className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                            <LogOut />
+                        <DropdownMenuItem onClick={handleLogout}
+                                          className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                            <LogOut/>
                             <span className="text-white font-medium text-md">Logout</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

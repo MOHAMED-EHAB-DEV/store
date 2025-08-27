@@ -1,4 +1,6 @@
 import * as motion from "motion/react-client";
+import {gsap} from "gsap";
+import {useGSAP} from "@gsap/react";
 import Image from "next/image";
 import Hero from "@/components/home/Hero";
 import {HeroItems} from "@/constants";
@@ -11,6 +13,8 @@ import FigmaFeatures from "@/components/home/FigmaFeatures";
 import Testimonials from "@/components/home/Testimonials";
 import StickyCTA from "@/components/ui/StickyCTA";
 import Cta from "@/components/home/CTA";
+
+gsap.registerPlugin(useGSAP);
 
 const isMobile =
     typeof window !== "undefined"

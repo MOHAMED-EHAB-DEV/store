@@ -196,10 +196,13 @@ const FramerFeatures = () => {
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video
-                                src="/assets/Videos/framer-demo.mp4"
+                                src={isVisible ? "/assets/Videos/framer-demo.mp4" : ""}
                                 autoPlay
                                 loop
                                 muted
+                                playsInline
+                                preload="metadata"
+                                poster="/assets/Icons/video-poster-2.jpg"
                                 className="absolute top-0 left-0 w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>

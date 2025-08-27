@@ -1,15 +1,12 @@
 'use client';
 
-// import {gsap} from 'gsap';
-import {useLayoutEffect} from "react";
-import {Star, ArrowRight, Sparkles} from '@/components/ui/svgs/Icons';
-import {Badge} from '@/components/ui/badge';
+import { useLayoutEffect } from "react";
+import { Star, ArrowRight, Sparkles } from '@/components/ui/svgs/Icons';
+import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
-// import {SplitText, ScrollTrigger} from 'gsap/all';
 import TrustSignals from '@/components/ui/TrustSignals';
 import Image from "next/image";
 
-// gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const Hero = () => {
     useLayoutEffect(() => {
@@ -73,56 +70,10 @@ const Hero = () => {
             ctx?.revert?.();
         };
     }, []);
-    // useLayoutEffect(() => {
-    //     const splitHeader = SplitText.create('.header', {
-    //         type: 'words',
-    //         mask: 'words',
-    //     });
-    //
-    //     gsap.set('.header', { opacity: 1, });
-    //
-    //     gsap.from(splitHeader.words, {
-    //         duration: 1.5,
-    //         y: 80,
-    //         autoAlpha: 0,
-    //         opacity: 0,
-    //         stagger: 0.08,
-    //         filter: 'blur(6px)',
-    //         ease: 'power2.out',
-    //         scrollTrigger: {
-    //             trigger: '.header',
-    //             start: 'top 80%', // when top of header hits 80% viewport
-    //             toggleActions: 'play none none none', // only play once
-    //         },
-    //     });
-    //
-    //     gsap.to('.hero-btn', {
-    //         y: -9,
-    //         repeat: -1,
-    //         yoyo: true,
-    //         duration: 1.8,
-    //         ease: 'power1.inOut',
-    //     });
-    //
-    //     // Animate gradient orbs
-    //     gsap.to('.gradient-orb-1', {
-    //         rotation: 360,
-    //         duration: 20,
-    //         repeat: -1,
-    //         ease: 'none',
-    //     });
-    //
-    //     gsap.to('.gradient-orb-2', {
-    //         rotation: -360,
-    //         duration: 25,
-    //         repeat: -1,
-    //         ease: 'none',
-    //     });
-    // });
 
     return (
         <section
-            className="relative flex items-center justify-center gap-3 min-h-screen overflow-x-hidden pb-4 pt-36 sm:pt-46 md:pt-36 h-full w-full"
+            className="relative flex items-center justify-center gap-3 min-h-screen overflow-x-hidden pb-4 pt-24 md:pt-36 h-full w-full"
             aria-labelledby="hero-title"
             role="banner"
         >
@@ -140,24 +91,24 @@ const Hero = () => {
                     aria-label="Featured announcement"
                 >
                     <Star
-                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300"/>
+                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" />
                     <span className="relative z-10">Unleash Your Creativity</span>
                     <span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine"/>
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine" />
                 </Badge>
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        className="font-bold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-7xl w-full md:w-2/3 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
+                        className="font-bold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
                     >
-                                    Premium Templates to{' '}
-                                    <span className="relative">
-                                        Elevate
-                                        <div
-                                            aria-hidden="true"
-                                            className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
-                                    </span>{' '}
-                                    Your Projects
+                        Premium Templates to{' '}
+                        <span className="relative">
+                            Elevate
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg" />
+                        </span>{' '}
+                        Your Projects
                     </h1>
                     <p
                         className="text-base sm:text-lg header opacity-0 md:text-xl lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
@@ -179,10 +130,10 @@ const Hero = () => {
                         <span className="relative z-10 flex items-center gap-2">
                             Explore Templates
                             <ArrowRight
-                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"/>
+                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                         </span>
                         <div
-                            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"/>
+                            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                     </Link>
 
                     {/*<Link*/}

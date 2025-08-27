@@ -39,7 +39,7 @@ const Navbar = () => {
             }`}>
                 <Logo onClick={() => router.push("/")} className={!user && "flex-1"} />
 
-                <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-6 items-center justify-center`}>
+                <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-5 items-center justify-center`}>
                     {NavigationLinks.map(({id, text, link}) => (
                         <NavbarItem text={text} link={link} key={id}/>
                     ))}
@@ -47,19 +47,19 @@ const Navbar = () => {
                 <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
                     <MobileDrawer user={user?.user}/>
                     {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
-                        <Link
+                        {/* <Link
                             className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-6 py-3 rounded-full text-white font-medium text-base backdrop-blur-sm"
                             aria-label="Sign In button"
                             href="/signin"
                         >
-                            Sign In
-                        </Link>
+                            Signin
+                        </Link> */}
                         <Link
                             className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
                             aria-label="Get Started button"
                             href="/register"
                         >
-                            Get Started
+                            Signup
                         </Link>
                     </div> : (
                         <Suspense fallback={<Loader/>}>
@@ -154,21 +154,21 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                                 {!user && (
                                     <>
                                         <div className="flex flex-col gap-3 mt-6">
-                                            <Link
+                                            {/* <Link
                                                 className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-8 py-4 rounded-full text-white text-center font-medium backdrop-blur-sm active:scale-95"
                                                 aria-label="Sign In button"
                                                 href="/signin"
                                                 onClick={() => setIsOpen(false)}
                                             >
-                                                Sign In
-                                            </Link>
+                                                Signin
+                                            </Link> */}
                                             <Link
                                                 className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-4 rounded-full text-white font-bold shadow-xl hover:shadow-purple-500/25 active:scale-95"
                                                 aria-label="Get Started button"
                                                 href="/register"
                                                 onClick={() => setIsOpen(false)}
                                             >
-                                                Get Started
+                                                Signup
                                             </Link>
                                         </div>
                                     </>

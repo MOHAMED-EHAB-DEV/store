@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Download, ExternalLink, Star } from "@/components/ui/svgs/Icons";
 import Markdown from "./Markdown";
 import {capitalizeFirstChar} from "@/lib/utils";
+import { ProductSchema } from "@/components/seo/StructuredData";
 
 const Template = async ({ template }: { template: ITemplate }) => {
     return (

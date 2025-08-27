@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect, Suspense, useRef} from 'react';
+import React, {useState, useEffect, Suspense, useRef, useCallback} from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
@@ -20,6 +20,8 @@ const Templates = ({initialData, categories, isHome = false}: {
     const [templates, setTemplates] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+    const abortControllerRef = useRef<AbortController | null>(null);
     const [selectedCategories, setSelectedCategories] = useState<(selected & ICategory)[]>(
         categories.map((category) => ({
             ...category,
@@ -49,12 +51,29 @@ const Templates = ({initialData, categories, isHome = false}: {
     }[]>(uniqueBuiltWithOptions);
     const [selectedTags, setSelectedTags] = useState<{ tag: string; selected: boolean }[]>(uniqueTags);
 
+    // Debounce search query
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
             return;
         }
         const fetchTemplates = async () => {
+            // Cancel previous request
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+
+            // Create new AbortController
+            abortControllerRef.current = new AbortController();
+
             setIsLoading(true);
             try {
                 const categories = selectedCategories
@@ -73,7 +92,7 @@ const Templates = ({initialData, categories, isHome = false}: {
                     .join(",");
 
                 const params = new URLSearchParams({
-                    ...(searchQuery && {search: searchQuery}),
+                    ...(debouncedSearchQuery && {search: debouncedSearchQuery}),
                     ...(categories && {categories}),
                     ...(tags && {tags}),
                     ...(builtWith && {builtWith}),
@@ -83,20 +102,24 @@ const Templates = ({initialData, categories, isHome = false}: {
                     sortBy: sortedBy,
                 });
 
-                const res = await fetch(`/api/template/search?${params.toString()}`);
+                const res = await fetch(`/api/template/search?${params.toString()}`, {
+                    signal: abortControllerRef.current.signal
+                });
                 if (!res.ok) throw new Error("Failed to fetch templates");
 
                 const data = await res.json();
                 setTemplates(data.data);
             } catch (error) {
-                console.error("Error fetching templates:", error);
+                if (error instanceof Error && error.name !== 'AbortError') {
+                    console.error("Error fetching templates:", error);
+                }
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchTemplates();
-    }, [searchQuery, selectedCategories, selectedTags, selectedBuiltWithOptions, minPrice, maxPrice, minRating, sortedBy]);
+    }, [debouncedSearchQuery, selectedCategories, selectedTags, selectedBuiltWithOptions, minPrice, maxPrice, minRating, sortedBy]);
 
     return (
         <div className="flex flex-col gap-5">

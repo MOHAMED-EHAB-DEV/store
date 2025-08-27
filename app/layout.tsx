@@ -10,6 +10,7 @@ import Head from 'next/head';
 import BackToTop from "@/components/ui/BackToTop";
 import {cn} from "@/lib/utils";
 import Providers from "./Providers";
+import { OrganizationSchema } from "@/components/seo/StructuredData";
 
 gsap.registerPlugin(useGSAP);
 

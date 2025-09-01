@@ -75,7 +75,6 @@ const UserSchema = new Schema<IUser>({
     },
     lockUntil: {
         type: Date,
-        sparse: true,
     }
 }, {
     timestamps: true,

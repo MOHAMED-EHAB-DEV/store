@@ -132,18 +132,18 @@ const TemplateSchema = new Schema<ITemplate>({
     autoIndex: process.env.NODE_ENV !== 'production',
 });
 
-TemplateSchema.index({ isActive: 1, isFeatured: -1, averageRating: -1 }); // Featured templates
-TemplateSchema.index({ isActive: 1, price: 1, downloads: -1 }); // Free/paid popular templates
-TemplateSchema.index({ isActive: 1, downloads: -1, averageRating: -1 }); // Most popular
-TemplateSchema.index({ isActive: 1, createdAt: -1 }); // Recent templates
-TemplateSchema.index({ isActive: 1, lastViewedAt: -1 }); // Trending templates
-TemplateSchema.index({ author: 1, isActive: 1, createdAt: -1 }); // Author's templates
-TemplateSchema.index({ categories: 1, isActive: 1, averageRating: -1 }); // Category templates
-TemplateSchema.index({ tags: 1, isActive: 1, downloads: -1 }); // Tag-based search
-TemplateSchema.index({ builtWith: 1, isActive: 1, averageRating: -1 }); // Built-with filter
-TemplateSchema.index({ price: 1, isActive: 1, averageRating: -1 }); // Price filtering
-TemplateSchema.index({ views: -1, isActive: 1 }); // Most viewed
-TemplateSchema.index({ reviewCount: -1, isActive: 1 }); // Most reviewed
+TemplateSchema.index({isActive: 1, isFeatured: -1, averageRating: -1}); // Featured templates
+TemplateSchema.index({isActive: 1, price: 1, downloads: -1}); // Free/paid popular templates
+TemplateSchema.index({isActive: 1, downloads: -1, averageRating: -1}); // Most popular
+TemplateSchema.index({isActive: 1, createdAt: -1}); // Recent templates
+TemplateSchema.index({isActive: 1, lastViewedAt: -1}); // Trending templates
+TemplateSchema.index({author: 1, isActive: 1, createdAt: -1}); // Author's templates
+TemplateSchema.index({categories: 1, isActive: 1, averageRating: -1}); // Category templates
+TemplateSchema.index({tags: 1, isActive: 1, downloads: -1}); // Tag-based search
+TemplateSchema.index({builtWith: 1, isActive: 1, averageRating: -1}); // Built-with filter
+TemplateSchema.index({price: 1, isActive: 1, averageRating: -1}); // Price filtering
+TemplateSchema.index({views: -1, isActive: 1}); // Most viewed
+TemplateSchema.index({reviewCount: -1, isActive: 1}); // Most reviewed
 
 // Text search index for title and description
 TemplateSchema.index({
@@ -159,7 +159,7 @@ TemplateSchema.index({
     name: 'template_search_index'
 });
 
-TemplateSchema.virtual('popularityScore').get(function() {
+TemplateSchema.virtual('popularityScore').get(function () {
     const now = Date.now();
     const daysSinceCreated = (now - this.createdAt.getTime()) / (1000 * 60 * 60 * 24);
     const daysSinceViewed = (now - this.lastViewedAt.getTime()) / (1000 * 60 * 60 * 24);
@@ -174,24 +174,24 @@ TemplateSchema.virtual('popularityScore').get(function() {
     ) / Math.max(1, daysSinceCreated * 0.1); // Age penalty
 });
 
-TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, useCache = true) {
+TemplateSchema.statics.findPopularTemplates = function (limit = 20, skip = 0, useCache = true) {
     return this.aggregate([
-        { $match: { isActive: true } },
+        {$match: {isActive: true}},
         {
             $addFields: {
                 popularityScore: {
                     $add: [
-                        { $multiply: ['$downloads', 2] },
-                        { $multiply: ['$averageRating', 20] },
-                        { $multiply: ['$views', 0.5] },
-                        { $cond: ['$isFeatured', 100, 0] }
+                        {$multiply: ['$downloads', 2]},
+                        {$multiply: ['$averageRating', 20]},
+                        {$multiply: ['$views', 0.5]},
+                        {$cond: ['$isFeatured', 100, 0]}
                     ]
                 }
             }
         },
-        { $sort: { popularityScore: -1, createdAt: -1 } },
-        { $skip: skip },
-        { $limit: limit },
+        {$sort: {popularityScore: -1, createdAt: -1}},
+        {$skip: skip},
+        {$limit: limit},
         {
             $lookup: {
                 from: 'users',
@@ -199,7 +199,7 @@ TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, use
                 foreignField: '_id',
                 as: 'author',
                 pipeline: [
-                    { $project: { name: 1, avatar: 1 } }
+                    {$project: {name: 1, avatar: 1}}
                 ]
             }
         },
@@ -210,11 +210,11 @@ TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, use
                 foreignField: '_id',
                 as: 'categories',
                 pipeline: [
-                    { $project: { name: 1, slug: 1 } }
+                    {$project: {name: 1, slug: 1}}
                 ]
             }
         },
-        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
         {
             $project: {
                 title: 1,
@@ -238,7 +238,7 @@ TemplateSchema.statics.findPopularTemplates = function(limit = 20, skip = 0, use
     ]).allowDiskUse(true); // Allow disk usage for large datasets
 };
 
-TemplateSchema.statics.findByCategory = function(categoryId: string, limit = 20, skip = 0) {
+TemplateSchema.statics.findByCategory = function (categoryId: string, limit = 20, skip = 0) {
     return this.aggregate([
         {
             $match: {
@@ -246,19 +246,19 @@ TemplateSchema.statics.findByCategory = function(categoryId: string, limit = 20,
                 isActive: true
             }
         },
-        { $sort: { averageRating: -1, downloads: -1 } },
-        { $skip: skip },
-        { $limit: limit },
+        {$sort: {averageRating: -1, downloads: -1}},
+        {$skip: skip},
+        {$limit: limit},
         {
             $lookup: {
                 from: 'users',
                 localField: 'author',
                 foreignField: '_id',
                 as: 'author',
-                pipeline: [{ $project: { name: 1, avatar: 1 } }]
+                pipeline: [{$project: {name: 1, avatar: 1}}]
             }
         },
-        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
         {
             $project: {
                 title: 1,
@@ -276,7 +276,7 @@ TemplateSchema.statics.findByCategory = function(categoryId: string, limit = 20,
     ]);
 };
 
-TemplateSchema.statics.searchTemplates = function(searchOptions: {
+TemplateSchema.statics.searchTemplates = function (searchOptions: {
     search?: string;
     categories?: string[];
     tags?: string[];
@@ -296,10 +296,15 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
     } = searchOptions;
 
     // Build match stage
-    const matchStage: any = { isActive: true };
+    const matchStage: any = {isActive: true};
 
     if (search) {
-        matchStage.$text = { $search: search };
+        const regex = {$regex: search?.trim(), $options: "i"};
+        matchStage.$or = [
+            {
+                title: regex,
+            },
+        ];
     }
 
     if (categories.length > 0) {
@@ -309,11 +314,11 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
     }
 
     if (tags.length > 0) {
-        matchStage.tags = { $in: tags.map(tag => tag.toLowerCase()) };
+        matchStage.tags = {$in: tags.map(tag => tag.toLowerCase())};
     }
 
     if (builtWith.length > 0) {
-        matchStage.builtWith = { $in: builtWith };
+        matchStage.builtWith = {$in: builtWith};
     }
 
     if (priceRange) {
@@ -323,43 +328,42 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
     }
 
     if (minRating) {
-        matchStage.averageRating = { $gte: minRating };
+        matchStage.averageRating = {$gte: minRating};
     }
 
     // Build sort stage
     let sortStage: any;
     switch (sortBy) {
         case 'recent':
-            sortStage = { createdAt: -1 };
+            sortStage = {createdAt: -1};
             break;
         case 'rating':
-            sortStage = { averageRating: -1, reviewCount: -1 };
+            sortStage = {averageRating: -1, reviewCount: -1};
             break;
         case 'price':
-            sortStage = { price: 1, averageRating: -1 };
+            sortStage = {price: 1, averageRating: -1};
             break;
         case 'downloads':
-            sortStage = { downloads: -1, averageRating: -1 };
+            sortStage = {downloads: -1, averageRating: -1};
             break;
         default: // popular
             sortStage = search ?
-                { score: { $meta: 'textScore' }, averageRating: -1, downloads: -1 } :
-                { downloads: -1, averageRating: -1 };
+                {averageRating: -1, downloads: -1} :
+                {downloads: -1, averageRating: -1};
     }
 
     const pipeline = [
-        { $match: matchStage },
-        ...(search ? [{ $addFields: { score: { $meta: 'textScore' } } }] : []),
-        { $sort: sortStage },
-        { $skip: skip },
-        { $limit: limit },
+        {$match: matchStage},
+        {$sort: sortStage},
+        {$skip: skip},
+        {$limit: limit},
         {
             $lookup: {
                 from: 'users',
                 localField: 'author',
                 foreignField: '_id',
                 as: 'author',
-                pipeline: [{ $project: { name: 1, avatar: 1 } }]
+                pipeline: [{$project: {name: 1, avatar: 1}}]
             }
         },
         {
@@ -368,10 +372,10 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
                 localField: 'categories',
                 foreignField: '_id',
                 as: 'categories',
-                pipeline: [{ $project: { name: 1, slug: 1 } }]
+                pipeline: [{$project: {name: 1, slug: 1}}]
             }
         },
-        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
         {
             $project: {
                 title: 1,
@@ -388,7 +392,6 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
                 tags: 1,
                 builtWith: 1,
                 createdAt: 1,
-                ...(search ? { score: 1 } : {})
             }
         }
     ];
@@ -396,19 +399,19 @@ TemplateSchema.statics.searchTemplates = function(searchOptions: {
     return this.aggregate(pipeline).allowDiskUse(true);
 };
 
-TemplateSchema.statics.findFreeTemplates = function(limit = 20, skip = 0) {
+TemplateSchema.statics.findFreeTemplates = function (limit = 20, skip = 0) {
     return this.aggregate([
-        { $match: { price: 0, isActive: true } },
-        { $sort: { downloads: -1, averageRating: -1 } },
-        { $skip: skip },
-        { $limit: limit },
+        {$match: {price: 0, isActive: true}},
+        {$sort: {downloads: -1, averageRating: -1}},
+        {$skip: skip},
+        {$limit: limit},
         {
             $lookup: {
                 from: 'users',
                 localField: 'author',
                 foreignField: '_id',
                 as: 'author',
-                pipeline: [{ $project: { name: 1, avatar: 1 } }]
+                pipeline: [{$project: {name: 1, avatar: 1}}]
             }
         },
         {
@@ -417,10 +420,10 @@ TemplateSchema.statics.findFreeTemplates = function(limit = 20, skip = 0) {
                 localField: 'categories',
                 foreignField: '_id',
                 as: 'categories',
-                pipeline: [{ $project: { name: 1, slug: 1 } }]
+                pipeline: [{$project: {name: 1, slug: 1}}]
             }
         },
-        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
         {
             $project: {
                 title: 1,
@@ -438,52 +441,52 @@ TemplateSchema.statics.findFreeTemplates = function(limit = 20, skip = 0) {
     ]);
 };
 
-TemplateSchema.statics.getTemplateStats = function() {
+TemplateSchema.statics.getTemplateStats = function () {
     return this.aggregate([
         {
             $facet: {
                 overview: [
-                    { $match: { isActive: true } },
+                    {$match: {isActive: true}},
                     {
                         $group: {
                             _id: null,
-                            totalTemplates: { $sum: 1 },
-                            totalDownloads: { $sum: '$downloads' },
-                            totalViews: { $sum: '$views' },
-                            averagePrice: { $avg: '$price' },
-                            averageRating: { $avg: '$averageRating' },
+                            totalTemplates: {$sum: 1},
+                            totalDownloads: {$sum: '$downloads'},
+                            totalViews: {$sum: '$views'},
+                            averagePrice: {$avg: '$price'},
+                            averageRating: {$avg: '$averageRating'},
                             freeTemplates: {
-                                $sum: { $cond: [{ $eq: ['$price', 0] }, 1, 0] }
+                                $sum: {$cond: [{$eq: ['$price', 0]}, 1, 0]}
                             },
                             paidTemplates: {
-                                $sum: { $cond: [{ $gt: ['$price', 0] }, 1, 0] }
+                                $sum: {$cond: [{$gt: ['$price', 0]}, 1, 0]}
                             }
                         }
                     }
                 ],
                 byBuiltWith: [
-                    { $match: { isActive: true } },
+                    {$match: {isActive: true}},
                     {
                         $group: {
                             _id: '$builtWith',
-                            count: { $sum: 1 },
-                            totalDownloads: { $sum: '$downloads' },
-                            averageRating: { $avg: '$averageRating' }
+                            count: {$sum: 1},
+                            totalDownloads: {$sum: '$downloads'},
+                            averageRating: {$avg: '$averageRating'}
                         }
                     }
                 ],
                 topCategories: [
-                    { $match: { isActive: true } },
-                    { $unwind: '$categories' },
+                    {$match: {isActive: true}},
+                    {$unwind: '$categories'},
                     {
                         $group: {
                             _id: '$categories',
-                            templateCount: { $sum: 1 },
-                            totalDownloads: { $sum: '$downloads' }
+                            templateCount: {$sum: 1},
+                            totalDownloads: {$sum: '$downloads'}
                         }
                     },
-                    { $sort: { templateCount: -1 } },
-                    { $limit: 10 },
+                    {$sort: {templateCount: -1}},
+                    {$limit: 10},
                     {
                         $lookup: {
                             from: 'categories',
@@ -492,7 +495,7 @@ TemplateSchema.statics.getTemplateStats = function() {
                             as: 'category'
                         }
                     },
-                    { $unwind: '$category' },
+                    {$unwind: '$category'},
                     {
                         $project: {
                             name: '$category.name',
@@ -506,11 +509,11 @@ TemplateSchema.statics.getTemplateStats = function() {
     ]);
 };
 
-TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
+TemplateSchema.statics.getTrendingTemplates = function (days = 7, limit = 20) {
     const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
     return this.aggregate([
-        { $match: { isActive: true, lastViewedAt: { $gte: cutoffDate } } },
+        {$match: {isActive: true, lastViewedAt: {$gte: cutoffDate}}},
         {
             $addFields: {
                 trendingScore: {
@@ -518,7 +521,7 @@ TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
                         '$views',
                         {
                             $divide: [
-                                { $subtract: [Date.now(), '$lastViewedAt'] },
+                                {$subtract: [Date.now(), '$lastViewedAt']},
                                 days * 24 * 60 * 60 * 1000
                             ]
                         }
@@ -526,18 +529,18 @@ TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
                 }
             }
         },
-        { $sort: { trendingScore: -1, views: -1 } },
-        { $limit: limit },
+        {$sort: {trendingScore: -1, views: -1}},
+        {$limit: limit},
         {
             $lookup: {
                 from: 'users',
                 localField: 'author',
                 foreignField: '_id',
                 as: 'author',
-                pipeline: [{ $project: { name: 1, avatar: 1 } }]
+                pipeline: [{$project: {name: 1, avatar: 1}}]
             }
         },
-        { $unwind: { path: '$author', preserveNullAndEmptyArrays: true } },
+        {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
         {
             $project: {
                 title: 1,
@@ -555,19 +558,19 @@ TemplateSchema.statics.getTrendingTemplates = function(days = 7, limit = 20) {
     ]);
 };
 
-TemplateSchema.methods.incrementViews = function(amount = 1) {
+TemplateSchema.methods.incrementViews = function (amount = 1) {
     return this.constructor.findByIdAndUpdate(
         this._id,
         {
-            $inc: { views: amount },
-            $set: { lastViewedAt: new Date() }
+            $inc: {views: amount},
+            $set: {lastViewedAt: new Date()}
         },
-        { new: true }
+        {new: true}
     );
 };
 
 // Pre-save middleware for tag normalization
-TemplateSchema.pre('save', function(next) {
+TemplateSchema.pre('save', function (next) {
     if (this.isModified('tags')) {
         // Normalize tags and remove duplicates
         this.tags = [...new Set(this.tags.map((tag: string) => tag.toLowerCase().trim()))];
@@ -575,12 +578,12 @@ TemplateSchema.pre('save', function(next) {
     next();
 });
 
-TemplateSchema.post('init', function() {
+TemplateSchema.post('init', function () {
     if (process.env.NODE_ENV === 'production') {
         // Ensure critical indexes exist
         this.collection.createIndex(
-            { isActive: 1, downloads: -1, averageRating: -1 },
-            { background: true }
+            {isActive: 1, downloads: -1, averageRating: -1},
+            {background: true}
         );
     }
 });

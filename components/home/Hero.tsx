@@ -1,72 +1,56 @@
 'use client';
 
-import { useLayoutEffect } from "react";
-import { Star, ArrowRight, Sparkles } from '@/components/ui/svgs/Icons';
-import { Badge } from '@/components/ui/badge';
+import {useLayoutEffect} from "react";
+import {Star, ArrowRight} from '@/components/ui/svgs/Icons';
+import gsap from "gsap"
+import {SplitText} from "gsap/all";
+import {Badge} from '@/components/ui/badge';
 import Link from "next/link";
 import TrustSignals from '@/components/ui/TrustSignals';
 
+gsap.registerPlugin(SplitText);
+
 const Hero = () => {
     useLayoutEffect(() => {
-        let ctx: any = null;
+        const splitHeader = SplitText.create('.header', {
+            type: 'words',
+            mask: 'words',
+        });
 
-        (async () => {
-            const { gsap } = await import('gsap');
-            const { SplitText, ScrollTrigger } = await import('gsap/all');
+        gsap.set('.header', {opacity: 1,});
 
-            gsap.registerPlugin(SplitText, ScrollTrigger);
+        gsap.from(splitHeader.words, {
+            duration: 1.5,
+            y: 80,
+            autoAlpha: 0,
+            opacity: 0,
+            stagger: 0.08,
+            filter: 'blur(6px)',
+            ease: 'power2.out',
+        });
 
-            ctx = gsap.context(() => {
-                const splitHeader = SplitText.create('.header', {
-                    type: 'words',
-                    mask: 'words',
-                });
+        gsap.to('.hero-btn', {
+            y: -9,
+            repeat: -1,
+            yoyo: true,
+            duration: 1.8,
+            ease: 'power1.inOut',
+        });
 
-                gsap.set('.header', { opacity: 1, });
+        // Animate gradient orbs
+        gsap.to('.gradient-orb-1', {
+            rotation: 360,
+            duration: 20,
+            repeat: -1,
+            ease: 'none',
+        });
 
-                gsap.from(splitHeader.words, {
-                    duration: 1.5,
-                    y: 80,
-                    autoAlpha: 0,
-                    opacity: 0,
-                    stagger: 0.08,
-                    filter: 'blur(6px)',
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: '.header',
-                        start: 'top 80%', // when top of header hits 80% viewport
-                        toggleActions: 'play none none none', // only play once
-                    },
-                });
-
-                gsap.to('.hero-btn', {
-                    y: -9,
-                    repeat: -1,
-                    yoyo: true,
-                    duration: 1.8,
-                    ease: 'power1.inOut',
-                });
-
-                // Animate gradient orbs
-                gsap.to('.gradient-orb-1', {
-                    rotation: 360,
-                    duration: 20,
-                    repeat: -1,
-                    ease: 'none',
-                });
-
-                gsap.to('.gradient-orb-2', {
-                    rotation: -360,
-                    duration: 25,
-                    repeat: -1,
-                    ease: 'none',
-                });
-            });
-        })();
-
-        return () => {
-            ctx?.revert?.();
-        };
+        gsap.to('.gradient-orb-2', {
+            rotation: -360,
+            duration: 25,
+            repeat: -1,
+            ease: 'none',
+        });
     }, []);
 
     return (
@@ -76,10 +60,13 @@ const Hero = () => {
             role="banner"
         >
             {/* Enhanced Background Layer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90"/>
+            <div
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10"/>
+            <div
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent"/>
+            <div
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"/>
 
             <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
                 <Badge
@@ -89,10 +76,10 @@ const Hero = () => {
                     aria-label="Featured announcement"
                 >
                     <Star
-                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" />
+                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300"/>
                     <span className="relative z-10">Unleash Your Creativity</span>
                     <span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine" />
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine"/>
                 </Badge>
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
@@ -104,7 +91,7 @@ const Hero = () => {
                             Elevate
                             <div
                                 aria-hidden="true"
-                                className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg" />
+                                className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
                         </span>{' '}
                         Your Projects
                     </h1>
@@ -128,10 +115,10 @@ const Hero = () => {
                         <span className="relative z-10 flex items-center gap-2">
                             Explore Templates
                             <ArrowRight
-                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"/>
                         </span>
                         <div
-                            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"/>
                     </Link>
 
                     {/*<Link*/}
@@ -149,7 +136,7 @@ const Hero = () => {
 
                 {/* Trust Signals */}
                 <div className="mt-4 w-full max-w-4xl">
-                    <TrustSignals variant="horizontal" className="justify-center" />
+                    <TrustSignals variant="horizontal" className="justify-center"/>
                 </div>
             </div>
         </section>

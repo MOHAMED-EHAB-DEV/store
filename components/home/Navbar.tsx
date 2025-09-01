@@ -13,7 +13,7 @@ import {useUser} from "@/context/UserContext";
 
 const Navbar = () => {
     const router = useRouter();
-    const {user} = useUser();
+    const {user, favoriteTemplates} = useUser();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -65,7 +65,7 @@ const Navbar = () => {
                         <Suspense fallback={<Loader/>}>
                             <div className="flex items-center justify-end">
                                 <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
-                                                 userEmail={user?.email} userRole={user?.role as String}/>
+                                                 userEmail={user?.email} userRole={user?.role as String} userFavorites={favoriteTemplates.length}/>
                             </div>
                         </Suspense>
                     )}

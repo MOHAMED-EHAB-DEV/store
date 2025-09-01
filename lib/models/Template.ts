@@ -161,8 +161,8 @@ TemplateSchema.index({
 
 TemplateSchema.virtual('popularityScore').get(function () {
     const now = Date.now();
-    const daysSinceCreated = (now - this.createdAt.getTime()) / (1000 * 60 * 60 * 24);
-    const daysSinceViewed = (now - this.lastViewedAt.getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceCreated = (now - this.createdAt?.getTime()) / (1000 * 60 * 60 * 24);
+    const daysSinceViewed = (now - this.lastViewedAt?.getTime()) / (1000 * 60 * 60 * 24);
 
     // Combine downloads, rating, recency, and views for popularity
     return (

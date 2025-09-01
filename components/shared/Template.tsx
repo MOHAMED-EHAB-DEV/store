@@ -8,6 +8,8 @@ import { capitalizeFirstChar } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from '../ui/button';
+import { useUser } from '@/context/UserContext';
 
 const Template = ({ template, idx, showPrice = false, showActionButtons = false }: {
     template: ITemplate,
@@ -18,6 +20,10 @@ const Template = ({ template, idx, showPrice = false, showActionButtons = false 
     const [hoveredTemplate, setHoveredTemplate] = useState<number | null>(null);
     const router = useRouter();
     const Icon = Icons[idx];
+
+    const { favoriteTemplates, toggleFavorite } = useUser();
+    const isFavorite = favoriteTemplates?.includes(template._id);
+
     return <div
         className="group relative overflow-hidden w-full h-[530px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
         onMouseEnter={() => setHoveredTemplate(template._id)}
@@ -32,12 +38,22 @@ const Template = ({ template, idx, showPrice = false, showActionButtons = false 
         {template.categories.some(({ name }: { name: string }) => name?.toLowerCase() === "featured") && (
             <div className="absolute top-4 left-4 z-10">
                 <Badge
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black border-none">
-                    <Heart className="w-3 h-3 mr-1" />
+                    className="bg-gradient-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">
+                    <Heart className="w-4 h-4" />
                     Featured
                 </Badge>
             </div>
         )}
+
+        <Button
+            className={`absolute top-4 right-4 ${isFavorite ? "bg-pink-100" : "bg-white/75"} transition hover:bg-white/90 cursor-pointer z-20 rounded-full p-2 shadow-md`}
+            onClick={e => {
+                e.stopPropagation();
+                toggleFavorite(template._id);
+            }}
+        >
+            <Heart className={`size-5 ${isFavorite ? "text-pink-500" : "text-gray-400"}`} isActive={isFavorite} />
+        </Button>
 
         {/* Template Image Placeholder */}
         {!template.thumbnail ? (

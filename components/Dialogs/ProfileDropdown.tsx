@@ -10,15 +10,17 @@ import {
     Settings,
     LogOut,
     LayoutDashboard,
+    Heart,
 } from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 
-const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
+const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorites}: {
     userImage: string,
     username: String,
     userEmail: String,
     userRole: String,
+    userFavorites: Number,
 }) => {
     const [open, isOpen] = useState(false);
     const router = useRouter();
@@ -68,15 +70,29 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail}: {
                     </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push(userRole === "admin" ? "/admin" : "/dashboard")} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <LayoutDashboard className="text-gray-400 w-16 h-16"/>
+                    <LayoutDashboard className="text-gray-400 size-7"/>
                     <span className="text-white font-medium text-md">Dashboard</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => router.push("/favorites")}
+                    className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
+                >
+                    <div className="relative flex items-center justify-center">
+                        <Heart className="text-gray-400 size-7" /> {/* slightly bigger */}
+                        {userFavorites > 0 && (
+                            <div className="absolute -top-1.5 -right-2 flex items-center justify-center rounded-full text-[10px] font-medium text-white min-w-[18px] min-h-[18px] px-1 bg-[#F48A42]">
+                                {userFavorites}
+                            </div>
+                        )}
+                    </div>
+                    <span className="text-white font-medium text-md">Favorites</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/dashboard/settings')} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <Settings className="text-gray-400 w-16 h-16"/>
+                    <Settings className="text-gray-400 size-7"/>
                     <span className="text-white font-medium text-md">Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <LogOut className="text-gray-400 w-16 h-16"/>
+                    <LogOut className="text-gray-400 size-7"/>
                     <span className="text-white font-medium text-md">Logout</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>

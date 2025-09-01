@@ -13,7 +13,7 @@ import {
 import {Home} from "@/components/ui/svgs/Icons";
 import {toast} from "sonner";
 
-const Sidebar = ({open, setOpen, title, user}: {
+const Sidebar = ({open, setOpen, user}: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     title: String,
@@ -56,7 +56,7 @@ const Sidebar = ({open, setOpen, title, user}: {
 
                 <div className="flex items-center gap-4">
                     <Logo onClick={() => router.push("/")}/>
-                    <h1 className="text-white font-bold text-2xl">{title}</h1>
+                    <h1 className="text-white font-bold text-2xl">Admin</h1>
                 </div>
 
                 <div className="flex flex-col gap-1 md:mt-14 mt-10">

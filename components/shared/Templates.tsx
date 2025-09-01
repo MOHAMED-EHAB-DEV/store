@@ -133,8 +133,10 @@ const Templates = ({initialData, categories, isHome = false}: {
                 </div>
             ) : <FilterOptions
                 isHome={isHome}
-                categories={selectedCategories} setCategories={setSelectedCategories}
-                tags={selectedTags} setTags={setSelectedTags}
+                categories={selectedCategories}
+                setCategories={setSelectedCategories}
+                tags={selectedTags}
+                setTags={setSelectedTags}
                 builtWithOptions={selectedBuiltWithOptions}
                 setBuiltWithOptions={setSelectedBuiltWithOptions}
                 minPrice={minPrice}
@@ -145,6 +147,8 @@ const Templates = ({initialData, categories, isHome = false}: {
                 setMaxPrice={setMaxPrice}
                 sortedBy={sortedBy}
                 setSortedBy={setSortedBy}
+                setSearch={setSearchQuery}
+                search={searchQuery}
             />}
 
             <div className={isHome ? "grid grid-cols-1 md:grid-cols-[30%_1fr] gap-4" : ""}>

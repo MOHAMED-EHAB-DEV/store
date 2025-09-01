@@ -4,8 +4,9 @@ import Link from "next/link";
 import {ArrowLeft} from "@/components/ui/svgs/Icons";
 import Head from "next/head";
 
-const Page = () => {
-    const url = `${process.env.NEXT_PUBLIC_APP_URL}signin`
+const Page = async ({searchParams}:{searchParams: {message: string}}) => {
+    const url = `${process.env.NEXT_PUBLIC_APP_URL}signin`;
+    const {message} = await searchParams;
     return (
         <>
             <Head>
@@ -25,7 +26,7 @@ const Page = () => {
                         <h1 className="text-white text-4xl font-bold">Signin</h1>
                     </div>
     
-                    <SigninForm />
+                    <SigninForm queryMessage={message} />
                     <div>Don't have an account? <Link href="/register" className="text-gradient-purple">Register Here</Link></div>
                 </div>
     

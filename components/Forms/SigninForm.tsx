@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, ChangeEvent, FormEvent} from 'react';
+import {useState, ChangeEvent, FormEvent, useEffect} from 'react';
 import {
     Mail,
     Lock,
@@ -10,13 +10,17 @@ import {
 import { useRouter } from "next/navigation";
 import {useUser} from "@/context/UserContext";
 
-const SigninForm = () => {
+const SigninForm = ({queryMessage}:{queryMessage: String}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({
+        type: queryMessage === "unauthorized" ? "error" : "",
+        content: queryMessage === "unauthorized" ? "Please, Login First" : ""
+    });
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const {setReload} = useUser();
@@ -58,8 +62,21 @@ const SigninForm = () => {
         }
     };
 
+    useEffect(() => {
+        // remove the message from the query params
+        if (queryMessage === "unauthorized")
+            router.replace(`/signin`, { scroll: false });
+    }, []);
+
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            {message.content && (
+                <div
+                    className={`mb-4 p-4 text-center rounded bg-red-600 text-red-50`}
+                >
+                    {message.content}
+                </div>
+            )}
             <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                     Email

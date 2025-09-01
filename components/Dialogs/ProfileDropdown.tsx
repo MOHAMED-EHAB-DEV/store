@@ -78,7 +78,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
                     className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
                 >
                     <div className="relative flex items-center justify-center">
-                        <Heart className="text-gray-400 size-7" /> {/* slightly bigger */}
+                        <Heart className="text-gray-400 size-7" />
                         {userFavorites > 0 && (
                             <div className="absolute -top-1.5 -right-2 flex items-center justify-center rounded-full text-[10px] font-medium text-white min-w-[18px] min-h-[18px] px-1 bg-[#F48A42]">
                                 {userFavorites}

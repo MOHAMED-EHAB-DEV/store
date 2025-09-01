@@ -15,7 +15,7 @@ const Template = ({ template, idx, showPrice = false, showActionButtons = false 
     template: ITemplate,
     idx: number,
     showPrice: Boolean,
-    showActionButtons: Boolean
+    showActionButtons: Boolean,
 }) => {
     const [hoveredTemplate, setHoveredTemplate] = useState<number | null>(null);
     const router = useRouter();

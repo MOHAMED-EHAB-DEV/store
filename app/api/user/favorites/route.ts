@@ -1,17 +1,17 @@
 import { NextRequest } from 'next/server';
 import User from '@/lib/models/User';
 import { withAPIMiddleware, createAPIResponse, createErrorResponse } from '@/lib/utils/api-helpers';
+import { authenticateUser } from '@/middleware/auth';
 
 // GET: Get user's favorite templates
 async function handleGET(req: NextRequest) {
-    // You should get userId from session/auth, here we use a query param for demo
-    const userId = req.nextUrl.searchParams.get('userId');
-    if (!userId) return createErrorResponse('Missing userId', 400);
+    const user = await authenticateUser();
+    if (!user) return createErrorResponse('unauthorized', 400);
 
-    const user = await User.findById(userId).select('favorites').populate('favorites', 'title thumbnail price createdAt lastViewedAt');
-    if (!user) return createErrorResponse('User not found', 404);
-
-    return createAPIResponse(user.favorites);
+    const favorites = await User.findOne({email: user?.email}).select('favorites').populate('favorites', '_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt');
+    
+    if (!favorites) return createErrorResponse('User not found', 404);
+    return createAPIResponse(favorites?.favorites);
 }
 
 // POST: Add/remove favorite template

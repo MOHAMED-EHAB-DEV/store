@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import { set } from "mongoose";
 
 interface IUserContext {
     user: IUser | null;
@@ -40,15 +41,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const fetchFavorites = async (userId: string) => {
+    const fetchFavorites = async () => {
         try {
-            const res = await fetch(`/api/user/favorites?userId=${userId}`);
+            const res = await fetch(`/api/user/favorites`);
             const data = await res.json();
+            console.log(data);
             if (data.success) {
                 setFavoriteTemplates(data.data.map((template: any) => template._id));
             }
         } catch (error) {
             console.error("Failed to fetch favorites:", error);
+            setFavoriteTemplates([]);
         }
     };
 
@@ -100,7 +103,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         fetchUser().then((u) => {
-            if (u?._id) fetchFavorites(u._id);
+            fetchFavorites();
         });
     }, [reload]);
 

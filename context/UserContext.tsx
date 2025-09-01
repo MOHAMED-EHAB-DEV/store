@@ -93,7 +93,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     };
 
     const toggleFavorite = (templateId: string) => {
-        if (!user) return router.push("/login?message=unauthorized");
+        if (!user) return router.push("/login");
         if (favoriteTemplates.includes(templateId)) removeFromFavorites(templateId);
         else addToFavorites(templateId);
     };

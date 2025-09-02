@@ -12,13 +12,15 @@ import {
     CommandGroup,
     CommandItem,
 } from "@/components/ui/command";
+import {toast} from "sonner";
+import {Input} from "@/components/ui/input";
 
 const sortOptions: { value: "popular" | "recent" | "rating" | "price" | "downloads"; label: string; icon: string }[] = [
-    { value: "popular", label: "Most Popular", icon: "🔥" },
-    { value: "recent", label: "Newest", icon: "🆕" },
-    { value: "rating", label: "Highest Rating", icon: "⭐" },
-    { value: "price", label: "Price", icon: "💲" },
-    { value: "downloads", label: "Most Downloads", icon: "⬇️" },
+    {value: "popular", label: "Most Popular", icon: "🔥"},
+    {value: "recent", label: "Newest", icon: "🆕"},
+    {value: "rating", label: "Highest Rating", icon: "⭐"},
+    {value: "price", label: "Price", icon: "💲"},
+    {value: "downloads", label: "Most Downloads", icon: "⬇️"},
 ];
 
 const FilterOptions = (
@@ -75,14 +77,14 @@ const FilterOptions = (
         setter: Dispatch<SetStateAction<T[]>>,
         list: T[]
     ) => {
-        setter(list.map((item) => ({ ...item, selected: true })));
+        setter(list.map((item) => ({...item, selected: true})));
     };
 
     const handleClearAll = <T extends { selected: boolean }>(
         setter: Dispatch<SetStateAction<T[]>>,
         list: T[]
     ) => {
-        setter(list.map((item) => ({ ...item, selected: false })));
+        setter(list.map((item) => ({...item, selected: false})));
     };
 
     const handleClearPriceRange = () => {
@@ -97,12 +99,12 @@ const FilterOptions = (
 
         if (type === "min") {
             if (num > maxPrice) {
-                return setMaxPrice(num);
+                return toast("Min. Price must be less than Max. Price");
             }
             setMinPrice(num);
         } else {
             if (num < minPrice) {
-                return setMinPrice(num);
+                return toast("Max. Price must be more than Min. Price");
             }
             setMaxPrice(num);
         }
@@ -191,7 +193,7 @@ const FilterOptions = (
                                     className="min-w-[220px] flex justify-between items-center outline-none border-none hover:bg-primary bg-conic-300 text-white"
                                 >
                                     {sortOptions.find((o) => o.value === sortedBy)?.label}
-                                    <ChevronDown className="w-4 h-4" />
+                                    <ChevronDown className="w-4 h-4"/>
                                 </Button>
                             </PopoverTrigger>
 
@@ -214,25 +216,42 @@ const FilterOptions = (
                         </Popover>
                     </div>
                     <div>
-                        <h4 className="text-white/60 text-xl font-semibold mb-5">
+                        <div className="text-white/60 text-xl font-semibold mb-5 flex items-center gap-2">
                             Price Range
-                        </h4>
+                            <Button
+                                onClick={() => {
+                                    setMaxPrice(0);
+                                    setMinPrice(0);
+                                }}
+                                className="cursor-pointer hover:text-white hover:bg-transparent"
+                            >Reset</Button>
+                        </div>
                         <div className="flex items-center gap-2">
-                            <input
-                                type="number"
-                                value={minPrice}
-                                onChange={(e) => handlePriceChange("min", e.target.value)}
-                                placeholder="Min. Price"
-                                className="w-32 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
-                            />
+                            <div className="flex flex-col justify-center">
+                                <label htmlFor="minPrice"
+                                       className="text-secondary text-xs font-black">min.</label>
+                                <Input
+                                    type="number"
+                                    id="minPrice"
+                                    value={minPrice}
+                                    onChange={(e) => handlePriceChange("min", e.target.value)}
+                                    placeholder="Min"
+                                    className="w-36 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400"
+                                />
+                            </div>
                             <span className="text-white/60">-</span>
-                            <input
-                                type="number"
-                                value={maxPrice}
-                                onChange={(e) => handlePriceChange("max", e.target.value)}
-                                placeholder="Max. Price"
-                                className="w-32 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
-                            />
+                            <div className="flex flex-col justify-center">
+                                <label htmlFor="maxPrice"
+                                       className="text-secondary text-xs font-black">max.</label>
+                                <Input
+                                    type="number"
+                                    id="maxPrice"
+                                    value={maxPrice}
+                                    onChange={(e) => handlePriceChange("max", e.target.value)}
+                                    placeholder="Max"
+                                    className="w-36 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400"
+                                />
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -259,7 +278,7 @@ const FilterOptions = (
                                 >
                                     {Array.from({length: rating}).map((_, i) => (
                                         // <span key={i} className="text-yellow-400">★</span>
-                                        <Star key={i} className="w-4 h-4 text-yellow-400" isActive={true} />
+                                        <Star key={i} className="w-4 h-4 text-yellow-400" isActive={true}/>
                                     ))}
                                     <span className="text-sm">& up</span>
                                 </button>
@@ -270,8 +289,9 @@ const FilterOptions = (
             ) : (
                 <>
                     <div className="relative w-full flex-1 min-w-[250px]">
-                        <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"/>
-                        <input
+                        <Search
+                            className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"/>
+                        <Input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -283,7 +303,8 @@ const FilterOptions = (
                     <div className="grid grid-cols-2 gap-4 md:flex md:flex-row md:space-x-4 md:gap-0">
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="min-w-[180px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
+                                <Button variant="outline"
+                                        className="min-w-[180px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
                                     {categories.filter(c => c.selected).length > 0
                                         ? `${categories.filter(c => c.selected).length} Category(s)`
                                         : "Categories"}
@@ -292,8 +313,12 @@ const FilterOptions = (
                             </PopoverTrigger>
                             <PopoverContent className="w-[250px] p-0 bg-dark">
                                 <div className="p-2 flex justify-between border-b border-border">
-                                    <Button size="sm" variant="ghost" onClick={() => handleSelectAll(setCategories, categories)} className="text-xs">Select All</Button>
-                                    <Button size="sm" variant="ghost" onClick={() => handleClearAll(setCategories, categories)} className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
+                                    <Button size="sm" variant="ghost"
+                                            onClick={() => handleSelectAll(setCategories, categories)}
+                                            className="text-xs">Select All</Button>
+                                    <Button size="sm" variant="ghost"
+                                            onClick={() => handleClearAll(setCategories, categories)}
+                                            className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <Command className="max-h-[200px] overflow-auto">
                                     <CommandGroup>
@@ -313,7 +338,8 @@ const FilterOptions = (
                         </Popover>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="min-w-[180px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
+                                <Button variant="outline"
+                                        className="min-w-[180px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
                                     {tags.filter(t => t.selected).length > 0
                                         ? `${tags.filter(t => t.selected).length} Tag(s)`
                                         : "Tags"}
@@ -322,8 +348,10 @@ const FilterOptions = (
                             </PopoverTrigger>
                             <PopoverContent className="w-[250px] p-0 bg-dark">
                                 <div className="p-2 flex justify-between border-b border-border">
-                                    <Button size="sm" variant="ghost" onClick={() => handleSelectAll(setTags, tags)} className="text-xs">Select All</Button>
-                                    <Button size="sm" variant="ghost" onClick={() => handleClearAll(setTags, tags)} className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
+                                    <Button size="sm" variant="ghost" onClick={() => handleSelectAll(setTags, tags)}
+                                            className="text-xs">Select All</Button>
+                                    <Button size="sm" variant="ghost" onClick={() => handleClearAll(setTags, tags)}
+                                            className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <Command className="max-h-[200px] overflow-auto">
                                     <CommandGroup>
@@ -343,15 +371,20 @@ const FilterOptions = (
                         </Popover>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="min-w-[180px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
+                                <Button variant="outline"
+                                        className="min-w-[180px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
                                     Built With
                                     <ChevronDown className="w-4 h-4"/>
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[250px] p-2 bg-dark">
                                 <div className="p-2 flex justify-between border-b border-border mb-2">
-                                    <Button size="sm" variant="ghost" onClick={() => handleSelectAll(setBuiltWithOptions, builtWithOptions)} className="text-xs">Select All</Button>
-                                    <Button size="sm" variant="ghost" onClick={() => handleClearAll(setBuiltWithOptions, builtWithOptions)} className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
+                                    <Button size="sm" variant="ghost"
+                                            onClick={() => handleSelectAll(setBuiltWithOptions, builtWithOptions)}
+                                            className="text-xs">Select All</Button>
+                                    <Button size="sm" variant="ghost"
+                                            onClick={() => handleClearAll(setBuiltWithOptions, builtWithOptions)}
+                                            className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {builtWithOptions?.map((bw, idx) => (
@@ -374,7 +407,8 @@ const FilterOptions = (
                         </Popover>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="min-w-[160px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
+                                <Button variant="outline"
+                                        className="min-w-[160px] focus:bg-primary hover:bg-primary flex gap-2 items-center bg-conic-300 text-white">
                                     Price Range
                                     <ChevronDown className="w-4 h-4"/>
                                 </Button>
@@ -382,12 +416,14 @@ const FilterOptions = (
                             <PopoverContent className="w-[280px] p-4 bg-dark space-y-3">
                                 <div className=" flex items-center justify-between border-b border-border mb-2">
                                     <h1>Price Range</h1>
-                                    <Button size="sm" variant="ghost" onClick={handleClearPriceRange} className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
+                                    <Button size="sm" variant="ghost" onClick={handleClearPriceRange}
+                                            className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="flex flex-col">
-                                        <label htmlFor="minPrice" className="text-secondary text-xs font-black">min.</label>
-                                        <input
+                                        <label htmlFor="minPrice"
+                                               className="text-secondary text-xs font-black">min.</label>
+                                        <Input
                                             type="number"
                                             id="minPrice"
                                             value={minPrice}
@@ -398,8 +434,9 @@ const FilterOptions = (
                                     </div>
                                     <span className="text-white/60">-</span>
                                     <div className="flex flex-col">
-                                        <label htmlFor="maxPrice" className="text-secondary text-xs font-black">min.</label>
-                                        <input
+                                        <label htmlFor="maxPrice"
+                                               className="text-secondary text-xs font-black">min.</label>
+                                        <Input
                                             type="number"
                                             id="maxPrice"
                                             value={maxPrice}
@@ -413,16 +450,18 @@ const FilterOptions = (
                         </Popover>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="min-w-[150px] hover:bg-primary focus:bg-primary flex gap-2 items-center bg-conic-300 text-white">
+                                <Button variant="outline"
+                                        className="min-w-[150px] hover:bg-primary focus:bg-primary flex gap-2 items-center bg-conic-300 text-white">
                                     {minRating > 0 ? `${minRating}+ Stars` : "Rating"}
                                     <ChevronDown className="w-4 h-4"/>
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[250px] p-3 bg-dark flex flex-col gap-2">
-                                <button onClick={() => setMinRating(0)} className={`px-3 py-2 rounded ${minRating === 0 ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
+                                <button onClick={() => setMinRating(0)}
+                                        className={`px-3 py-2 rounded ${minRating === 0 ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
                                     All Ratings
                                 </button>
-                                {[1,2,3,4,5].map(rating => (
+                                {[1, 2, 3, 4, 5].map(rating => (
                                     <button
                                         key={rating}
                                         onClick={() => setMinRating(rating)}
@@ -439,7 +478,8 @@ const FilterOptions = (
                         </Popover>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline" className="min-w-[180px] hover:bg-primary focus:bg-primary flex justify-between items-center bg-conic-300 text-white">
+                                <Button variant="outline"
+                                        className="min-w-[180px] hover:bg-primary focus:bg-primary flex justify-between items-center bg-conic-300 text-white">
                                     {sortOptions.find(o => o.value === sortedBy)?.label}
                                     <ChevronDown className="w-4 h-4"/>
                                 </Button>

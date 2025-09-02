@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
 import {useUser} from "@/context/UserContext";
+import {Input} from "@/components/ui/input";
 
 const SigninForm = ({queryMessage}:{queryMessage: String}) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -21,8 +22,6 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
         type: queryMessage === "unauthorized" ? "error" : "",
         content: queryMessage === "unauthorized" ? "Please, Login First" : ""
     });
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
     const {setReload} = useUser();
 
     const router = useRouter();
@@ -52,12 +51,16 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
             setReload(prev => !prev);
             router.push('/');
         } else {
-            setError(true);
-            setErrorMessage("Invalid email or password");
+            setMessage({
+                type: "Error",
+                content: "Invalid email or password"
+            });
 
             setTimeout(() => {
-                setError(false);
-                setErrorMessage("");
+                setMessage({
+                    type: "",
+                    content: "",
+                });
             }, 7000);
         }
     };
@@ -83,7 +86,7 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
                 </label>
                 <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         value={formData.email}
@@ -107,7 +110,7 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
                 </label>
                 <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={formData.password}
@@ -135,10 +138,6 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
                         )}
                     </button>
                 </div>
-            </div>
-
-            <div className={`${error ? "flex" : "hidden"} rounded-md bg-red-800 border border-red-500 px-4 py-2 items-start`}>
-                <span>{errorMessage}</span>
             </div>
 
             <button

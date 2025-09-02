@@ -37,7 +37,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             setUser(data.user);
             return data.user;
         } catch (error) {
-            console.error("Failed to fetch user:", error);
+            setUser(null);
         }
     };
 
@@ -50,7 +50,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 setFavoriteTemplates(data.data.map((template: any) => template._id));
             }
         } catch (error) {
-            console.error("Failed to fetch favorites:", error);
             setFavoriteTemplates([]);
         }
     };

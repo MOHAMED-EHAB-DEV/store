@@ -25,7 +25,7 @@ const Template = ({ template, idx, showPrice = false, showActionButtons = false 
     const isFavorite = favoriteTemplates?.includes(template._id);
 
     return <div
-        className="group relative overflow-hidden w-full h-[530px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
+        className="group relative overflow-hidden w-full h-[580px] cursor-pointer rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02]"
         onMouseEnter={() => setHoveredTemplate(template._id)}
         onMouseLeave={() => setHoveredTemplate(null)}
         onClick={() => router.push(`/templates/${template._id}`)}

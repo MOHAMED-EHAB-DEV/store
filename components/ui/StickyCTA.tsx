@@ -31,7 +31,7 @@ const StickyCTA = () => {
     return (
         <>
             {isVisible && (
-                <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 p-4 shadow-2xl border-t border-white/10 backdrop-blur-sm">
+                <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 py-4 px-2 shadow-2xl border-t border-white/10 backdrop-blur-sm">
                     <div className="max-w-7xl mx-auto flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">

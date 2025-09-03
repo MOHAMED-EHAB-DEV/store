@@ -25,7 +25,7 @@ export default async function Home() {
     return (
         <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw]  md:px-0"
               role="main">
-            {/*<StickyCTA/>*/}
+            <StickyCTA/>
             <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
                 <Hero/>
                 <section

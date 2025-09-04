@@ -87,6 +87,6 @@ export const Parastoo = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-paras",
+  variable: "--font-parastoo",
   display: "swap",
 });

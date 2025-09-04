@@ -404,15 +404,15 @@
     }
 
     .animate-gradient {
-        animation: gradient 4s ease infinite;
+        animation: linear 4s ease infinite;
     }
 
     .animate-shimmer {
-        animation: shimmer 2s gradient infinite;
+        animation: shimmer 2s linear infinite;
     }
 
     .animate-shine {
-        animation: shine 2s gradient infinite;
+        animation: shine 2s linear infinite;
     }
 
     .animate-pulse-slow {
@@ -584,7 +584,7 @@
 }
 
 .animate-left-infinite-scroll {
-    animation: left-infinite-scroll 200s gradient infinite;
+    animation: left-infinite-scroll 200s linear infinite;
 }
 
 @keyframes right-infinite-scroll {
@@ -597,7 +597,7 @@
 }
 
 .animate-right-infinite-scroll {
-    animation: right-infinite-scroll 200s gradient infinite;
+    animation: right-infinite-scroll 200s linear infinite;
 }
 
 @keyframes gradientMove {

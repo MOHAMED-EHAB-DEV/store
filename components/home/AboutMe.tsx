@@ -94,7 +94,7 @@ const AboutMe = () => {
                     <Sparkles className="w-4 h-4 mr-2"/>
                     About the Creator
                 </Badge>
-                <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-paras">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-white mb-6 font-paras">
                     Meet{' '}
                     <span
                         className="bg-linear-to-r from-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">

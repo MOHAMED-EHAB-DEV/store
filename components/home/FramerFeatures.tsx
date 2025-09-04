@@ -95,7 +95,7 @@ const FramerFeatures = () => {
                     <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
                 </Badge>
 
-                <h1 className="text-xl md:text-4xl text-white font-paras font-bold w-full md:w-4/5 text-center">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-white font-paras font-bold w-full md:w-4/5 text-center">
                     Ship Websites Faster with Framer
                 </h1>
             </div>

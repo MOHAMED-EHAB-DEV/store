@@ -37,7 +37,7 @@ const FeaturedTemplates = async () => {
                         <Star className="w-5 h-5 mr-2 animate-pulse"/>
                         Featured Templates
                     </Badge>
-                    <h2 className="text-4xl header opacity-0 md:text-5xl lg:text-6xl xl:text-7xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
+                    <h2 className="header opacity-0 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
                     Handpicked{' '}
                     <span
                         className="relative">

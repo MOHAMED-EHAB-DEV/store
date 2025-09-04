@@ -84,7 +84,7 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        className="font-bold md:font-semibold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
+                        className="font-bold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
                     >
                         Premium Templates to{' '}
                         <span className="relative">
@@ -108,7 +108,7 @@ const Hero = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
                     <Link
-                        className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-linear-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
+                        className="hero-btn animate-bounce group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-linear-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
                         href="/templates"
                     >

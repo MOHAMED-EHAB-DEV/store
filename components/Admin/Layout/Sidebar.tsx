@@ -38,7 +38,8 @@ const Sidebar = ({open, setOpen, user}: {
                 window.location.href = `/`;
             }, 100);
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            toast.error((err as Error).message);
         }
     }
 

@@ -19,7 +19,7 @@ async function getTemplates() {
             return [];
         }
     } catch (err) {
-        console.log(`error getting templates: ${err}`)
+        // console.log(`error getting templates: ${err}`)
         return [];
     }
 }

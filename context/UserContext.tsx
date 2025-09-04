@@ -44,7 +44,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         try {
             const res = await fetch(`/api/user/favorites`);
             const data = await res.json();
-            console.log(data);
             if (data.success) {
                 setFavoriteTemplates(data.data.map((template: any) => template._id));
             }

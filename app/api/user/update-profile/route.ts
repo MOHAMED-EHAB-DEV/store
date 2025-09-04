@@ -38,7 +38,7 @@ export async function POST(req: Request) {
             message: "User updated Successfully"
         }, {status: 200});
     } catch (err: any) {
-        console.log("Update user error:", err);
+        // console.log("Update user error:", err);
         return NextResponse.json(
             {success: false, message: err.message || "Something went wrong"},
             {status: 400}

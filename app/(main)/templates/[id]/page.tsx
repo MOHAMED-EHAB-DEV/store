@@ -9,21 +9,35 @@ const getTemplate = async (id: string) => {
         }
         const data = await response.json();
 
-        return data.success ? data.data : {};
+        return data.success ? {
+            data: data.data as ITemplate[],
+            err: null
+        } : {
+            err: data.message || 'No Template Found',
+            data: null,
+        };
     } catch (err) {
-        console.log(`Error while trying to get template: ${err}`);
-        return {};
+        return {
+            err: `Error fetching template with id ${id}: ${err}`,
+            data: null,
+        };
     }
 }
 
 const Page = async ({params}:{params: {id: string}}) => {
     const {id} = await params;
-    const template = await getTemplate(id);
+    const {data, err} = await getTemplate(id);
     return (
         <div className="pt-36 sm:pt-46 md:pt-36">
-            <Template
-                template={template}
-            />
+            {err ? (
+                <div className="text-center text-red-500">{err}</div>
+            ) : !data ? (
+                <div className="text-center">Loading...</div>
+            ) : (
+                <Template
+                    template={data}
+                />
+            )}
         </div>
     )
 }

@@ -1,9 +1,9 @@
-import {useState} from 'react';
-import {Check, Eye, EyeOff, Lock} from "@/components/ui/svgs/Icons";
-import {passwordRequirements} from "@/constants";
-import {toast} from "sonner";
+import { useState } from 'react';
+import { Check, Eye, EyeOff, Lock } from "@/components/ui/svgs/Icons";
+import { passwordRequirements } from "@/constants";
+import { toast } from "sonner";
 
-const ChangePassword = ({user} : {user:IUser}) => {
+const ChangePassword = ({ user }: { user: IUser }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
@@ -15,7 +15,7 @@ const ChangePassword = ({user} : {user:IUser}) => {
         confirmPassword: "",
     });
 
-    const handleInputChange = ({target: {name, value}}: { target: { name: string, value: string } }) =>
+    const handleInputChange = ({ target: { name, value } }: { target: { name: string, value: string } }) =>
         setPasswordData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -42,8 +42,8 @@ const ChangePassword = ({user} : {user:IUser}) => {
 
             return response;
         } catch (err) {
-            console.log(err);
-            toast(err)
+            // console.log(err);
+            toast.error((err as Error).message);
         } finally {
             setIsLoading(false);
         }
@@ -57,7 +57,7 @@ const ChangePassword = ({user} : {user:IUser}) => {
                     Password
                 </label>
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20"/>
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
                     <input
                         type={isPasswordVisible ? "text" : "password"}
                         name="currentPassword"
@@ -73,9 +73,9 @@ const ChangePassword = ({user} : {user:IUser}) => {
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                     >
                         {isPasswordVisible ? (
-                            <EyeOff className="w-5 h-5"/>
+                            <EyeOff className="w-5 h-5" />
                         ) : (
-                            <Eye className="w-5 h-5"/>
+                            <Eye className="w-5 h-5" />
                         )}
                     </button>
                 </div>
@@ -86,7 +86,7 @@ const ChangePassword = ({user} : {user:IUser}) => {
                     Password
                 </label>
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20"/>
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
                     <input
                         type={isNewPasswordVisible ? "text" : "password"}
                         name="newPassword"
@@ -102,9 +102,9 @@ const ChangePassword = ({user} : {user:IUser}) => {
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                     >
                         {isNewPasswordVisible ? (
-                            <EyeOff className="w-5 h-5"/>
+                            <EyeOff className="w-5 h-5" />
                         ) : (
-                            <Eye className="w-5 h-5"/>
+                            <Eye className="w-5 h-5" />
                         )}
                     </button>
                 </div>
@@ -114,14 +114,12 @@ const ChangePassword = ({user} : {user:IUser}) => {
                         {passwordRequirements(passwordData.newPassword).map((req, index) => (
                             <div
                                 key={index}
-                                className={`flex items-center text-sm ${
-                                    req.met ? "text-green-400" : "text-gray-400"
-                                }`}
+                                className={`flex items-center text-sm ${req.met ? "text-green-400" : "text-gray-400"
+                                    }`}
                             >
                                 <Check
-                                    className={`w-4 h-4 mr-2 ${
-                                        req.met ? "text-green-400" : "text-gray-600"
-                                    }`}
+                                    className={`w-4 h-4 mr-2 ${req.met ? "text-green-400" : "text-gray-600"
+                                        }`}
                                 />
                                 {req.text}
                             </div>
@@ -135,7 +133,7 @@ const ChangePassword = ({user} : {user:IUser}) => {
                     Confirm Password
                 </label>
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20"/>
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
                     <input
                         type={isConfirmPasswordVisible ? "text" : "password"}
                         name="confirmPassword"
@@ -151,9 +149,9 @@ const ChangePassword = ({user} : {user:IUser}) => {
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                     >
                         {isConfirmPasswordVisible ? (
-                            <EyeOff className="w-5 h-5"/>
+                            <EyeOff className="w-5 h-5" />
                         ) : (
-                            <Eye className="w-5 h-5"/>
+                            <Eye className="w-5 h-5" />
                         )}
                     </button>
                 </div>
@@ -166,7 +164,7 @@ const ChangePassword = ({user} : {user:IUser}) => {
             </div>
 
             <button disabled={isLoading || passwordData.newPassword !== passwordData.confirmPassword} className={`self-end btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed`} type="submit">
-                {isLoading ? "Updating Password": "Update Password"}
+                {isLoading ? "Updating Password" : "Update Password"}
             </button>
         </form>
     )

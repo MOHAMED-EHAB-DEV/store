@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import './fonts.css';
 @import 'tw-animate-css';
 
 @theme {
@@ -15,7 +14,7 @@
   --color-border: #24262c;
   --color-accent: #f6e96a;
 
-  --font-paras: 'Parastoo', serif;
+  /* --font-paras: var(--font-parastoo); */
 
   /* Typography Scale */
   --text-xs: 0.75rem; /* 12px */
@@ -165,6 +164,9 @@
         font-weight: 500;
     }
 
+    .font-paras {
+        font-family: var(--font-parastoo), serif;
+    }
 
     /* Put this inside your @layer base (replace the previous block) */
 

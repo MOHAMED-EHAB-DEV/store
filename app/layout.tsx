@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import {Roboto} from "@/lib/fonts";
+import {Roboto, Parastoo} from "@/lib/fonts";
 import {Analytics} from "@vercel/analytics/next";
 import {SpeedInsights} from "@vercel/speed-insights/next";
 import {Toaster} from "@/components/ui/sonner";
@@ -85,7 +85,7 @@ export default function RootLayout(
                       crossOrigin="anonymous"/>
             </Head>
             <body
-                className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className)}
+                className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className, Parastoo.variable)}
             >
             <Toaster/>
             <a

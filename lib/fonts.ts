@@ -58,3 +58,35 @@ export const Roboto = localFont({
     preload: true,
     fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
+
+export const Parastoo = localFont({
+  src: [
+    {
+      path: "../public/assets/fonts/Parastoo/Parastoo-VariableFont_wght.ttf",
+      weight: "100 900",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/fonts/Parastoo/static/Parastoo-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/fonts/Parastoo/static/Parastoo-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/fonts/Parastoo/static/Parastoo-SemiBold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/assets/fonts/Parastoo/static/Parastoo-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-parastoo",
+  display: "swap",
+});

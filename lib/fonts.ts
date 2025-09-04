@@ -88,5 +88,7 @@ export const Parastoo = localFont({
     },
   ],
   variable: "--font-parastoo",
+  preload: true,
   display: "swap",
+  fallback: ['serif'],
 });

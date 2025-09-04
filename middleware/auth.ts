@@ -1,9 +1,8 @@
 "use server";
 
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import User from "@/lib/models/User";
-import { connectToDatabase } from "@/lib/database";
 
 export async function authenticateUser() {
     try {

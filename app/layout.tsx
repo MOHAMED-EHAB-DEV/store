@@ -75,14 +75,6 @@ export default function RootLayout(
             <Head>
                 <link rel="preload" as="image" href="/assets/Icons/cursor.avif" type="image/avif"/>
                 <link rel="preload" as="image" href="/assets/Icons/publish.webp" type="image/webp"/>
-                <link rel="preload" as="font" href="/assets/fonts/Parastoo/Parastoo-VariableFont_wght.ttf"
-                      type="font/ttf" crossOrigin="anonymous"/>
-                <link rel="preload" as="font" href="/assets/fonts/Parastoo/static/Parastoo-Regular.ttf" type="font/ttf"
-                      crossOrigin="anonymous"/>
-                <link rel="preload" as="font" href="/assets/fonts/Parastoo/static/Parastoo-Medium.ttf" type="font/ttf"
-                      crossOrigin="anonymous"/>
-                <link rel="preload" as="font" href="/assets/fonts/Parastoo/static/Parastoo-Bold.ttf" type="font/ttf"
-                      crossOrigin="anonymous"/>
             </Head>
             <body
                 className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className, Parastoo.variable)}

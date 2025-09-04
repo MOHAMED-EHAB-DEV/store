@@ -10,7 +10,7 @@ const Page = async () => {
     const templates = rawTemplates.map(serializeTemplate);
     const categories = rawCategories.map(serializeCategory);
     return (
-        <main className="flex flex-col justify-center py-36 gap-4 overflow-x-hidden w-[100dvw] px-5 md:px-56"
+        <main className="flex flex-col justify-center py-36 gap-4 overflow-x-hidden w-dvw px-5 md:px-56"
               role="main">
             <h1 className="text-white text-2xl md:text-4xl font-bold">Templates</h1>
 

@@ -51,9 +51,9 @@ export function VerticalMarquee(
             }}
         >
             <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-dark to-transparent"/>
+                className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-linear-to-b from-dark to-transparent"/>
             <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-dark to-transparent"/>
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-dark to-transparent"/>
 
             <motion.div
                 className="flex flex-col gap-4 py-2 will-change-transform"
@@ -98,7 +98,7 @@ export default function HorizontialMarquee(
     const animationClasses = direction === "left" ? "animate-left-infinite-scroll" : "animate-right-infinite-scroll";
     return (
         <div
-            className={cn("w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_32px,_black_calc(100%-32px),transparent_100%)] md:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]", className)}>
+            className={cn("w-full inline-flex flex-nowrap overflow-hidden mask-[linear-gradient(to_right,transparent_0,black_32px,black_calc(100%-32px),transparent_100%)] md:mask-[linear-gradient(to_right,transparent_0,black_128px,black_calc(100%-200px),transparent_100%)]", className)}>
             <div className={cn(animationClasses, `flex items-center gap-4 justify-center md:justify-start`)}>
                 {[...items, ...items, ...items, ...items, ...items, ...items, ...items, ...items].map((testimonial, i) => (
                     <div
@@ -108,7 +108,7 @@ export default function HorizontialMarquee(
                         <div className="flex gap-4 justify-center items-center">
                             <div className="flex gap-2 justify-center items-center">
                                 <div
-                                    className="w16 relative  bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold mr-4"
+                                    className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold mr-4"
                                 >
                                     <Image
                                         src={testimonial.avatar}

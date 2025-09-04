@@ -21,8 +21,6 @@ export async function authenticateUser() {
             throw new Error("Invalid token payload");
         }
 
-        await connectToDatabase();
-
         const user = await User.findOne(
             { _id: decoded.id },
             { _id: 0 }

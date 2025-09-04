@@ -29,11 +29,11 @@ const FeaturedTemplates = async () => {
     return (
         <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 relative">
             {/* Section Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
+            <div className="absolute inset-0 bg-linear-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
             <div className="relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-20">
-                    <Badge className="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
+                    <Badge className="mb-6 bg-linear-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
                         <Star className="w-5 h-5 mr-2 animate-pulse"/>
                         Featured Templates
                     </Badge>
@@ -44,7 +44,7 @@ const FeaturedTemplates = async () => {
                         Premium
                         <div
                             aria-hidden="true"
-                            className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
+                            className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
                     </span>{' '}
                     Templates
                 </h2>
@@ -79,9 +79,9 @@ const FeaturedTemplates = async () => {
                 {/* View All Button */}
                 <div className="text-center mt-16">
                     <Link href="/templates"
-                          className="group relative inline-flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                          className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
                         <span className="relative z-10">View All Templates</span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                     </Link>
                 </div>
             </div>

@@ -65,7 +65,7 @@ const TrustSignals: React.FC<TrustSignalsProps> = ({
                         key={index}
                         className="group flex items-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-3 hover:bg-white/10 transition-all duration-300"
                     >
-                        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${signal.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        <div className={`w-8 h-8 rounded-full bg-linear-to-r ${signal.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                             <IconComponent className="w-4 h-4 text-white" />
                         </div>
                         <span className="text-white font-medium text-sm whitespace-nowrap">

@@ -50,7 +50,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
                     alt={`${username} Profile`}
                     width={50}
                     height={50}
-                    className="p-[1px] rounded-full w-full h-full"
+                    className="p-px rounded-full w-full h-full"
                 />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="flex flex-col items-center justify-center bg-dark border-dark">
@@ -61,7 +61,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
                             alt={`${username} Profile`}
                             width={30}
                             height={30}
-                            className="p-[1px] rounded-full transition-all duration-500 w-full h-full"
+                            className="p-px rounded-full transition-all duration-500 w-full h-full"
                         />
                     </div>
                     <div className="flex flex-col justify-center gap-1">

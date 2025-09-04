@@ -102,16 +102,16 @@ export default function RootLayout(
                     <div className="absolute inset-0 bg-primary"/>
 
                     {/* Gradient overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-dark to-primary opacity-90"/>
+                    <div className="absolute inset-0 bg-linear-to-br from-primary via-dark to-primary opacity-90"/>
 
                     {/* Animated gradient orbs */}
                     <div
-                        className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-transparent rounded-full blur-3xl animate-float"/>
+                        className="absolute top-0 left-0 w-96 h-96 bg-linear-to-br from-purple-500/20 via-pink-500/10 to-transparent rounded-full blur-3xl animate-float"/>
                     <div
-                        className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-bl from-blue-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl animate-float"
+                        className="absolute top-1/3 right-0 w-80 h-80 bg-linear-to-bl from-blue-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl animate-float"
                         style={{animationDelay: '2s'}}/>
                     <div
-                        className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-green-500/15 via-teal-500/10 to-transparent rounded-full blur-3xl animate-float"
+                        className="absolute bottom-0 left-1/3 w-72 h-72 bg-linear-to-tr from-green-500/15 via-teal-500/10 to-transparent rounded-full blur-3xl animate-float"
                         style={{animationDelay: '4s'}}/>
 
                     {/* Subtle radial gradient pattern */}

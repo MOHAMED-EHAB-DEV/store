@@ -1,4 +1,6 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
+
+export const dynamic = "force-dynamic";
 
 async function getTemplates() {
     try {

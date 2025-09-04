@@ -136,7 +136,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                         {/* Buttons */}
                         <div className="flex flex-col gap-3 w-full max-w-[250px]">
                             <button
-                                className="w-full px-5 py-2.5 sm:py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base">
+                                className="w-full px-5 py-2.5 sm:py-3 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base">
                                 {template.price === 0 ? "Download" : "Buy Now"}
                             </button>
                             <Link

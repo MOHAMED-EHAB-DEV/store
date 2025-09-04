@@ -92,7 +92,7 @@ const FramerFeatures = () => {
                 >
                     <Framer className="w-10 h-10" />
                     Framer Templates
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shine" />
+                    <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
                 </Badge>
 
                 <h1 className="text-xl md:text-4xl text-white font-paras font-bold w-full md:w-4/5 text-center">
@@ -176,7 +176,7 @@ const FramerFeatures = () => {
                                 autoPlay
                                 className="absolute top-0 left-0 w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                            <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10"></div>
                             <div className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
                                 <h1 className="text-white font-medium text-base md:text-2xl">
                                     Drag-and-Drop Simplicity
@@ -199,7 +199,7 @@ const FramerFeatures = () => {
                                 muted
                                 className="absolute top-0 left-0 w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"></div>
                             <div className="relative z-10">
                                 <h1 className="text-white font-paras font-bold text-xl md:text-3xl">
                                     Lightning-Fast Launch
@@ -270,14 +270,14 @@ const FramerFeatures = () => {
             <div className="text-center mt-16 px-6">
                 <a
                     href="/templates"
-                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                    className="group relative inline-flex items-center justify-center bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                     aria-label="Browse Framer templates"
                 >
                     <span className="relative z-10 flex items-center gap-2">
                         <Framer className="w-6 h-6"/>
                         Explore Framer Templates
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                 </a>
             </div>
         </section>

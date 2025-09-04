@@ -44,7 +44,7 @@ const ComingSoon: React.FC<ComingSoonProps> = ({ dateUnlocked, title, descriptio
 
     return (
         <section className="relative flex flex-col items-center justify-center min-h-[80vh] overflow-hidden rounded-2xl mx-auto max-w-4xl container w-full p-8 text-center text-white bg-gradient-radial from-indigo-900 via-slate-900 to-black">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 {title}
             </h1>
 
@@ -75,7 +75,7 @@ const ComingSoon: React.FC<ComingSoonProps> = ({ dateUnlocked, title, descriptio
                 ))}
             </div>
 
-            <span className="mt-10 px-6 py-2 rounded-full font-semibold tracking-wider bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg">
+            <span className="mt-10 px-6 py-2 rounded-full font-semibold tracking-wider bg-linear-to-r from-indigo-500 to-purple-600 shadow-lg">
                 #ExclusivePreview
             </span>
         </section>

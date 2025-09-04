@@ -2,9 +2,11 @@ import { NextRequest } from 'next/server';
 import User from '@/lib/models/User';
 import { withAPIMiddleware, createAPIResponse, createErrorResponse } from '@/lib/utils/api-helpers';
 import { authenticateUser } from '@/middleware/auth';
+import { connectToDatabase } from '@/lib/database';
 
 // GET: Get user's favorite templates
 async function handleGET(req: NextRequest) {
+    await connectToDatabase();
     const user = await authenticateUser();
     if (!user) return createErrorResponse('unauthorized', 400);
 

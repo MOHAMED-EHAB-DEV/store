@@ -90,14 +90,14 @@ const AboutMe = () => {
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col gap-4 items-center justify-center">
             <div className="text-center mb-16 about-header">
-                <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-gradient-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
+                <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-linear-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
                     <Sparkles className="w-4 h-4 mr-2"/>
                     About the Creator
                 </Badge>
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-paras">
                     Meet{' '}
                     <span
-                        className="bg-gradient-to-r from-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                        className="bg-linear-to-r from-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
                         Mohammed Ehab
                     </span>
                 </h2>
@@ -111,10 +111,10 @@ const AboutMe = () => {
                 <div className="space-y-8">
                     <div className="relative overflow-hidden rounded-3xl glass-strong p-8 about-card">
                         <div
-                            className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-teal-500/20 to-cyan-500/20"></div>
+                            className="absolute inset-0 bg-linear-to-br from-green-500/20 via-teal-500/20 to-cyan-500/20"></div>
                         <div className="relative z-10 flex items-center gap-6 mb-6">
                             <div
-                                className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold">
+                                className="w-20 h-20 rounded-full bg-linear-to-br from-green-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold">
                                 ME
                             </div>
                             <div>
@@ -143,10 +143,10 @@ const AboutMe = () => {
                                     className="group relative overflow-hidden rounded-2xl glass-strong p-4 hover:scale-105 transition-all duration-300"
                                 >
                                     <div
-                                        className={`absolute inset-0 bg-gradient-to-br ${badge.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                                        className={`absolute inset-0 bg-linear-to-br ${badge.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
                                     <div className="relative z-10 text-center">
                                         <div
-                                            className={`w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br ${badge.gradient} flex items-center justify-center`}>
+                                            className={`w-12 h-12 mx-auto mb-2 rounded-full bg-linear-to-br ${badge.gradient} flex items-center justify-center`}>
                                             <Icon className="w-6 h-6 text-white"/>
                                         </div>
                                         <p className="text-white text-sm font-medium">{badge.text}</p>
@@ -157,7 +157,7 @@ const AboutMe = () => {
                     </div>
 
                     <div className="about-card relative overflow-hidden rounded-2xl glass-strong p-6 w-full mx-auto">
-                        <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-teal-500/20"></div>
+                        <div className="absolute inset-0 bg-linear-to-br from-green-500/20 to-teal-500/20"></div>
                         <div className="relative z-10 text-center">
                             <h4 className="text-xl font-bold text-white mb-3">Let's Build Something Amazing</h4>
                             <p className="text-gray-300 mb-4">
@@ -166,7 +166,7 @@ const AboutMe = () => {
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <Link
                                     href="/templates"
-                                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
+                                    className="flex-1 bg-linear-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
                                 >
                                     Browse Templates
                                 </Link>
@@ -192,7 +192,7 @@ const AboutMe = () => {
                                     className="relative overflow-hidden rounded-2xl glass-strong p-6 group hover:scale-105 transition-all duration-300"
                                 >
                                     <div
-                                        className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        className="absolute inset-0 bg-linear-to-br from-purple-500/20 via-pink-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     <div className="relative z-10 text-center">
                                         <Icon className="w-8 h-8 text-cyan-400 mx-auto mb-3"/>
                                         {/* <div className="text-3xl font-bold text-white mb-1">{stat.value}</div> */}
@@ -213,7 +213,7 @@ const AboutMe = () => {
 
                     <div className="about-card relative overflow-hidden rounded-3xl glass-strong p-8">
                         <div
-                            className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20"></div>
+                            className="absolute inset-0 bg-linear-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20"></div>
                         <div className="relative z-10">
                             <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                                 <Code className="w-6 h-6 text-blue-400"/>
@@ -233,7 +233,7 @@ const AboutMe = () => {
                                         </div>
                                         <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
                                             <div
-                                                className={`h-full bg-gradient-to-r ${skill.color} rounded-full transition-all duration-1000 ease-out group-hover:animate-pulse`}
+                                                className={`h-full bg-linear-to-r ${skill.color} rounded-full transition-all duration-1000 ease-out group-hover:animate-pulse`}
                                                 style={{width: `${skill.level}%`}}
                                             ></div>
                                         </div>

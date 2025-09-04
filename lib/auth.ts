@@ -20,7 +20,7 @@ export async function getUserFromServer({headerToken=""}:{headerToken:string}) {
         if (typeof decoded === "string" || !("id" in decoded)) {
             throw new Error("Invalid token payload");
         }
-        await connectToDatabase();
+        
         const user = await User.findById(decoded.id).select(
             "_id name email avatar role"
         );

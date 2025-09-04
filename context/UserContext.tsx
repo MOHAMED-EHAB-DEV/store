@@ -1,7 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { set } from "mongoose";
 
 interface IUserContext {
     user: IUser | null;

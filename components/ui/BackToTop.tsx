@@ -29,7 +29,7 @@ const BackToTop = () => {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 80, opacity: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white rounded-full shadow-2xl hover:shadow-purple-500/25 transition-all hover:-translate-y-1 active:scale-95"
+                    className="fixed bottom-6 right-6 z-50 p-4 bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white rounded-full shadow-2xl hover:shadow-purple-500/25 transition-all hover:-translate-y-1 active:scale-95"
                     aria-label="Back to top"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}

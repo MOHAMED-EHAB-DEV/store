@@ -3,6 +3,8 @@ import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout(
     {
         children,

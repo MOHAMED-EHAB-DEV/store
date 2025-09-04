@@ -45,7 +45,7 @@ const Sidebar = ({open, setOpen, user}: {
     return (
         <div
             className={`lg:start-0 z-50 w-[18rem] bg-dark flex flex-col md:p-8 p-4 justify-between h-screen fixed top-0 overflow-auto transition-[inset-inline-start] duration-300 ${
-                open ? "start-0" : "-start-[18rem]"
+                open ? "start-0" : "-start-72"
             } `}
         >
             <div className="">
@@ -85,7 +85,7 @@ const Sidebar = ({open, setOpen, user}: {
                                 alt={`${user?.name} Profile`}
                                 width={30}
                                 height={30}
-                                className="p-[1px] rounded-full transition-all duration-500 w-full h-full border hover:border-white"
+                                className="p-px rounded-full transition-all duration-500 w-full h-full border hover:border-white"
                             />
                         </div>
                         <div className="flex gap-1 items-center">

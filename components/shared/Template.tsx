@@ -32,13 +32,13 @@ const Template = ({ template, idx, showPrice = false, showActionButtons = false 
     >
         {/* Gradient Background */}
         <div
-            className={`absolute inset-0 bg-gradient-to-br ${template.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
+            className={`absolute inset-0 bg-linear-to-br ${template.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
 
         {/* Featured Badge */}
         {template.categories.some(({ name }: { name: string }) => name?.toLowerCase() === "featured") && (
             <div className="absolute top-4 left-4 z-10">
                 <Badge
-                    className="bg-gradient-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">
+                    className="bg-linear-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">
                     <Heart className="w-4 h-4" />
                     Featured
                 </Badge>
@@ -58,9 +58,9 @@ const Template = ({ template, idx, showPrice = false, showActionButtons = false 
         {/* Template Image Placeholder */}
         {!template.thumbnail ? (
             <div
-                className="relative h-64 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
+                className="relative h-64 bg-linear-to-br from-gray-800 to-gray-900 overflow-hidden">
                 <div
-                    className={`absolute inset-0 bg-gradient-to-br ${template.gradient} opacity-30`}></div>
+                    className={`absolute inset-0 bg-linear-to-br ${template.gradient} opacity-30`}></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-6xl text-white/20">
                         {template.Icon && <Icon />}

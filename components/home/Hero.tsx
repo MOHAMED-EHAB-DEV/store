@@ -60,18 +60,18 @@ const Hero = () => {
             role="banner"
         >
             {/* Enhanced Background Layer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/95 to-primary/90"/>
+            <div className="absolute inset-0 bg-linear-to-br from-primary via-primary/95 to-primary/90"/>
             <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10"/>
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10"/>
             <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent"/>
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent"/>
             <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"/>
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"/>
 
             <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
                 <Badge
                     variant="secondary"
-                    className="hero-badge relative bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-white border border-yellow-500/50 rounded-full px-6 py-3 font-semibold overflow-hidden hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] transition-all duration-500 group"
+                    className="hero-badge relative bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white border border-yellow-500/50 rounded-full px-6 py-3 font-semibold overflow-hidden hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] transition-all duration-500 group"
                     role="status"
                     aria-label="Featured announcement"
                 >
@@ -79,7 +79,7 @@ const Hero = () => {
                         className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300"/>
                     <span className="relative z-10">Unleash Your Creativity</span>
                     <span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine"/>
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent animate-shine"/>
                 </Badge>
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
@@ -91,7 +91,7 @@ const Hero = () => {
                             Elevate
                             <div
                                 aria-hidden="true"
-                                className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
+                                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
                         </span>{' '}
                         Your Projects
                     </h1>
@@ -108,7 +108,7 @@ const Hero = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
                     <Link
-                        className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
+                        className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-linear-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
                         href="/templates"
                     >
@@ -118,7 +118,7 @@ const Hero = () => {
                                 className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"/>
                         </span>
                         <div
-                            className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"/>
+                            className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"/>
                     </Link>
 
                     {/*<Link*/}

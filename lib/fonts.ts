@@ -69,22 +69,22 @@ export const Parastoo = localFont({
     {
       path: "../public/assets/fonts/Parastoo/static/Parastoo-Regular.ttf",
       weight: "400",
-      style: "normal",
+      style: "regular",
     },
     {
       path: "../public/assets/fonts/Parastoo/static/Parastoo-Medium.ttf",
       weight: "500",
-      style: "normal",
+      style: "medium",
     },
     {
       path: "../public/assets/fonts/Parastoo/static/Parastoo-SemiBold.ttf",
       weight: "600",
-      style: "normal",
+      style: "semibold",
     },
     {
       path: "../public/assets/fonts/Parastoo/static/Parastoo-Bold.ttf",
       weight: "700",
-      style: "normal",
+      style: "bold",
     },
   ],
   variable: "--font-parastoo",

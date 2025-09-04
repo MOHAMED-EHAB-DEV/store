@@ -84,7 +84,7 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        className="font-bold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
+                        className="font-bold md:font-semibold header opacity-0 text-3xl sm:text-4xl md:text-6xl lg:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
                     >
                         Premium Templates to{' '}
                         <span className="relative">

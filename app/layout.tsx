@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 import "./globals.css";
-import {Roboto, Parastoo} from "@/lib/fonts";
+import {Roboto} from "@/lib/fonts";
 import {Analytics} from "@vercel/analytics/next";
 import {SpeedInsights} from "@vercel/speed-insights/next";
 import {Toaster} from "@/components/ui/sonner";
@@ -77,7 +77,7 @@ export default function RootLayout(
                 <link rel="preload" as="image" href="/assets/Icons/publish.webp" type="image/webp"/>
             </Head>
             <body
-                className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className, Parastoo.variable)}
+                className={cn("antialiased scroll-smooth bg-primary text-white", Roboto.className)}
             >
             <Toaster/>
             <a

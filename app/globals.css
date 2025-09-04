@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './fonts.css';
 @import 'tw-animate-css';
 
 @theme {
@@ -14,7 +15,7 @@
   --color-border: #24262c;
   --color-accent: #f6e96a;
 
-  --font-paras: var(--font-parastoo);
+  --font-paras: 'Parastoo', serif;
 
   /* Typography Scale */
   --text-xs: 0.75rem; /* 12px */
@@ -58,7 +59,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #5b5cf6 0%, #7c3aed 100%);
+    background: kinear-gradient(135deg, #5b5cf6 0%, #7c3aed 100%);
 }
 
 /* Firefox scrollbar styling */
@@ -69,12 +70,12 @@
 
 @layer base {
     :root {
-        --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        --gradient-warning: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        --gradient-danger: linear-gradient(135deg, #ff4e50 0%, #f44336 50%, #d32f2f 100%);
-        --gradient-info: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        --gradient-primary: gradient-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        --gradient-secondary: gradient-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-success: gradient-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-warning: gradient-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --gradient-danger: gradient-gradient(135deg, #ff4e50 0%, #f44336 50%, #d32f2f 100%);
+        --gradient-info: gradient-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         --card: var(--color-card);
         --border: var(--color-border);
         --accent: var(--color-accent);
@@ -240,7 +241,7 @@
     }
 
     .btn-primary {
-        @apply bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400
+        @apply bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400
         hover:shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-1;
     }
 
@@ -249,12 +250,12 @@
     }
 
     .btn-accent {
-        @apply bg-linear-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-400 hover:via-red-400 hover:to-pink-400
+        @apply bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-400 hover:via-red-400 hover:to-pink-400
         hover:shadow-2xl hover:shadow-orange-500/30 hover:-translate-y-1;
     }
 
     .btn-success {
-        @apply bg-linear-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400
+        @apply bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400
         hover:shadow-2xl hover:shadow-green-500/30 hover:-translate-y-1;
     }
 
@@ -290,47 +291,47 @@
     }
 
     .text-gradient {
-        @apply bg-linear-to-r from-gold to-yellow-300 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-gold to-yellow-300 bg-clip-text text-transparent;
     }
 
     .text-gradient-primary {
-        @apply bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text;
+        @apply bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text;
     }
 
     .text-gradient-secondary {
-        @apply bg-linear-to-r from-gray-400 to-gray-600 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-gray-400 to-gray-600 bg-clip-text text-transparent;
     }
 
     .text-gradient-success {
-        @apply bg-linear-to-r from-green-400 to-teal-400 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent;
     }
 
     .text-gradient-warning {
-        @apply bg-linear-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent;
     }
 
     .text-gradient-danger {
-        @apply bg-linear-to-r from-red-400 to-pink-400 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent;
     }
 
     .text-gradient-rainbow {
-        @apply bg-linear-to-r from-purple-400 via-pink-400 via-red-400 via-yellow-400 via-green-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-purple-400 via-pink-400 via-red-400 via-yellow-400 via-green-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent;
     }
 
     .text-gradient-purple {
-        @apply bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent;
     }
 
     .text-gradient-ocean {
-        @apply bg-linear-to-r from-blue-500 via-teal-500 to-green-500 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-blue-500 via-teal-500 to-green-500 bg-clip-text text-transparent;
     }
 
     .text-gradient-sunset {
-        @apply bg-linear-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent;
     }
 
     .text-gradient-cosmic {
-        @apply bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent;
         background-size: 200% 200%;
         animation: gradient 3s ease infinite;
     }
@@ -361,25 +362,25 @@
     }
 
     .bg-gradient-purple {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: gradient-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
     .bg-gradient-ocean {
-        background: linear-gradient(135deg, #667eea 0%, #06b6d4 50%, #10b981 100%);
+        background: gradient-gradient(135deg, #667eea 0%, #06b6d4 50%, #10b981 100%);
     }
 
     .bg-gradient-sunset {
-        background: linear-gradient(135deg, #f97316 0%, #ef4444 50%, #ec4899 100%);
+        background: gradient-gradient(135deg, #f97316 0%, #ef4444 50%, #ec4899 100%);
     }
 
     .bg-gradient-cosmic {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 25%, #ec4899 50%, #06b6d4 75%, #10b981 100%);
+        background: gradient-gradient(135deg, #6366f1 0%, #8b5cf6 25%, #ec4899 50%, #06b6d4 75%, #10b981 100%);
         background-size: 400% 400%;
         animation: gradient 8s ease infinite;
     }
 
     .bg-gradient-glass {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        background: gradient-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -407,11 +408,11 @@
     }
 
     .animate-shimmer {
-        animation: shimmer 2s linear infinite;
+        animation: shimmer 2s gradient infinite;
     }
 
     .animate-shine {
-        animation: shine 2s linear infinite;
+        animation: shine 2s gradient infinite;
     }
 
     .animate-pulse-slow {
@@ -441,7 +442,7 @@
 
     /* Brand accent colors */
     .text-brand-primary {
-        @apply bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent;
     }
 
     .text-brand-secondary {
@@ -449,11 +450,11 @@
     }
 
     .bg-brand-primary {
-        @apply bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500;
+        @apply bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500;
     }
 
     .bg-brand-accent {
-        @apply bg-linear-to-r from-orange-500 via-red-500 to-pink-500;
+        @apply bg-gradient-to-r from-orange-500 via-red-500 to-pink-500;
     }
 
     .border-brand {
@@ -552,12 +553,12 @@
 
 .animate-shimmer {
     background-size: 200% auto;
-    animation: shimmer 3s linear infinite;
+    animation: shimmer 3s gradient infinite;
 }
 
 .animate-shine {
     display: block;
-    animation: shine 1.5s linear infinite;
+    animation: shine 1.5s gradient infinite;
 }
 
 .animate-pulse-glow {
@@ -583,7 +584,7 @@
 }
 
 .animate-left-infinite-scroll {
-    animation: left-infinite-scroll 200s linear infinite;
+    animation: left-infinite-scroll 200s gradient infinite;
 }
 
 @keyframes right-infinite-scroll {
@@ -596,7 +597,7 @@
 }
 
 .animate-right-infinite-scroll {
-    animation: right-infinite-scroll 200s linear infinite;
+    animation: right-infinite-scroll 200s gradient infinite;
 }
 
 @keyframes gradientMove {

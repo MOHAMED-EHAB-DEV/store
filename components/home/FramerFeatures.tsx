@@ -158,8 +158,7 @@ const FramerFeatures = () => {
                                 Premium Templates at Affordable Prices
                             </h1>
                             <p className="text-secondary text-base md:text-lg font-medium">
-                                Create pixel-perfect designs without breaking the bank. Our pre-built
-                                Framer templates cost a fraction of hiring a professional designer.
+                                Save thousands compared to hiring a designer—snap up fully designed, top-quality templates for a fraction of the price.
                             </p>
                         </div>
                     </div>
@@ -205,8 +204,7 @@ const FramerFeatures = () => {
                                     Lightning-Fast Launch
                                 </h1>
                                 <p className="text-secondary font-medium text-base md:text-lg">
-                                    From concept to live site in <b>days, not months</b>. Start building,
-                                    customize with ease, and hit publish without delays.
+                                    Get live in <b>days</b>, not <b>months</b>.
                                 </p>
                             </div>
                         </div>

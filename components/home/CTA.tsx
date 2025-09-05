@@ -53,7 +53,7 @@ const Cta = () => {
                         </span>
                     </h2>
                     <p className="text-xl md:text-2xl text-medium-contrast mb-10 leading-relaxed font-medium">
-                        Stop waiting weeks for development. Launch your website today with our
+                        Stop waiting. Launch your website today with our
                         professionally designed templates.
                     </p>
                     <div className="flex flex-col items-center justify-center gap-4">

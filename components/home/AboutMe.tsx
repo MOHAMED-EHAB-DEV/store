@@ -119,7 +119,7 @@ const AboutMe = () => {
                             </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-white">Mohammed Ehab</h3>
-                                <p className="text-teal-400 font-medium">Full-Stack Developer</p>
+                                <p className="text-teal-400 font-medium">Full-Stack Developer • Design & Code Enthusiast</p>
                                 <div className="flex items-center gap-2 mt-2">
                                     <Coffee className="w-4 h-4 text-yellow-400"/>
                                     <span className="text-gray-300 text-sm">Fueled by coffee & creativity</span>

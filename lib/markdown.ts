@@ -26,24 +26,27 @@ async function getHighlighter() {
  * with an HTML node containing the highlighted <pre><code>...</code></pre>).
  */
 function remarkShiki() {
-  return async (tree: Root, file: any, next: () => void) => {
-    await getHighlighter()
-      .then((highlighter) => {
-        visit(tree, "code", (node: any) => {
-          const lang = node.lang ?? "text";
-          const code = node.value ?? "";
-          const highlighted = highlighter?.codeToHtml(code, { lang });
+  return async (tree: Root) => {
+    try {
+      const highlighter = await getHighlighter();
+      if (!highlighter) return;
+
+      visit(tree, "code", (node: any) => {
+        const lang = node.lang ?? "text";
+        const code = node.value ?? "";
+        try {
+          const highlighted = highlighter.codeToHtml(code, { lang });
           node.type = "html";
           node.value = highlighted;
           delete node.lang;
           delete node.meta;
-        });
-        // next();
-      })
-      .catch((err) => {
-        console.error("Shiki error:", err);
-        next(err);
+        } catch (err) {
+          console.error("Shiki highlight error for a code block:", err);
+        }
       });
+    } catch (err) {
+      console.error("Shiki error initializing highlighter:", err);
+    }
   };
 }
 

@@ -90,12 +90,12 @@
         scroll-behavior: smooth;
         box-sizing: border-box;
         /*  Remove Text Selection  */
-        -webkit-touch-callout: none; /* IOS, Safari */
-        -webkit-user-select: none; /*  Safari  */
-        -khtml-user-select: none; /* Konqueror HTML */
-        -moz-user-select: none; /* Old Versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-        user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+        /* -webkit-touch-callout: none; IOS, Safari */
+        /* -webkit-user-select: none;  Safari  */
+        /* -khtml-user-select: none; Konqueror HTML */
+        /* -moz-user-select: none; Old Versions of Firefox */
+        /* -ms-user-select: none; Internet Explorer/Edge */
+        /* user-select: none; Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
     }
 
     .will-change {

@@ -1,12 +1,13 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {Download, ExternalLink, Star} from "@/components/ui/svgs/Icons";
+import { Download, ExternalLink, Star } from "@/components/ui/svgs/Icons";
 import Markdown from "./Markdown";
-import {capitalizeFirstChar} from "@/lib/utils";
-import {TemplateSchema} from "@/components/SEO/StructuredData";
+import { capitalizeFirstChar } from "@/lib/utils";
+import { TemplateSchema } from "@/components/SEO/StructuredData";
+import SimilarTemplate from "../shared/Template";
 
-const Template = async ({template}: { template: ITemplate }) => {
+const Template = async ({ template, similarTemplates }: { template: ITemplate, similarTemplates: ITemplate[] }) => {
     return (
         <>
             <TemplateSchema
@@ -48,8 +49,8 @@ const Template = async ({template}: { template: ITemplate }) => {
                             </h1>
                             <span
                                 className="text-xl sm:text-2xl font-bold text-gradient-primary text-center sm:text-right break-words">
-                            {template.price === 0 ? "Free" : `$${template.price}`}
-                        </span>
+                                {template.price === 0 ? "Free" : `$${template.price}`}
+                            </span>
                         </div>
                         <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-all">
                             {template.description}
@@ -65,8 +66,8 @@ const Template = async ({template}: { template: ITemplate }) => {
                                             key={idx}
                                             className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
                                         >
-                                        #{tag}
-                                    </span>
+                                            #{tag}
+                                        </span>
                                     ))}
                                 </div>
                             </div>
@@ -81,10 +82,10 @@ const Template = async ({template}: { template: ITemplate }) => {
                                 {template.categories?.map((cat: any) => (
                                     <span
                                         key={cat._id}
-                                        className="py-1 px-2 bg-white/20 rounded-md text-xs text-white/80"
+                                        className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
                                     >
-                                    {cat.name}
-                                </span>
+                                        {cat.name}
+                                    </span>
                                 ))}
                             </div>
                         </div>
@@ -95,15 +96,15 @@ const Template = async ({template}: { template: ITemplate }) => {
                                 Built With
                             </h4>
                             <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
-                            {capitalizeFirstChar(template.builtWith as string)}
-                        </span>
+                                {capitalizeFirstChar(template.builtWith as string)}
+                            </span>
                         </div>
                     </div>
 
 
                     {/* Right Panel */}
                     <div
-                        className="flex flex-row flex-wrap lg:flex-col justify-between lg:justify-start gap-6 items-center lg:items-center">
+                        className="flex flex-row flex-wrap lg:flex-col justify-center gap-16 lg:justify-start lg:gap-6 items-center lg:items-center">
                         {/* Rating */}
                         <div className="flex flex-col items-center">
                             <div className="flex items-center gap-1 sm:gap-2">
@@ -113,24 +114,24 @@ const Template = async ({template}: { template: ITemplate }) => {
                                         className={`w-4 h-4 sm:w-5 sm:h-5 ${i < Math.floor(template.averageRating)
                                             ? "text-yellow-400 fill-current"
                                             : "text-gray-600"
-                                        }`}
+                                            }`}
                                     />
                                 ))}
                             </div>
                             <span className="text-base sm:text-lg font-semibold">
-                            {template.averageRating?.toFixed(1)}
-                        </span>
+                                {template.averageRating?.toFixed(1)}
+                            </span>
                             <span className="text-gray-400 text-xs sm:text-sm">
-                            {template.reviewCount ?? 0} reviews
-                        </span>
+                                {template.reviewCount ?? 0} reviews
+                            </span>
                         </div>
 
                         {/* Downloads */}
                         <div className="flex flex-col items-center">
-                            <Download className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5"/>
+                            <Download className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                             <span className="text-gray-400 text-xs sm:text-sm">
-                            {template.downloads} downloads
-                        </span>
+                                {template.downloads} downloads
+                            </span>
                         </div>
 
                         {/* Buttons */}
@@ -144,7 +145,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                                 target="_blank"
                                 className="px-5 py-2.5 sm:py-3 w-full border border-white/20 rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition text-sm sm:text-base"
                             >
-                                <ExternalLink className="w-4 h-4"/>
+                                <ExternalLink className="w-4 h-4" />
                                 Live Demo
                             </Link>
                         </div>
@@ -152,48 +153,7 @@ const Template = async ({template}: { template: ITemplate }) => {
                 </div>
 
                 {/* Content */}
-                <Markdown content={template.content}/>
-                {/*/!* Content & TOC *!/*/}
-                {/*<div className="grid grid-cols-1 md:grid-cols-[1fr_2px_20%] border-t border-white/10 pt-8 gap-8">*/}
-                {/*    /!* Markdown Content *!/*/}
-                {/*    <div className="prose prose-invert max-w-none prose-headings:text-white prose-p:text-gray-300 prose-a:text-purple-400 hover:prose-a:text-purple-300 prose-strong:text-white prose-code:text-pink-400 prose-pre:bg-[#1a1a1a] prose-pre:rounded-xl prose-pre:p-4 prose-img:rounded-xl">*/}
-                {/*        <ReactMarkdown*/}
-                {/*            remarkPlugins={[remarkGfm]}*/}
-                {/*            rehypePlugins={[rehypePrism]}*/}
-                {/*            components={{*/}
-                {/*                h1: ({ node, ...props }) => (*/}
-                {/*                    <h1 id={String(props.children).toLowerCase().replace(/\s+/g, "-")} {...props} />*/}
-                {/*                ),*/}
-                {/*                h2: ({ node, ...props }) => (*/}
-                {/*                    <h2 id={String(props.children).toLowerCase().replace(/\s+/g, "-")} {...props} />*/}
-                {/*                ),*/}
-                {/*                h3: ({ node, ...props }) => (*/}
-                {/*                    <h3 id={String(props.children).toLowerCase().replace(/\s+/g, "-")} {...props} />*/}
-                {/*                ),*/}
-                {/*            }}*/}
-                {/*        >*/}
-                {/*            {template.content}*/}
-                {/*        </ReactMarkdown>*/}
-                {/*    </div>*/}
-                {/*    /!* Divider *!/*/}
-                {/*    <div className="hidden md:block w-[2px] bg-white/10 rounded-full" />*/}
-
-                {/*    /!* TOC *!/*/}
-                {/*    <aside className="hidden md:flex flex-col gap-2 sticky top-24 self-start pr-4">*/}
-                {/*        <h4 className="text-sm font-semibold text-gray-400 mb-2">On this page</h4>*/}
-                {/*        {headings.map((h, idx) => (*/}
-                {/*            <a*/}
-                {/*                key={idx}*/}
-                {/*                href={`#${h.id}`}*/}
-                {/*                className={`block text-sm hover:text-purple-400 transition-colors ${*/}
-                {/*                    h.level === 1 ? "ml-0 font-bold" : h.level === 2 ? "ml-2" : "ml-4"*/}
-                {/*                }`}*/}
-                {/*            >*/}
-                {/*                {h.text}*/}
-                {/*            </a>*/}
-                {/*        ))}*/}
-                {/*    </aside>*/}
-                {/*</div>*/}
+                <Markdown content={template.content} />
 
                 {/* Author Section */}
                 {/*<div className="flex items-center gap-4 border-t border-white/10 pt-8">*/}
@@ -209,6 +169,20 @@ const Template = async ({template}: { template: ITemplate }) => {
                 {/*        <span className="text-gray-400 text-sm">Template Author</span>*/}
                 {/*    </div>*/}
                 {/*</div>*/}
+
+                {similarTemplates && similarTemplates.length > 0 && (
+                    <div className="flex w-full flex-col items-center justify-center gap-6">
+                        <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center">
+                            Similar Templates
+                        </h2>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                            {similarTemplates.map((temp) => (
+                                <SimilarTemplate key={temp._id} template={temp} showPrice={true} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

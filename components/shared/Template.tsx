@@ -138,7 +138,7 @@ const Template = ({
                                 e.stopPropagation()
                                 window.open(template.demoLink, "_blank");
                             }}
-                            className="px-4 cursor-pointer py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200"
+                            className="px-4 cursor-pointer bg-transparent py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200"
                         >
                             <ExternalLink className="w-5 h-5" />
                         </Button>

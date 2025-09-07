@@ -3,8 +3,9 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import User from "@/lib/models/User";
+import { connectToDatabase } from "@/lib/database";
 
-export async function authenticateUser() {
+export async function authenticateUser(connectDB:Boolean=false) {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get("token");
@@ -20,6 +21,7 @@ export async function authenticateUser() {
             throw new Error("Invalid token payload");
         }
 
+        if(connectDB) await connectToDatabase();
         const user = await User.findOne(
             { _id: decoded.id },
             { _id: 0 }

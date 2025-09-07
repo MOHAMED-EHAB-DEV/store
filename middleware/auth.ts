@@ -23,7 +23,7 @@ export async function authenticateUser() {
         const user = await User.findOne(
             { _id: decoded.id },
             { _id: 0 }
-        ).lean();
+        );
 
         if (!user) throw new Error("User not found");
 

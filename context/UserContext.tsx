@@ -7,6 +7,7 @@ interface IUserContext {
     setUser: Dispatch<SetStateAction<IUser | null>>;
     setReload: Dispatch<SetStateAction<boolean>>;
     favoriteTemplates: String[];
+    purchasedTemplates: String[];
     addToFavorites: (templateId: string) => void;
     removeFromFavorites: (templateId: string) => void;
     toggleFavorite: (templateId: string) => void;
@@ -17,6 +18,7 @@ const UserContext = createContext<IUserContext>({
     setUser: () => { },
     setReload: () => { },
     favoriteTemplates: [],
+    purchasedTemplates: [],
     addToFavorites: () => { },
     removeFromFavorites: () => { },
     toggleFavorite: () => { },
@@ -28,6 +30,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState(null);
     const [reload, setReload] = useState(false);
     const [favoriteTemplates, setFavoriteTemplates] = useState([]);
+    const [purchasedTemplates, setPurchasedTemplates] = useState([]);
 
     const fetchUser = async () => {
         try {
@@ -39,6 +42,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
             setUser(null);
         }
     };
+
+    const fetchPurchasedTemplates = async () => {
+        try {
+            const res = await fetch(`/api/user/purchased-templates`);
+            const data = await res.json();
+            if (data.success) {
+                setPurchasedTemplates(data.data.map((template: any) => template._id));
+            }
+        } catch (error) {
+            setPurchasedTemplates([]);
+        }
+    }
 
     const fetchFavorites = async () => {
         try {
@@ -101,6 +116,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         fetchUser().then((u) => {
             fetchFavorites();
+            fetchPurchasedTemplates();
         });
     }, [reload]);
 
@@ -111,6 +127,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 setUser,
                 setReload,
                 favoriteTemplates,
+                purchasedTemplates,
                 addToFavorites,
                 removeFromFavorites,
                 toggleFavorite,

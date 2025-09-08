@@ -6,6 +6,7 @@ import Markdown from "./Markdown";
 import { capitalizeFirstChar } from "@/lib/utils";
 import { TemplateSchema } from "@/components/SEO/StructuredData";
 import SimilarTemplate from "../shared/Template";
+import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
 
 const Template = async ({ template, similarTemplates }: { template: ITemplate, similarTemplates: ITemplate[] }) => {
     return (
@@ -75,9 +76,9 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
 
                         {/* Categories */}
                         <div>
-                            <h4 className="text-white/60 text-sm font-semibold mb-2">
+                            <h2 className="text-white/60 text-sm font-semibold mb-2">
                                 Categories
-                            </h4>
+                            </h2>
                             <div className="flex flex-wrap gap-2">
                                 {template.categories?.map((cat: any) => (
                                     <span
@@ -92,9 +93,9 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
 
                         {/* Built With */}
                         <div>
-                            <h4 className="text-white/60 text-sm font-semibold mb-2">
+                            <h2 className="text-white/60 text-sm font-semibold mb-2">
                                 Built With
-                            </h4>
+                            </h2>
                             <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
                                 {capitalizeFirstChar(template.builtWith as string)}
                             </span>
@@ -170,10 +171,12 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 {/*    </div>*/}
                 {/*</div>*/}
 
+                <ReviewsContainer templateId={template?._id} averageRating={template?.averageRating} reviewCount={template.reviewCount ?? 0} />
+
                 {similarTemplates && similarTemplates.length > 0 && (
-                    <div className="flex w-full flex-col items-center justify-center gap-6">
+                    <div className="flex w-full flex-col items-center justify-center gap-8">
                         <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center">
-                            Similar Templates
+                            You might also like
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">

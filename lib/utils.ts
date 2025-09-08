@@ -32,3 +32,10 @@ export const serializeCategory = (doc: ICategory) => ({
     createdAt: doc.createdAt?.toISOString?.(),
     updatedAt: doc.updatedAt?.toISOString?.(),
 });
+
+export function formatCount(count: number): string {
+    if (count < 1000) return count.toString();
+    if (count < 1_000_000) return (count / 1000).toFixed(count % 1000 === 0 ? 0 : 1) + "K";
+    if (count < 1_000_000_000) return (count / 1_000_000).toFixed(count % 1_000_000 === 0 ? 0 : 1) + "M";
+    return (count / 1_000_000_000).toFixed(count % 1_000_000_000 === 0 ? 0 : 1) + "B";
+}

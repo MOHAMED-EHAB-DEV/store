@@ -2,13 +2,33 @@ import Templates from "@/components/shared/Templates";
 import {TemplateService} from "@/lib/services/TemplateService";
 import {CategoryService} from "@/lib/services/CategoryService";
 import {serializeCategory, serializeTemplate} from "@/lib/utils";
+import {toast} from "sonner";
+
+const getInitialData = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search`);
+
+        if (!response.ok)
+            throw new Error(`Failed to fetch template: ${response.status}`);
+
+        const data = await response.json();
+
+        if (data.success) {
+            return data.data;
+        } else {
+            return [];
+        }
+    } catch (err) {
+        toast.error("Something went wrong");
+        return [];
+    }
+}
 
 const Page = async () => {
-    const rawTemplates = await TemplateService.getPopularTemplates(100, 0);
+    const templates = await getInitialData();
     const rawCategories = await CategoryService.getMainCategories();
-
-    const templates = rawTemplates.map(serializeTemplate);
     const categories = rawCategories.map(serializeCategory);
+
     return (
         <main className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw px-5 md:px-56"
               role="main">

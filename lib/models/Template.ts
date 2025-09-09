@@ -19,7 +19,6 @@ export interface ITemplate extends Document {
   builtWith: "framer" | "figma" | "vite" | "next.js";
   views: number;
   reviewCount: number;
-  isFeatured: boolean;
   createdAt: Date;
   updatedAt: Date;
   lastViewedAt: Date;
@@ -112,11 +111,6 @@ const TemplateSchema = new Schema<ITemplate>(
       required: true,
       trim: true,
     },
-    isFeatured: {
-      type: Boolean,
-      default: false,
-      index: true,
-    },
     builtWith: {
       type: String,
       enum: ["vite", "figma", "framer", "next.js"],
@@ -182,7 +176,7 @@ TemplateSchema.virtual("popularityScore").get(function () {
       this.averageRating * 20 +
       this.views * 0.5 +
       Math.max(0, 30 - daysSinceViewed) * 2 + // Recency boost
-      (this.isFeatured ? 100 : 0)) / // Featured boost
+      (this.categories.some((category) => category === "6895e37824be395fbc0b72ae") ? 100 : 0)) / // Featured boost
     Math.max(1, daysSinceCreated * 0.1)
   ); // Age penalty
 });
@@ -400,6 +394,19 @@ TemplateSchema.statics.searchTemplates = function (
         pipeline: [{ $project: { name: 1, slug: 1 } }],
       },
     },
+    {
+        $lookup: {
+            from: "reviews",
+            localField: "_id",
+            foreignField: "template",
+            as: "reviews",
+        }
+    },
+    {
+        $addFields: {
+            reviews: { $size: "$reviews" }
+        }
+    },
     { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
     {
       $project: {
@@ -411,7 +418,7 @@ TemplateSchema.statics.searchTemplates = function (
         downloads: 1,
         views: 1,
         averageRating: 1,
-        reviewCount: 1,
+        reviews: 1,
         author: 1,
         categories: 1,
         tags: 1,

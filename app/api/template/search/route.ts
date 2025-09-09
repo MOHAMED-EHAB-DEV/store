@@ -7,6 +7,7 @@ import {
     createAPIResponse,
     createErrorResponse
 } from '@/lib/utils/api-helpers';
+import Review from "@/lib/models/Review";
 
 function validateSearchParams(req: NextRequest): {
     isValid: boolean;

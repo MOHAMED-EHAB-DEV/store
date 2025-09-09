@@ -1,4 +1,3 @@
-// app/api/reviews/route.ts
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Review from "@/lib/models/Review";

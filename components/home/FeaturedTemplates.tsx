@@ -7,14 +7,14 @@ import {Suspense} from "react";
 
 async function getTemplates() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ? process.env.NEXT_PUBLIC_APP_URL : '/'}/api/template/popular?limit=4`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ? process.env.NEXT_PUBLIC_APP_URL : '/'}/api/template/featured`, {
             method: "GET",
             next: {revalidate: 24 * 60 * 60}, // Revalidates in 24 hours
         });
         const data = await response.json();
 
         if (data?.success) {
-            return data?.data;
+            return data.data;
         } else {
             return [];
         }

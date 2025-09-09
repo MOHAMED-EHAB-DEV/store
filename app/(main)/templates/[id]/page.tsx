@@ -8,9 +8,9 @@ const getTemplate = async (id: string) => {
       { cache: "no-store" }
     );
 
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to fetch template: ${response.status}`);
-    }
+
 
     const data = await response.json();
 

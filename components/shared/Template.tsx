@@ -22,10 +22,12 @@ const Template = ({
     const { favoriteTemplates, toggleFavorite } = useUser();
     const isFavorite = favoriteTemplates?.includes(template._id);
 
+    console.log(template);
+
     return (
         <Link
             href={`/templates/${template._id}`}
-            className="group relative overflow-hidden w-full h-[580px] rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02] block"
+            className="group relative overflow-hidden w-full h-fit rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02] block"
         >
             {/* Gradient Background */}
             <div
@@ -117,7 +119,7 @@ const Template = ({
                 <div className="flex h-fit justify-between items-center">
                     {/* Tags */}
                     <div className="flex items-center flex-wrap gap-2 mb-4">
-                        {template.tags.map((tag: string) => (
+                        {template.tags?.slice(0, 3).map((tag: string) => (
                             <Badge
                                 key={tag}
                                 variant="secondary"

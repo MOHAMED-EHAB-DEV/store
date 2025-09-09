@@ -123,7 +123,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                                 {template.averageRating?.toFixed(1)}
                             </span>
                             <span className="text-gray-400 text-xs sm:text-sm">
-                                {template.reviewCount ?? 0} reviews
+                                {template.reviews ?? 0} reviews
                             </span>
                         </div>
 
@@ -171,7 +171,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 {/*    </div>*/}
                 {/*</div>*/}
 
-                <ReviewsContainer templateId={template?._id} averageRating={template?.averageRating} reviewCount={template.reviewCount ?? 0} />
+                <ReviewsContainer templateId={template?._id} averageRating={template?.averageRating} reviewCount={template.reviews ?? 0} />
 
                 {similarTemplates && similarTemplates.length > 0 && (
                     <div className="flex w-full flex-col items-center justify-center gap-8">

@@ -24,11 +24,11 @@ const trustSignals: TrustSignal[] = [
         text: "50K+ Downloads",
         gradient: "from-green-500 to-teal-500"
     },
-    {
-        icon: Shield,
-        text: "30-Day Guarantee",
-        gradient: "from-purple-500 to-pink-500"
-    },
+    // {
+    //     icon: Shield,
+    //     text: "30-Day Guarantee",
+    //     gradient: "from-purple-500 to-pink-500"
+    // },
     {
         icon: Zap,
         text: "Launch in Minutes",

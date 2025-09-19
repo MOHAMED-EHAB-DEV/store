@@ -22,8 +22,6 @@ const Template = ({
     const { favoriteTemplates, toggleFavorite } = useUser();
     const isFavorite = favoriteTemplates?.includes(template._id);
 
-    console.log(template);
-
     return (
         <Link
             href={`/templates/${template._id}`}

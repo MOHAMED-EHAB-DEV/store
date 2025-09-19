@@ -39,7 +39,7 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
                 window.location.href = `/`;
             }, 100);
         } catch (err) {
-            console.log(err);
+            toast.error("Error logging out. Please try again.");
         }
     }
     return (

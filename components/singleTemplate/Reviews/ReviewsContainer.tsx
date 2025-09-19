@@ -79,7 +79,9 @@ const ReviewsContainer = ({ templateId, averageRating, reviewCount }: { template
 
     useEffect(() => {
         loadReviews(1);
-        checkUserReviewStatus();
+        if (user?._id && templateId) {
+            checkUserReviewStatus();
+        }
     }, [templateId]);
 
     const handleShowMore = async () => {

@@ -14,9 +14,9 @@ const WhyUs = () => {
                     convert. Let&apos;s fix that.
                 </p>
                 <ul className="text-secondary text-base md:text-lg list-d built to engage and convertisc pl-5 space-y-1">
-                    <li>Professionally designed, conversion‑ready layouts built to engage and convert.</li>
-                    <li>Fully responsive—optimized for mobile, tablet, and desktop.</li>
-                    <li>Customizable without the typical builder constraints.</li>
+                    <li>- Professionally designed, conversion‑ready layouts built to engage and convert.</li>
+                    <li>- Fully responsive—optimized for mobile, tablet, and desktop.</li>
+                    <li>- Customizable without the typical builder constraints.</li>
                 </ul>
                 <span className="font-bold text-xl tracking-wide md:text-2xl font-paras">
                     Build smarter. Launch sooner.

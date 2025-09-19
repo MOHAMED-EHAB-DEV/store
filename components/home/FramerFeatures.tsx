@@ -169,7 +169,7 @@ const FramerFeatures = () => {
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video
-                                src={isVisible ? "/assets/Videos/framer.mp4" : null}
+                                src="/assets/Videos/framer.mp4"
                                 muted
                                 loop
                                 autoPlay
@@ -192,7 +192,7 @@ const FramerFeatures = () => {
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
                             <video
-                                src={isVisible ? "/assets/Videos/framer-demo.mp4" : null}
+                                src="/assets/Videos/framer-demo.mp4"
                                 autoPlay
                                 loop
                                 muted

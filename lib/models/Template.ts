@@ -376,15 +376,15 @@ TemplateSchema.statics.searchTemplates = function (
     { $sort: sortStage },
     { $skip: skip },
     { $limit: limit },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author",
-        pipeline: [{ $project: { name: 1, avatar: 1 } }],
-      },
-    },
+    // {
+    //   $lookup: {
+    //     from: "users",
+    //     localField: "author",
+    //     foreignField: "_id",
+    //     as: "author",
+    //     pipeline: [{ $project: { name: 1, avatar: 1 } }],
+    //   },
+    // },
     {
       $lookup: {
         from: "categories",

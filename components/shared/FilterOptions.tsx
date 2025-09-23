@@ -280,7 +280,7 @@ const FilterOptions = (
                                         // <span key={i} className="text-yellow-400">★</span>
                                         <Star key={i} className="w-4 h-4 text-yellow-400" isActive={true}/>
                                     ))}
-                                    <span className="text-sm">& up</span>
+                                    {rating !== 5 && <span className="text-sm">& up</span>}
                                 </button>
                             ))}
                         </div>
@@ -471,7 +471,7 @@ const FilterOptions = (
                                         {Array.from({length: rating}).map((_, i) => (
                                             <Star key={i} className="w-4 h-4 text-yellow-400" isActive={true}/>
                                         ))}
-                                        <span>& up</span>
+                                        {rating !== 5 && <span>& up</span>}
                                     </button>
                                 ))}
                             </PopoverContent>

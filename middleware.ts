@@ -1,5 +1,4 @@
 import type { NextRequest } from 'next/server';
-import jwt from "jsonwebtoken";
 import { NextResponse } from 'next/server';
 
 const protectedRoutes = [
@@ -46,7 +45,7 @@ export async function middleware(req: NextRequest) {
         if (!token) return reLogin();
         try {
             const userResponse = await fetch(
-                `${process.env.NEXT_PUBLIC_APP_URL}/api/user`,
+                new URL('/api/user', req.nextUrl.origin),
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             const userData = await userResponse.json();
@@ -60,7 +59,7 @@ export async function middleware(req: NextRequest) {
         if (!token) return reLogin();
         try {
             const userResponse = await fetch(
-                `${process.env.NEXT_PUBLIC_APP_URL}/api/user`,
+                new URL('/api/user', req.nextUrl.origin),
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             const userData = await userResponse.json();

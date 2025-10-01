@@ -119,7 +119,7 @@ class TemplateServiceClass {
             const {
                 select = "_id title description thumbnail price averageRating downloads categories tags isActive createdAt updatedAt",
                 lean = true,
-                includeContent = true,
+                includeContent = false,
             } = options;
 
             if (!includeContent) {
@@ -130,11 +130,15 @@ class TemplateServiceClass {
             await connectToDatabase();
 
             const selectFields = includeContent ? `${select} content` : select;
+            const projection = selectFields.split(" ").reduce((acc, field) => {
+                if (field.trim()) acc[field.trim()] = 1;
+                return acc;
+            }, {} as Record<string, 1>);
 
             const template = await measureQuery(
                 `findTemplateById_${templateId}`,
-                Template.findById(templateId)
-                    .select(selectFields)
+                Template.findById(templateId, projection)
+                    // .select(selectFields)
                     // .populate("author", "name avatar")
                     .populate("categories", "name slug")
                     .lean(lean)

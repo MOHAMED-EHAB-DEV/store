@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, ChangeEvent, FormEvent} from 'react';
+import {useState, ChangeEvent, FormEvent, useEffect} from 'react';
 import {
     Mail,
     Lock,
@@ -9,16 +9,19 @@ import {
 } from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
 import {useUser} from "@/context/UserContext";
+import {Input} from "@/components/ui/input";
 
-const SigninForm = () => {
+const SigninForm = ({queryMessage}:{queryMessage: String}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [message, setMessage] = useState({
+        type: queryMessage === "unauthorized" ? "error" : "",
+        content: queryMessage === "unauthorized" ? "Please, Login First" : ""
+    });
     const {setReload} = useUser();
 
     const router = useRouter();
@@ -48,25 +51,42 @@ const SigninForm = () => {
             setReload(prev => !prev);
             router.push('/');
         } else {
-            setError(true);
-            setErrorMessage("Invalid email or password");
+            setMessage({
+                type: "Error",
+                content: "Invalid email or password"
+            });
 
             setTimeout(() => {
-                setError(false);
-                setErrorMessage("");
+                setMessage({
+                    type: "",
+                    content: "",
+                });
             }, 7000);
         }
     };
 
+    useEffect(() => {
+        // remove the message from the query params
+        if (queryMessage === "unauthorized")
+            router.replace(`/signin`, { scroll: false });
+    }, []);
+
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            {message.content && (
+                <div
+                    className={`mb-4 p-4 text-center rounded bg-red-600 text-red-50`}
+                >
+                    {message.content}
+                </div>
+            )}
             <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                     Email
                 </label>
                 <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         value={formData.email}
@@ -90,7 +110,7 @@ const SigninForm = () => {
                 </label>
                 <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={formData.password}
@@ -118,10 +138,6 @@ const SigninForm = () => {
                         )}
                     </button>
                 </div>
-            </div>
-
-            <div className={`${error ? "flex" : "hidden"} rounded-md bg-red-800 border border-red-500 px-4 py-2 items-start`}>
-                <span>{errorMessage}</span>
             </div>
 
             <button

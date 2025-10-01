@@ -191,17 +191,17 @@ const HeroItems = [
     {
         id: 1,
         title: "Beautifully Crafted Designs",
-        desc: "Designed in Figma to help you stand out and win trust—perfect for startups and design-focused teams.",
+        desc: "Designed in Figma to help you stand out—perfect for startups, agencies, and design-forward teams.",
     },
     {
         id: 2,
         title: "Production-Ready Code Templates",
-        desc: "Built with the most trusted JavaScript frameworks—ready for developers to plug in and go.",
+        desc: "Built with top JavaScript frameworks like React, Next.js, and TypeScript for developers who want to ship fast.",
     },
     {
         id: 3,
         title: "Customize in Minutes, Not Months",
-        desc: "Framer template built for speed. Whether you're a founder or a team of one, launch fast and stay focused on growth.",
+        desc: "Full Framer integration means drag-and-drop simplicity—no fighting with builders, just customizing.",
     }
 ];
 

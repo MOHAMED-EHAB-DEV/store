@@ -1,4 +1,4 @@
-import {useState, memo} from "react";
+import { useState, memo } from "react";
 import {
     Dialog,
     DialogContent,
@@ -7,13 +7,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import {whatLoseWhenDeleteMyAccount} from "@/constants";
-import {toast} from "sonner";
-import {Eye, EyeOff, Lock, Mail, X} from "@/components/ui/svgs/Icons";
-import {useRouter} from "next/navigation";
+import { whatLoseWhenDeleteMyAccount } from "@/constants";
+import { toast } from "sonner";
+import { Eye, EyeOff, Lock, Mail, X } from "@/components/ui/svgs/Icons";
+import { useRouter } from "next/navigation";
 import revalidate from "@/actions/revalidateTag";
 
-const Settings = ({userId}: {userId: string}) => {
+const Settings = ({ userId }: { userId: string }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
@@ -25,7 +25,7 @@ const Settings = ({userId}: {userId: string}) => {
     });
     const router = useRouter();
 
-    const handleInputChange = ({target: {name, value}}: { target: { name: string, value: string } }) =>
+    const handleInputChange = ({ target: { name, value } }: { target: { name: string, value: string } }) =>
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -51,8 +51,8 @@ const Settings = ({userId}: {userId: string}) => {
                 toast(response.message);
             }
         } catch (err) {
-            console.log(err)
-            toast(err)
+            // console.log(err)
+            toast.error((err as Error).message);
         } finally {
             setIsLoading(false);
         }
@@ -88,7 +88,7 @@ const Settings = ({userId}: {userId: string}) => {
                         <form onSubmit={handleSubmit} className="flex flex-col gap-2 justify-center">
                             <div>
                                 <div className="relative w-4/5">
-                                    <Mail className="absolute left-3 top-1/2 z-20 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
+                                    <Mail className="absolute left-3 top-1/2 z-20 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                     <input
                                         type="email"
                                         name="email"
@@ -102,7 +102,7 @@ const Settings = ({userId}: {userId: string}) => {
                             </div>
                             <div>
                                 <div className="relative w-4/5">
-                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20"/>
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
                                     <input
                                         type={isPasswordVisible ? "text" : "password"}
                                         name="currentPassword"
@@ -118,16 +118,16 @@ const Settings = ({userId}: {userId: string}) => {
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                                     >
                                         {isPasswordVisible ? (
-                                            <EyeOff className="w-5 h-5"/>
+                                            <EyeOff className="w-5 h-5" />
                                         ) : (
-                                            <Eye className="w-5 h-5"/>
+                                            <Eye className="w-5 h-5" />
                                         )}
                                     </button>
                                 </div>
                             </div>
                             <div>
                                 <div className="relative w-4/5">
-                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20"/>
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
                                     <input
                                         type={isConfirmPasswordVisible ? "text" : "password"}
                                         name="confirmPassword"
@@ -143,9 +143,9 @@ const Settings = ({userId}: {userId: string}) => {
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                                     >
                                         {isConfirmPasswordVisible ? (
-                                            <EyeOff className="w-5 h-5"/>
+                                            <EyeOff className="w-5 h-5" />
                                         ) : (
-                                            <Eye className="w-5 h-5"/>
+                                            <Eye className="w-5 h-5" />
                                         )}
                                     </button>
                                 </div>
@@ -158,7 +158,7 @@ const Settings = ({userId}: {userId: string}) => {
                             </div>
 
                             <button disabled={isLoading || formData.currentPassword !== formData.confirmPassword} className={`self-end btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed`} type="submit">
-                                {isLoading ? "Confirming": "Confirm"}
+                                {isLoading ? "Confirming" : "Confirm"}
                             </button>
                         </form>
                     </DialogHeader>

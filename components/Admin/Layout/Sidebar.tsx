@@ -13,7 +13,7 @@ import {
 import {Home} from "@/components/ui/svgs/Icons";
 import {toast} from "sonner";
 
-const Sidebar = ({open, setOpen, title, user}: {
+const Sidebar = ({open, setOpen, user}: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     title: String,
@@ -38,14 +38,15 @@ const Sidebar = ({open, setOpen, title, user}: {
                 window.location.href = `/`;
             }, 100);
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            toast.error((err as Error).message);
         }
     }
 
     return (
         <div
             className={`lg:start-0 z-50 w-[18rem] bg-dark flex flex-col md:p-8 p-4 justify-between h-screen fixed top-0 overflow-auto transition-[inset-inline-start] duration-300 ${
-                open ? "start-0" : "-start-[18rem]"
+                open ? "start-0" : "-start-72"
             } `}
         >
             <div className="">
@@ -56,7 +57,7 @@ const Sidebar = ({open, setOpen, title, user}: {
 
                 <div className="flex items-center gap-4">
                     <Logo onClick={() => router.push("/")}/>
-                    <h1 className="text-white font-bold text-2xl">{title}</h1>
+                    <h1 className="text-white font-bold text-2xl">Admin</h1>
                 </div>
 
                 <div className="flex flex-col gap-1 md:mt-14 mt-10">
@@ -85,7 +86,7 @@ const Sidebar = ({open, setOpen, title, user}: {
                                 alt={`${user?.name} Profile`}
                                 width={30}
                                 height={30}
-                                className="p-[1px] rounded-full transition-all duration-500 w-full h-full border hover:border-white"
+                                className="p-px rounded-full transition-all duration-500 w-full h-full border hover:border-white"
                             />
                         </div>
                         <div className="flex gap-1 items-center">

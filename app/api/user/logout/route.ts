@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import { UserService } from "@/lib/services/UserService";
+import { connectToDatabase } from "@/lib/database";
 
 interface ApiResponse {
     success: boolean;
@@ -14,6 +15,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
     const startTime = Date.now();
 
     try {
+        await connectToDatabase();
         // Try to get the current user for logging purposes
         let user = null;
         try {
@@ -59,9 +61,8 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 
         const duration = Date.now() - startTime;
 
-        // Even if there's an error, we should still clear the cookie
         const response = NextResponse.json({
-            success: true, // We consider this successful since we're clearing the session
+            success: true,
             message: "Session cleared",
             performance: {
                 duration

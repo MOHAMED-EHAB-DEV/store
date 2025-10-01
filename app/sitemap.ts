@@ -1,34 +1,34 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
+
+export const dynamic = "force-dynamic";
 
 async function getTemplates() {
     try {
-        // Fetch templates from your API
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'}/api/template`, {
             cache: 'no-store',
         })
         if (!res.ok) return []
         const data = await res.json()
-        return data.templates || []
+        return data.data || []
     } catch (error) {
         console.error('Error fetching templates for sitemap:', error)
         return []
     }
 }
 
-async function getCategories() {
-    try {
-        // Fetch categories from your API
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'}/api/template/category`, {
-            cache: 'no-store',
-        })
-        if (!res.ok) return []
-        const data = await res.json()
-        return data.categories || []
-    } catch (error) {
-        console.error('Error fetching categories for sitemap:', error)
-        return []
-    }
-}
+// async function getCategories() {
+//     try {
+//         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'}/api/category`, {
+//             cache: 'no-store',
+//         })
+//         if (!res.ok) return []
+//         const data = await res.json()
+//         return data.categories || []
+//     } catch (error) {
+//         console.error('Error fetching categories for sitemap:', error)
+//         return []
+//     }
+// }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'
@@ -82,18 +82,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
     }))
 
+    // TODO: Add Logic for getting categories
     // Category pages (if you have category routing)
-    const categories = await getCategories()
-    const categoryPages = categories.map((category: any) => ({
-        url: `${baseUrl}/templates?category=${category.slug || category._id}`,
-        lastModified: category.updatedAt ? new Date(category.updatedAt) : new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-    }))
+    // const categories = await getCategories()
+    // const categoryPages = categories.map((category: any) => ({
+    //     url: `${baseUrl}/templates?category=${category.slug || category._id}`,
+    //     lastModified: category.updatedAt ? new Date(category.updatedAt) : new Date(),
+    //     changeFrequency: 'weekly' as const,
+    //     priority: 0.7,
+    // }))
 
     return [
         ...staticPages,
         ...templatePages,
-        ...categoryPages,
+        // ...categoryPages,
     ]
 }

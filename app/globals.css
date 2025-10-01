@@ -3,9 +3,9 @@
 @import "tw-animate-css";
 
 @theme {
-    --color-primary: #0D0F19;
-    --color-secondary: #8C86A7;
-    --color-muted-foreground: #A0A0AB;
+    --color-primary: #0d0f19;
+    --color-secondary: #8c86a7;
+    --color-muted-foreground: #a0a0ab;
     --color-dark: #121620;
     --color-gold: hsl(45 90% 60%);
     --color-gold-foreground: hsl(220 27% 8%);
@@ -31,7 +31,6 @@
     --text-7xl: 4.5rem; /* 72px */
     --text-8xl: 5.625rem; /* 90px */
     --text-9xl: 8rem; /* 128px */
-
     /* Line Heights */
     --leading-none: 1;
     --leading-tight: 1.25;
@@ -74,7 +73,12 @@
         --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         --gradient-warning: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        --gradient-danger: linear-gradient(135deg, #ff4e50 0%, #f44336 50%, #d32f2f 100%);
+        --gradient-danger: linear-gradient(
+                135deg,
+                #ff4e50 0%,
+                #f44336 50%,
+                #d32f2f 100%
+        );
         --gradient-info: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         --card: var(--color-card);
         --border: var(--color-border);
@@ -89,6 +93,13 @@
     * {
         scroll-behavior: smooth;
         box-sizing: border-box;
+        /*  Remove Text Selection  */
+        /* -webkit-touch-callout: none; IOS, Safari */
+        /* -webkit-user-select: none;  Safari  */
+        /* -khtml-user-select: none; Konqueror HTML */
+        /* -moz-user-select: none; Old Versions of Firefox */
+        /* -ms-user-select: none; Internet Explorer/Edge */
+        /* user-select: none; Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
     }
 
     .will-change {
@@ -96,7 +107,9 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             animation-duration: 0.01ms !important;
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
@@ -104,19 +117,27 @@
         }
     }
 
-    html, body {
+    html,
+    body {
         overflow-x: hidden;
         line-height: var(--leading-normal);
     }
 
     /* Enhanced Typography */
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         line-height: var(--leading-tight);
         font-weight: 700;
         letter-spacing: -0.025em;
     }
 
-    p, span, div {
+    p,
+    span,
+    div {
         line-height: var(--leading-relaxed);
     }
 
@@ -158,9 +179,6 @@
         font-weight: 500;
     }
 
-
-    /* Put this inside your @layer base (replace the previous block) */
-
     /* basic pre/code */
     .markdown-body pre {
         border-radius: 0.5rem;
@@ -170,7 +188,8 @@
     }
 
     .markdown-body code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+        "Helvetica Neue", monospace;
         font-size: 0.9rem;
     }
 
@@ -222,13 +241,98 @@
         white-space: pre;
     }
 
+    /* Markdown + Shiki styling */
+    .markdown-body pre.shiki {
+        @apply rounded-lg p-4 overflow-x-auto bg-[#0d1117] text-sm leading-relaxed;
+    }
+
+    .markdown-body pre.shiki code {
+        @apply font-mono text-white;
+    }
+
     /* copy button area */
     .markdown-body pre {
         position: relative;
     }
+
     .markdown-body pre .copy-btn {
         @apply absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded;
     }
+
+    /* wrapper & layout */
+    .code-block-wrapper {
+        @apply my-6 relative;
+    }
+
+    /* Shiki pre area: ensure consistent padding/scroll */
+    .shiki-pre {
+        @apply overflow-x-auto rounded-lg p-4 text-sm font-mono;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+        line-height: 1.35;
+    }
+
+    /* default dark theme variables applied to shiki output */
+    .code-block-wrapper .shiki-pre {
+        background: var(--code-bg, #0b1220);
+        color: var(--code-fg, #e6edf3);
+    }
+
+    /* copy button (icon-only) */
+    .copy-btn {
+        @apply absolute top-3 right-3 z-20 px-2 py-1.5 rounded-md text-xs font-medium border backdrop-blur-sm transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none;
+        @apply bg-gray-800/80 border-gray-600/50 text-gray-200 hover:bg-gray-700/90 hover:text-white;
+        cursor: pointer;
+    }
+
+    /* svg icon sizing and color via currentColor */
+    .copy-btn svg {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* success state (applied programmatically) */
+    .copy-btn.success {
+        @apply bg-green-600/80 border-green-500/50;
+        color: #eafff1; /* icon color when success */
+    }
+    .copy-btn.success:hover {
+        @apply bg-green-600 border-green-500;
+    }
+
+    /* ensure the icon color updates with the button */
+    .copy-btn,
+    .copy-btn * {
+        color: inherit;
+    }
+
+    /* hide/show helpers (Tailwind's hidden class does display: none) - keep as is */
+
+    /* language badge */
+    .lang-badge {
+        @apply absolute top-3 left-3 z-10 px-2 py-1 rounded text-xs font-medium text-white bg-purple-600/80 border border-purple-500/30 backdrop-blur-sm pointer-events-none;
+    }
+
+    /* prefer horizontal scroll for long lines */
+    .code-block-wrapper pre code {
+        white-space: pre;
+    }
+
+    /* theme-specific overrides using data-theme attribute */
+    .code-block-wrapper[data-theme="github-light"] .shiki-pre { --code-bg: #f6f8fa; --code-fg: #0b1220; }
+    .code-block-wrapper[data-theme="github-dark"]  .shiki-pre { --code-bg: #0b1220;  --code-fg: #e6edf3; }
+    .code-block-wrapper[data-theme="dracula"]       .shiki-pre { --code-bg: #282a36; --code-fg: #f8f8f2; }
+    .code-block-wrapper[data-theme="nord"]          .shiki-pre { --code-bg: #2e3440; --code-fg: #d8dee9; }
+
+    /* keyboard focus */
+    .copy-btn:focus {
+        outline: 2px solid rgba(124, 58, 237, 0.4);
+        outline-offset: 2px;
+    }
+
+    /* Ensure pre has relative positioning for absolute button placement */
+    .code-block-wrapper pre { position: relative; }
 }
 
 @layer components {
@@ -258,16 +362,20 @@
     .card {
         @apply rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] md:p-4;
     }
+
     .card-glass {
-        @apply  hover:bg-white/15;
+        @apply hover:bg-white/15;
     }
+
     .card-gradient {
         @apply relative overflow-hidden;
     }
+
     .card-gradient::before {
         @apply absolute inset-0 opacity-10 transition-opacity duration-300;
-        content: '';
+        content: "";
     }
+
     .card-gradient:hover::before {
         @apply opacity-20;
     }
@@ -362,21 +470,42 @@
     }
 
     .bg-gradient-ocean {
-        background: linear-gradient(135deg, #667eea 0%, #06b6d4 50%, #10b981 100%);
+        background: linear-gradient(
+                135deg,
+                #667eea 0%,
+                #06b6d4 50%,
+                #10b981 100%
+        );
     }
 
     .bg-gradient-sunset {
-        background: linear-gradient(135deg, #f97316 0%, #ef4444 50%, #ec4899 100%);
+        background: linear-gradient(
+                135deg,
+                #f97316 0%,
+                #ef4444 50%,
+                #ec4899 100%
+        );
     }
 
     .bg-gradient-cosmic {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 25%, #ec4899 50%, #06b6d4 75%, #10b981 100%);
+        background: linear-gradient(
+                135deg,
+                #6366f1 0%,
+                #8b5cf6 25%,
+                #ec4899 50%,
+                #06b6d4 75%,
+                #10b981 100%
+        );
         background-size: 400% 400%;
         animation: gradient 8s ease infinite;
     }
 
     .bg-gradient-glass {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%
+        );
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -400,7 +529,7 @@
     }
 
     .animate-gradient {
-        animation: gradient 4s ease infinite;
+        animation: linear 4s ease infinite;
     }
 
     .animate-shimmer {
@@ -459,7 +588,7 @@
 
     /* Custom text contrast classes */
     .text-high-contrast {
-        color: #FFFFFF;
+        color: #ffffff;
     }
 
     .text-muted-foreground {
@@ -491,7 +620,8 @@
 }
 
 @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0px);
     }
     50% {
@@ -521,7 +651,8 @@
 }
 
 @keyframes pulse-slow {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
@@ -530,7 +661,8 @@
 }
 
 @keyframes bounce-slow {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0);
     }
     50% {
@@ -539,7 +671,8 @@
 }
 
 @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
     }
     50% {
@@ -549,12 +682,12 @@
 
 .animate-shimmer {
     background-size: 200% auto;
-    animation: shimmer 3s linear infinite;
+    animation: shimmer 3s gradient infinite;
 }
 
 .animate-shine {
     display: block;
-    animation: shine 1.5s linear infinite;
+    animation: shine 1.5s gradient infinite;
 }
 
 .animate-pulse-glow {
@@ -614,7 +747,8 @@
 }
 
 @keyframes twinkle {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
@@ -629,9 +763,16 @@
 }
 
 @keyframes wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-3deg); }
-    75% { transform: rotate(3deg); }
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-3deg);
+    }
+    75% {
+        transform: rotate(3deg);
+    }
 }
 
 .animate-wiggle {
@@ -639,8 +780,13 @@
 }
 
 @keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .animate-heartbeat {
@@ -669,7 +815,8 @@
 
 .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .hover-scale {

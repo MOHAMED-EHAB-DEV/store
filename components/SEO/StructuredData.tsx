@@ -70,7 +70,7 @@ export const TemplateSchema: React.FC<{
         programmingLanguage: builtWith,
         offers: {
             "@type": "Offer",
-            price: price.toString(),
+            price: price?.toString(),
             priceCurrency: currency,
             availability: "https://schema.org/InStock",
             url: demoLink,

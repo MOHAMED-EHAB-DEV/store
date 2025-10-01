@@ -4,7 +4,7 @@ import {socialImgs, NavigationLinks} from "@/constants";
 
 const Footer = () => {
     return (
-        <footer className="w-[100dvw] bg-dark">
+        <footer className="w-dvw bg-dark">
             <div className="max-w-7xl w-full mx-auto flex flex-col md:flex-row py-4 px-3 items-center justify-between gap-4">
                 <div className="flex flex-col md:items-start items-center gap-6 w-full md:w-[269px]">
                     <div className="flex items-center justify-center md:items-start md:justify-start flex-col gap-1">

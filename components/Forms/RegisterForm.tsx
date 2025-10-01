@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {passwordRequirements} from "@/constants";
 import {useUser} from "@/context/UserContext";
+import {Input} from "@/components/ui/input";
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -38,10 +39,10 @@ const RegisterForm = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!agreed) {
-            alert("Please agree to the terms and conditions");
-            return;
-        }
+        // if (!agreed) {
+        //     alert("Please agree to the terms and conditions");
+        //     return;
+        // }
         setLoading(true);
         const response = await fetch("/api/user/register", {
             method: "POST",
@@ -54,7 +55,7 @@ const RegisterForm = () => {
         setLoading(false);
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         // Redirect to OTP verification with email
         // navigate("/verify-email", { state: { email: formData.email } });
@@ -72,7 +73,7 @@ const RegisterForm = () => {
                 </label>
                 <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type="text"
                         name="name"
                         value={formData.name}
@@ -94,7 +95,7 @@ const RegisterForm = () => {
                 </label>
                 <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         value={formData.email}
@@ -118,7 +119,7 @@ const RegisterForm = () => {
                 </label>
                 <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={formData.password}
@@ -175,7 +176,7 @@ const RegisterForm = () => {
                 </label>
                 <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                    <input
+                    <Input
                         type={showConfirmPassword ? "text" : "password"}
                         name="confirmPassword"
                         value={formData.confirmPassword}
@@ -211,26 +212,26 @@ const RegisterForm = () => {
                     )}
             </div>
 
-            <label className="flex items-start" htmlFor="agree-terms">
-                <input
-                    type="checkbox"
-                    id="agree-terms"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                    className="w-4 h-4 rounded border-gray-600 text-gold focus:ring-gold focus:ring-offset-0 bg-transparent mt-1"
-                    required
-                />
-                <span className="ml-2 text-sm text-gray-300">
-                I agree to the{" "}
-                    <Link href="/terms" className="text-gold hover:text-yellow-400">
-                  Terms of Service
-                </Link>{" "}
-                    and{" "}
-                    <Link href="/privacy" className="text-gold hover:text-yellow-400">
-                  Privacy Policy
-                </Link>
-              </span>
-            </label>
+            {/*<label className="flex items-center" htmlFor="agree-terms">*/}
+            {/*    <Input*/}
+            {/*        type="checkbox"*/}
+            {/*        id="agree-terms"*/}
+            {/*        checked={agreed}*/}
+            {/*        onChange={(e) => setAgreed(e.target.checked)}*/}
+            {/*        className="w-4 h-4 rounded border-gray-600 text-gold focus:ring-gold focus:ring-offset-0 bg-transparent mt-1"*/}
+            {/*        required*/}
+            {/*    />*/}
+            {/*    <span className="ml-2 text-sm text-gray-300">*/}
+            {/*        I agree to the{" "}*/}
+            {/*        <Link href="/terms" className="text-gold hover:text-yellow-400">*/}
+            {/*          Terms of Service*/}
+            {/*        </Link>{" "}*/}
+            {/*        and{" "}*/}
+            {/*        <Link href="/privacy" className="text-gold hover:text-yellow-400">*/}
+            {/*          Privacy Policy*/}
+            {/*        </Link>*/}
+            {/*  </span>*/}
+            {/*</label>*/}
 
             <button
                 type="submit"

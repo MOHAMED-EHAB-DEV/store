@@ -1,8 +1,10 @@
-import { getUserFromServer } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { connectToDatabase } from "@/lib/database";
+import { getUserFromServer } from "@/lib/auth";
 
 export async function GET(request: Request) {
     try {
+        await connectToDatabase();
         // Get token from Authorization header
         const authHeader = request.headers.get('Authorization');
         const headerToken = authHeader?.split(' ')[1];

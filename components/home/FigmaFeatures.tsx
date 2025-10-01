@@ -75,7 +75,7 @@ const FigmaFeatures = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
                     <div className="text-center lg:text-left">
-                        <h2 className="figma-title text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 font-heading leading-tight">
+                        <h2 className="figma-title text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-white mb-6 font-heading leading-tight">
                             {SplitText('Figma Design Systems')}
                         </h2>
                         <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
@@ -85,7 +85,7 @@ const FigmaFeatures = () => {
                         <div className="space-y-4 sm:space-y-6 mb-8">
                             {figmaFeatures.map((feature) => (
                                 <div key={feature.title} className="figma-feature flex space-x-4">
-                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shrink-0">
                                         <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                                     </div>
                                     <div>
@@ -101,7 +101,7 @@ const FigmaFeatures = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             <a
                                 href="/templates"
-                                className="group relative inline-flex items-center justify-center bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-400 hover:via-red-400 hover:to-pink-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                                className="group relative inline-flex items-center justify-center bg-linear-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-400 hover:via-red-400 hover:to-pink-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                                 aria-label="Browse Figma templates"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
@@ -109,7 +109,7 @@ const FigmaFeatures = () => {
                                     <Figma className="w-5 h-5" />
                                     Browse Figma Templates
                                 </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-linear-to-r from-orange-400 via-red-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                             </a>
                             {/*<button className="flex gap-2 items-center justify-center glass hover:bg-white/15 text-foreground font-medium px-5 sm:px-6 py-3 rounded-lg transition-all duration-300 hover:backdrop-blur-xl">*/}
                             {/*    <Play className="w-5 h-5 mr-2" />*/}
@@ -120,7 +120,7 @@ const FigmaFeatures = () => {
 
                     <div className="figma-preview relative mt-10 lg:mt-0">
                         <div className="glass-strong p-6 sm:p-8 rounded-3xl">
-                            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl p-4 sm:p-6 mb-6">
+                            <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 rounded-2xl p-4 sm:p-6 mb-6">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex space-x-2">
                                         <div className="w-3 h-3 bg-red-400 rounded-full" />
@@ -133,8 +133,8 @@ const FigmaFeatures = () => {
                                     <div className="h-4 bg-white/20 rounded" />
                                     <div className="h-4 bg-white/10 rounded w-3/4" />
                                     <div className="grid grid-cols-2 gap-3 mt-4">
-                                        <div className="h-16 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-lg" />
-                                        <div className="h-16 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 rounded-lg" />
+                                        <div className="h-16 bg-linear-to-r from-purple-400/30 to-pink-400/30 rounded-lg" />
+                                        <div className="h-16 bg-linear-to-r from-blue-400/30 to-cyan-400/30 rounded-lg" />
                                     </div>
                                 </div>
                             </div>

@@ -4,11 +4,11 @@ const TemplateSkeleton = () => {
     return (
         <div className="group relative overflow-hidden w-full md:w-[600px] rounded-3xl glass-strong animate-pulse">
             {/* Gradient Background Placeholder */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-800/20 to-gray-700/20"></div>
+            <div className="absolute inset-0 bg-linear-to-br from-gray-800/20 to-gray-700/20"></div>
 
             {/* Template Image Placeholder */}
-            <div className="relative h-64 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-700/30 to-gray-600/30"></div>
+            <div className="relative h-64 bg-linear-to-br from-gray-800 to-gray-900 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-gray-700/30 to-gray-600/30"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-16 h-16 bg-gray-600/50 rounded-lg"></div>
                 </div>

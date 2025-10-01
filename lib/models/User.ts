@@ -1,4 +1,5 @@
 import mongoose, {Schema, Document, Model} from "mongoose";
+import "./Template";
 
 export interface IUser extends Document {
     _id: string;
@@ -75,7 +76,6 @@ const UserSchema = new Schema<IUser>({
     },
     lockUntil: {
         type: Date,
-        sparse: true,
     }
 }, {
     timestamps: true,

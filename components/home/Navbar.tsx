@@ -13,7 +13,7 @@ import {useUser} from "@/context/UserContext";
 
 const Navbar = () => {
     const router = useRouter();
-    const {user} = useUser();
+    const {user, favoriteTemplates} = useUser();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const Navbar = () => {
                             Signin
                         </Link> */}
                         <Link
-                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
+                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
                             aria-label="Get Started button"
                             href="/register"
                         >
@@ -65,7 +65,7 @@ const Navbar = () => {
                         <Suspense fallback={<Loader/>}>
                             <div className="flex items-center justify-end">
                                 <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
-                                                 userEmail={user?.email} userRole={user?.role as String}/>
+                                                 userEmail={user?.email} userRole={user?.role as String} userFavorites={favoriteTemplates.length}/>
                             </div>
                         </Suspense>
                     )}
@@ -87,7 +87,7 @@ const NavbarItem = ({text, link}: { text: string, link: string }) => {
         >
             {text}
             <div
-                className={`w-0 h-[2px] ${isHovered && "!w-full"} bg-gradient-to-r from-[#8BFA9E] to-[#3FD6DD] rounded-[2px] transition-all duration-300 ease-out`}
+                className={`w-0 h-[2px] ${isHovered && "w-full!"} bg-linear-to-r from-[#8BFA9E] to-[#3FD6DD] rounded-[2px] transition-all duration-300 ease-out`}
             />
         </Link>
     );
@@ -114,7 +114,7 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                     ></div>
 
                     <motion.div
-                        className="fixed top-0 right-0 h-screen w-3/4 sm:w-2/4 bg-dark/95 backdrop-blur-xl shadow-2xl z-[9999999] border-l border-white/10"
+                        className="fixed top-0 right-0 h-screen w-3/4 sm:w-2/4 bg-dark/95 backdrop-blur-xl shadow-2xl z-9999999 border-l border-white/10"
                         variants={{
                             hidden: {x: "100%", opacity: 0},
                             visible: {
@@ -163,7 +163,7 @@ const MobileDrawer = ({user}: { user: IUser | undefined }) => {
                                                 Signin
                                             </Link> */}
                                             <Link
-                                                className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-4 rounded-full text-white font-bold shadow-xl hover:shadow-purple-500/25 active:scale-95"
+                                                className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-4 rounded-full text-white font-bold shadow-xl hover:shadow-purple-500/25 active:scale-95"
                                                 aria-label="Get Started button"
                                                 href="/register"
                                                 onClick={() => setIsOpen(false)}

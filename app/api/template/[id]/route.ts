@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         ]);
         return NextResponse.json({success: true, data: {...template, reviews: totalReviews},}, {status: 200});
     } catch (err) {
-        console.log(`Error while getting the template: ${err}`);
+        // console.log(`Error while getting the template: ${err}`);
         return NextResponse.json({message: err, success: false}, {status: 500})
     }
 }
@@ -33,7 +33,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         const updated = await TemplateService.updateTemplate(id, body);
         return NextResponse.json({success: true, message: "Template Updated Successfully", data: updated}, {status: 200});
     } catch (err) {
-        console.log(`Error while updating the template: ${err}`);
+        // console.log(`Error while updating the template: ${err}`);
         return NextResponse.json({success:false, message: err}, {status: 500});
     }
 }
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         await TemplateService.deleteTemplate(id, true); // soft delete
         return NextResponse.json({success: true, message: "Template disabled Successfully"});
     } catch (err) {
-        console.log(`Error while disabling the template: ${err}`);
+        // console.log(`Error while disabling the template: ${err}`);
         return NextResponse.json({success:false, message: err}, {status: 500});
     }
 }
@@ -55,7 +55,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
         const deleted = await TemplateService.deleteTemplate(id, false); // Delete from database
         return NextResponse.json({success: true, message: "Template deleted Successfully"});
     } catch (err) {
-        console.log(`Error while deleting the template: ${err}`);
+        // console.log(`Error while deleting the template: ${err}`);
         return NextResponse.json({success: false, message: err}, {status: 500});
     }
 }

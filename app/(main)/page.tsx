@@ -23,9 +23,9 @@ const isMobile =
 
 export default async function Home() {
     return (
-        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-[100dvw]  md:px-0"
+        <main className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-dvw  md:px-0"
               role="main">
-            <StickyCTA/>
+            {/*<StickyCTA/>*/}
             <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
                 <Hero/>
                 <section
@@ -52,7 +52,7 @@ export default async function Home() {
                         >
                             {/* Enhanced glow effect on hover */}
                             <div
-                                className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
+                                className="absolute inset-0 bg-linear-to-br from-accent/10 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"/>
 
                             {/* Floating particles effect */}
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-60 transition-opacity duration-700">
@@ -64,12 +64,12 @@ export default async function Home() {
                             {/* Content */}
                             <div className="relative z-10">
                                 <div className="flex items-center gap-4 mb-4">
-                                    {/*<div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-2xl group-hover:bg-accent/20 transition-colors duration-300">*/}
+                                    {/*<div className="shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-2xl group-hover:bg-accent/20 transition-colors duration-300">*/}
                                     {/*    {valueProp.icon}*/}
                                     {/*</div>*/}
-                                    <h3 className="text-xl font-paras font-bold text-high-contrast group-hover:text-accent transition-colors duration-300 leading-snug">
+                                    <h2 className="text-xl font-paras font-bold text-high-contrast group-hover:text-accent transition-colors duration-300 leading-snug">
                                         {title}
-                                    </h3>
+                                    </h2>
                                 </div>
                                 <p className="text-medium-contrast leading-loose text-base font-medium">
                                     {desc}
@@ -78,7 +78,7 @@ export default async function Home() {
 
                             {/* Subtle border glow */}
                             <div
-                                className="absolute inset-0 rounded-xl bg-gradient-to-br from-accent/20 via-transparent to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                                className="absolute inset-0 rounded-xl bg-linear-to-br from-accent/20 via-transparent to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                                 style={{
                                     mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                                     maskComposite: "xor",
@@ -110,7 +110,7 @@ export default async function Home() {
 
                     {/* Secondary gradient orb */}
                     <div
-                        className="gradient-orb-2 absolute -bottom-32 -left-32 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-gradient-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl"
+                        className="gradient-orb-2 absolute -bottom-32 -left-32 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-linear-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl"
                     />
 
                     {/* Floating particles */}

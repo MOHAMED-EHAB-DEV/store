@@ -1,11 +1,11 @@
 "use server";
 
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 
-export async function authenticateUser() {
+export async function authenticateUser(connectDB:Boolean=false, isId:Boolean=false) {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get("token");
@@ -21,12 +21,11 @@ export async function authenticateUser() {
             throw new Error("Invalid token payload");
         }
 
-        await connectToDatabase();
-
+        if(connectDB) await connectToDatabase();
         const user = await User.findOne(
             { _id: decoded.id },
-            { _id: 0 }
-        ).lean();
+            { _id: isId ? 1 : 0 }
+        );
 
         if (!user) throw new Error("User not found");
 

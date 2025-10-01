@@ -69,7 +69,7 @@ const CodedFeatures = () => {
         <section className="code-section relative z-10 px-6 py-32">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="code-title text-5xl md:text-6xl font-bold text-white mb-8 font-paras">
+                    <h2 className="code-title text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-white mb-8 font-paras">
                         {SplitText("Production-Ready Code")}
                     </h2>
                     <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
@@ -85,12 +85,12 @@ const CodedFeatures = () => {
                         return (
                             <div
                                 key={f.title}
-                                className="code-feature group relative text-center rounded-xl p-[1px] bg-glass backdrop-blur-sm hover:backdrop-blur-md transition-all duration-500"
+                                className="code-feature group relative text-center rounded-xl p-px bg-glass backdrop-blur-sm hover:backdrop-blur-md transition-all duration-500"
                             >
                                 <div
                                     className="h-full w-full rounded-xl bg-neutral-900/60 group-hover:bg-neutral-900/70 border border-white/10 px-5 py-8 flex flex-col shadow-[0_0_0_0_rgba(255,255,255,0)] group-hover:shadow-[0_0_32px_-8px_rgba(0,255,180,0.35)] transition-all">
                                     <div
-                                        className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 flex items-center justify-center ring-4 ring-emerald-400/20 group-hover:scale-105 group-hover:rotate-3 transition-transform duration-500">
+                                        className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-linear-to-r from-emerald-400 to-teal-500 flex items-center justify-center ring-4 ring-emerald-400/20 group-hover:scale-105 group-hover:rotate-3 transition-transform duration-500">
                                         <Icon className="w-8 h-8 text-white" aria-hidden="true"/>
                                     </div>
                                     <h3 className="text-lg font-semibold text-white mb-3 tracking-tight">
@@ -166,14 +166,14 @@ const CodedFeatures = () => {
                     <div className="text-center mt-8">
                         <a
                             href="/templates"
-                            className="group relative inline-flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                            className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                             aria-label="Browse code templates"
                         >
                             <span className="relative z-10 flex items-center gap-2">
                                 <Code2 className="w-5 h-5"/>
                                 Browse Code Templates
                             </span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                         </a>
                     </div>
                 </div>

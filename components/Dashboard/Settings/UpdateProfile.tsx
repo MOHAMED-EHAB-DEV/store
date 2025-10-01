@@ -31,7 +31,12 @@ const UpdateProfile = ({user}: { user: IUser }) => {
     };
 
     const {startUpload, routeConfig} = useUploadThing("profilePicture", {
-        onClientUploadComplete: () => console.log("Done Uploading")
+        onClientUploadComplete: (res) => {
+            toast.success("Image uploaded successfully!");
+        },
+        onUploadError: (res) => {
+            toast.error("Error uploading image. Please try again.");
+        },
     });
 
     const fileToBase64 = (file: File): Promise<string> => {
@@ -90,7 +95,8 @@ const UpdateProfile = ({user}: { user: IUser }) => {
             router.refresh();
             return response;
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            toast.error((err as Error).message);
         } finally {
             setIsLoading(false);
         }

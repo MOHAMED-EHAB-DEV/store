@@ -16,14 +16,14 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
   text,
 }) => {
   return (
-    <div className="relative w-fit h-fit p-[3px] rounded-2xl bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 animate-gradient group hover:animate-pulse">
+    <div className="relative w-fit h-fit p-[3px] rounded-2xl bg-linear-to-r from-yellow-400 via-pink-500 to-purple-500 animate-gradient group hover:animate-pulse">
       <div
         className="flex flex-col justify-between items-center gap-5 w-80 h-fit 
         rounded-2xl p-6 
-        bg-gradient-to-b from-[#0b0f1a]/95 to-[#111827]/95 backdrop-blur-lg
+        bg-linear-to-b from-[#0b0f1a]/95 to-[#111827]/95 backdrop-blur-lg
         border border-white/10 shadow-lg shadow-purple-500/10
         hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-2 transition-all duration-500
-        group-hover:bg-gradient-to-b group-hover:from-[#0b0f1a]/98 group-hover:to-[#111827]/98"
+        group-hover:bg-linear-to-b group-hover:from-[#0b0f1a]/98 group-hover:to-[#111827]/98"
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'scale(1.05) translateY(-8px) rotateX(5deg)';
         }}
@@ -34,7 +34,7 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
         {/* Avatar + Name + Stars */}
         <div className="flex gap-4 items-center w-full">
           {/* Avatar with gradient ring */}
-          <div className="relative w-14 h-14 rounded-full p-[2px] bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
+          <div className="relative w-14 h-14 rounded-full p-[2px] bg-linear-to-r from-yellow-400 via-orange-400 to-pink-500 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
             <div className="w-full h-full rounded-full overflow-hidden bg-black">
               <Image src={avatar} alt={name} width={56} height={56} />
             </div>

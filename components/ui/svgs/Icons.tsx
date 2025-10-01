@@ -1,4 +1,4 @@
-type Props = { className?: string }
+type Props = { className?: string, isActive?: boolean };
 const Home = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -143,7 +143,7 @@ const Download = ({className}: Props) => (
         <line x1="12" y1="15" x2="12" y2="3"/>
     </svg>
 )
-const Star = ({className, isActive=false}: {className: string, isActive: Boolean}) => (
+const Star = ({className, isActive = false}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
          viewBox="0 0 24 24" fill={isActive ? "yellow" : "none"} stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -163,16 +163,20 @@ const Coffee = ({className}: Props) => (
         <line x1="14" y1="1" x2="14" y2="4"/>
     </svg>
 )
-const Heart = ({className}: Props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-         className={className}>
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5
-             5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
-             1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </svg>
-)
+const Heart = ({isActive, className}: Props) => {
+    return isActive ? (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+            <path
+                d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
+        </svg>
+    ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"
+             className={className}>
+            <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+        </svg>
+    )
+};
 const Sparkles = ({className}: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -470,6 +474,13 @@ const Vite = ({className}: Props) => (
             </linearGradient>
         </defs>
     </svg>
+);
+const Cross = ({className}: Props) => (
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z"
+            fill="currentColor" fillRule="evenodd" clipRule="evenodd" />
+    </svg>
 )
 export {
     Rocket,
@@ -519,4 +530,5 @@ export {
     Upload,
     NextJS,
     Vite,
+    Cross,
 }

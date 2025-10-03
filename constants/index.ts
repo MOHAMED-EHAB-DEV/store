@@ -332,56 +332,36 @@ const whatLoseWhenDeleteMyAccount = [
 
 const Gradients = ["from-blue-500 via-purple-500 to-pink-500", "from-green-500 via-teal-500 to-blue-500", "from-orange-500 via-red-500 to-pink-500", "from-purple-500 via-indigo-500 to-blue-500"]
 const Icons = [Zap, ExternalLink, Palette, Code];
-
 const testimonials = [
     {
-        avatar: "/assets/images/client1.png",
-        name: "Sarah Johnson",
-        rating: 5,
-        text: "These templates helped us launch our startup website in just 2 days. Amazing quality and support!",
+        quote:
+            "As a freelancer, these templates save me weeks of development time. My clients love the results!",
+        name: "Ananya Gupta",
+        designation: "Frontend Engineer, NovaTech",
+        src: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb",
+    },
+
+    {
+        quote:
+            "Best investment for our agency. We've used these templates for 10+ client projects successfully.",
+        name: "Sophia Allen",
+        designation: "UI/UX Designer, Creatify",
+        src: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb",
     },
     {
-        avatar: "/assets/images/client2.png",
-        name: "Mike Anderson",
-        rating: 5,
-        text: "As a freelancer, these templates save me weeks of development time. My clients love the results!",
+        quote:
+            "The code quality is exceptional. Clean, modern, and perfectly documented. Highly recommended!",
+        name: "Ethan Rodriguez",
+        designation: "Software Engineer, CodeWorks",
+        src: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb",
     },
     {
-        avatar: "/assets/images/client3.png",
-        name: "Emily Carter",
-        rating: 5,
-        text: "The code quality is exceptional. Clean, modern, and perfectly documented. Highly recommended!",
+        quote:
+            "These templates helped us launch our startup website in just 2 days. Amazing quality and support!",
+        name: "Priya Sharma",
+        designation: "Full Stack Developer, Innovate Labs",
+        src: "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb",
     },
-    {
-        avatar: "/assets/images/client1.png",
-        name: "David Kim",
-        rating: 5,
-        text: "Best investment for our agency. We've used these templates for 10+ client projects successfully.",
-    },
-    {
-        avatar: "/assets/images/client2.png",
-        name: "Lisa Rodriguez",
-        rating: 4,
-        text: "Professional designs that actually convert. Our conversion rate increased by 40% after switching.",
-    },
-    {
-        avatar: "/assets/images/client3.png",
-        name: "James Wilson",
-        rating: 5,
-        text: "Outstanding templates! The Figma files are perfectly organized and the code is production-ready.",
-    },
-    {
-        avatar: "/assets/images/client1.png",
-        name: "Anna Thompson",
-        rating: 5,
-        text: "These templates are a game-changer for small businesses. Professional results without the cost.",
-    },
-    {
-        avatar: "/assets/images/client2.png",
-        name: "Robert Chen",
-        rating: 4,
-        text: "Excellent customer support and regular updates. The templates keep getting better over time.",
-    }
 ];
 
 // About Me

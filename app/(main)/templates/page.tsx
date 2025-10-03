@@ -2,7 +2,6 @@ import Templates from "@/components/shared/Templates";
 import {TemplateService} from "@/lib/services/TemplateService";
 import {CategoryService} from "@/lib/services/CategoryService";
 import {serializeCategory, serializeTemplate} from "@/lib/utils";
-import {toast} from "sonner";
 
 const getInitialData = async () => {
     try {
@@ -19,7 +18,6 @@ const getInitialData = async () => {
             return [];
         }
     } catch (err) {
-        toast.error("Something went wrong");
         return [];
     }
 }

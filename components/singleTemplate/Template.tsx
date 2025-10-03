@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Download, ExternalLink, Star } from "@/components/ui/svgs/Icons";
@@ -7,6 +6,7 @@ import { capitalizeFirstChar } from "@/lib/utils";
 import { TemplateSchema } from "@/components/SEO/StructuredData";
 import SimilarTemplate from "../shared/Template";
 import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
+import DownloadBtn from "./DownloadBtn";
 
 const Template = async ({ template, similarTemplates }: { template: ITemplate, similarTemplates: ITemplate[] }) => {
     return (
@@ -137,10 +137,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
 
                         {/* Buttons */}
                         <div className="flex flex-col gap-3 w-full max-w-[250px]">
-                            <button
-                                className="w-full px-5 py-2.5 sm:py-3 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base">
-                                {template.price === 0 ? "Download" : "Buy Now"}
-                            </button>
+                            <DownloadBtn templateId={template._id} isFree={template.price === 0} />
                             <Link
                                 href={template.demoLink}
                                 target="_blank"

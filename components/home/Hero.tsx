@@ -67,6 +67,8 @@ const Hero = () => {
                 className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent"/>
             <div
                 className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"/>
+            {/*<div*/}
+            {/*    className="absolute md:top-0 md:-left-44 w-full h-full pointer-events-none before:content-[''] before:absolute before:-left-[350px] before:-top-[500px] md:before:-top-72 md:before:-left-44 before:w-[800px] before:h-[800px] before:rounded-full before:bg-gradient-to-br before:from-white/90 before:to-white/40 before:blur-3xl before:opacity-50 before:rotate-[60deg]"/>*/}
 
             <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
                 <Badge

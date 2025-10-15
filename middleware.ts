@@ -70,4 +70,6 @@ export async function middleware(req: NextRequest) {
             return reLogin();
         }
     }
+
+    return NextResponse.next();
 }

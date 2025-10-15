@@ -1,18 +1,19 @@
 import * as motion from "motion/react-client";
 import {gsap} from "gsap";
 import {useGSAP} from "@gsap/react";
-import Image from "next/image";
+// import Image from "next/image";
 import Hero from "@/components/home/Hero";
-import {HeroItems} from "@/constants";
+import {HeroItems, testimonials} from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import AboutMe from "@/components/home/AboutMe";
 import FramerFeatures from "@/components/home/FramerFeatures";
 import CodedFeatures from "@/components/home/CodedFeatures";
 import FigmaFeatures from "@/components/home/FigmaFeatures";
-import Testimonials from "@/components/home/Testimonials";
-import StickyCTA from "@/components/ui/StickyCTA";
+// import Testimonials from "@/components/home/Testimonials";
+// import StickyCTA from "@/components/ui/StickyCTA";
 import Cta from "@/components/home/CTA";
+// import AnimatedTestimonialsDemo from "@/components/spectrumui/animated_testimonials";
 
 gsap.registerPlugin(useGSAP);
 
@@ -132,7 +133,8 @@ export default async function Home() {
             <FramerFeatures/>
             <CodedFeatures/>
             <FigmaFeatures/>
-            <Testimonials/>
+            {/*<Testimonials/>*/}
+            {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}
             <AboutMe/>
             <Cta/>
         </main>

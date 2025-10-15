@@ -38,3 +38,12 @@ export function formatCount(count: number): string {
     if (count < 1_000_000_000) return (count / 1_000_000).toFixed(count % 1_000_000 === 0 ? 0 : 1) + "M";
     return (count / 1_000_000_000).toFixed(count % 1_000_000_000 === 0 ? 0 : 1) + "B";
 }
+
+export function sanitizeFilename(title?: string, fallback = "download.zip") {
+    if (!title || typeof title !== "string") return fallback;
+    let cleaned = title.replace(/[\x00-\x1f\x7f]/g, "");            // remove control
+    cleaned = cleaned.replace(/[\/\\]+/g, "-").replace(/["<>|?*:]+/g, "").trim();
+    cleaned = cleaned.replace(/\s+/g, "-");
+    if (cleaned.length > 60) cleaned = cleaned.slice(0, 60);
+    return `${cleaned}.zip`;
+}

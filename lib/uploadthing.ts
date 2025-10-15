@@ -1,6 +1,6 @@
 import { UTApi, UTFile } from "uploadthing/server";
 
-const utapi = new UTApi();
+export const utapi = new UTApi();
 
 export async function uploadThing(file: File, key: "profilePicture") {
     // Convert the browser File into an ArrayBuffer

@@ -19,11 +19,11 @@ function validateDownloadParams(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const templateId = searchParams.get("templateId")?.trim() || "";
         const token = searchParams.get("token")?.trim() || undefined;
-        if (!templateId) return { isValid: false, error: "Missing templateId parameter" };
-        if (!mongoose.Types.ObjectId.isValid(templateId)) return { isValid: false, error: "Invalid templateId format" };
+        if (!templateId) return { isValid: false, error: "Missing templateId parameter", params: { templateId: "", } };
+        if (!mongoose.Types.ObjectId.isValid(templateId)) return { isValid: false, error: "Invalid templateId format", params: { templateId: "", } };
         return { isValid: true, params: { templateId, token } };
     } catch {
-        return { isValid: false, error: "Invalid request parameters" };
+        return { isValid: false, error: "Invalid request parameters", params: { templateId: "", } };
     }
 }
 
@@ -32,7 +32,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
         // Validate params
         const validation = validateDownloadParams(req);
         if (!validation.isValid) return createErrorResponse(validation.error!, 400);
-        const { templateId, token } = validation.params;
+        const { templateId } = validation.params;
 
 
         // Connect DB
@@ -100,7 +100,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
         if (upstreamContentRange) resHeaders.set("Content-Range", upstreamContentRange);
 
         // Filename derived only from title
-        const rawTitle = (template.title && String(template.title).trim()) || (template.name && String(template.name).trim()) || "download";
+        const rawTitle = (template.title && String(template.title).trim()) || (template.title && String(template.title).trim()) || "download";
         const suggestedFilename = sanitizeFilename(rawTitle);
         const encodedName = encodeURIComponent(suggestedFilename);
         resHeaders.set("Content-Disposition", `attachment; filename="${suggestedFilename.replace(/"/g, "")}"; filename*=UTF-8''${encodedName}`);

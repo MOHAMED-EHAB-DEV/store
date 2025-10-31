@@ -201,6 +201,34 @@ ReviewSchema.post('findOneAndUpdate', async function() {
     }
 });
 
-const Review: Model<IReview> = mongoose.models.Review || mongoose.model<IReview>("Review", ReviewSchema);
+interface ReviewModel extends Model<IReview> {
+  findTemplateReviews(
+    templateId: string,
+    limit?: number,
+    skip?: number
+  ): Promise<IReview[]>;
+
+  getTemplateRatingStats(
+    templateId: string
+  ): Promise<
+    {
+      _id: string;
+      averageRating: number;
+      totalReviews: number;
+      ratingDistribution: number[];
+      ratingBreakdown: Record<string, number>;
+    }[]
+  >;
+
+  getUserReviews(
+    userId: string,
+    limit?: number,
+    skip?: number
+  ): Promise<IReview[]>;
+}
+
+const Review =
+  (mongoose.models.Review as ReviewModel) ||
+  mongoose.model<IReview, ReviewModel>("Review", ReviewSchema);
 
 export default Review;

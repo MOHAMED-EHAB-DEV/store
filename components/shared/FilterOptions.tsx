@@ -12,7 +12,7 @@ import {
     CommandGroup,
     CommandItem,
 } from "@/components/ui/command";
-import {toast} from "sonner";
+import {sonnerToast} from "@/components/ui/sonner";
 import {Input} from "@/components/ui/input";
 
 const sortOptions: { value: "popular" | "recent" | "rating" | "price" | "downloads"; label: string; icon: string }[] = [
@@ -99,12 +99,12 @@ const FilterOptions = (
 
         if (type === "min") {
             if (num > maxPrice) {
-                return toast("Min. Price must be less than Max. Price");
+                return sonnerToast.error("Min. Price must be less than Max. Price");
             }
             setMinPrice(num);
         } else {
             if (num < minPrice) {
-                return toast("Max. Price must be more than Min. Price");
+                return sonnerToast.error("Max. Price must be more than Min. Price");
             }
             setMaxPrice(num);
         }

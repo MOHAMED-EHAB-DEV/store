@@ -6,7 +6,7 @@ import {Star} from "@/components/ui/svgs/Icons";
 import {formatCount} from "@/lib/utils";
 import RatingDistribution from "@/components/singleTemplate/Reviews/RatingDistribution";
 import AddReview from "@/components/Dialogs/AddReview";
-import {toast} from "sonner";
+import {sonnerToast} from "@/components/ui/sonner";
 import {useUser} from "@/context/UserContext";
 import {useRouter} from "next/navigation";
 
@@ -103,12 +103,14 @@ const ReviewsContainer = ({ templateId, averageRating, reviewCount }: { template
             const data = await response.json();
 
             if (data.success) {
-                toast.success(data.message);
+                sonnerToast.success(data.message || "Review added successfully!");
                 router.refresh();
+                setReviews((prev) => [data.review, ...prev]);
+                setUserReviewed(true);
             } else
-                toast.error(data.message);
+                sonnerToast.error(data.message || "Failed to add review");
         } catch (err) {
-            toast.error("Error while adding your review, please try again.");
+            sonnerToast.error("Error while adding your review, please try again.");
             console.log(err);
         }
     }

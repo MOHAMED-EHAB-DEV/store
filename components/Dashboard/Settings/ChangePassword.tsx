@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Check, Eye, EyeOff, Lock } from "@/components/ui/svgs/Icons";
 import { passwordRequirements } from "@/constants";
-import { toast } from "sonner";
+import { sonnerToast } from "@/components/ui/sonner";
 
 const ChangePassword = ({ user }: { user: IUser }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -36,14 +36,14 @@ const ChangePassword = ({ user }: { user: IUser }) => {
             }).then((res) => res.json());
 
             if (!response?.success) {
-                toast(response.message);
+                sonnerToast.error(response.message);
             } else
-                toast("Password updated successfully!");
+                sonnerToast.success("Password updated successfully!");
 
             return response;
         } catch (err) {
             // console.log(err);
-            toast.error((err as Error).message);
+            sonnerToast.error((err as Error).message);
         } finally {
             setIsLoading(false);
         }

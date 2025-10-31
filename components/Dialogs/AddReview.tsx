@@ -20,16 +20,18 @@ const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
     const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(0);
     const [comment, setComment] = useState("");
+    const [open, setOpen] = useState(false);
 
     const handleSubmit = () => {
         if (!rating || !comment.trim()) return;
         handleAddReview(comment, templateId, rating);
         setComment("");
         setRating(0);
+        setOpen(false);
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger className="cursor-pointer px-4 py-2 bg-blue-600 text-white hover:bg-blue-500 transition-colors rounded-lg">
                 Add Review
             </DialogTrigger>

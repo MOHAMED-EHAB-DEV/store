@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {Home} from "@/components/ui/svgs/Icons";
-import {toast} from "sonner";
+import {sonnerToast} from "@/components/ui/sonner";
 
 const Sidebar = ({open, setOpen, user}: {
     open: Boolean,
@@ -33,13 +33,13 @@ const Sidebar = ({open, setOpen, user}: {
             const data = await response.json();
             if (!data.success)
                 throw new Error(data.message);
-            toast("Successfully LoggedOut");
+            sonnerToast.success("Successfully LoggedOut");
             setTimeout(() => {
                 window.location.href = `/`;
             }, 100);
         } catch (err) {
             // console.log(err);
-            toast.error((err as Error).message);
+            sonnerToast.error((err as Error).message);
         }
     }
 

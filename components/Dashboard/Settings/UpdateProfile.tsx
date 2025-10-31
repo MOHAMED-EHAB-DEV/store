@@ -3,7 +3,7 @@
 import {useState, useRef, ChangeEvent} from "react";
 import Image from "next/image";
 import {useUploadThing} from "@/hooks/useUploadthing";
-import {toast} from "sonner";
+import {sonnerToast} from "@/components/ui/sonner";
 import {isBase64Image} from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import {useRouter} from "next/navigation";
@@ -32,10 +32,10 @@ const UpdateProfile = ({user}: { user: IUser }) => {
 
     const {startUpload, routeConfig} = useUploadThing("profilePicture", {
         onClientUploadComplete: (res) => {
-            toast.success("Image uploaded successfully!");
+            sonnerToast.success("Image uploaded successfully!");
         },
         onUploadError: (res) => {
-            toast.error("Error uploading image. Please try again.");
+            sonnerToast.error("Error uploading image. Please try again.");
         },
     });
 
@@ -55,13 +55,13 @@ const UpdateProfile = ({user}: { user: IUser }) => {
             if (imgRes && imgRes[0]?.url) {
                 return imgRes[0].url;
             } else {
-                toast("Uh oh! Something went wrong.", {
+                sonnerToast("Uh oh! Something went wrong.", {
                     description: "File upload failed. Please try again.",
                 });
                 return null;
             }
         } catch (err) {
-            toast("Upload error", {
+            sonnerToast("Upload error", {
                 description: "Failed to process the image, Please try again.",
             });
             return null;
@@ -91,12 +91,12 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                 }),
             }).then((res) => res.json());
 
-            toast("Profile updated successfully!");
+            sonnerToast.success("Profile updated successfully!");
             router.refresh();
             return response;
         } catch (err) {
             // console.log(err);
-            toast.error((err as Error).message);
+            sonnerToast.error((err as Error).message);
         } finally {
             setIsLoading(false);
         }

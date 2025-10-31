@@ -8,7 +8,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { whatLoseWhenDeleteMyAccount } from "@/constants";
-import { toast } from "sonner";
+import { sonnerToast } from "@/components/ui/sonner";
 import { Eye, EyeOff, Lock, Mail, X } from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
 import revalidate from "@/actions/revalidateTag";
@@ -44,15 +44,14 @@ const Settings = ({ userId }: { userId: string }) => {
             }).then((res) => res.json());
 
             if (response.success) {
-                toast(response.message);
+                sonnerToast.success(response.message);
                 await revalidate("/");
                 router.push("/");
-            } else {
-                toast(response.message);
-            }
+            } else 
+                return sonnerToast.error(response.message);
         } catch (err) {
             // console.log(err)
-            toast.error((err as Error).message);
+            return sonnerToast.error((err as Error).message);
         } finally {
             setIsLoading(false);
         }

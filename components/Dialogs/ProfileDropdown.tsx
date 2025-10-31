@@ -13,7 +13,7 @@ import {
     Heart,
 } from "@/components/ui/svgs/Icons";
 import {useRouter} from "next/navigation";
-import {toast} from "sonner";
+import {sonnerToast} from "@/components/ui/sonner";
 
 const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorites}: {
     userImage: string,
@@ -34,12 +34,12 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
             const data = await response.json();
             if (!data.success)
                 throw new Error(data.message);
-            toast("Successfully LoggedOut");
+            sonnerToast.success("Successfully LoggedOut");
             setTimeout(() => {
                 window.location.href = `/`;
             }, 100);
         } catch (err) {
-            toast.error("Error logging out. Please try again.");
+            sonnerToast.error("Error logging out. Please try again.");
         }
     }
     return (

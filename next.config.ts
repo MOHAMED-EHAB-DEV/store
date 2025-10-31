@@ -7,13 +7,13 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig = {
     experimental: {
         optimizePackageImports: ["gsap", "motion"],
-        inlineCss: true,
+        // inlineCss: true,
         optimizeCss: true,
         esmExternals: true,
     },
-    typescript: {
-        ignoreBuildErrors: true
-    },
+    // typescript: {
+    //     ignoreBuildErrors: true,
+    // },
     reactStrictMode: true,
     images: {
         remotePatterns: [

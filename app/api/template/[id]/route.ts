@@ -3,10 +3,10 @@ import { TemplateService } from '@/lib/services/TemplateService';
 import Review from "@/lib/models/Review";
 import {connectToDatabase} from "@/lib/database";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string; } }) {
-    const {id} = await params;
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         await connectToDatabase();
+        const {id} = await params;
 
         const [template, totalReviews] = await Promise.all([
             TemplateService.findById(

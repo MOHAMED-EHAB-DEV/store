@@ -6,7 +6,7 @@ import {connectToDatabase} from "@/lib/database";
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         await connectToDatabase();
-        const {id} = await params;
+        const {id} = params;
 
         const [template, totalReviews] = await Promise.all([
             TemplateService.findById(

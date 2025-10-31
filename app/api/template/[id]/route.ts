@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { NextApiRequest } from 'next';
 import { TemplateService } from '@/lib/services/TemplateService';
 import Review from "@/lib/models/Review";
 import {connectToDatabase} from "@/lib/database";
 
-export async function GET(req: NextRequest, params: Promise<{ id: string }>) {
+export async function GET(req: NextApiRequest, { params }: { params: { id: string } }) {
     const {id} = await params;
     try {
         await connectToDatabase();

@@ -17,7 +17,6 @@ import { IUser } from '@/types';
 const Sidebar = ({open, setOpen, user}: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    title: String,
     user: IUser,
 }) => {
     const router = useRouter();

@@ -38,6 +38,7 @@ declare type ITemplate = {
     createdAt: Date;
     updatedAt: Date;
     lastViewedAt: Date;
+    reviews?: number;
 }
 
 declare type IOrder = {

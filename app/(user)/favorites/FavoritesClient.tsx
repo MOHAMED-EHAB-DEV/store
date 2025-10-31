@@ -3,9 +3,10 @@
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import Template from "@/components/shared/Template";
 import { useState, useEffect } from 'react';
+import { ITemplate } from "@/types";
 
 const FavoritesClient = () => {
-    const [templates, setTemplates] = useState([]);
+    const [templates, setTemplates] = useState<ITemplate[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
@@ -36,7 +37,7 @@ const FavoritesClient = () => {
     ) : templates.length > 0 ? (
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-5`}>
             {templates.map((template, idx) => <Template showActionButtons={true} showPrice={true}
-                key={template._id} template={template}
+                key={template?._id! as string} template={template}
                 idx={idx}/>)}
         </div>
     ) : (

@@ -1,4 +1,4 @@
-import Template from "@/lib/models/Template";
+import Template, { ITemplate } from "@/lib/models/Template";
 import {connectToDatabase, measureQuery} from "@/lib/database";
 import {Gradients} from "@/constants";
 import {Types} from "mongoose";

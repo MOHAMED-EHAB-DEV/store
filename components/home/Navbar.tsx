@@ -10,6 +10,7 @@ import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import Loader from "@/components/ui/Loader";
 import {useUser} from "@/context/UserContext";
+import { IUser } from '@/types';
 
 const Navbar = () => {
     const router = useRouter();

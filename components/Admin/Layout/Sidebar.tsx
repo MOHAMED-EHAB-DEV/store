@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Home} from "@/components/ui/svgs/Icons";
 import {sonnerToast} from "@/components/ui/sonner";
+import { IUser } from '@/types';
 
 const Sidebar = ({open, setOpen, user}: {
     open: Boolean,

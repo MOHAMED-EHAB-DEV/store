@@ -9,6 +9,7 @@ import Loader from "@/components/ui/Loader";
 import {useRouter} from "next/navigation";
 import {User} from "@/components/ui/svgs/Icons";
 import {Dropzone, DropzoneContent, DropzoneEmptyState} from '@/components/ui/kibo-ui/dropzone';
+import { IUser } from "@/types";
 
 const UpdateProfile = ({user}: { user: IUser }) => {
     const [files, setFiles] = useState<File[]>([]);

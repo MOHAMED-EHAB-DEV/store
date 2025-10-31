@@ -1,5 +1,6 @@
 import React from "react";
 import Template from "@/components/singleTemplate/Template";
+import { ITemplate } from "@/types";
 
 const getTemplate = async (id: string) => {
   try {

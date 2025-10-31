@@ -1,3 +1,4 @@
+import { IUser } from "@/types";
 import UpdateProfile from "./UpdateProfile";
 
 const Profile = ({user} : {user:IUser}) => {

@@ -5,6 +5,7 @@ import {ArrowLeftToLine} from "@/components/ui/svgs/Icons";
 import Sidebar from "@/components/Dashboard/Layout/Sidebar";
 import {usePathname} from "next/navigation";
 import {capitalizeFirstChar} from "@/lib/utils";
+import { IUser } from '@/types';
 
 const LayoutContainer = ({children, user}: Readonly<{children: React.ReactNode, user: IUser}>) => {
     const [open, setOpen] = useState(false);

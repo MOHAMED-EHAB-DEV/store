@@ -6,6 +6,7 @@ import {capitalizeFirstChar} from "@/lib/utils";
 import ChangePassword from "@/components/Dashboard/Settings/ChangePassword";
 import Settings from "@/components/Dashboard/Settings/Settings";
 import Loader from "@/components/ui/Loader";
+import { IUser } from '@/types';
 
 const Cases = ["profile", "change-password", "settings",];
 

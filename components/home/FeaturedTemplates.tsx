@@ -4,6 +4,7 @@ import {Star} from '@/components/ui/svgs/Icons';
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import {Suspense} from "react";
+import { ITemplate } from '@/types';
 
 async function getTemplates() {
     try {

@@ -7,6 +7,7 @@ import { TemplateSchema } from "@/components/SEO/StructuredData";
 import SimilarTemplate from "../shared/Template";
 import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
 import DownloadBtn from "./DownloadBtn";
+import { ITemplate } from "@/types";
 
 const Template = async ({ template, similarTemplates }: { template: ITemplate, similarTemplates: ITemplate[] }) => {
     return (

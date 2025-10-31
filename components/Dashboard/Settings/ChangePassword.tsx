@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react';
 import { Check, Eye, EyeOff, Lock } from "@/components/ui/svgs/Icons";
 import { passwordRequirements } from "@/constants";
 import { sonnerToast } from "@/components/ui/sonner";
+import { IUser } from '@/types';
 
 const ChangePassword = ({ user }: { user: IUser }) => {
     const [isLoading, setIsLoading] = useState(false);

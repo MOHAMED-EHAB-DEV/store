@@ -6,6 +6,7 @@ import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import {builtWithOptions} from "@/constants";
 import {Search} from "@/components/ui/svgs/Icons";
+import { ICategory, ITemplate } from '@/types';
 
 declare type selected = {
     selected: boolean,

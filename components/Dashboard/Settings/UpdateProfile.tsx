@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, useRef, ChangeEvent} from "react";
+import {useState, useRef, ChangeEvent, FormEvent} from "react";
 import Image from "next/image";
 import {useUploadThing} from "@/hooks/useUploadthing";
 import {sonnerToast} from "@/components/ui/sonner";
@@ -112,7 +112,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                         onDrop={handleImage}
                         onError={(err) => {
                             setError(true);
-                            setTimeout(4000, () => setError(false))
+                            setTimeout(() => setError(false), 4000);
                         }}
                         src={files}
                         maxFiles={1}
@@ -144,7 +144,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                     <input type="text"
                            className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
                            name="name" placeholder="Enter your name" value={name}
-                           onChange={(e: ChangeEvent) => setName(e.target.value! as string)}/>
+                           onChange={(e) => setName(e.target.value! as string)}/>
                 </div>
             </div>
 

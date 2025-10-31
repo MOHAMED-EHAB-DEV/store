@@ -17,10 +17,10 @@ import {sonnerToast} from "@/components/ui/sonner";
 
 const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorites}: {
     userImage: string,
-    username: String,
-    userEmail: String,
-    userRole: String,
-    userFavorites: Number,
+    username: string,
+    userEmail: string,
+    userRole: string,
+    userFavorites: number,
 }) => {
     const [open, isOpen] = useState(false);
     const router = useRouter();

@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, FormEvent } from "react";
 import {
     Dialog,
     DialogContent,
@@ -31,7 +31,7 @@ const Settings = ({ userId }: { userId: string }) => {
             [name]: value,
         }));
 
-    const handleSubmit = async (e: FormEventHandler<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         try {

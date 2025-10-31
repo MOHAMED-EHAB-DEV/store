@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { Check, Eye, EyeOff, Lock } from "@/components/ui/svgs/Icons";
 import { passwordRequirements } from "@/constants";
 import { sonnerToast } from "@/components/ui/sonner";
@@ -22,7 +22,7 @@ const ChangePassword = ({ user }: { user: IUser }) => {
         }));
 
 
-    const handleSubmit = async (e: FormEventHandler<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
         try {

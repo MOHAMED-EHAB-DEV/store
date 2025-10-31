@@ -21,7 +21,7 @@ interface Review {
     createdAt: string;
 }
 
-const ReviewsContainer = ({ templateId, averageRating, reviewCount }: { templateId: string, averageRating: Number, reviewCount: number }) => {
+const ReviewsContainer = ({ templateId, averageRating, reviewCount }: { templateId: string, averageRating: number, reviewCount: number }) => {
     const [reviews, setReviews] = useState<Review[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);

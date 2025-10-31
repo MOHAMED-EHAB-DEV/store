@@ -92,7 +92,7 @@ const Sidebar = ({open, setOpen, user}: {
                         <div className="flex gap-1 items-center">
                             <h1 className="text-md font-semibold text-white">{user?.name}</h1>
                         </div>
-                        {isOpen ? <ChevronUp size={17}/> : <ChevronDown size={17}/>}
+                        {isOpen ? <ChevronUp/> : <ChevronDown/>}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-dark">
                         <DropdownMenuItem onClick={() => router.push("/")} className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">

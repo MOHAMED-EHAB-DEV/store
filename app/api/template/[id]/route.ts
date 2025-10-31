@@ -6,9 +6,9 @@ import { connectToDatabase } from "@/lib/database";
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function GET(req: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
   try {
     await connectToDatabase();
-    const { id } = await context.params;
 
     const [template, totalReviews] = await Promise.all([
       TemplateService.findById(id, {
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
-  const {id} = await context.params;
+  const { id } = await context.params;
   try {
     const deleted = await TemplateService.deleteTemplate(id, false); // Delete from database
     return NextResponse.json({

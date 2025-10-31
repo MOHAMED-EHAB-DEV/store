@@ -255,7 +255,20 @@ UserSchema.statics.cleanupExpiredLocks = function() {
     );
 };
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+export interface IUserModel extends Model<IUser> {
+  findByEmail(email: string): Promise<IUser | null>;
+  findByEmailWithPassword(email: string): Promise<IUser | null>;
+  findActiveUsers(limit?: number, skip?: number): Promise<IUser[]>;
+  getUserStats(): Promise<any[]>; // you can define a more specific shape later
+  findUsersWithPurchases(limit?: number, skip?: number): Promise<IUser[]>;
+  incrementLoginAttempts(userId: string): Promise<IUser | null>;
+  resetLoginAttempts(userId: string): Promise<IUser | null>;
+  cleanupExpiredLocks(): Promise<any>;
+}
+
+const User =
+  (mongoose.models.User as IUserModel) ||
+  mongoose.model<IUser, IUserModel>("User", UserSchema);
 
 // Create indexes if they don't exist (development only)
 if (process.env.NODE_ENV !== 'production') {

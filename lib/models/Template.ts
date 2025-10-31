@@ -643,9 +643,30 @@ TemplateSchema.post("init", function () {
     }
 });
 
-const Template: Model<ITemplate> =
-    mongoose.models.Template ||
-    mongoose.model<ITemplate>("Template", TemplateSchema);
+export interface ITemplateModel extends Model<ITemplate> {
+  findPopularTemplates(limit?: number, skip?: number): Promise<ITemplate[]>;
+  findByCategory(categoryId: string, limit?: number, skip?: number): Promise<ITemplate[]>;
+  searchTemplates(
+    searchOptions: {
+      search?: string;
+      categories?: string[];
+      tags?: string[];
+      builtWith?: string[];
+      priceRange?: { min?: number; max?: number };
+      minRating?: number;
+      sortBy?: "popular" | "recent" | "rating" | "price" | "downloads";
+    },
+    limit?: number,
+    skip?: number
+  ): Promise<ITemplate[]>;
+  findFreeTemplates(limit?: number, skip?: number): Promise<ITemplate[]>;
+  getTemplateStats(): Promise<any>;
+  getTrendingTemplates(days?: number, limit?: number): Promise<ITemplate[]>;
+}
+
+const Template =
+  (mongoose.models.Template as ITemplateModel) ||
+  mongoose.model<ITemplate, ITemplateModel>("Template", TemplateSchema);
 
 if (process.env.NODE_ENV !== "production") {
     Template.syncIndexes().catch(console.error);

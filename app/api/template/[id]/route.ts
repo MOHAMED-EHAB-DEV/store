@@ -1,61 +1,77 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { TemplateService } from '@/lib/services/TemplateService';
+import { NextRequest, NextResponse } from "next/server";
+import { TemplateService } from "@/lib/services/TemplateService";
 import Review from "@/lib/models/Review";
-import {connectToDatabase} from "@/lib/database";
+import { connectToDatabase } from "@/lib/database";
 
-export async function GET(req: NextRequest, context: { params: Promise<{ id: string; }>; }) {
-    try {
-        await connectToDatabase();
-        const {id} = await context.params;
+type RouteContext = { params: Promise<{ id: string }> };
 
-        const [template, totalReviews] = await Promise.all([
-            TemplateService.findById(
-                id,
-                {
-                    includeContent: true,
-                    lean: true,
-                    select: "_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt",
-                }
-            ),
-            Review.countDocuments({template: id})
-        ]);
-        return NextResponse.json({success: true, data: {...template, reviews: totalReviews},}, {status: 200});
-    } catch (err) {
-        // console.log(`Error while getting the template: ${err}`);
-        return NextResponse.json({message: err, success: false}, {status: 500})
-    }
+export async function GET(req: NextRequest, context: RouteContext) {
+  try {
+    await connectToDatabase();
+    const { id } = await context.params;
+
+    const [template, totalReviews] = await Promise.all([
+      TemplateService.findById(id, {
+        includeContent: true,
+        lean: true,
+        select:
+          "_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt",
+      }),
+      Review.countDocuments({ template: id }),
+    ]);
+    return NextResponse.json(
+      { success: true, data: { ...template, reviews: totalReviews } },
+      { status: 200 }
+    );
+  } catch (err) {
+    // console.log(`Error while getting the template: ${err}`);
+    return NextResponse.json({ message: err, success: false }, { status: 500 });
+  }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-    try {
-        const id = params.id;
-        const body = await req.json();
-        const updated = await TemplateService.updateTemplate(id, body);
-        return NextResponse.json({success: true, message: "Template Updated Successfully", data: updated}, {status: 200});
-    } catch (err) {
-        // console.log(`Error while updating the template: ${err}`);
-        return NextResponse.json({success:false, message: err}, {status: 500});
-    }
+export async function PATCH(req: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
+  try {
+    const body = await req.json();
+    const updated = await TemplateService.updateTemplate(id, body);
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Template Updated Successfully",
+        data: updated,
+      },
+      { status: 200 }
+    );
+  } catch (err) {
+    // console.log(`Error while updating the template: ${err}`);
+    return NextResponse.json({ success: false, message: err }, { status: 500 });
+  }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-    try {
-        const id = params.id;
-        await TemplateService.deleteTemplate(id, true); // soft delete
-        return NextResponse.json({success: true, message: "Template disabled Successfully"});
-    } catch (err) {
-        // console.log(`Error while disabling the template: ${err}`);
-        return NextResponse.json({success:false, message: err}, {status: 500});
-    }
+export async function POST(req: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
+  try {
+    await TemplateService.deleteTemplate(id, true); // soft delete
+    return NextResponse.json({
+      success: true,
+      message: "Template disabled Successfully",
+    });
+  } catch (err) {
+    // console.log(`Error while disabling the template: ${err}`);
+    return NextResponse.json({ success: false, message: err }, { status: 500 });
+  }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-    try {
-        const id = params.id;
-        const deleted = await TemplateService.deleteTemplate(id, false); // Delete from database
-        return NextResponse.json({success: true, message: "Template deleted Successfully"});
-    } catch (err) {
-        // console.log(`Error while deleting the template: ${err}`);
-        return NextResponse.json({success: false, message: err}, {status: 500});
-    }
+export async function DELETE(req: NextRequest, context: RouteContext) {
+  const {id} = await context.params;
+  try {
+    const deleted = await TemplateService.deleteTemplate(id, false); // Delete from database
+    return NextResponse.json({
+      success: true,
+      message: "Template deleted Successfully",
+    });
+  } catch (err) {
+    // console.log(`Error while deleting the template: ${err}`);
+    return NextResponse.json({ success: false, message: err }, { status: 500 });
+  }
 }

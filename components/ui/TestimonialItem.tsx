@@ -50,7 +50,7 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
                 <Star
                   key={i}
                   className="w-4 h-4 fill-current animate-twinkle group-hover:text-yellow-300 transition-colors duration-300"
-                  style={{ animationDelay: `${i * 0.3}s` }}
+                  // style={{ animationDelay: `${i * 0.3}s` }}
                 />
               ))}
             </div>

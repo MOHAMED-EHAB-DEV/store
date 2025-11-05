@@ -310,7 +310,7 @@ function rehypeShiki() {
                                         "border-purple-500/30",
                                     ],
                                 },
-                                children: [{ type: "text", value: lang.toUpperCase() }],
+                                children: [{ type: "text", value: lang?.toUpperCase() }],
                             }
                             : null,
                         {

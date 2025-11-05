@@ -1,18 +1,18 @@
 "use client";
 
-import React, {useState, useEffect, Suspense, useRef, useCallback} from 'react';
+import React, { useState, useEffect, Suspense, useRef, useCallback } from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
-import {builtWithOptions} from "@/constants";
-import {Search} from "@/components/ui/svgs/Icons";
+import { builtWithOptions } from "@/constants";
+import { Search } from "@/components/ui/svgs/Icons";
 import { ICategory, ITemplate } from '@/types';
 
 declare type selected = {
     selected: boolean,
 }
 
-const Templates = ({initialData, categories, isHome = false}: {
+const Templates = ({ initialData, categories, isHome = false }: {
     initialData: ITemplate[],
     categories: ICategory[],
     isHome?: Boolean
@@ -46,7 +46,7 @@ const Templates = ({initialData, categories, isHome = false}: {
     }))
 
     const [selectedBuiltWithOptions, setSelectedBuiltWithOptions] = useState<{
-        Icon: ({className}: { className: string }) => React.JSX.Element,
+        Icon: ({ className }: { className: string }) => React.JSX.Element,
         text: string,
         selected: boolean
     }[]>(uniqueBuiltWithOptions);
@@ -74,28 +74,28 @@ const Templates = ({initialData, categories, isHome = false}: {
             setIsLoading(true);
             try {
                 const categories = selectedCategories
-                    .filter(({selected}) => selected)
-                    .map(({_id}) => _id)
+                    .filter(({ selected }) => selected)
+                    .map(({ _id }) => _id)
                     .join(",");
 
                 const tags = selectedTags
-                    .filter(({selected}) => selected)
-                    .map(({tag}) => tag)
+                    .filter(({ selected }) => selected)
+                    .map(({ tag }) => tag)
                     .join(",");
 
                 const builtWith = selectedBuiltWithOptions
-                    .filter(({selected}) => selected)
-                    .map(({text}) => text.toLowerCase())
+                    .filter(({ selected }) => selected)
+                    .map(({ text }) => text.toLowerCase())
                     .join(",");
 
                 const params = new URLSearchParams({
-                    ...(debouncedSearchQuery && {search: debouncedSearchQuery}),
-                    ...(categories && {categories}),
-                    ...(tags && {tags}),
-                    ...(builtWith && {builtWith}),
-                    ...(minPrice ? {minPrice: String(minPrice)} : {}),
-                    ...(maxPrice ? {maxPrice: String(maxPrice)} : {}),
-                    ...(minRating ? {minRating: String(minRating)} : {}),
+                    ...(debouncedSearchQuery && { search: debouncedSearchQuery }),
+                    ...(categories && { categories }),
+                    ...(tags && { tags }),
+                    ...(builtWith && { builtWith }),
+                    ...(minPrice ? { minPrice: String(minPrice) } : {}),
+                    ...(maxPrice ? { maxPrice: String(maxPrice) } : {}),
+                    ...(minRating ? { minRating: String(minRating) } : {}),
                     sortBy: sortedBy,
                 });
 
@@ -122,7 +122,7 @@ const Templates = ({initialData, categories, isHome = false}: {
         <div className="flex flex-col gap-5">
             {isHome ? (
                 <div className="relative w-full flex-1">
-                    <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"/>
+                    <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                         type="text"
                         value={searchQuery}
@@ -166,31 +166,32 @@ const Templates = ({initialData, categories, isHome = false}: {
                     setMinPrice={setMinPrice}
                     setMaxPrice={setMaxPrice}
                     sortedBy={sortedBy}
-                    setSortedBy={setSortedBy}
-                />}
+                    setSortedBy={setSortedBy} 
+                    setSearch={setSearchQuery}
+                    search={searchQuery} />}
                 <Suspense fallback={
                     <div className="flex items-center justify-center flex-wrap gap-6">
                         {[...Array(6)].map((_, idx) => (
-                            <TemplateSkeleton key={idx}/>
+                            <TemplateSkeleton key={idx} />
                         ))}
                     </div>
                 }>
                     {isLoading ? (
                         <div className="flex items-center justify-center flex-wrap gap-6">
                             {[...Array(6)].map((_, idx) => (
-                                <TemplateSkeleton key={idx}/>
+                                <TemplateSkeleton key={idx} />
                             ))}
                         </div>
                     ) : templates.length > 0 ? (
                         <div className={`grid grid-cols-1 ${isHome ? "md:grid-cols-2" : "md:grid-cols-3"} gap-5`}>
                             {templates.map((template, idx) => <Template showActionButtons={true} showPrice={true}
-                                                                        key={template._id} template={template}
-                                                                        idx={idx}/>)}
+                                key={template._id} template={template}
+                                idx={idx} />)}
                         </div>
                     ) : (
                         <div className="flex flex-col items-center  text-center py-12">
                             <div className="w-32 h-32 mb-4">
-                                <Search className="w-full h-full text-gray-400 opacity-60"/>
+                                <Search className="w-full h-full text-gray-400 opacity-60" />
                             </div>
                             <h3 className="text-lg font-semibold text-white/90 mb-2">
                                 No templates found
@@ -205,8 +206,8 @@ const Templates = ({initialData, categories, isHome = false}: {
                                     <button
                                         onClick={() => {
                                             setSearchQuery("");
-                                            setSelectedCategories(categories.map(c => ({...c, selected: false})));
-                                            setSelectedTags((prev) => prev.map(t => ({...t, selected: false})));
+                                            setSelectedCategories(categories.map(c => ({ ...c, selected: false })));
+                                            setSelectedTags((prev) => prev.map(t => ({ ...t, selected: false })));
                                             setSelectedBuiltWithOptions((prev) => prev.map(b => ({
                                                 ...b,
                                                 selected: false

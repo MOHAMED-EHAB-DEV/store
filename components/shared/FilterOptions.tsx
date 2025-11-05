@@ -67,8 +67,8 @@ const FilterOptions = (
         setMaxPrice: Dispatch<SetStateAction<number>>;
         minRating: number;
         setMinRating: Dispatch<SetStateAction<number>>;
-        sortedBy: string;
-        setSortedBy: Dispatch<SetStateAction<String>>;
+        sortedBy: "popular" | "recent" | "rating" | "price" | "downloads";
+        setSortedBy: Dispatch<SetStateAction<"popular" | "recent" | "rating" | "price" | "downloads">>;
     }) => {
     const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
     const [isTagsOpen, setIsTagsOpen] = useState(false);

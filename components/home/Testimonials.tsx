@@ -14,14 +14,14 @@ export default function Testimonials() {
                     </h2>
                 </div>
 
-                <div className="relative overflow-hidden">
+                {/* <div className="relative overflow-hidden">
                     <HorizontialMarquee
                         items={testimonials}
                         speed={20}
                         direction="right"
                         className="py-8"
                     />
-                </div>
+                </div> */}
             </div>
         </section>
     );

@@ -7,13 +7,18 @@ import {HeroItems, testimonials} from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import AboutMe from "@/components/home/AboutMe";
-import FramerFeatures from "@/components/home/FramerFeatures";
-import CodedFeatures from "@/components/home/CodedFeatures";
-import FigmaFeatures from "@/components/home/FigmaFeatures";
+import dynamic from "next/dynamic";
+// import FramerFeatures from "@/components/home/FramerFeatures";
+// import CodedFeatures from "@/components/home/CodedFeatures";
+// import FigmaFeatures from "@/components/home/FigmaFeatures";
 // import Testimonials from "@/components/home/Testimonials";
 // import StickyCTA from "@/components/ui/StickyCTA";
 import Cta from "@/components/home/CTA";
 // import AnimatedTestimonialsDemo from "@/components/spectrumui/animated_testimonials";
+
+const FramerFeatures = dynamic(() => import('@/components/home/FramerFeatures'));
+const CodedFeatures = dynamic(() => import('@/components/home/CodedFeatures'));
+const FigmaFeatures = dynamic(() => import('@/components/home/FigmaFeatures'));
 
 gsap.registerPlugin(useGSAP);
 

@@ -17,8 +17,8 @@ const Template = ({
 }: {
     template: ITemplate;
     idx: number;
-    showPrice: Boolean;
-    showActionButtons: Boolean;
+    showPrice?: Boolean;
+    showActionButtons?: Boolean;
 }) => {
     const { favoriteTemplates, toggleFavorite } = useUser();
     const isFavorite = favoriteTemplates?.includes(template._id);
@@ -35,7 +35,7 @@ const Template = ({
 
             {/* Featured Badge */}
             {template.categories.some(
-                ({ name }: { name: string }) => name?.toLowerCase() === "featured"
+                (category) => category?.name?.toLowerCase() === "featured"
             ) && (
                     <div className="absolute top-4 left-4 z-10">
                         <Badge className="bg-linear-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">

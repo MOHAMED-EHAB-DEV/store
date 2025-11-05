@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/command";
 import {sonnerToast} from "@/components/ui/sonner";
 import {Input} from "@/components/ui/input";
+import { ICategory } from "@/types";
 
 const sortOptions: { value: "popular" | "recent" | "rating" | "price" | "downloads"; label: string; icon: string }[] = [
     {value: "popular", label: "Most Popular", icon: "🔥"},
@@ -46,8 +47,8 @@ const FilterOptions = (
         search: string;
         setSearch: Dispatch<SetStateAction<string>>;
         isHome: Boolean;
-        categories: ICategory[];
-        setCategories: Dispatch<SetStateAction<ICategory[]>>;
+        categories: ({ selected: boolean }&ICategory)[];
+        setCategories: Dispatch<SetStateAction<({ selected: boolean }&ICategory)[]>>;
         tags: { tag: string; selected: boolean }[];
         setTags: Dispatch<SetStateAction<{ tag: string; selected: boolean }[]>>;
         builtWithOptions: {

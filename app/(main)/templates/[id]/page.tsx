@@ -1,6 +1,6 @@
 import React from "react";
 import Template from "@/components/singleTemplate/Template";
-import { ITemplate } from "@/types";
+import { ICategory, ITemplate } from "@/types";
 
 const getTemplate = async (id: string) => {
   try {
@@ -27,7 +27,7 @@ const getTemplate = async (id: string) => {
 };
 
 const getSimilarTemplates = async (
-  categoryIds: string[],
+  categoryIds: string[] | ICategory[],
   builtWith: string,
   tags: string[],
   excludeId: string

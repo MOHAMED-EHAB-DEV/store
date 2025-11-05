@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { TemplateService } from "@/lib/services/TemplateService";
 import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
+import Template from "@/lib/models/Template";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -11,12 +12,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
     await connectToDatabase();
 
     const [template, totalReviews] = await Promise.all([
-      TemplateService.findById(id, {
-        includeContent: true,
-        lean: true,
-        select:
-          "_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt",
-      }),
+      Template.findById(id, { _id: 1, title: 1, description: 1, thumbnail: 1, price: 1, averageRating: 1, downloads: 1, categories: 1, tags: 1, demoLink: 1, builtWith: 1, createdAt: 1, content: 1, }),
       Review.countDocuments({ template: id }),
     ]);
     return NextResponse.json(

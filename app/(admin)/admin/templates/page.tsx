@@ -1,7 +1,6 @@
 import Templates from "@/components/shared/Templates";
 import Template from "@/lib/models/Template";
 import Category from "@/lib/models/Category";
-import {serializeCategory, serializeTemplate} from "@/lib/utils";
 import { ITemplate } from "@/types";
 
 const Page = async () => {

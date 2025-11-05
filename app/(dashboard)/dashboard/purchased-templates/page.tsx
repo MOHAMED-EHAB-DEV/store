@@ -1,19 +1,16 @@
 import Templates from "@/components/shared/Templates";
-import {TemplateService} from "@/lib/services/TemplateService";
-import {CategoryService} from "@/lib/services/CategoryService";
-import {serializeCategory, serializeTemplate} from "@/lib/utils";
+import Template from "@/lib/models/Template";
+import Category from "@/lib/models/Category";
+import { ITemplate } from "@/types";
 
 const Page = async () => {
-    const rawTemplates = await TemplateService.getPopularTemplates(15, 0);
-    const rawCategories = await CategoryService.getMainCategories();
-
-    const templates = rawTemplates.map(serializeTemplate);
-    const categories = rawCategories.map(serializeCategory);
+    const templates = await Template.find();
+    const categories = await Category.find();
     return (
         <div className="grid grid-rows-[auto_1fr] h-full w-full p-8 gap-10">
             <h1 className="text-white font-bold text-3xl">Purchased Templates</h1>
 
-            <Templates initialData={templates} categories={categories} />
+            <Templates initialData={templates as ITemplate[]} categories={categories} />
         </div>
     )
 }

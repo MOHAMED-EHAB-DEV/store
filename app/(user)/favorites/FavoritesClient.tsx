@@ -37,8 +37,7 @@ const FavoritesClient = () => {
     ) : templates.length > 0 ? (
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-5`}>
             {templates.map((template, idx) => <Template showActionButtons={true} showPrice={true}
-                key={template?._id! as string} template={template}
-                idx={idx}/>)}
+                key={template?._id! as string} template={template}/>)}
         </div>
     ) : (
         <p className="text-gray-400 text-center">{errorMessage ? errorMessage : "No favorite templates found."}</p>

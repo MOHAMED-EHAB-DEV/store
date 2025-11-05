@@ -665,7 +665,7 @@ export interface ITemplateModel extends Model<ITemplate> {
 }
 
 const Template =
-  (mongoose.models.Template as ITemplateModel) ||
+  (mongoose.models.Template as unknown as ITemplateModel) ||
   mongoose.model<ITemplate, ITemplateModel>("Template", TemplateSchema);
 
 if (process.env.NODE_ENV !== "production") {

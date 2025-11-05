@@ -77,7 +77,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   }
 
   const { data: similarTemplates, error } = await getSimilarTemplates(
-    template.categories.map((category) => category) || [],
+    template.categories || [],
     template.builtWith,
     template.tags || [],
     id

@@ -38,7 +38,7 @@ const Navbar = () => {
             <div className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
                 scrolled ? 'py-6' : 'py-8'
             }`}>
-                <Logo onClick={() => router.push("/")} className={!user && "flex-1"} />
+                <Logo onClick={() => router.push("/")} className={!user ? "flex-1" : ""} />
 
                 <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-5 items-center justify-center`}>
                     {NavigationLinks.map(({id, text, link}) => (
@@ -66,7 +66,7 @@ const Navbar = () => {
                         <Suspense fallback={<Loader/>}>
                             <div className="flex items-center justify-end">
                                 <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
-                                                 userEmail={user?.email} userRole={user?.role as String} userFavorites={favoriteTemplates.length}/>
+                                                 userEmail={user?.email} userRole={user?.role as string} userFavorites={favoriteTemplates.length}/>
                             </div>
                         </Suspense>
                     )}

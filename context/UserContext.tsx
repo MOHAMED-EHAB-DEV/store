@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import { ITemplate, IUser } from "@/types";
 
 interface IUserContext {
     user: IUser | null;
@@ -27,9 +28,9 @@ const UserContext = createContext<IUserContext>({
 
 export function UserProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<IUser | null>(null);
     const [reload, setReload] = useState(false);
-    const [favoriteTemplates, setFavoriteTemplates] = useState([]);
+    const [favoriteTemplates, setFavoriteTemplates] = useState<String[]>([]);
     const [purchasedTemplates, setPurchasedTemplates] = useState([]);
 
     const fetchUser = async () => {
@@ -69,12 +70,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     const addToFavorites = async (templateId: string) => {
         if (!user) return;
-        setFavoriteTemplates((prev) => [...prev, templateId]);
+        setFavoriteTemplates((prev) => [...prev, templateId] as String[]);
         try {
             const res = await fetch("/api/user/favorites", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user._id, templateId, action: "add" }),
+                body: JSON.stringify({ userId: user?._id, templateId, action: "add" }),
             });
             const data = await res.json();
             if (!data.success) {

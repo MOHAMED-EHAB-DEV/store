@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import { UserService } from "@/lib/services/UserService";
+import User from "@/lib/models/User";
 
 interface PasswordUpdateRequest {
     email: string;
@@ -85,13 +86,9 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         }
 
         // Find user with password field included using UserService
-        const dbUser = await UserService.findByEmail(
-            email, 
-            { 
-                select: '_id email password name',
-                includePassword: true, // This will bypass cache for security
-                lean: true,
-            }
+        const dbUser = await User.findOne(
+            { email },
+            { password: 1, email: 1 }
         );
 
         if (!dbUser) {
@@ -102,7 +99,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         }
 
         // Security check: ensure user can only update their own password
-        if (sessionUser.email !== dbUser.email) {
+        if (sessionUser.email !== dbUser?.email) {
             return NextResponse.json({
                 success: false,
                 message: "Unauthorized. You can only update your own password."
@@ -110,7 +107,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         }
 
         // Verify current password (use await for proper error handling)
-        const isValidPassword = await bcrypt.compare(password, dbUser.password! as string);
+        const isValidPassword = await bcrypt.compare(password, dbUser?.password! as string);
         
         if (!isValidPassword) {
             return NextResponse.json({

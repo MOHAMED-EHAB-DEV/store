@@ -6,7 +6,7 @@ import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
 
-export async function authenticateUser(connectDB:Boolean=false, isId:Boolean=false) {
+export async function authenticateUser(connectDB:Boolean=false, includeId:Boolean=false) {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get("token");
@@ -25,7 +25,7 @@ export async function authenticateUser(connectDB:Boolean=false, isId:Boolean=fal
         if(connectDB) await connectToDatabase();
         const user = await User.findOne(
             { _id: decoded.id },
-            { _id: isId ? 1 : 0 }
+            { _id: includeId ? 1 : 0 }
         );
 
         if (!user) throw new Error("User not found");

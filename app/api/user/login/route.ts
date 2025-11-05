@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { connectToDatabase, measureQuery } from "@/lib/database";
 import { UserService } from "@/lib/services/UserService";
+import User from "@/lib/models/User";
 
 // Types for better type safety
 interface LoginRequest {
@@ -85,13 +86,9 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         await connectToDatabase();
 
         // Find user with password using UserService
-        const user = await UserService.findByEmail(
-            normalizedEmail,
-            {
-                select: '_id name email password role avatar',
-                includePassword: true, // This bypasses cache for security
-                lean: true
-            }
+        const user = await User.findOne(
+            {email: normalizedEmail},
+            { password: 1, name: 1, email: 1, role: 1, avatar: 1 }
         );
 
         if (!user) {

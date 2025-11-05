@@ -10,7 +10,7 @@ export async function GET() {
         const user = await authenticateUser(false, true);
         if (!user) return NextResponse.json({success: false, message: "unauthorized access"}, {status: 400});
 
-        const purchasedTemplates = (await User.findOne(user._id).select("purchasedTemplates"))?.purchasedTemplates;
+        const purchasedTemplates = (await User.findById(user?._id).select("purchasedTemplates"))?.purchasedTemplates;
         if (!purchasedTemplates) return NextResponse.json({success: false, message: "Something went error"}, {status:400});
 
         return NextResponse.json({success: true, data: purchasedTemplates}, {status: 200});

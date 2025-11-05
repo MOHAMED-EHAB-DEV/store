@@ -46,7 +46,7 @@ const Navbar = () => {
                     ))}
                 </nav>
                 <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
-                    <MobileDrawer user={user?.user}/>
+                    <MobileDrawer user={user as IUser}/>
                     {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
                         {/* <Link
                             className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-6 py-3 rounded-full text-white font-medium text-base backdrop-blur-sm"
@@ -94,7 +94,7 @@ const NavbarItem = ({text, link}: { text: string, link: string }) => {
     );
 };
 
-const MobileDrawer = ({user}: { user: IUser | undefined }) => {
+const MobileDrawer = ({user}: { user: IUser }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (

@@ -25,7 +25,7 @@ declare type ITemplate = {
     demoLink: string;
     price: number;
     content: string;
-    categories: ICategory[];
+    categories: ICategory[] | string[];
     gradient?: string;
     reviews?: number;
     averageRating: number;

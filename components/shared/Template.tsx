@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
-import { ITemplate } from "@/types";
+import { ICategory, ITemplate } from "@/types";
 
 const Template = ({
     template,
@@ -35,7 +35,7 @@ const Template = ({
 
             {/* Featured Badge */}
             {template.categories.some(
-                (category) => category?.name?.toLowerCase() === "featured"
+                (category) => (category as ICategory)?.name?.toLowerCase() === "featured"
             ) && (
                     <div className="absolute top-4 left-4 z-10">
                         <Badge className="bg-linear-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">

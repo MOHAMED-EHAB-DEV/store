@@ -185,8 +185,7 @@ const Templates = ({ initialData, categories, isHome = false }: {
                     ) : templates.length > 0 ? (
                         <div className={`grid grid-cols-1 ${isHome ? "md:grid-cols-2" : "md:grid-cols-3"} gap-5`}>
                             {templates.map((template, idx) => <Template showActionButtons={true} showPrice={true}
-                                key={template._id} template={template}
-                                idx={idx} />)}
+                                key={template._id} template={template} />)}
                         </div>
                     ) : (
                         <div className="flex flex-col items-center  text-center py-12">

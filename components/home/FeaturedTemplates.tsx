@@ -70,7 +70,7 @@ const FeaturedTemplates = async () => {
                         : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-12">
                                 {templates.map((template, idx) => (
-                                    <Template template={template} idx={idx} key={template._id}/>
+                                    <Template template={template} key={template._id}/>
                                 ))}
                             </div>
                         )

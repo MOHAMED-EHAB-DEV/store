@@ -11,12 +11,10 @@ import { ICategory, ITemplate } from "@/types";
 
 const Template = ({
     template,
-    idx,
     showPrice = false,
     showActionButtons = false,
 }: {
     template: ITemplate;
-    idx: number;
     showPrice?: Boolean;
     showActionButtons?: Boolean;
 }) => {

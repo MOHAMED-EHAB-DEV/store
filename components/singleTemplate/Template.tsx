@@ -20,7 +20,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 price={template.price}
                 currency="USD"
                 tags={template.tags}
-                categories={template.categories}
+                categories={template.categories.map((cat: any) => { return { name: cat.name, slug: cat.slug } })}
                 builtWith={template.builtWith}
                 averageRating={template.averageRating}
                 reviewCount={template.reviews}

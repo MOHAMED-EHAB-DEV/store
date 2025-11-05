@@ -28,7 +28,7 @@ const ComingSoon: React.FC<ComingSoonProps> = ({ dateUnlocked, title, descriptio
 
             if (distance <= 0) {
                 clearInterval(interval);
-                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                setTimeLeft({ days: 0, hours: 0, minutes: 0 });
                 return;
             }
 

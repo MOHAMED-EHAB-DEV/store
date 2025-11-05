@@ -125,7 +125,7 @@ UserSchema.index({
 });
 
 UserSchema.virtual('isLocked').get(function () {
-    return !!(this.lockUntil && this.lockUntil > Date.now());
+    return !!(this.lockUntil && this.lockUntil > new Date());
 });
 
 UserSchema.statics.findByEmail = function (email: string) {

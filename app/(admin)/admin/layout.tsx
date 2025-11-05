@@ -11,7 +11,7 @@ export default async function RootLayout(
     }: Readonly<{
         children: React.ReactNode;
     }>) {
-    const user = await authenticateUser();
+    const user = await authenticateUser(true);
 
     if (!user) redirect("/");
     return (

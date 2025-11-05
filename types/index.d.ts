@@ -31,14 +31,15 @@ declare type ITemplate = {
     downloads: number;
     averageRating: number;
     isActive: boolean; // Add for soft delete
-    builtWith: "framer" | "figma" | "vite";
+    builtWith: "framer" | "figma" | "vite" | "next.js";
     views: number;
     reviewCount: number;
-    isFeatured: boolean;
+    type: "framer" | "coded" | "figma";
+    isPaid: Boolean;
     createdAt: Date;
     updatedAt: Date;
     lastViewedAt: Date;
-    reviews?: number;
+    fileKey: String;
 }
 
 declare type IOrder = {

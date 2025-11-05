@@ -1,4 +1,4 @@
-import { ITemplate } from "@/types";
+import { ICategory, ITemplate } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -28,7 +28,7 @@ export const serializeTemplate = (doc: ITemplate) => ({
 export const serializeCategory = (doc: ICategory) => ({
     ...doc,
     _id: `${doc._id}`,
-    parent: doc.parent ? `${doc.parent}` : null,
+    parent: doc?.parent ? `${doc.parent}` : null,
     createdAt: doc.createdAt?.toISOString?.(),
     updatedAt: doc.updatedAt?.toISOString?.(),
 });

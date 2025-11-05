@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
+import { IUser } from "@/types";
 
 export async function authenticateUser(connectDB:Boolean=false, isId:Boolean=false) {
     try {

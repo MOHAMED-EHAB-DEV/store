@@ -83,9 +83,9 @@ const UserSchema = new Schema<IUser>({
     versionKey: false,
     toJSON: {
         transform: function (doc, ret) {
-            delete ret.password;
-            delete ret.loginAttempts;
-            delete ret.lockUntil;
+            delete (ret as Partial<IUser>).password;
+            delete (ret as Partial<IUser>).loginAttempts;
+            delete (ret as Partial<IUser>).lockUntil;
             return ret;
         }
     },
@@ -267,7 +267,7 @@ export interface IUserModel extends Model<IUser> {
 }
 
 const User =
-  (mongoose.models.User as IUserModel) ||
+  (mongoose.models.User as unknown as IUserModel) ||
   mongoose.model<IUser, IUserModel>("User", UserSchema);
 
 // Create indexes if they don't exist (development only)

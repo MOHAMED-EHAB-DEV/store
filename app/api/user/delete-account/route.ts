@@ -1,7 +1,6 @@
 import {NextResponse} from "next/server";
 import bcrypt from "bcryptjs";
 import {connectToDatabase} from "@/lib/database";
-import {UserService} from "@/lib/services/UserService";
 import User from "@/lib/models/User";
 
 // Types for better type safety
@@ -79,7 +78,7 @@ export async function DELETE(req: Request): Promise<NextResponse<ApiResponse>> {
         // Connect to database
         await connectToDatabase();
 
-        // Find user with password using UserService
+        // Find user with password
         const user = await User.findOne(
             {email: normalizedEmail},
             { password: 1, email: 1 }
@@ -102,8 +101,8 @@ export async function DELETE(req: Request): Promise<NextResponse<ApiResponse>> {
             }, {status: 401});
         }
 
-        // Delete User using User Service
-        await UserService.deleteUser(user._id.toString());
+        // Delete User
+        await User.findByIdAndDelete(user._id.toString());
 
         const duration = Date.now() - startTime;
 

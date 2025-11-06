@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
-import { UserService } from "@/lib/services/UserService";
 import { connectToDatabase } from "@/lib/database";
+import User from "@/lib/models/User";
 
 interface ApiResponse {
     success: boolean;
@@ -22,12 +22,9 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
             user = await authenticateUser();
             if (user) {
                 // Update last logout time
-                await UserService.updateUser(user._id, {
+                await User.findByIdAndUpdate(user._id, {
                     lastLogout: new Date()
                 });
-
-                // Clear user cache
-                UserService.clearUserCache(user._id);
             }
         } catch (authError) {
             // Don't fail logout if we can't authenticate

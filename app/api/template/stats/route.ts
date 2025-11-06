@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { TemplateService } from '@/lib/services/TemplateService';
+import Template from '@/lib/models/Template';
 
 export async function GET() {
-    const stats = await TemplateService.getStats();
+    const stats = await Template.getTemplateStats();
     return NextResponse.json(stats[0] || {});
 }

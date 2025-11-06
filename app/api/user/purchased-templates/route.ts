@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
-import { UserService } from "@/lib/services/UserService";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 

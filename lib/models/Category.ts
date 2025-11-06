@@ -10,6 +10,8 @@ export interface ICategory extends Document {
   templateCount: number;
   sortOrder: number;
   parentCategory?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 
   // Instance methods
   updateTemplateCount(): Promise<void>;

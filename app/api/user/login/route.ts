@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { connectToDatabase, measureQuery } from "@/lib/database";
-import { UserService } from "@/lib/services/UserService";
+import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 
 // Types for better type safety
@@ -85,7 +84,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         // Connect to database
         await connectToDatabase();
 
-        // Find user with password using UserService
+        // Find user with password
         const user = await User.findOne(
             {email: normalizedEmail},
             { password: 1, name: 1, email: 1, role: 1, avatar: 1 }
@@ -119,8 +118,8 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             { expiresIn: "7d" }
         );
 
-        // Update last login using UserService
-        await UserService.updateUser(user._id.toString(), {
+        // Update last login
+        await User.findByIdAndUpdate(user._id.toString(), {
             lastLogin: new Date()
         });
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { TemplateService } from '@/lib/services/TemplateService';
+import Template from '@/lib/models/Template';
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -9,6 +9,6 @@ export async function GET(req: NextRequest) {
 
     if (!categoryId) return NextResponse.json({ error: 'Missing categoryId' }, { status: 400 });
 
-    const templates = await TemplateService.getByCategory(categoryId, limit, skip);
+    const templates = await Template.findByCategory(categoryId, limit, skip);
     return NextResponse.json(templates);
 }

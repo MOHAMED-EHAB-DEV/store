@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TemplateService } from "@/lib/services/TemplateService";
 import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
-import { ITemplate } from "@/types";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -30,7 +28,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     const body = await req.json();
-    const updated = await TemplateService.updateTemplate(id, body);
+    const updated = await Template.findByIdAndUpdate(id, body);
     return NextResponse.json(
       {
         success: true,
@@ -48,7 +46,9 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 export async function POST(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
-    await TemplateService.deleteTemplate(id, true); // soft delete
+    await Template.findOneAndUpdate(id, {
+      isActive: false,
+    }); // soft delete
     return NextResponse.json({
       success: true,
       message: "Template disabled Successfully",
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
 export async function DELETE(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
-    const deleted = await TemplateService.deleteTemplate(id, false); // Delete from database
+    await Template.findByIdAndDelete(id); // Delete from database
     return NextResponse.json({
       success: true,
       message: "Template deleted Successfully",

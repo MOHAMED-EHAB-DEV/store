@@ -1,5 +1,4 @@
 import {NextRequest, NextResponse} from "next/server";
-import {TemplateService} from "@/lib/services/TemplateService";
 import {connectToDatabase} from "@/lib/database";
 import Template from "@/lib/models/Template";
 import Review from "@/lib/models/Review";

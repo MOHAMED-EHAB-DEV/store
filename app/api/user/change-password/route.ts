@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
-import { UserService } from "@/lib/services/UserService";
 import User from "@/lib/models/User";
 
 interface PasswordUpdateRequest {
@@ -85,7 +84,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             }, { status: 401 });
         }
 
-        // Find user with password field included using UserService
+        // Find user with password field included
         const dbUser = await User.findOne(
             { email },
             { password: 1, email: 1 }
@@ -129,17 +128,14 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         const saltRounds = 12;
         const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
-        // Update password using UserService
-        const updatedUser = await UserService.updateUser(
+        // Update password
+        const updatedUser = await User.findByIdAndUpdate(
             dbUser._id.toString(),
             { 
                 password: hashedNewPassword,
                 passwordUpdatedAt: new Date()
-            },
-            {
-                select: '_id name email role avatar updatedAt'
             }
-        );
+        ).select("_id name email role avatar updatedAt").lean();
 
         const duration = Date.now() - startTime;
 

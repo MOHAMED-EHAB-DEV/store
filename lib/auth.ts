@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "./models/User";
 import { cookies } from "next/headers";
-import {connectToDatabase} from "./database";
 
 // Server-side auth
 export async function getUserFromServer({headerToken=""}:{headerToken:string}) {

@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { ITemplate, IUser } from "@/types";
+import { IUser } from "@/types";
 
 interface IUserContext {
     user: IUser | null;

@@ -1,215 +1,249 @@
-import mongoose, {Model, Schema, Document, ObjectId} from "mongoose";
+import mongoose, { Model, Schema, Document, Types } from "mongoose";
 
 export interface IOrder extends Document {
-    _id: string;
-    user: ObjectId;
-    templates: ObjectId[]; // Fixed: should be array based on schema
-    totalAmount: number;
-    paymentStatus: string;
-    paymentMethod: string;
-    paymentId?: string; // Add payment provider ID
-    currency: string; // Add currency support
+  _id: string;
+  user: Types.ObjectId;
+  templates: Types.ObjectId[];
+  totalAmount: number;
+  paymentStatus: "pending" | "completed" | "failed" | "refunded" | "cancelled";
+  paymentMethod: "credit_card" | "paypal" | "stripe";
+  paymentId?: string;
+  currency: "USD" | "EUR" | "GBP";
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const OrderSchema = new Schema<IOrder>({
-    user: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "User", 
-        required: true,
-        index: true // Primary lookup field
+interface IOrderModel extends Model<IOrder> {
+  findUserOrders(userId: string, limit?: number, skip?: number): Promise<IOrder[]>;
+  findCompletedOrdersByUser(userId: string): Promise<IOrder[]>;
+  getRevenueStats(startDate?: Date, endDate?: Date): Promise<any>;
+  getTemplatePopularityStats(limit?: number): Promise<any>;
+  findPendingOrders(olderThanMinutes?: number): Promise<IOrder[]>;
+}
+
+const OrderSchema = new Schema<IOrder>(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
     },
-    templates: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
+    templates: [
+      {
+        type: Schema.Types.ObjectId,
         ref: "Template",
-        required: true
-    }],
-    totalAmount: { 
-        type: Number, 
         required: true,
-        min: 0,
-        index: true // For revenue queries
+      },
+    ],
+    totalAmount: {
+      type: Number,
+      required: true,
+      min: 0,
+      index: true,
     },
-    paymentStatus: { 
-        type: String, 
-        enum: ["pending", "completed", "failed", "refunded", "cancelled"], 
-        default: "pending",
-        index: true // Critical for status queries
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "completed", "failed", "refunded", "cancelled"],
+      default: "pending",
+      index: true,
     },
-    paymentMethod: { 
-        type: String, 
-        enum: ["credit_card", "paypal", "stripe"], 
-        default: "stripe"
+    paymentMethod: {
+      type: String,
+      enum: ["credit_card", "paypal", "stripe"],
+      default: "stripe",
     },
     paymentId: {
-        type: String,
-        sparse: true, // Allow null but index when present
-        index: true
+      type: String,
+      sparse: true,
+      index: true,
     },
     currency: {
-        type: String,
-        default: "USD",
-        enum: ["USD", "EUR", "GBP"] // Add supported currencies
-    }
-}, { 
+      type: String,
+      default: "USD",
+      enum: ["USD", "EUR", "GBP"],
+    },
+  },
+  {
     timestamps: true,
-    versionKey: false
-});
+    versionKey: false,
+  }
+);
 
-// Compound indexes for common query patterns
-OrderSchema.index({ user: 1, paymentStatus: 1, createdAt: -1 }); // User order history
-OrderSchema.index({ paymentStatus: 1, createdAt: -1 }); // Admin order management
-OrderSchema.index({ createdAt: -1, paymentStatus: 1 }); // Recent orders
-OrderSchema.index({ templates: 1, paymentStatus: 1 }); // Template sales tracking
-OrderSchema.index({ paymentId: 1, paymentStatus: 1 }); // Payment provider lookup
+//
+// 🧠 Indexes
+//
+OrderSchema.index({ user: 1, paymentStatus: 1, createdAt: -1 });
+OrderSchema.index({ paymentStatus: 1, createdAt: -1 });
+OrderSchema.index({ createdAt: -1, paymentStatus: 1 });
+OrderSchema.index({ templates: 1, paymentStatus: 1 });
+OrderSchema.index({ paymentId: 1, paymentStatus: 1 });
+OrderSchema.index(
+  { paymentStatus: 1, createdAt: 1 },
+  {
+    expireAfterSeconds: 7 * 24 * 60 * 60,
+    partialFilterExpression: { paymentStatus: "pending" },
+  }
+);
 
-// Static methods for optimized queries
-OrderSchema.statics.findUserOrders = function(userId: string, limit = 20, skip = 0) {
-    return this.find({ 
-        user: userId,
-        paymentStatus: { $in: ['completed', 'pending'] }
-    })
-        .select('template totalAmount paymentStatus paymentMethod currency createdAt')
-        .populate('templates', 'title thumbnail price')
-        .sort({ createdAt: -1 })
-        .limit(limit)
-        .skip(skip)
-        .lean();
+//
+// ⚙️ Static Methods
+//
+OrderSchema.statics.findUserOrders = function (userId: string, limit = 20, skip = 0) {
+  return this.find({
+    user: userId,
+    paymentStatus: { $in: ["completed", "pending"] },
+  })
+    .select("templates totalAmount paymentStatus paymentMethod currency createdAt")
+    .populate("templates", "title thumbnail price")
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .skip(skip)
+    .lean();
 };
 
-OrderSchema.statics.findCompletedOrdersByUser = function(userId: string) {
-    return this.find({ 
-        user: userId,
-        paymentStatus: 'completed'
-    })
-        .select('templates')
-        .lean();
+OrderSchema.statics.findCompletedOrdersByUser = function (userId: string) {
+  return this.find({
+    user: userId,
+    paymentStatus: "completed",
+  })
+    .select("templates")
+    .lean();
 };
 
-OrderSchema.statics.getRevenueStats = function(startDate?: Date, endDate?: Date) {
-    const matchStage: any = { paymentStatus: 'completed' };
-    
-    if (startDate || endDate) {
-        matchStage.createdAt = {};
-        if (startDate) matchStage.createdAt.$gte = startDate;
-        if (endDate) matchStage.createdAt.$lte = endDate;
-    }
+OrderSchema.statics.getRevenueStats = function (startDate?: Date, endDate?: Date) {
+  const matchStage: any = { paymentStatus: "completed" };
 
-    return this.aggregate([
-        { $match: matchStage },
-        {
-            $group: {
-                _id: null,
-                totalRevenue: { $sum: '$totalAmount' },
-                totalOrders: { $sum: 1 },
-                averageOrderValue: { $avg: '$totalAmount' },
-                revenueByMethod: {
-                    $push: {
-                        method: '$paymentMethod',
-                        amount: '$totalAmount'
-                    }
-                }
-            }
+  if (startDate || endDate) {
+    matchStage.createdAt = {};
+    if (startDate) matchStage.createdAt.$gte = startDate;
+    if (endDate) matchStage.createdAt.$lte = endDate;
+  }
+
+  return this.aggregate([
+    { $match: matchStage },
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: "$totalAmount" },
+        totalOrders: { $sum: 1 },
+        averageOrderValue: { $avg: "$totalAmount" },
+        revenueByMethod: {
+          $push: {
+            method: "$paymentMethod",
+            amount: "$totalAmount",
+          },
         },
-        {
-            $addFields: {
-                paymentMethodBreakdown: {
-                    $reduce: {
-                        input: '$revenueByMethod',
-                        initialValue: {},
-                        in: {
-                            $mergeObjects: [
-                                '$$value',
+      },
+    },
+    {
+      $addFields: {
+        paymentMethodBreakdown: {
+          $reduce: {
+            input: "$revenueByMethod",
+            initialValue: {},
+            in: {
+              $mergeObjects: [
+                "$$value",
+                {
+                  $arrayToObject: [
+                    [
+                      {
+                        k: "$$this.method",
+                        v: {
+                          $add: [
+                            {
+                              $ifNull: [
                                 {
-                                    $arrayToObject: [[{
-                                        k: '$$this.method',
-                                        v: {
-                                            $add: [
-                                                { $ifNull: [{ $getField: { field: '$$this.method', input: '$$value' } }, 0] },
-                                                '$$this.amount'
-                                            ]
-                                        }
-                                    }]]
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        }
-    ]);
+                                  $getField: {
+                                    field: "$$this.method",
+                                    input: "$$value",
+                                  },
+                                },
+                                0,
+                              ],
+                            },
+                            "$$this.amount",
+                          ],
+                        },
+                      },
+                    ],
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  ]);
 };
 
-OrderSchema.statics.getTemplatePopularityStats = function(limit = 20) {
-    return this.aggregate([
-        { $match: { paymentStatus: 'completed' } },
-        { $unwind: '$template' },
-        {
-            $group: {
-                _id: '$template',
-                purchaseCount: { $sum: 1 },
-                totalRevenue: { $sum: '$totalAmount' }
-            }
-        },
-        {
-            $lookup: {
-                from: 'templates',
-                localField: '_id',
-                foreignField: '_id',
-                as: 'template'
-            }
-        },
-        { $unwind: '$template' },
-        {
-            $project: {
-                templateId: '$_id',
-                templateTitle: '$template.title',
-                purchaseCount: 1,
-                totalRevenue: 1
-            }
-        },
-        { $sort: { purchaseCount: -1 } },
-        { $limit: limit }
-    ]);
+OrderSchema.statics.getTemplatePopularityStats = function (limit = 20) {
+  return this.aggregate([
+    { $match: { paymentStatus: "completed" } },
+    { $unwind: "$templates" }, // ✅ fixed typo here (was `$template`)
+    {
+      $group: {
+        _id: "$templates",
+        purchaseCount: { $sum: 1 },
+        totalRevenue: { $sum: "$totalAmount" },
+      },
+    },
+    {
+      $lookup: {
+        from: "templates",
+        localField: "_id",
+        foreignField: "_id",
+        as: "template",
+      },
+    },
+    { $unwind: "$template" },
+    {
+      $project: {
+        templateId: "$_id",
+        templateTitle: "$template.title",
+        purchaseCount: 1,
+        totalRevenue: 1,
+      },
+    },
+    { $sort: { purchaseCount: -1 } },
+    { $limit: limit },
+  ]);
 };
 
-OrderSchema.statics.findPendingOrders = function(olderThanMinutes = 30) {
-    const cutoffTime = new Date(Date.now() - olderThanMinutes * 60 * 1000);
-    
-    return this.find({
-        paymentStatus: 'pending',
-        createdAt: { $lte: cutoffTime }
-    })
-        .select('user paymentId paymentMethod totalAmount createdAt')
-        .populate('user', 'name email')
-        .sort({ createdAt: 1 })
-        .lean();
+OrderSchema.statics.findPendingOrders = function (olderThanMinutes = 30) {
+  const cutoffTime = new Date(Date.now() - olderThanMinutes * 60 * 1000);
+
+  return this.find({
+    paymentStatus: "pending",
+    createdAt: { $lte: cutoffTime },
+  })
+    .select("user paymentId paymentMethod totalAmount createdAt")
+    .populate("user", "name email")
+    .sort({ createdAt: 1 })
+    .lean();
 };
 
-// Pre-save middleware to update template download count
-OrderSchema.post('save', async function() {
-    if (this.paymentStatus === 'completed' && this.isModified('paymentStatus')) {
-        try {
-            const Template = mongoose.model('Template');
-            // Increment download count for all template in the order
-            await Template.updateMany(
-                { _id: { $in: this.templates } },
-                { $inc: { downloads: 1 } }
-            );
-        } catch (error) {
-            console.error('Error updating template download count:', error);
-        }
+//
+// 🔁 Post-save Hook
+//
+OrderSchema.post("save", async function (doc) {
+  if (doc.paymentStatus === "completed" && doc.isModified("paymentStatus")) {
+    try {
+      const Template = mongoose.model("Template");
+      await Template.updateMany(
+        { _id: { $in: doc.templates } },
+        { $inc: { downloads: 1 } }
+      );
+    } catch (err) {
+      console.error("Error updating template download count:", err);
     }
+  }
 });
 
-// Index for efficient cleanup of old pending orders
-OrderSchema.index({ 
-    paymentStatus: 1, 
-    createdAt: 1 
-}, { 
-    expireAfterSeconds: 7 * 24 * 60 * 60, // Auto-delete pending orders after 7 days
-    partialFilterExpression: { paymentStatus: 'pending' }
-});
-
-const Order: Model<IOrder> = mongoose.models.Order || mongoose.model<IOrder>("Order", OrderSchema);
+const Order =
+  (mongoose.models.Order as unknown as IOrderModel) ||
+  mongoose.model<IOrder, IOrderModel>("Order", OrderSchema);
 
 export default Order;

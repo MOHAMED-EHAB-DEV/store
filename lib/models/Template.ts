@@ -606,7 +606,7 @@ TemplateSchema.statics.getTrendingTemplates = function (days = 7, limit = 20) {
 };
 
 TemplateSchema.methods.incrementViews = function (amount = 1) {
-    return this.constructor.findByIdAndUpdate(
+    return this.findByIdAndUpdate(
         this._id,
         {
             $inc: {views: amount},

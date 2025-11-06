@@ -228,7 +228,7 @@ interface ReviewModel extends Model<IReview> {
 }
 
 const Review =
-  (mongoose.models.Review as ReviewModel) ||
+  (mongoose.models.Review as unknown as ReviewModel) ||
   mongoose.model<IReview, ReviewModel>("Review", ReviewSchema);
 
 export default Review;

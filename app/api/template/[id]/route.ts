@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 export async function POST(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
-    await Template.findOneAndUpdate(id, {
+    await Template.findByIdAndUpdate(id, {
       isActive: false,
     }); // soft delete
     return NextResponse.json({

@@ -16,23 +16,6 @@ export function isBase64Image(imageData: string) {
   return base64Regex.test(imageData);
 }
 
-export const serializeTemplate = (doc: ITemplate) => ({
-    ...doc,
-    _id: `${doc._id}`,
-    author: `${doc.author}`,
-    categories: doc.categories?.map((id: any) => `${id}`),
-    createdAt: doc.createdAt?.toISOString?.(),
-    updatedAt: doc.updatedAt?.toISOString?.(),
-});
-
-export const serializeCategory = (doc: ICategory) => ({
-    ...doc,
-    _id: `${doc._id}`,
-    parent: doc?.parent ? `${doc.parent}` : null,
-    createdAt: doc.createdAt?.toISOString?.(),
-    updatedAt: doc.updatedAt?.toISOString?.(),
-});
-
 export function formatCount(count: number): string {
     if (count < 1000) return count.toString();
     if (count < 1_000_000) return (count / 1000).toFixed(count % 1000 === 0 ? 0 : 1) + "K";

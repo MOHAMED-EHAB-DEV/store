@@ -235,7 +235,7 @@ const RegisterForm = () => {
 
             <button
                 type="submit"
-                disabled={loading || !agreed || formData.password !== formData.confirmPassword}
+                disabled={loading || formData.password !== formData.confirmPassword}
                 className="w-full btn btn-primary py-3 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {loading ? (

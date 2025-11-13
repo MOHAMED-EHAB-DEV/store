@@ -16,6 +16,7 @@ export interface IUser extends Document {
     isEmailVerified: boolean;
     loginAttempts: number;
     lockUntil?: Date;
+    tier: "free" | "premium";
 }
 
 const UserSchema = new Schema<IUser>({
@@ -76,6 +77,13 @@ const UserSchema = new Schema<IUser>({
     },
     lockUntil: {
         type: Date,
+    },
+    tier: {
+        type: String,
+        default: "free",
+        index: true,
+        lowercase: true,
+        enum: ["free", "premium"],
     }
 }, {
     timestamps: true,

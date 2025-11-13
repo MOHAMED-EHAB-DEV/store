@@ -165,7 +165,7 @@ const CodedFeatures = () => {
                     </div>
                     <div className="text-center mt-8">
                         <a
-                            href="/templates"
+                            href="/templates?type=coded"
                             className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                             aria-label="Browse code templates"
                         >

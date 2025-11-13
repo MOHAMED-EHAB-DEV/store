@@ -1,22 +1,30 @@
 "use client";
 
-import React, { useState, useEffect, Suspense, useRef, useCallback } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { builtWithOptions } from "@/constants";
 import { Search } from "@/components/ui/svgs/Icons";
 import { ICategory, ITemplate } from '@/types';
+import { useRouter } from 'next/navigation';
 
 declare type selected = {
     selected: boolean,
 }
 
-const Templates = ({ initialData, categories, isHome = false }: {
+const Templates = ({ initialData, categories, isHome = false, searchParams }: {
     initialData: ITemplate[],
     categories: ICategory[],
-    isHome?: Boolean
+    isHome?: Boolean,
+    searchParams: {
+        builtWith: string[] | string;
+        categories: string[] | string;
+        tags: string[] | string;
+    };
 }) => {
+    const router = useRouter();
+
     const isFirstRender = useRef(true);
     const [templates, setTemplates] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +34,7 @@ const Templates = ({ initialData, categories, isHome = false }: {
     const [selectedCategories, setSelectedCategories] = useState<(selected & ICategory)[]>(
         categories.map((category) => ({
             ...category,
-            selected: false,
+            selected: Array.isArray(searchParams?.categories) ? searchParams.categories.some((c) => c === category.name) : searchParams.categories === category.name,
         }))
     );
     const [minRating, setMinRating] = useState<number>(0);
@@ -38,11 +46,11 @@ const Templates = ({ initialData, categories, isHome = false }: {
         new Set(templates.flatMap((template) => template.tags))
     ).map((tag) => ({
         tag,
-        selected: false,
+        selected: Array.isArray(searchParams?.tags) ? searchParams.tags.some((t) => t === tag) : searchParams.tags === tag,
     }));
     const uniqueBuiltWithOptions = Array.from(new Set(builtWithOptions.flatMap((option) => option))).map((option) => ({
         ...option,
-        selected: false,
+        selected: Array.isArray(searchParams?.builtWith) ? searchParams.builtWith.some((b) => b === option.text) : searchParams.builtWith === option.text,
     }))
 
     const [selectedBuiltWithOptions, setSelectedBuiltWithOptions] = useState<{
@@ -63,6 +71,7 @@ const Templates = ({ initialData, categories, isHome = false }: {
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
+            router.replace("/templates", { scroll: false })
             return;
         }
         const fetchTemplates = async () => {
@@ -166,7 +175,7 @@ const Templates = ({ initialData, categories, isHome = false }: {
                     setMinPrice={setMinPrice}
                     setMaxPrice={setMaxPrice}
                     sortedBy={sortedBy}
-                    setSortedBy={setSortedBy} 
+                    setSortedBy={setSortedBy}
                     setSearch={setSearchQuery}
                     search={searchQuery} />}
                 <Suspense fallback={

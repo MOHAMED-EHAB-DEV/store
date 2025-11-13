@@ -5,7 +5,7 @@ import { Badge } from "../ui/badge";
 import { Framer, Layers } from "@/components/ui/svgs/Icons";
 import Image from "next/image";
 import { featuresBusinessSales } from "@/constants";
-import {VerticalMarquee} from "@/components/ui/marquee";
+import { VerticalMarquee } from "@/components/ui/marquee";
 
 const FramerFeatures = () => {
     const scrollableRef = useRef(null);
@@ -95,9 +95,9 @@ const FramerFeatures = () => {
                     <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
                 </Badge>
 
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-white font-paras font-bold w-full md:w-4/5 text-center">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-white font-paras font-bold w-full md:w-4/5 text-center">
                     Ship Websites Faster with Framer
-                </h1>
+                </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-[7fr_3fr] w-full gap-6 px-6 md:px-20">
@@ -126,9 +126,8 @@ const FramerFeatures = () => {
                                         4999$+
                                     </span>
                                     <div
-                                        className={`${
-                                            isVisible ? "w-full md:w-[80%]" : "w-0"
-                                        } h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}
+                                        className={`${isVisible ? "w-full md:w-[80%]" : "w-0"
+                                            } h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}
                                     />
                                 </div>
                             </div>
@@ -146,9 +145,8 @@ const FramerFeatures = () => {
                                 >
                                     <span className="z-10 text-white font-medium">99$</span>
                                     <div
-                                        className={`${
-                                            isVisible ? "w-[75%]" : "w-0"
-                                        } h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}
+                                        className={`${isVisible ? "w-[75%]" : "w-0"
+                                            } h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}
                                     />
                                 </div>
                             </div>
@@ -267,12 +265,12 @@ const FramerFeatures = () => {
             {/* Strategic CTA */}
             <div className="text-center mt-16 px-6">
                 <a
-                    href="/templates"
+                    href="/templates?type=framer"
                     className="group relative inline-flex items-center justify-center bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                     aria-label="Browse Framer templates"
                 >
                     <span className="relative z-10 flex items-center gap-2">
-                        <Framer className="w-6 h-6"/>
+                        <Framer className="w-6 h-6" />
                         Explore Framer Templates
                     </span>
                     <div className="absolute inset-0 bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />

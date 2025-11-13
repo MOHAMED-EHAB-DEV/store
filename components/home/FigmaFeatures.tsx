@@ -100,7 +100,7 @@ const FigmaFeatures = () => {
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             <a
-                                href="/templates"
+                                href="/templates?type=figma"
                                 className="group relative inline-flex items-center justify-center bg-linear-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-400 hover:via-red-400 hover:to-pink-400 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                                 aria-label="Browse Figma templates"
                             >

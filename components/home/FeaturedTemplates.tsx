@@ -1,16 +1,16 @@
-import {Badge} from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
-import {Star} from '@/components/ui/svgs/Icons';
+import { Star } from '@/components/ui/svgs/Icons';
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
-import {Suspense} from "react";
+import { Suspense } from "react";
 import { ITemplate } from '@/types';
 
 async function getTemplates() {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ? process.env.NEXT_PUBLIC_APP_URL : '/'}/api/template/featured`, {
             method: "GET",
-            next: {revalidate: 24 * 60 * 60}, // Revalidates in 24 hours
+            next: { revalidate: 24 * 60 * 60 }, // Revalidates in 24 hours
         });
         const data = await response.json();
 
@@ -35,23 +35,23 @@ const FeaturedTemplates = async () => {
                 {/* Section Header */}
                 <div className="text-center mb-20">
                     <Badge className="mb-6 bg-linear-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
-                        <Star className="w-5 h-5 mr-2 animate-pulse"/>
+                        <Star className="w-5 h-5 mr-2 animate-pulse" />
                         Featured Templates
                     </Badge>
                     <h2 className="header opacity-0 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
-                    Handpicked{' '}
-                    <span
-                        className="relative">
-                        Premium
-                        <div
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
-                    </span>{' '}
-                    Templates
-                </h2>
+                        Handpicked{' '}
+                        <span
+                            className="relative">
+                            Premium
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg" />
+                        </span>{' '}
+                        Templates
+                    </h2>
                     <p className="text-medium-contrast header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
-                    Discover our most popular and highest-rated templates, crafted with attention to detail and
-                    optimized for performance.
+                        Discover our most popular and highest-rated templates, crafted with attention to detail and
+                        optimized for performance.
                     </p>
                 </div>
 
@@ -70,7 +70,7 @@ const FeaturedTemplates = async () => {
                         : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-12">
                                 {templates.map((template, idx) => (
-                                    <Template template={template} key={template._id}/>
+                                    <Template template={template} key={template._id} />
                                 ))}
                             </div>
                         )
@@ -80,7 +80,7 @@ const FeaturedTemplates = async () => {
                 {/* View All Button */}
                 <div className="text-center mt-16">
                     <Link href="/templates"
-                          className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                        className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
                         <span className="relative z-10">View All Templates</span>
                         <div className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
                     </Link>

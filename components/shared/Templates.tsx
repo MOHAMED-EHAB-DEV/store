@@ -34,7 +34,7 @@ const Templates = ({ initialData, categories, isHome = false, searchParams }: {
     const [selectedCategories, setSelectedCategories] = useState<(selected & ICategory)[]>(
         categories.map((category) => ({
             ...category,
-            selected: Array.isArray(searchParams?.categories) ? searchParams.categories.some((c) => c === category.name) : searchParams.categories === category.name,
+            selected: Array.isArray(searchParams?.categories) ? searchParams.categories.some((c) => c === category.name) : searchParams?.categories === category.name,
         }))
     );
     const [minRating, setMinRating] = useState<number>(0);
@@ -46,11 +46,11 @@ const Templates = ({ initialData, categories, isHome = false, searchParams }: {
         new Set(templates.flatMap((template) => template.tags))
     ).map((tag) => ({
         tag,
-        selected: Array.isArray(searchParams?.tags) ? searchParams.tags.some((t) => t === tag) : searchParams.tags === tag,
+        selected: Array.isArray(searchParams?.tags) ? searchParams.tags.some((t) => t === tag) : searchParams?.tags === tag,
     }));
     const uniqueBuiltWithOptions = Array.from(new Set(builtWithOptions.flatMap((option) => option))).map((option) => ({
         ...option,
-        selected: Array.isArray(searchParams?.builtWith) ? searchParams.builtWith.some((b) => b === option.text) : searchParams.builtWith === option.text,
+        selected: Array.isArray(searchParams?.builtWith) ? searchParams.builtWith.some((b) => b === option.text) : searchParams?.builtWith === option.text,
     }))
 
     const [selectedBuiltWithOptions, setSelectedBuiltWithOptions] = useState<{

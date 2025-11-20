@@ -17,7 +17,7 @@ const Templates = ({ initialData, categories, isHome = false, searchParams }: {
     initialData: ITemplate[],
     categories: ICategory[],
     isHome?: Boolean,
-    searchParams: {
+    searchParams?: {
         builtWith: string[] | string;
         categories: string[] | string;
         tags: string[] | string;

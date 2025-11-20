@@ -2,7 +2,7 @@ const SplitText = (text: string, className: string = "") => {
     return text.split("").map((char, index) => (
         <span
             key={index}
-            className={`char inline-block! ${char === " " ? "w-[0.3em]" : "w-auto"} transition-transform duration-300 hover:scale-110 ${className}`}
+            className={`char inline-block! ${char === " " ? "w-[0.3em]" : "w-auto"} transition-transform duration-200 hover:scale-110 ${className}`}
             style={{
                 minWidth: char === " " ? "0.3em" : "auto",
             }}

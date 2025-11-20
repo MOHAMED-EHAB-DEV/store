@@ -17,7 +17,7 @@ const CodedFeatures = () => {
 
             ScrollTrigger.create({
                 trigger: ".code-section",
-                start: "top bottom",
+                start: "top 85%",
                 end: "bottom 50%",
                 onEnter: () => {
                     const codeTl = gsap.timeline();
@@ -40,10 +40,10 @@ const CodedFeatures = () => {
                         ".code-feature",
                         { opacity: 0, y: 50 },
                         {
-                            duration: 1,
+                            duration: 0.6,
                             y: 0,
                             opacity: 1,
-                            stagger: 0.1,
+                            stagger: 0.02,
                             ease: "power2.out",
                         },
                         "-=0.3"
@@ -53,10 +53,10 @@ const CodedFeatures = () => {
                         ".code-preview",
                         { opacity: 0, y: 100 },
                         {
-                            duration: 1.2,
+                            duration: 0.6,
                             y: 0,
                             opacity: 1,
-                            ease: "power3.out",
+                            ease: "power2.out",
                         },
                         "-=0.5"
                     );

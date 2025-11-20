@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 // import StickyCTA from "@/components/ui/StickyCTA";
 import Cta from "@/components/home/CTA";
 // import AnimatedTestimonialsDemo from "@/components/spectrumui/animated_testimonials";
+import Pricing from "@/components/home/Pricing";
 
 const FramerFeatures = dynamic(() => import('@/components/home/FramerFeatures'));
 const CodedFeatures = dynamic(() => import('@/components/home/CodedFeatures'));
@@ -138,6 +139,7 @@ export default async function Home() {
             <FramerFeatures/>
             <CodedFeatures/>
             <FigmaFeatures/>
+            <Pricing/>
             {/*<Testimonials/>*/}
             {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}
             <AboutMe/>

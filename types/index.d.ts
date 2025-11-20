@@ -15,6 +15,7 @@ declare type IUser = {
   isEmailVerified: boolean;
   loginAttempts: number;
   lockUntil?: Date;
+  tier: "free" | "premium";
 };
 
 declare type ITemplate = {

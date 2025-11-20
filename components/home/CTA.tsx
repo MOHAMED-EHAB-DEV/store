@@ -42,7 +42,7 @@ const Cta = () => {
     }, []);
 
     return (
-        <section className="cta-section relative z-10 px-6 py-20">
+        <section className="cta-section relative z-10 px-6 py-6">
             <div className="max-w-4xl mx-auto text-center">
                 {/* Box Gradient */}
                 <div className="cta-content bg-linear-to-br from-indigo-900 via-purple-900 to-teal-900 p-12 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)]">

@@ -40,6 +40,7 @@ const FramerFeatures = () => {
                     scrollTrigger: {
                         trigger: ".framer-header",
                         start: "top 85%",
+                        end: "bottom 30%"
                     },
                     opacity: 0,
                     y: 40,
@@ -53,6 +54,7 @@ const FramerFeatures = () => {
                         scrollTrigger: {
                             trigger: card,
                             start: "top 85%",
+                            end: "bottom 30%"
                         },
                         opacity: 0,
                         y: 60,
@@ -68,6 +70,7 @@ const FramerFeatures = () => {
                         scrollTrigger: {
                             trigger: video,
                             start: "top 85%",
+                            end: "bottom 30%"
                         },
                         opacity: 0,
                         scale: 0.95,
@@ -83,7 +86,7 @@ const FramerFeatures = () => {
     }, []);
 
     return (
-        <section className="flex flex-col w-full h-full items-center justify-center gap-6">
+        <section className="flex flex-col w-full h-full items-center justify-center gap-6 py-6">
             {/* Header Section */}
             <div className="flex flex-col items-center justify-center gap-2 framer-header">
                 <Badge

@@ -28,7 +28,7 @@ async function getTemplates() {
 const FeaturedTemplates = async () => {
     const templates: ITemplate[] = await getTemplates();
     return (
-        <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-20 md:py-24 relative">
+        <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 relative">
             {/* Section Background */}
             <div className="absolute inset-0 bg-linear-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
             <div className="relative z-10">
@@ -38,7 +38,7 @@ const FeaturedTemplates = async () => {
                         <Star className="w-5 h-5 mr-2 animate-pulse" />
                         Featured Templates
                     </Badge>
-                    <h2 className="header opacity-0 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
+                    <h2 className="header opacity-0 text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-high-contrast mb-8 font-paras leading-none tracking-tight">
                         Handpicked{' '}
                         <span
                             className="relative">

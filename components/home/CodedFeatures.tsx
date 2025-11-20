@@ -18,7 +18,7 @@ const CodedFeatures = () => {
             ScrollTrigger.create({
                 trigger: ".code-section",
                 start: "top 85%",
-                end: "bottom 50%",
+                end: "bottom 30%",
                 onEnter: () => {
                     const codeTl = gsap.timeline();
 
@@ -66,10 +66,10 @@ const CodedFeatures = () => {
     }, []);
 
     return (
-        <section className="code-section relative z-10 px-6 py-32">
+        <section className="code-section relative z-10 px-6 py-6">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="code-title text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-white mb-8 font-paras">
+                    <h2 className="code-title text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-8 font-paras">
                         {SplitText("Production-Ready Code")}
                     </h2>
                     <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">

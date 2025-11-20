@@ -1,8 +1,6 @@
 'use client';
 
 import {useLayoutEffect} from "react";
-// import {gsap} from "gsap";
-// import {ScrollTrigger} from "gsap/ScrollTrigger";
 import {Badge} from '@/components/ui/badge';
 import {
     Code,
@@ -13,37 +11,7 @@ import CountUp from '../ui/CountUp';
 import Link from 'next/link';
 import {stats, skills, badges} from "@/constants";
 
-// gsap.registerPlugin(ScrollTrigger);
-
 const AboutMe = () => {
-    // useLayoutEffect(() => {
-    //     // Animate header
-    //     gsap.from(".about-header", {
-    //         scrollTrigger: {
-    //             trigger: ".about-header",
-    //             start: "top 70%",
-    //             toggleActions: "play none none none",
-    //         },
-    //         y: 40,
-    //         opacity: 0,
-    //         duration: 1.5,
-    //         ease: "power3.out",
-    //     });
-    //
-    //     // Animate all cards
-    //     gsap.from(".about-card", {
-    //         scrollTrigger: {
-    //             trigger: ".about-card",
-    //             start: "top 80%",
-    //             toggleActions: "play none none none",
-    //         },
-    //         y: 50,
-    //         opacity: 0,
-    //         duration: 1,
-    //         stagger: 0.2,
-    //         ease: "power2.out",
-    //     });
-    // }, []);
 
     useLayoutEffect(() => {
         let ctx: gsap.Context | null = null;
@@ -88,13 +56,13 @@ const AboutMe = () => {
         return () => ctx?.revert();
     }, []);
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col gap-4 items-center justify-center">
+        <div className="w-full max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4 items-center justify-center">
             <div className="text-center mb-16 about-header">
                 <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-linear-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
                     <Sparkles className="w-4 h-4 mr-2"/>
                     About the Creator
                 </Badge>
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-white mb-6 font-paras">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-6 font-paras">
                     Meet{' '}
                     <span
                         className="bg-linear-to-r from-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">

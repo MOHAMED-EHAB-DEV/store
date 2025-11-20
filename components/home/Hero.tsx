@@ -86,7 +86,7 @@ const Hero = () => {
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
                     <h1
-                        className="font-bold header opacity-0 text-2xl sm:text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
+                        className="font-bold header opacity-0 text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-high-contrast leading-none tracking-tighter px-2 sm:px-0"
                     >
                         Premium Templates to{' '}
                         <span className="relative">
@@ -98,7 +98,7 @@ const Hero = () => {
                         Your Projects
                     </h1>
                     <p
-                        className="text-base sm:text-lg header opacity-0 md:text-xl lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
+                        className="text-base md:text-lg header opacity-0 lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
                         aria-describedby="hero-title"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.

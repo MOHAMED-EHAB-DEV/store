@@ -99,7 +99,7 @@ const Hero = () => {
                     </h1>
                     <p
                         className="text-base md:text-lg header opacity-0 lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
-                        aria-describedby="hero-title"
+                        aria-label="Hero Description"
                     >
                         Smart templates. Clean design. Built to help you move fast and look great doing it.
                         <span className="block mt-3 text-base md:text-lg text-low-contrast font-normal">

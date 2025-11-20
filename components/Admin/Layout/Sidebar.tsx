@@ -50,7 +50,7 @@ const Sidebar = ({open, setOpen, user}: {
             } `}
         >
             <div className="">
-                <button onClick={() => setOpen(false)}
+                <button onClick={() => setOpen(false)} aria-label="Close sidebar"
                         className="bg-transparent cursor-pointer flex items-center justify-center lg:hidden rounded-full absolute top-2 end-2 p-4">
                     <X/>
                 </button>

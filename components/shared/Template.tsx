@@ -46,7 +46,7 @@ const Template = ({
             {/* Favorite Button */}
             <Button
                 className={`absolute top-4 right-4 ${isFavorite ? "bg-pink-100" : "bg-white/75"
-                    } transition hover:bg-white/90 cursor-pointer z-20 rounded-full p-2 shadow-md`}
+                    } transition hover:bg-white/90 cursor-pointer z-20 rounded-full p-2 shadow-md`} aria-label="Toggle Favorite"
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

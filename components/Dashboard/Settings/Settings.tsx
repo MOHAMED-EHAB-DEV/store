@@ -113,6 +113,7 @@ const Settings = ({ userId }: { userId: string }) => {
                                     />
                                     <button
                                         type="button"
+                                        aria-label="Toggle password visibility"
                                         onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                                     >
@@ -138,6 +139,7 @@ const Settings = ({ userId }: { userId: string }) => {
                                     />
                                     <button
                                         type="button"
+                                        aria-label="Toggle confirm password visibility"
                                         onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                                     >

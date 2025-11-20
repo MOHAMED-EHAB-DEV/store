@@ -149,7 +149,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                 </div>
             </div>
 
-            <button disabled={isLoading}
+            <button disabled={isLoading} aria-label="Update Profile"
                     className={`self-end btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed`}
                     type="submit">
                 {isLoading ? "Updating Profile" : "Update Profile"}

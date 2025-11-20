@@ -53,6 +53,7 @@ const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
                             onMouseEnter={() => setHover(star)}
                             onMouseLeave={() => setHover(0)}
                             className="focus:outline-none"
+                            aria-label="Select rating"
                         >
                             <Star
                                 className={`w-8 h-8 transition-colors ${
@@ -80,6 +81,7 @@ const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
                         onClick={handleSubmit}
                         disabled={!rating || !comment.trim()}
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg disabled:opacity-50"
+                        aria-label="Submit review"
                     >
                         Submit
                     </button>

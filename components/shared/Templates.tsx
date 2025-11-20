@@ -225,6 +225,7 @@ const Templates = ({ initialData, categories, isHome = false, searchParams }: {
                                             setMaxPrice(0)
                                             setMinRating(0)
                                         }}
+                                        aria-label="Clear Filters"
                                         className="px-4 py-2 rounded-lg bg-gold text-black font-medium hover:bg-yellow-500 transition"
                                     >
                                         Clear Filters
@@ -232,6 +233,7 @@ const Templates = ({ initialData, categories, isHome = false, searchParams }: {
                                 )}
                                 <button
                                     onClick={() => window.location.reload()}
+                                    aria-label='Retry'
                                     className="px-4 py-2 rounded-lg border border-gray-600 text-white hover:bg-white/10 transition"
                                 >
                                     Retry

@@ -7,6 +7,7 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
       <button
         onClick={() => reset()}
         className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+        aria-label="Try again"
       >
         Try again
       </button>

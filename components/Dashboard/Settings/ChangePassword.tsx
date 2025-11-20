@@ -70,6 +70,7 @@ const ChangePassword = ({ user }: { user: IUser }) => {
                     />
                     <button
                         type="button"
+                        aria-label='Toggle password visibility'
                         onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                     >
@@ -84,7 +85,7 @@ const ChangePassword = ({ user }: { user: IUser }) => {
 
             <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Password
+                    New Password
                 </label>
                 <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
@@ -99,6 +100,7 @@ const ChangePassword = ({ user }: { user: IUser }) => {
                     />
                     <button
                         type="button"
+                        aria-label="Toggle new password visibility"
                         onClick={() => setIsNewPasswordVisible(!isPasswordVisible)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                     >
@@ -146,6 +148,7 @@ const ChangePassword = ({ user }: { user: IUser }) => {
                     />
                     <button
                         type="button"
+                        aria-label='Toggle password visibility'
                         onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                     >
@@ -164,7 +167,7 @@ const ChangePassword = ({ user }: { user: IUser }) => {
                     )}
             </div>
 
-            <button disabled={isLoading || passwordData.newPassword !== passwordData.confirmPassword} className={`self-end btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed`} type="submit">
+            <button disabled={isLoading || passwordData.newPassword !== passwordData.confirmPassword} className={`self-end btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed`} type="submit" aria-label="Submit New Password">
                 {isLoading ? "Updating Password" : "Update Password"}
             </button>
         </form>

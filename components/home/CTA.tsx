@@ -58,7 +58,7 @@ const Cta = () => {
                     </p>
                     <div className="flex flex-col items-center justify-center gap-4">
                         {/* Button Gradient */}
-                        <Link href="/templates" className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                        <Link aria-label="Start Exploring Now" href="/templates" className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
                             <span className="relative z-10 flex items-center gap-2">
                                 Start Exploring Now
                                 <Sparkles className="w-5 h-5 duration-500 transition-transform group-hover:rotate-12" />

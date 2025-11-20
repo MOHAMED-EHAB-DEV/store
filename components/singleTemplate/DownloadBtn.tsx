@@ -87,6 +87,7 @@ const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: stri
                 className="w-full cursor-pointer px-5 py-2.5 sm:py-3 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base"
                 onClick={isFree ? handleFreeDownload : handlePaidDownload}
                 disabled={loading}
+                aria-label={isFree ? "Download" : "Buy Now"}
             >
                 {loading ? "Downloading" : isFree ? "Download" : "Buy Now"}
             </button>

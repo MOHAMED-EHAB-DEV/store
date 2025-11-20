@@ -207,6 +207,7 @@ const ReviewsContainer = ({ templateId, averageRating, reviewCount }: { template
                 <button
                     onClick={handleShowMore}
                     disabled={loading}
+                    aria-label="Show More Reviews"
                     className="mt-4 px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700 disabled:opacity-50"
                 >
                     {loading ? "Loading..." : "Show More"}

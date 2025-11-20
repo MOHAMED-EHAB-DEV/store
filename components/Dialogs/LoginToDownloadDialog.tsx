@@ -29,10 +29,10 @@ export function LoginToDownloadDialog({ isOpen, onClose }: LoginToDownloadDialog
           <p>Creating an account is fast and easy. Join our community to get access to exclusive content and features!</p>
         </div>
         <div className="flex justify-end space-x-2">
-          <Button variant="outline" className="hover:bg-primary cursor-pointer" onClick={onClose}>
+          <Button aria-label="Cancel" variant="outline" className="hover:bg-primary cursor-pointer" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleLogin} className="border-2 border-primary hover:bg-transparent cursor-pointer">
+          <Button aria-label="Register a New Account" onClick={handleLogin} className="border-2 border-primary hover:bg-transparent cursor-pointer">
             Register a New Account
           </Button>
         </div>

@@ -1,5 +1,4 @@
-import ComingSoon from '@/components/shared/ComingSoon'
-import React from 'react'
+import ComingSoon from '@/components/shared/ComingSoon';
 
 const Page = () => {
     return (

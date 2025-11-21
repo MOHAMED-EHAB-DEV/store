@@ -53,6 +53,7 @@ const Pricing = () => {
     {
       name: 'Starter',
       price: '0$',
+      isPerMonth: true,
       description: 'Perfect for side projects and hobbyists.',
       features: ['Up to 3 Free Templates', "Community Support", 'Personal Use license'],
       cta: 'Get Started',
@@ -62,8 +63,9 @@ const Pricing = () => {
     {
       name: 'Pro',
       price: '$29',
+      isPerMonth: true,
       description: 'For growing teams and businesses.',
-      features: ['Unlimited Templates', "New template drops every month", 'Priority Support', 'Commercial Use license'],
+      features: ['Unlimited Templates', "50% OFF on Templates Customization", 'Priority Support', 'Commercial Use license'],
       cta: 'Try Pro',
       ctaLink: "/register",
       highlight: true,
@@ -71,9 +73,10 @@ const Pricing = () => {
     {
       name: "Lifetime",
       price: "399$",
+      isPerMonth: false,
       description: "For long term users",
-      features: ['Unlimited Templates', "New template drops every month", 'Priority Support', 'Commercial Use license'],
-      cta: 'Try Lifetime',
+      features: ["Unlimited access for lifetime", 'Access to all Templates', 'Priority Support', 'Commercial Use license'],
+      cta: 'Pay once, Build Forever',
       ctaLink: "/register",
       highlight: false,
     },
@@ -111,7 +114,7 @@ const Pricing = () => {
                   <h3 className="text-xl font-bold">{tier.name}</h3>
                   <div className="mt-2 flex items-baseline gap-1">
                     <span className="text-4xl font-bold tracking-tight">{tier.price}</span>
-                    {tier.price !== 'Custom' && <span className="text-sm font-semibold text-neutral-400">/month</span>}
+                    {tier.isPerMonth && <span className="text-sm font-semibold text-neutral-400">/month</span>}
                   </div>
                   <p className="mt-4 text-sm text-neutral-400">{tier.description}</p>
                 </div>

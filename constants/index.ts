@@ -46,6 +46,11 @@ const NavigationLinks = [
     },
     {
         id: 3,
+        text: "FAQs",
+        link: "/faqs",
+    },
+    {
+        id: 4,
         text: "Support",
         link: "/support",
     },

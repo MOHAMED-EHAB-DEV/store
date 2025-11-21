@@ -269,7 +269,7 @@ const FramerFeatures = () => {
             <div className="text-center mt-16 px-6">
                 <a
                     href="/templates?type=framer"
-                    className="group relative inline-flex items-center justify-center bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
+                    className="group relative inline-flex items-center justify-center bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-400 hover:via-purple-400 hover:to-pink-400 text-white px-12 py-5 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
                     aria-label="Browse Framer templates"
                 >
                     <span className="relative z-10 flex items-center gap-2">

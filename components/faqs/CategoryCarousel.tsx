@@ -19,7 +19,7 @@ export default function CategoryCarousel({
         loop: false,
         dragFree: true,
         containScroll: "trimSnaps",
-        startIndex: 2,
+        startIndex: 1,
     });
 
     const scrollPrev = useCallback(() => {
@@ -50,10 +50,10 @@ export default function CategoryCarousel({
 
             {/* Embla Carousel Container */}
             <div className="overflow-visible px-14" ref={emblaRef}>
-                <div className="flex gap-5 touch-pan-y">
+                <div className="flex gap-6 touch-pan-y">
                     {/* Category Cards */}
                     {FAQ_CATEGORIES.map((category) => (
-                        <div key={category.id} className="flex-[0_0_auto] w-64">
+                        <div key={category.id} className="flex-[0_0_auto] w-80">
                             <button
                                 onClick={() => onCategorySelect(category.id === selectedCategory ? null : category.id)}
                                 className={`w-full h-[200px] rounded-2xl p-6 flex flex-col items-center justify-center gap-4 border-2 transition-all duration-300 shadow-lg hover:shadow-2xl ${selectedCategory === category.id ? "bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 border-transparent text-white scale-105" : "bg-white dark:bg-gray-900 border-purple-200 dark:border-purple-800 hover:border-purple-500 dark:hover:border-purple-500 hover:scale-105"}`}

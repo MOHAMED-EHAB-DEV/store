@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sonnerToast } from "@/components/ui/sonner";
 import { Loader2 } from "@/components/ui/svgs/Icons";
-import {Dropzone, DropzoneContent, DropzoneEmptyState} from '@/components/ui/kibo-ui/dropzone';
-import {useUploadThing} from "@/hooks/useUploadthing";
+import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/ui/kibo-ui/dropzone';
+import { useUploadThing } from "@/hooks/useUploadthing";
 import Image from "next/image";
 import Loader from "@/components/ui/Loader";
 
@@ -27,7 +27,7 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
         isPublished: initialData?.isPublished || false,
     });
     const [isImageLoading, setIsImageLoading] = useState(false);
-    const [image, setImage] = useState();
+    const [image, setImage] = useState<string | undefined>();
     const [error, setError] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

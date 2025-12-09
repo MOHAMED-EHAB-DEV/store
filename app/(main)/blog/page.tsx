@@ -24,7 +24,7 @@ const getData = async (): Promise<BlogPost[]> => {
         const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
         const res = await fetch(`${domain}/api/blogs?limit=10`, {
             method: 'GET',
-            next: { revalidate: 300 } // Revalidate every 5 minutes for better performance
+            next: { revalidate: 300 }
         });
 
         if (!res.ok) return [];

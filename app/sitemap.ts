@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 async function getTemplates() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'}/api/template`, {
-            cache: 'no-store',
+            next: { revalidate: 60 * 60 * 24 },
         })
         if (!res.ok) return []
         const data = await res.json()
@@ -17,7 +17,7 @@ async function getTemplates() {
 async function getBlogs() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'}/api/blogs?limit=100`, {
-            cache: 'no-store',
+            next: { revalidate: 60 * 60 * 24 },
         })
         if (!res.ok) return []
         const data = await res.json()

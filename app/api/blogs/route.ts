@@ -18,7 +18,19 @@ export async function GET(req: NextRequest) {
 
     const query: any = {};
 
-    if (!isAdmin) query.isPublished = true;
+    if (searchParams.get("admin") === "true") {
+      const user = await authenticateUser(false, true);
+      if (user) {
+        const dbUser = await User.findById(user._id).select('role').lean();
+        if (dbUser?.role !== 'admin') {
+          query.isPublished = true;
+        }
+      } else {
+        query.isPublished = true;
+      }
+    } else {
+      query.isPublished = true;
+    }
 
     if (tag) {
       query.tags = tag;

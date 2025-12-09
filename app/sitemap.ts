@@ -1,10 +1,8 @@
 import { MetadataRoute } from 'next';
 
-export const dynamic = "force-dynamic";
-
 async function getTemplates() {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'}/api/template`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'}/api/template`, {
             cache: 'no-store',
         })
         if (!res.ok) return []
@@ -16,22 +14,22 @@ async function getTemplates() {
     }
 }
 
-// async function getCategories() {
-//     try {
-//         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'}/api/category`, {
-//             cache: 'no-store',
-//         })
-//         if (!res.ok) return []
-//         const data = await res.json()
-//         return data.categories || []
-//     } catch (error) {
-//         console.error('Error fetching categories for sitemap:', error)
-//         return []
-//     }
-// }
+async function getBlogs() {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'}/api/blogs?limit=100`, {
+            cache: 'no-store',
+        })
+        if (!res.ok) return []
+        const data = await res.json()
+        return data.success ? data.data : []
+    } catch (error) {
+        console.error('Error fetching blogs for sitemap:', error)
+        return []
+    }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://mhd-store.vercel.app'
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'
 
     // Static pages
     const staticPages = [
@@ -60,16 +58,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.7,
         },
         {
-            url: `${baseUrl}/signin`,
+            url: `${baseUrl}/faqs`,
             lastModified: new Date(),
             changeFrequency: 'monthly' as const,
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/register`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly' as const,
-            priority: 0.5,
+            priority: 0.6,
         },
     ]
 
@@ -82,19 +74,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
     }))
 
-    // TODO: Add Logic for getting categories
-    // Category pages (if you have category routing)
-    // const categories = await getCategories()
-    // const categoryPages = categories.map((category: any) => ({
-    //     url: `${baseUrl}/templates?category=${category.slug || category._id}`,
-    //     lastModified: category.updatedAt ? new Date(category.updatedAt) : new Date(),
-    //     changeFrequency: 'weekly' as const,
-    //     priority: 0.7,
-    // }))
+    // Dynamic blog pages
+    const blogs = await getBlogs()
+    const blogPages = blogs.map((blog: any) => ({
+        url: `${baseUrl}/blog/${blog.slug || blog._id}`,
+        lastModified: blog.updatedAt ? new Date(blog.updatedAt) : new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+    }))
 
     return [
         ...staticPages,
         ...templatePages,
-        // ...categoryPages,
+        ...blogPages,
     ]
 }

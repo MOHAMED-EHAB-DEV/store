@@ -78,15 +78,14 @@ const BlogSchema = new Schema<IBlog>(
 BlogSchema.index({ createdAt: -1 });
 BlogSchema.index({ publishedAt: -1, isPublished: 1 });
 BlogSchema.index({ tags: 1 });
+BlogSchema.index({ title: 'text', content: 'text', excerpt: 'text' });
 
-export interface IBlogModel extends Model<IBlog> {}
+export interface IBlogModel extends Model<IBlog> { }
 
 const Blog =
   (mongoose.models.Blog as unknown as IBlogModel) ||
   mongoose.model<IBlog, IBlogModel>("Blog", BlogSchema);
 
-if (process.env.NODE_ENV !== "production") {
-  Blog.syncIndexes().catch(console.error);
-}
+Blog.syncIndexes().catch(console.error);
 
 export default Blog;

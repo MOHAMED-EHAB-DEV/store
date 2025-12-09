@@ -36,7 +36,9 @@ const getInitialData = async ({ builtWith, categories, tags, type }: {
             }
         }
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${params.toString()}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${params.toString()}`, {
+            next: { revalidate: 300 }
+        });
 
         const data = await response.json();
         if (data.success) return data.data; else throw new Error("Failed to fetch templates");
@@ -47,7 +49,9 @@ const getInitialData = async ({ builtWith, categories, tags, type }: {
 
 const getCategories = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || ""}/api/categories`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || ""}/api/categories`, {
+            next: { revalidate: 3600 }
+        });
 
         const data = await response.json();
 

@@ -307,6 +307,11 @@ const AdminSidebarLinks = [
         Icon: Templates,
         text: "Templates",
         link: "/admin/templates",
+    },
+    {
+        Icon: Blocks,
+        text: "Blog",
+        link: "/admin/blogs",
     }
 ];
 
@@ -371,28 +376,28 @@ const testimonials = [
 
 // About Me
 const stats = [
-    {label: "Templates Created", value: "10+", icon: Code},
-    {label: "Happy Customers", value: "1K+", icon: Users},
-    {label: "Downloads", value: "2K+", icon: Download},
-    {label: "5-Star Reviews", value: "98%", icon: Star}
+    { label: "Templates Created", value: "10+", icon: Code },
+    { label: "Happy Customers", value: "1K+", icon: Users },
+    { label: "Downloads", value: "2K+", icon: Download },
+    { label: "5-Star Reviews", value: "98%", icon: Star }
 ];
 
 const skills = [
-    {name: "React & Next.js", level: 95, color: "from-blue-500 to-cyan-500"},
+    { name: "React & Next.js", level: 95, color: "from-blue-500 to-cyan-500" },
     // {name: "UI/UX Design", level: 90, color: "from-purple-500 to-pink-500"},
-    {name: "Tailwind CSS", level: 98, color: "from-green-500 to-teal-500"},
-    {name: "Framer Motion", level: 85, color: "from-orange-500 to-red-500"},
-    {name: "Figma Design", level: 92, color: "from-indigo-500 to-purple-500"},
-    {name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500"},
+    { name: "Tailwind CSS", level: 98, color: "from-green-500 to-teal-500" },
+    { name: "Framer Motion", level: 85, color: "from-orange-500 to-red-500" },
+    { name: "Figma Design", level: 92, color: "from-indigo-500 to-purple-500" },
+    { name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500" },
 ];
 
 const badges = [
-    {text: "Top Seller", icon: Award, gradient: "from-yellow-400 to-orange-500"},
-    {text: "Design Expert", icon: Palette, gradient: "from-purple-500 to-pink-500"},
-    {text: "Code Wizard", icon: Zap, gradient: "from-blue-500 to-cyan-500"},
-    {text: "Innovation Leader", icon: Rocket, gradient: "from-green-500 to-teal-500"},
-    {text: "Customer Favorite", icon: Heart, gradient: "from-red-500 to-pink-500"},
-    {text: "Quality Focused", icon: Target, gradient: "from-indigo-500 to-purple-500"}
+    { text: "Top Seller", icon: Award, gradient: "from-yellow-400 to-orange-500" },
+    { text: "Design Expert", icon: Palette, gradient: "from-purple-500 to-pink-500" },
+    { text: "Code Wizard", icon: Zap, gradient: "from-blue-500 to-cyan-500" },
+    { text: "Innovation Leader", icon: Rocket, gradient: "from-green-500 to-teal-500" },
+    { text: "Customer Favorite", icon: Heart, gradient: "from-red-500 to-pink-500" },
+    { text: "Quality Focused", icon: Target, gradient: "from-indigo-500 to-purple-500" }
 ];
 
 const builtWithOptions = [

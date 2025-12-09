@@ -6,12 +6,12 @@ import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
 
-export async function authenticateUser(connectDB:Boolean=false, includeId:Boolean=false) {
+export async function authenticateUser(connectDB: Boolean = false, includeId: Boolean = false): Promise<IUser | null> {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get("token");
 
-        if (!token) return;
+        if (!token) return null;
 
         const secret = process.env.JWT_SECRET;
         if (!secret) throw new Error("JWT secret is not defined");
@@ -22,13 +22,13 @@ export async function authenticateUser(connectDB:Boolean=false, includeId:Boolea
             throw new Error("Invalid token payload");
         }
 
-        if(connectDB) await connectToDatabase();
+        if (connectDB) await connectToDatabase();
         const user = await User.findOne(
             { _id: decoded.id },
             { _id: includeId ? 1 : 0 }
         );
 
-        if (!user) throw new Error("User not found");
+        if (!user) return null;
 
         return user as IUser;
     } catch (error) {

@@ -13,7 +13,7 @@ export default async function RootLayout(
     }>) {
     const user = await authenticateUser(true);
 
-    if (!user) redirect("/");
+    if (!user || user?.role !== "admin") redirect("/");
     return (
         <LayoutContainer user={user}>
             {children}

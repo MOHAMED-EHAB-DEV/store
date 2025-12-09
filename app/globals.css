@@ -526,7 +526,7 @@
   .toast .close {
     position: absolute;
     right: 20px;
-    top: 20px;
+    top: 30px;
     width: 36px;
     height: 36px;
     display: inline-flex;

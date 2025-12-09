@@ -1,20 +1,21 @@
 'use client';
 
-import {useState, Suspense, useEffect} from 'react';
-import {Menu, X} from '@/components/ui/svgs/Icons';
-import {motion} from "motion/react";
-import {useRouter} from "next/navigation";
+import { useState, Suspense, useEffect } from 'react';
+import { Menu, X } from '@/components/ui/svgs/Icons';
+import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
-import {NavigationLinks} from "@/constants";
+import NotificationCenter from "@/components/NotificationCenter";
+import { NavigationLinks } from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import Loader from "@/components/ui/Loader";
-import {useUser} from "@/context/UserContext";
+import { useUser } from "@/context/UserContext";
 import { IUser } from '@/types';
 
 const Navbar = () => {
     const router = useRouter();
-    const {user, favoriteTemplates} = useUser();
+    const { user, favoriteTemplates } = useUser();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -29,24 +30,22 @@ const Navbar = () => {
 
     return (
         <div
-            className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-500 ease-in-out translate-y-0 opacity-100 ${
-                scrolled
+            className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-500 ease-in-out translate-y-0 opacity-100 ${scrolled
                     ? 'bg-primary/95 backdrop-blur-xl shadow-2xl border border-white/10 scale-[0.98]'
                     : 'bg-primary/50 backdrop-blur-lg shadow-lg border border-white/5'
-            }`}
+                }`}
         >
-            <div className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
-                scrolled ? 'py-6' : 'py-8'
-            }`}>
+            <div className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${scrolled ? 'py-6' : 'py-8'
+                }`}>
                 <Logo onClick={() => router.push("/")} className={!user ? "flex-1" : ""} />
 
                 <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-5 items-center justify-center`}>
-                    {NavigationLinks.map(({id, text, link}) => (
-                        <NavbarItem text={text} link={link} key={id}/>
+                    {NavigationLinks.map(({ id, text, link }) => (
+                        <NavbarItem text={text} link={link} key={id} />
                     ))}
                 </nav>
                 <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
-                    <MobileDrawer user={user as IUser}/>
+                    <MobileDrawer user={user as IUser} />
                     {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
                         {/* <Link
                             className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-6 py-3 rounded-full text-white font-medium text-base backdrop-blur-sm"
@@ -63,10 +62,11 @@ const Navbar = () => {
                             Signup
                         </Link>
                     </div> : (
-                        <Suspense fallback={<Loader/>}>
-                            <div className="flex items-center justify-end">
+                        <Suspense fallback={<Loader />}>
+                            <div className="flex items-center justify-end gap-2">
+                                <NotificationCenter />
                                 <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
-                                                 userEmail={user?.email} userRole={user?.role as string} userFavorites={favoriteTemplates.length}/>
+                                    userEmail={user?.email} userRole={user?.role as string} userFavorites={favoriteTemplates.length} />
                             </div>
                         </Suspense>
                     )}
@@ -77,7 +77,7 @@ const Navbar = () => {
 };
 export default Navbar;
 
-const NavbarItem = ({text, link}: { text: string, link: string }) => {
+const NavbarItem = ({ text, link }: { text: string, link: string }) => {
     const [isHovered, setIsHovered] = useState(false);
     return (
         <Link
@@ -94,7 +94,7 @@ const NavbarItem = ({text, link}: { text: string, link: string }) => {
     );
 };
 
-const MobileDrawer = ({user}: { user: IUser }) => {
+const MobileDrawer = ({ user }: { user: IUser }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -104,7 +104,7 @@ const MobileDrawer = ({user}: { user: IUser }) => {
                 className="p-3 bg-transparent hover:bg-white/10 rounded-full transition-colors duration-200 active:scale-95"
                 onClick={() => setIsOpen(true)}
             >
-                <Menu className="w-6 h-6 text-white"/>
+                <Menu className="w-6 h-6 text-white" />
             </button>
 
             {isOpen && (
@@ -117,16 +117,16 @@ const MobileDrawer = ({user}: { user: IUser }) => {
                     <motion.div
                         className="fixed top-0 right-0 h-screen w-3/4 sm:w-2/4 bg-dark/95 backdrop-blur-xl shadow-2xl z-9999999 border-l border-white/10"
                         variants={{
-                            hidden: {x: "100%", opacity: 0},
+                            hidden: { x: "100%", opacity: 0 },
                             visible: {
                                 x: 5,
                                 opacity: 1,
-                                transition: {type: "spring", stiffness: 400, damping: 30},
+                                transition: { type: "spring", stiffness: 400, damping: 30 },
                             },
                             exit: {
                                 x: "100%",
                                 opacity: 0,
-                                transition: {type: "spring", stiffness: 400, damping: 30},
+                                transition: { type: "spring", stiffness: 400, damping: 30 },
                             },
                         }}
                         initial="hidden"
@@ -138,10 +138,10 @@ const MobileDrawer = ({user}: { user: IUser }) => {
                                 className="p-3 mb-4 hover:bg-white/10 rounded-full w-fit transition-colors duration-200 active:scale-95"
                                 onClick={() => setIsOpen(false)}
                             >
-                                <X className="w-6 h-6 text-white"/>
+                                <X className="w-6 h-6 text-white" />
                             </button>
                             <ul className="flex flex-col gap-2">
-                                {NavigationLinks.map(({id, link, text}) => (
+                                {NavigationLinks.map(({ id, link, text }) => (
                                     <li key={id}>
                                         <Link
                                             href={link}

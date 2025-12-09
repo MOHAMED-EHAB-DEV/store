@@ -86,7 +86,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
 
         // Find user with password
         const user = await User.findOne(
-            {email: normalizedEmail},
+            { email: normalizedEmail },
             { password: 1, name: 1, email: 1, role: 1, avatar: 1 }
         );
 
@@ -112,7 +112,8 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             {
                 id: user._id,
                 email: user.email,
-                avatar: user.avatar
+                avatar: user.avatar,
+                role: user.role
             },
             process.env.JWT_SECRET! as string,
             { expiresIn: "7d" }

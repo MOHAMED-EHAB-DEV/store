@@ -13,11 +13,13 @@ import {
 import { Home } from "@/components/ui/svgs/Icons";
 import { sonnerToast } from "@/components/ui/sonner";
 import { IUser } from '@/types';
+import NotificationCenter from "@/components/NotificationCenter";
 
-const Sidebar = ({ open, setOpen, user }: {
+const Sidebar = ({ open, setOpen, user, socketToken }: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     user: IUser,
+    socketToken?: string
 }) => {
     const router = useRouter();
     const path = usePathname();
@@ -97,7 +99,7 @@ const Sidebar = ({ open, setOpen, user }: {
                             />
                         </div>
                         <div className="flex gap-1 items-center">
-                            <h1 className="text-md font-semibold text-white">{user?.name}</h1>
+                            <h1 className="text-md font-semibold text-white">{user?.name.split(" ")[0]}</h1>
                         </div>
                         {isOpen ? <ChevronUp /> : <ChevronDown />}
                     </DropdownMenuTrigger>
@@ -114,6 +116,7 @@ const Sidebar = ({ open, setOpen, user }: {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <NotificationCenter socketToken={socketToken} />
             </div>
         </div>
     )

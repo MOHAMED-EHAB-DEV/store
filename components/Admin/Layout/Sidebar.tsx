@@ -1,8 +1,8 @@
-import React, {MouseEvent as ReactMouseEvent, useState} from 'react';
-import {X, ChevronUp, ChevronDown, LogOut} from "@/components/ui/svgs/Icons";
+import React, { MouseEvent as ReactMouseEvent, useState } from 'react';
+import { X, ChevronUp, ChevronDown, LogOut } from "@/components/ui/svgs/Icons";
 import Logo from "@/components/ui/Logo";
-import {AdminSidebarLinks} from "@/constants";
-import {useRouter, usePathname} from "next/navigation";
+import { AdminSidebarLinks } from "@/constants";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import {
     DropdownMenu,
@@ -10,15 +10,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {Home} from "@/components/ui/svgs/Icons";
-import {sonnerToast} from "@/components/ui/sonner";
+import { Home } from "@/components/ui/svgs/Icons";
+import { sonnerToast } from "@/components/ui/sonner";
 import { IUser } from '@/types';
+import NotificationCenter from "@/components/NotificationCenter";
 
-const Sidebar = ({open, setOpen, user}: {
+const Sidebar = ({ open, setOpen, user, socketToken }: {
     open: Boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     user: IUser,
+    socketToken?: string
 }) => {
+
     const router = useRouter();
     const path = usePathname();
 
@@ -45,29 +48,28 @@ const Sidebar = ({open, setOpen, user}: {
 
     return (
         <div
-            className={`lg:start-0 z-50 w-[18rem] bg-dark flex flex-col md:p-8 p-4 justify-between h-screen fixed top-0 overflow-auto transition-[inset-inline-start] duration-300 ${
-                open ? "start-0" : "-start-72"
-            } `}
+            className={`lg:start-0 z-50 w-[18rem] bg-dark flex flex-col md:p-8 p-4 justify-between h-screen fixed top-0 overflow-auto transition-[inset-inline-start] duration-300 ${open ? "start-0" : "-start-72"
+                } `}
         >
             <div className="">
                 <button onClick={() => setOpen(false)} aria-label="Close sidebar"
-                        className="bg-transparent cursor-pointer flex items-center justify-center lg:hidden rounded-full absolute top-2 end-2 p-4">
-                    <X/>
+                    className="bg-transparent cursor-pointer flex items-center justify-center lg:hidden rounded-full absolute top-2 end-2 p-4">
+                    <X />
                 </button>
 
                 <div className="flex items-center gap-4">
-                    <Logo onClick={() => router.push("/")}/>
+                    <Logo onClick={() => router.push("/")} />
                     <h1 className="text-white font-bold text-2xl">Admin</h1>
                 </div>
 
                 <div className="flex flex-col gap-1 md:mt-14 mt-10">
-                    {AdminSidebarLinks.map(({Icon, text, link}, idx) => (
+                    {AdminSidebarLinks.map(({ Icon, text, link }, idx) => (
                         <div key={idx} onClick={() => {
                             setIsOpen(false);
                             router.push(link);
                         }}
-                             className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path === link ? "bg-white/10" : "hover:bg-white/10"}`}>
-                            <Icon className="w-5 h-5 text-white"/>
+                            className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path === link ? "bg-white/10" : "hover:bg-white/10"}`}>
+                            <Icon className="w-5 h-5 text-white" />
                             <span className={`text-white text-sm ${path === link && "font-bold"}`}>{text}</span>
                         </div>
                     ))}
@@ -76,7 +78,7 @@ const Sidebar = ({open, setOpen, user}: {
 
             <div className="relative flex items-center w-full h-20">
                 {/* Line */}
-                <div className="h-1 absolute top-0 left-0 w-full rounded-full bg-white/10"/>
+                <div className="h-1 absolute top-0 left-0 w-full rounded-full bg-white/10" />
                 <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
                     <DropdownMenuTrigger
                         className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
@@ -90,9 +92,9 @@ const Sidebar = ({open, setOpen, user}: {
                             />
                         </div>
                         <div className="flex gap-1 items-center">
-                            <h1 className="text-md font-semibold text-white">{user?.name}</h1>
+                            <h1 className="text-md font-semibold text-white">{user?.name.split(" ")[0]}</h1>
                         </div>
-                        {isOpen ? <ChevronUp/> : <ChevronDown/>}
+                        {isOpen ? <ChevronUp /> : <ChevronDown />}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-dark">
                         <DropdownMenuItem onClick={() => router.push("/")} className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
@@ -105,6 +107,7 @@ const Sidebar = ({open, setOpen, user}: {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <NotificationCenter socketToken={socketToken} />
             </div>
         </div>
     )

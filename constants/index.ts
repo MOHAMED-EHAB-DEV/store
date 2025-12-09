@@ -26,6 +26,7 @@ import {
     Figma,
     Vite,
     NextJS,
+    Headset
 } from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
@@ -291,6 +292,11 @@ const DashboardSidebarLinks = [
         link: "/dashboard/purchased-templates",
     },
     {
+        Icon: Headset,
+        text: "Support",
+        link: "/dashboard/support",
+    },
+    {
         Icon: Settings,
         text: "Settings",
         link: "/dashboard/settings",
@@ -312,7 +318,12 @@ const AdminSidebarLinks = [
         Icon: Blocks,
         text: "Blog",
         link: "/admin/blogs",
-    }
+    },
+    {
+        Icon: Headset,
+        text: "Support",
+        link: "/admin/support",
+    },
 ];
 
 const passwordRequirements = (password: string) => [

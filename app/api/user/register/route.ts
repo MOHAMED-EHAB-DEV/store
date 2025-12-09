@@ -189,6 +189,7 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         id: newUser._id,
         email: newUser.email,
         avatar: newUser.avatar,
+        role: newUser.role
       },
       JWT_SECRET,
       { expiresIn: "7d" }

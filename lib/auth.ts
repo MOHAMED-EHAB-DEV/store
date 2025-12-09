@@ -2,8 +2,28 @@ import jwt from "jsonwebtoken";
 import User from "./models/User";
 import { cookies } from "next/headers";
 
+// Verify JWT token and return decoded payload
+export function verifyToken(token: string): { userId: string; role: string } | null {
+    try {
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error("JWT secret is not defined");
+
+        const decoded = jwt.verify(token, secret);
+
+        if (typeof decoded === "string" || !("id" in decoded)) {
+            return null;
+        }
+
+        return {
+            userId: decoded.id as string,
+            role: (decoded.role as string) || "user"
+        };
+    } catch (error) {
+        return null;
+    }
+}
 // Server-side auth
-export async function getUserFromServer({headerToken=""}:{headerToken:string}) {
+export async function getUserFromServer({ headerToken = "" }: { headerToken: string }) {
     try {
         const cookieStore = await cookies();
         const cookieToken = cookieStore.get("token");
@@ -19,7 +39,7 @@ export async function getUserFromServer({headerToken=""}:{headerToken:string}) {
         if (typeof decoded === "string" || !("id" in decoded)) {
             throw new Error("Invalid token payload");
         }
-        
+
         const user = await User.findById(decoded.id).select(
             "_id name email avatar role"
         );

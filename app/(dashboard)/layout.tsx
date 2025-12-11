@@ -13,7 +13,7 @@ export default async function RootLayout(
     }: Readonly<{
         children: React.ReactNode;
     }>) {
-    const user = await authenticateUser();
+    const user = await authenticateUser(true, false, true);
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 

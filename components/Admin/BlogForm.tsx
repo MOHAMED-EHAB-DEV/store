@@ -51,7 +51,7 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
         }
     };
 
-    const { startUpload, routeConfig } = useUploadThing("profilePicture", {
+    const { startUpload, routeConfig } = useUploadThing("imageUploader", {
         onClientUploadComplete: (res) => {
             sonnerToast.success("Image uploaded successfully!");
         },

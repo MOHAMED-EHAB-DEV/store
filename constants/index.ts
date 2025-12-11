@@ -26,7 +26,9 @@ import {
     Figma,
     Vite,
     NextJS,
-    Headset
+    Headset,
+    FolderOpen,
+    HelpCircle
 } from "@/components/ui/svgs/Icons";
 
 const NavigationLinks = [
@@ -310,14 +312,34 @@ const AdminSidebarLinks = [
         link: "/admin/dashboard",
     },
     {
+        Icon: Users,
+        text: "Users",
+        link: "/admin/users",
+    },
+    {
         Icon: Templates,
         text: "Templates",
         link: "/admin/templates",
     },
     {
+        Icon: FolderOpen,
+        text: "Categories",
+        link: "/admin/categories",
+    },
+    {
         Icon: Blocks,
         text: "Blog",
         link: "/admin/blogs",
+    },
+    {
+        Icon: HelpCircle,
+        text: "FAQs",
+        link: "/admin/faqs",
+    },
+    {
+        Icon: Download,
+        text: "Downloads",
+        link: "/admin/download-logs",
     },
     {
         Icon: Headset,

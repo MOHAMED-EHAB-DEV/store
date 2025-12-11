@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
+import { revalidateTag } from "next/cache";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
     await connectToDatabase();
 
     const [template, totalReviews] = await Promise.all([
-      Template.findOne({_id: id}).select('+content').populate("categories", "_id name slug").lean(),
+      Template.findOne({ _id: id }).select('+content').populate("categories", "_id name slug").lean(),
       Review.countDocuments({ template: id }),
     ]);
     return NextResponse.json(
@@ -29,6 +30,11 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
     const body = await req.json();
     const updated = await Template.findByIdAndUpdate(id, body);
+
+    // Revalidate cache for this template and all templates
+    revalidateTag(`template-${id}`, 'default');
+    revalidateTag('templates', 'default');
+
     return NextResponse.json(
       {
         success: true,
@@ -49,6 +55,11 @@ export async function POST(req: NextRequest, context: RouteContext) {
     await Template.findByIdAndUpdate(id, {
       isActive: false,
     }); // soft delete
+
+    // Revalidate cache for this template and all templates
+    revalidateTag(`template-${id}`, 'default');
+    revalidateTag('templates', 'default');
+
     return NextResponse.json({
       success: true,
       message: "Template disabled Successfully",
@@ -63,6 +74,11 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     await Template.findByIdAndDelete(id); // Delete from database
+
+    // Revalidate cache for this template and all templates
+    revalidateTag(`template-${id}`, 'default');
+    revalidateTag('templates', 'default');
+
     return NextResponse.json({
       success: true,
       message: "Template deleted Successfully",

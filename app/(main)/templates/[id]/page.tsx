@@ -3,16 +3,41 @@ import Template from "@/components/singleTemplate/Template";
 import { ICategory, ITemplate } from "@/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { connectToDatabase } from "@/lib/database";
+import TemplateModel from "@/lib/models/Template";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+// Generate static params for build-time generation
+export async function generateStaticParams() {
+  try {
+    await connectToDatabase();
+    const templates = await TemplateModel.find({ isActive: true })
+      .select("_id")
+      .limit(100)
+      .lean();
+
+    return templates.map((template: any) => ({
+      id: template._id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
 }
 
 const getTemplate = async (id: string) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
-      { next: { revalidate: 300 } } // ISR: 5 minutes
+      {
+        next: {
+          revalidate: 300, // ISR: 5 minutes fallback
+          tags: [`template-${id}`, "templates"] // Tags for easy revalidation
+        }
+      }
     );
 
     if (!response.ok)
@@ -110,10 +135,46 @@ const Page = async ({ params }: PageProps) => {
     id
   );
 
+  // JSON-LD structured data for SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: template.title,
+    description: template.description,
+    image: template.thumbnail,
+    url: `${process.env.NEXT_PUBLIC_APP_URL || ""}/templates/${id}`,
+    offers: {
+      "@type": "Offer",
+      price: template.price || 0,
+      priceCurrency: "USD",
+      availability: template.isActive
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+    ...(template.averageRating && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: template.averageRating,
+        reviewCount: template.reviewCount || 1,
+      },
+    }),
+    category: template.builtWith,
+    brand: {
+      "@type": "Brand",
+      name: "Premium Templates",
+    },
+  };
+
   return (
-    <div className="pt-36 sm:pt-46 md:pt-36">
-      <Template template={template} similarTemplates={similarTemplates || []} />
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="pt-36 sm:pt-46 md:pt-36">
+        <Template template={template} similarTemplates={similarTemplates || []} />
+      </div>
+    </>
   );
 };
 

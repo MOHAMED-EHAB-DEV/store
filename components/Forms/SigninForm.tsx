@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, ChangeEvent, FormEvent, useEffect} from 'react';
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import {
     Mail,
     Lock,
@@ -8,10 +8,10 @@ import {
     EyeOff,
 } from "@/components/ui/svgs/Icons";
 import { useRouter } from "next/navigation";
-import {useUser} from "@/context/UserContext";
-import {Input} from "@/components/ui/input";
+import { useUser } from "@/context/UserContext";
+import { Input } from "@/components/ui/input";
 
-const SigninForm = ({queryMessage}:{queryMessage: String}) => {
+const SigninForm = ({ queryMessage }: { queryMessage: String }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -22,7 +22,7 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
         type: queryMessage === "unauthorized" ? "error" : "",
         content: queryMessage === "unauthorized" ? "Please, Login First" : ""
     });
-    const {setReload} = useUser();
+    const { setReload } = useUser();
 
     const router = useRouter();
 
@@ -51,17 +51,38 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
             setReload(prev => !prev);
             router.push('/');
         } else {
-            setMessage({
-                type: "Error",
-                content: "Invalid email or password"
-            });
-
-            setTimeout(() => {
+            if (response.status === 423) {
                 setMessage({
-                    type: "",
-                    content: "",
+                    type: "Error",
+                    content: data.message
                 });
-            }, 7000);
+            } else if (response.status === 403) {
+                setMessage({
+                    type: "Error",
+                    content: data.message,
+                });
+
+                setTimeout(() => {
+                    setMessage({
+                        type: "",
+                        content: "",
+                    });
+                }, 7000);
+
+                router.push("/banned");
+            } else {
+                setMessage({
+                    type: "Error",
+                    content: data.message,
+                });
+
+                setTimeout(() => {
+                    setMessage({
+                        type: "",
+                        content: "",
+                    });
+                }, 7000);
+            }
         }
     };
 
@@ -85,19 +106,18 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
                     Email
                 </label>
                 <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
-                            formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-                                ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500' 
-                                : formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                        className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+                            ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500'
+                            : formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
                                 ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
                                 : 'border-white/10 focus:ring-gold focus:border-transparent'
-                        }`}
+                            }`}
                         placeholder="Enter your email"
                         required
                     />
@@ -109,19 +129,18 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
                     Password
                 </label>
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"/>
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <Input
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
-                            formData.password && formData.password.length >= 6
-                                ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500' 
-                                : formData.password && formData.password.length < 6
+                        className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${formData.password && formData.password.length >= 6
+                            ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500'
+                            : formData.password && formData.password.length < 6
                                 ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
                                 : 'border-white/10 focus:ring-gold focus:border-transparent'
-                        }`}
+                            }`}
                         placeholder="Enter your password"
                         required
                     />
@@ -132,9 +151,9 @@ const SigninForm = ({queryMessage}:{queryMessage: String}) => {
                         aria-label={showPassword ? "Hide Current Password" : "Show Current Password"}
                     >
                         {showPassword ? (
-                            <EyeOff className="w-5 h-5"/>
+                            <EyeOff className="w-5 h-5" />
                         ) : (
-                            <Eye className="w-5 h-5"/>
+                            <Eye className="w-5 h-5" />
                         )}
                     </button>
                 </div>

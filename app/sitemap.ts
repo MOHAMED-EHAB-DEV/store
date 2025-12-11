@@ -1,32 +1,45 @@
 import { MetadataRoute } from 'next';
+import { unstable_cache } from 'next/cache';
+import { connectToDatabase } from '@/lib/database';
+import Template from '@/lib/models/Template';
+import Blog from '@/lib/models/Blog';
 
-async function getTemplates() {
-    try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'}/api/template`, {
-            next: { revalidate: 60 * 60 * 24 },
-        })
-        if (!res.ok) return []
-        const data = await res.json()
-        return data.data || []
-    } catch (error) {
-        console.error('Error fetching templates for sitemap:', error)
-        return []
-    }
-}
+// Cache templates for 48 hours
+const getTemplates = unstable_cache(
+    async () => {
+        try {
+            await connectToDatabase();
+            const templates = await Template.find({ isActive: true })
+                .select('_id updatedAt')
+                .lean();
+            return JSON.parse(JSON.stringify(templates));
+        } catch (error) {
+            console.error('Error fetching templates for sitemap:', error);
+            return [];
+        }
+    },
+    ['sitemap-templates'],
+    { revalidate: 60 * 60 * 48 } // 48 hours
+);
 
-async function getBlogs() {
-    try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'}/api/blogs?limit=100`, {
-            next: { revalidate: 60 * 60 * 24 },
-        })
-        if (!res.ok) return []
-        const data = await res.json()
-        return data.success ? data.data : []
-    } catch (error) {
-        console.error('Error fetching blogs for sitemap:', error)
-        return []
-    }
-}
+// Cache blogs for 48 hours
+const getBlogs = unstable_cache(
+    async () => {
+        try {
+            await connectToDatabase();
+            const blogs = await Blog.find({ isPublished: true })
+                .select('_id slug updatedAt')
+                .limit(100)
+                .lean();
+            return JSON.parse(JSON.stringify(blogs));
+        } catch (error) {
+            console.error('Error fetching blogs for sitemap:', error);
+            return [];
+        }
+    },
+    ['sitemap-blogs'],
+    { revalidate: 60 * 60 * 48 } // 48 hours
+);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'

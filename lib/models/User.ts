@@ -1,4 +1,4 @@
-import mongoose, {Schema, Document, Model} from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 import "./Template";
 
 export interface IUser extends Document {
@@ -17,6 +17,15 @@ export interface IUser extends Document {
     loginAttempts: number;
     lockUntil?: Date;
     tier: "free" | "premium";
+    banned: boolean;
+    banId: string;
+    banMetadata?: {
+        reason: string;
+        bannedAt: Date;
+        bannedBy: string; // Admin user ID
+        notes?: string;
+        expiresAt?: Date; // For temporary bans
+    };
 }
 
 const UserSchema = new Schema<IUser>({
@@ -61,7 +70,6 @@ const UserSchema = new Schema<IUser>({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Template"
     }],
-    createdAt: {type: Date, default: Date.now, index: true},
     lastLogin: {
         type: Date,
         index: true,
@@ -84,6 +92,36 @@ const UserSchema = new Schema<IUser>({
         index: true,
         lowercase: true,
         enum: ["free", "premium"],
+    },
+    banned: {
+        type: Boolean,
+        default: false
+    },
+    banId: {
+        type: String,
+        default: "",
+        unique: true,
+        sparse: true // Only enforce uniqueness when banId exists
+    },
+    banMetadata: {
+        reason: {
+            type: String,
+            default: ""
+        },
+        bannedAt: {
+            type: Date
+        },
+        bannedBy: {
+            type: String, // Admin user ID
+            default: ""
+        },
+        notes: {
+            type: String,
+            default: ""
+        },
+        expiresAt: {
+            type: Date // For temporary bans
+        }
     }
 }, {
     timestamps: true,
@@ -102,14 +140,14 @@ const UserSchema = new Schema<IUser>({
 });
 
 // Compound indexes for common query patterns
-UserSchema.index({email: 1, role: 1}); // Login + role check - MOST IMPORTANT
-UserSchema.index({role: 1, createdAt: -1}); // Admin dashboard queries
-UserSchema.index({createdAt: -1, isEmailVerified: 1}); // Recent verified users
-UserSchema.index({lastLogin: -1, role: 1}); // Active user analytics
-UserSchema.index({isEmailVerified: 1, role: 1}); // Verification status queries
-UserSchema.index({lockUntil: 1}, {sparse: true}); // Security - locked accounts
-UserSchema.index({purchasedTemplates: 1}); // User purchases lookup
-UserSchema.index({favorites: 1}); // User favorites lookup
+UserSchema.index({ email: 1, role: 1 }); // Login + role check - MOST IMPORTANT
+UserSchema.index({ role: 1, createdAt: -1 }); // Admin dashboard queries
+UserSchema.index({ createdAt: -1, isEmailVerified: 1 }); // Recent verified users
+UserSchema.index({ lastLogin: -1, role: 1 }); // Active user analytics
+UserSchema.index({ isEmailVerified: 1, role: 1 }); // Verification status queries
+UserSchema.index({ lockUntil: 1 }, { sparse: true }); // Security - locked accounts
+UserSchema.index({ purchasedTemplates: 1 }); // User purchases lookup
+UserSchema.index({ favorites: 1 }); // User favorites lookup
 
 // Pre-save middleware for password hashing (if you're not already doing this)
 UserSchema.pre('save', function (next) {
@@ -137,24 +175,24 @@ UserSchema.virtual('isLocked').get(function () {
 });
 
 UserSchema.statics.findByEmail = function (email: string) {
-    return this.findOne({email: email.toLowerCase()})
+    return this.findOne({ email: email.toLowerCase() })
         .select('_id name email role avatar createdAt lastLogin') // TODO: Add isEmailVerified when its functionality being added
         .lean();
 };
 
 UserSchema.statics.findByEmailWithPassword = function (email: string) {
-    return this.findOne({email: email.toLowerCase()})
+    return this.findOne({ email: email.toLowerCase() })
         .select('_id name email password role avatar loginAttempts lockUntil') // TODO: Add isEmailVerified when its functionality being added
         .lean();
 };
 
 UserSchema.statics.findActiveUsers = function (limit = 20, skip = 0) {
     return this.find({
-        role: {$ne: 'deleted'},
+        role: { $ne: 'deleted' },
         // isEmailVerified: true TODO: Uncomment when isEmailVerified Functionality added
     })
         .select('name email role avatar createdAt lastLogin')
-        .sort({lastLogin: -1, createdAt: -1})
+        .sort({ lastLogin: -1, createdAt: -1 })
         .limit(limit)
         .skip(skip)
         .lean();
@@ -165,12 +203,12 @@ UserSchema.statics.getUserStats = function () {
         {
             $group: {
                 _id: null,
-                totalUsers: {$sum: 1},
+                totalUsers: { $sum: 1 },
                 verifiedUsers: {
-                    $sum: {$cond: ['$isEmailVerified', 1, 0]}
+                    $sum: { $cond: ['$isEmailVerified', 1, 0] }
                 },
                 adminUsers: {
-                    $sum: {$cond: [{$eq: ['$role', 'admin']}, 1, 0]}
+                    $sum: { $cond: [{ $eq: ['$role', 'admin'] }, 1, 0] }
                 },
                 activeLastMonth: {
                     $sum: {
@@ -205,7 +243,7 @@ UserSchema.statics.getUserStats = function () {
     ]);
 };
 
-UserSchema.statics.findUsersWithPurchases = function(limit = 20, skip = 0) {
+UserSchema.statics.findUsersWithPurchases = function (limit = 20, skip = 0) {
     return this.find({
         purchasedTemplates: { $exists: true, $not: { $size: 0 } }
     })
@@ -217,7 +255,7 @@ UserSchema.statics.findUsersWithPurchases = function(limit = 20, skip = 0) {
         .lean();
 };
 
-UserSchema.statics.incrementLoginAttempts = function(userId: string) {
+UserSchema.statics.incrementLoginAttempts = function (userId: string) {
     return this.findByIdAndUpdate(
         userId,
         {
@@ -230,7 +268,7 @@ UserSchema.statics.incrementLoginAttempts = function(userId: string) {
     );
 };
 
-UserSchema.statics.resetLoginAttempts = function(userId: string) {
+UserSchema.statics.resetLoginAttempts = function (userId: string) {
     return this.findByIdAndUpdate(
         userId,
         {
@@ -240,7 +278,7 @@ UserSchema.statics.resetLoginAttempts = function(userId: string) {
     );
 };
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.password.startsWith('$2')) {
         return next();
     }
@@ -248,7 +286,7 @@ UserSchema.pre('save', function(next) {
     next();
 });
 
-UserSchema.post('init', function() {
+UserSchema.post('init', function () {
     if (process.env.NODE_ENV === 'production') {
         this.collection.createIndex({ email: 1, role: 1 }, { background: true });
         this.collection.createIndex({ role: 1, createdAt: -1 }, { background: true });
@@ -256,7 +294,7 @@ UserSchema.post('init', function() {
 });
 
 // Cleanup expired locks regularly
-UserSchema.statics.cleanupExpiredLocks = function() {
+UserSchema.statics.cleanupExpiredLocks = function () {
     return this.updateMany(
         { lockUntil: { $lte: new Date() } },
         { $unset: { lockUntil: 1, loginAttempts: 1 } }
@@ -264,19 +302,19 @@ UserSchema.statics.cleanupExpiredLocks = function() {
 };
 
 export interface IUserModel extends Model<IUser> {
-  findByEmail(email: string): Promise<IUser | null>;
-  findByEmailWithPassword(email: string): Promise<IUser | null>;
-  findActiveUsers(limit?: number, skip?: number): Promise<IUser[]>;
-  getUserStats(): Promise<any[]>; // you can define a more specific shape later
-  findUsersWithPurchases(limit?: number, skip?: number): Promise<IUser[]>;
-  incrementLoginAttempts(userId: string): Promise<IUser | null>;
-  resetLoginAttempts(userId: string): Promise<IUser | null>;
-  cleanupExpiredLocks(): Promise<any>;
+    findByEmail(email: string): Promise<IUser | null>;
+    findByEmailWithPassword(email: string): Promise<IUser | null>;
+    findActiveUsers(limit?: number, skip?: number): Promise<IUser[]>;
+    getUserStats(): Promise<any[]>; // you can define a more specific shape later
+    findUsersWithPurchases(limit?: number, skip?: number): Promise<IUser[]>;
+    incrementLoginAttempts(userId: string): Promise<IUser | null>;
+    resetLoginAttempts(userId: string): Promise<IUser | null>;
+    cleanupExpiredLocks(): Promise<any>;
 }
 
 const User =
-  (mongoose.models.User as unknown as IUserModel) ||
-  mongoose.model<IUser, IUserModel>("User", UserSchema);
+    (mongoose.models.User as unknown as IUserModel) ||
+    mongoose.model<IUser, IUserModel>("User", UserSchema);
 
 // Create indexes if they don't exist (development only)
 if (process.env.NODE_ENV !== 'production') {

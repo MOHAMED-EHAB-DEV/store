@@ -6,7 +6,7 @@ import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
 
-export async function authenticateUser(connectDB: Boolean = false, includeId: Boolean = false): Promise<IUser | null> {
+export async function authenticateUser(connectDB: Boolean = false, includeId: Boolean = false, lean: Boolean = false): Promise<IUser | null> {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get("token");
@@ -23,10 +23,13 @@ export async function authenticateUser(connectDB: Boolean = false, includeId: Bo
         }
 
         if (connectDB) await connectToDatabase();
-        const user = await User.findOne(
+
+        const query = User.findOne(
             { _id: decoded.id },
             { _id: includeId ? 1 : 0 }
         );
+
+        const user = lean ? await query.lean() : await query;
 
         if (!user) return null;
 

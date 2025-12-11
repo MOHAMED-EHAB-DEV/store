@@ -1,6 +1,6 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import {authenticateUser} from "@/middleware/auth";
+import { authenticateUser } from "@/middleware/auth";
 
 const f = createUploadthing();
 
@@ -36,6 +36,22 @@ export const ourFileRouter = {
 
             // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
             return { uploadedBy: metadata.userId };
+        }),
+
+    // General image uploader for blog covers, FAQ images, etc.
+    imageUploader: f({
+        image: {
+            maxFileSize: "8MB",
+            maxFileCount: 1,
+        },
+    })
+        .middleware(async ({ req }) => {
+            const user = await authenticateUser();
+            if (!user) throw new UploadThingError("Unauthorized");
+            return { userId: user?._id };
+        })
+        .onUploadComplete(async ({ metadata, file }) => {
+            return { uploadedBy: metadata.userId, url: file.ufsUrl };
         }),
 } satisfies FileRouter;
 

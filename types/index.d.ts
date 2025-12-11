@@ -16,6 +16,15 @@ declare type IUser = {
   loginAttempts: number;
   lockUntil?: Date;
   tier: "free" | "premium";
+  banned: boolean;
+  banId: string;
+  banMetadata?: {
+    reason: string;
+    bannedAt: Date;
+    bannedBy: string;
+    notes?: string;
+    expiresAt?: Date;
+  };
 };
 
 declare type ITemplate = {

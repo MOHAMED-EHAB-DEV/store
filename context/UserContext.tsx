@@ -30,15 +30,14 @@ const UserContext = createContext<IUserContext>({
 export function UserProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
     const [user, setUser] = useState<IUser | null>(null);
-    const [token, setToken] = useState<string | undefined>(undefined);
     const [reload, setReload] = useState(false);
     const [favoriteTemplates, setFavoriteTemplates] = useState<String[]>([]);
     const [purchasedTemplates, setPurchasedTemplates] = useState([]);
 
     // Initialize socket globally when user is logged in
+    // No token needed here as it uses cookies
     useSocket({
-        enabled: !!user && !!token,
-        token
+        enabled: !!user
     });
 
     const fetchUser = async () => {
@@ -46,11 +45,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
             const res = await fetch("/api/user");
             const data = await res.json();
             setUser(data.user);
-            setToken(data.token);
             return data.user;
         } catch (error) {
             setUser(null);
-            setToken(undefined);
         }
     };
 

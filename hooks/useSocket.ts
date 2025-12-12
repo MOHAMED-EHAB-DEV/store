@@ -47,8 +47,8 @@ export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
         console.log("[Socket] Connecting to:", SOCKET_URL);
 
         const socket = io(SOCKET_URL, {
-            auth: { token }, // Still send if provided, but optional
-            withCredentials: true, // IMPORTANT: Send cookies
+            auth: { token },
+            withCredentials: true,
             transports: ["websocket", "polling"],
             reconnection: true,
             reconnectionAttempts: 5,

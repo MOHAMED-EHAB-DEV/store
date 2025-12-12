@@ -38,15 +38,17 @@ export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
             return;
         }
 
-        if (!token) {
-            console.log("[Socket] No token provided");
-            return;
-        }
+        // We now rely on cookies, so token is optional usually
+        // if (!token) {
+        //     console.log("[Socket] No token provided");
+        //     return;
+        // }
 
         console.log("[Socket] Connecting to:", SOCKET_URL);
 
         const socket = io(SOCKET_URL, {
-            auth: { token },
+            auth: { token }, // Still send if provided, but optional
+            withCredentials: true, // IMPORTANT: Send cookies
             transports: ["websocket", "polling"],
             reconnection: true,
             reconnectionAttempts: 5,

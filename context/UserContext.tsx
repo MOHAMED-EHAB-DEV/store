@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types";
+import { useSocket } from "@/hooks/useSocket";
 
 interface IUserContext {
     user: IUser | null;
@@ -29,18 +30,27 @@ const UserContext = createContext<IUserContext>({
 export function UserProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
     const [user, setUser] = useState<IUser | null>(null);
+    const [token, setToken] = useState<string | undefined>(undefined);
     const [reload, setReload] = useState(false);
     const [favoriteTemplates, setFavoriteTemplates] = useState<String[]>([]);
     const [purchasedTemplates, setPurchasedTemplates] = useState([]);
+
+    // Initialize socket globally when user is logged in
+    useSocket({
+        enabled: !!user && !!token,
+        token
+    });
 
     const fetchUser = async () => {
         try {
             const res = await fetch("/api/user");
             const data = await res.json();
             setUser(data.user);
+            setToken(data.token);
             return data.user;
         } catch (error) {
             setUser(null);
+            setToken(undefined);
         }
     };
 

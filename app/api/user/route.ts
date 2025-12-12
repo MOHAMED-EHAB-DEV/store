@@ -9,7 +9,7 @@ export async function GET(request: Request) {
         const authHeader = request.headers.get('Authorization');
         const headerToken = authHeader?.split(' ')[1];
 
-        const user = await getUserFromServer({headerToken: headerToken as string});
+        const user = await getUserFromServer({ headerToken: headerToken as string });
         return NextResponse.json({ user });
     } catch (error) {
         return NextResponse.json(

@@ -25,6 +25,7 @@ declare type IUser = {
     notes?: string;
     expiresAt?: Date;
   };
+  online: boolean;
 };
 
 declare type ITemplate = {

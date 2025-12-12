@@ -22,10 +22,12 @@ export interface IUser extends Document {
     banMetadata?: {
         reason: string;
         bannedAt: Date;
-        bannedBy: string; // Admin user ID
+        bannedBy: string;
         notes?: string;
-        expiresAt?: Date; // For temporary bans
+        expiresAt?: Date;
     };
+    online: boolean;
+    lastSeen: Date;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -122,6 +124,15 @@ const UserSchema = new Schema<IUser>({
         expiresAt: {
             type: Date // For temporary bans
         }
+    },
+    online: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
+    lastSeen: {
+        type: Date,
+        default: Date.now,
     }
 }, {
     timestamps: true,
@@ -148,6 +159,7 @@ UserSchema.index({ isEmailVerified: 1, role: 1 }); // Verification status querie
 UserSchema.index({ lockUntil: 1 }, { sparse: true }); // Security - locked accounts
 UserSchema.index({ purchasedTemplates: 1 }); // User purchases lookup
 UserSchema.index({ favorites: 1 }); // User favorites lookup
+UserSchema.index({ lastSeen: 1, online: 1 }); // User activity tracking
 
 // Pre-save middleware for password hashing (if you're not already doing this)
 UserSchema.pre('save', function (next) {

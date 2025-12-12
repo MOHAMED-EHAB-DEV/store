@@ -41,7 +41,7 @@ export async function getUserFromServer({ headerToken = "" }: { headerToken: str
         }
 
         const user = await User.findById(decoded.id).select(
-            "_id name email avatar role"
+            "_id name email avatar role online"
         );
         if (!user) return null;
         const data = {
@@ -50,6 +50,7 @@ export async function getUserFromServer({ headerToken = "" }: { headerToken: str
             email: user.email,
             avatar: user.avatar,
             role: user.role,
+            online: user.online,
         };
         return JSON.parse(JSON.stringify(data));
     } catch (error) {

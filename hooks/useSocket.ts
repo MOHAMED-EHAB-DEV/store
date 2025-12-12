@@ -143,6 +143,19 @@ export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
         };
     }, []);
 
+    const onUserStatusChange = useCallback((callback: (data: { userId: string, status: 'online' | 'offline' }) => void) => {
+        const handleOnline = (data: { userId: string }) => callback({ userId: data.userId, status: 'online' });
+        const handleOffline = (data: { userId: string }) => callback({ userId: data.userId, status: 'offline' });
+
+        socketRef.current?.on("user-online", handleOnline);
+        socketRef.current?.on("user-offline", handleOffline);
+
+        return () => {
+            socketRef.current?.off("user-online", handleOnline);
+            socketRef.current?.off("user-offline", handleOffline);
+        };
+    }, []);
+
     return {
         isConnected,
         joinTicket,
@@ -153,6 +166,7 @@ export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
         onNewMessage,
         onTicketStatusChange,
         onNewNotification,
+        onUserStatusChange,
         typingUsers
     };
 }

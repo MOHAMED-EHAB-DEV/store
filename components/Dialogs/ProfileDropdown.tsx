@@ -1,4 +1,4 @@
-import {MouseEvent as ReactMouseEvent, useState} from "react";
+import { MouseEvent as ReactMouseEvent, useState } from "react";
 import Image from "next/image";
 import {
     DropdownMenu,
@@ -12,10 +12,10 @@ import {
     LayoutDashboard,
     Heart,
 } from "@/components/ui/svgs/Icons";
-import {useRouter} from "next/navigation";
-import {sonnerToast} from "@/components/ui/sonner";
+import { useRouter } from "next/navigation";
+import { sonnerToast } from "@/components/ui/sonner";
 
-const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorites}: {
+const ProfileDropdown = ({ userImage, userRole, username, userEmail, userFavorites }: {
     userImage: string,
     username: string,
     userEmail: string,
@@ -69,10 +69,16 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
                         <p className="text-secondary font-medium text-md">{userEmail}</p>
                     </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push(`${userRole === "admin" ? "/admin": ""}/dashboard`)} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <LayoutDashboard className="text-gray-400 size-7"/>
+                <DropdownMenuItem onClick={() => router.push(`/dashboard`)} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                    <LayoutDashboard className="text-gray-400 size-7" />
                     <span className="text-white font-medium text-md">Dashboard</span>
                 </DropdownMenuItem>
+                {userRole === "admin" && (
+                    <DropdownMenuItem onClick={() => router.push("/admin")} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                        <LayoutDashboard className="text-gray-400 size-7" />
+                        <span className="text-white font-medium text-md">Dashboard</span>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuItem
                     onClick={() => router.push("/favorites")}
                     className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
@@ -88,11 +94,11 @@ const ProfileDropdown = ({userImage, userRole, username, userEmail, userFavorite
                     <span className="text-white font-medium text-md">Favorites</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push('/dashboard/settings')} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <Settings className="text-gray-400 size-7"/>
+                    <Settings className="text-gray-400 size-7" />
                     <span className="text-white font-medium text-md">Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <LogOut className="text-gray-400 size-7"/>
+                    <LogOut className="text-gray-400 size-7" />
                     <span className="text-white font-medium text-md">Logout</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>

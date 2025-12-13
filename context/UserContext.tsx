@@ -37,7 +37,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     // Initialize socket globally when user is logged in
     // No token needed here as it uses cookies
     useSocket({
-        enabled: !!user
+        enabled: !!user,
+        userId: user?._id,
+        role: user?.role
     });
 
     const fetchUser = async () => {

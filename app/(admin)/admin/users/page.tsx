@@ -1,3 +1,10 @@
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -63,15 +70,19 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                         defaultValue={params.search || ""}
                         className="flex-1 min-w-[200px] px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    <select
-                        name="role"
+                    <Select
                         defaultValue={params.role || ""}
-                        className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors"
+                        // className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors"
                     >
-                        <option value="" className="bg-gray-900">All Roles</option>
-                        <option value="user" className="bg-gray-900">User</option>
-                        <option value="admin" className="bg-gray-900">Admin</option>
-                    </select>
+                        <SelectTrigger className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors">
+                            <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all" className="bg-gray-900 focus:bg-primary hover:bg-primary">All Roles</SelectItem>
+                            <SelectItem value="user" className="bg-gray-900 focus:bg-primary hover:bg-primary">User</SelectItem>
+                            <SelectItem value="admin" className="bg-gray-900 focus:bg-primary hover:bg-primary">Admin</SelectItem>
+                        </SelectContent>
+                    </Select>
                     <select
                         name="tier"
                         defaultValue={params.tier || ""}

@@ -26,7 +26,7 @@ export async function authenticateUser(connectDB: Boolean = false, includeId: Bo
 
         const query = User.findOne(
             { _id: decoded.id },
-            { _id: includeId ? 1 : 0 }
+            { _id: includeId ? 1 : 0, purchasedTemplates: 0, favorites: 0, }
         );
 
         const user = lean ? await query.lean() : await query;

@@ -7,7 +7,8 @@ const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001"
 
 interface UseSocketOptions {
     enabled?: boolean;
-    token?: string;
+    userId?: string;
+    role?: string;
 }
 
 interface SocketMessage {
@@ -26,7 +27,7 @@ interface TicketUpdate {
     updates: any;
 }
 
-export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
+export function useSocket({ enabled = true, userId, role }: UseSocketOptions = {}) {
     const socketRef = useRef<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [typingUsers, setTypingUsers] = useState<Record<string, string[]>>({});
@@ -38,16 +39,15 @@ export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
             return;
         }
 
-        // We now rely on cookies, so token is optional usually
-        // if (!token) {
-        //     console.log("[Socket] No token provided");
-        //     return;
-        // }
+        if (!userId) {
+            console.log("[Socket] No userId provided");
+            return;
+        }
 
         console.log("[Socket] Connecting to:", SOCKET_URL);
 
         const socket = io(SOCKET_URL, {
-            auth: { token },
+            auth: { userId, role },
             withCredentials: true,
             transports: ["websocket", "polling"],
             reconnection: true,
@@ -92,7 +92,7 @@ export function useSocket({ enabled = true, token }: UseSocketOptions = {}) {
             socket.disconnect();
             socketRef.current = null;
         };
-    }, [enabled, token]);
+    }, [enabled, userId, role]);
 
     // Join a ticket room
     const joinTicket = useCallback((ticketId: string) => {

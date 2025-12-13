@@ -33,7 +33,7 @@ export default function TicketDetailClient({ ticketId, userId, socketToken }: Ti
         onNewMessage,
         onTicketStatusChange,
         typingUsers
-    } = useSocket({ token: socketToken });
+    } = useSocket({ userId, role: 'user', enabled: !!userId });
 
     const fetchTicket = async () => {
         try {

@@ -18,8 +18,8 @@ interface Notification {
     createdAt: string;
 }
 
-export default function NotificationCenter({ socketToken }: { socketToken?: string }) {
-    const { onNewNotification } = useSocket({ token: socketToken });
+export default function NotificationCenter({ userId, role }: { userId?: string; role?: string }) {
+    const { onNewNotification } = useSocket({ userId, role, enabled: !!userId });
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
 

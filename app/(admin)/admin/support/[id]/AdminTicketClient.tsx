@@ -34,7 +34,7 @@ export default function AdminTicketClient({ ticketId, adminId, socketToken }: Ad
         onNewMessage,
         onTicketStatusChange,
         typingUsers
-    } = useSocket({ token: socketToken });
+    } = useSocket({ userId: adminId, role: 'admin', enabled: !!adminId });
 
     const fetchTicket = async () => {
         try {

@@ -137,9 +137,9 @@ const Hero = () => {
                 </div>
 
                 {/* Trust Signals */}
-                <div className="mt-4 w-full max-w-4xl">
+                {/* <div className="mt-4 w-full max-w-4xl">
                     <TrustSignals variant="horizontal" className="justify-center"/>
-                </div>
+                </div> */}
             </div>
         </section>
     );

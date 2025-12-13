@@ -64,7 +64,7 @@ const Navbar = () => {
                     </div> : (
                         <Suspense fallback={<Loader />}>
                             <div className="flex items-center justify-end gap-2">
-                                <NotificationCenter userId={user?._id} role={user?.role} />
+                                <NotificationCenter />
                                 <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
                                     userEmail={user?.email} userRole={user?.role as string} userFavorites={favoriteTemplates.length} />
                             </div>

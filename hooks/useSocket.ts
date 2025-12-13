@@ -11,6 +11,20 @@ interface UseSocketOptions {
     role?: string;
 }
 
+export interface SocketInterface {
+    isConnected: boolean;
+    joinTicket: (ticketId: string) => void;
+    leaveTicket: (ticketId: string) => void;
+    sendMessage: (ticketId: string, message: any) => void;
+    setTyping: (ticketId: string, isTyping: boolean) => void;
+    notifyTicketUpdate: (ticketId: string, updates: any) => void;
+    onNewMessage: (callback: (data: SocketMessage) => void) => () => void;
+    onTicketStatusChange: (callback: (data: TicketUpdate) => void) => () => void;
+    onNewNotification: (callback: (notification: any) => void) => () => void;
+    onUserStatusChange: (callback: (data: { userId: string, status: 'online' | 'offline' }) => void) => () => void;
+    typingUsers: Record<string, string[]>;
+}
+
 interface SocketMessage {
     ticketId: string;
     message: any;
@@ -27,7 +41,7 @@ interface TicketUpdate {
     updates: any;
 }
 
-export function useSocket({ enabled = true, userId, role }: UseSocketOptions = {}) {
+export function useSocket({ enabled = true, userId, role }: UseSocketOptions = {}): SocketInterface {
     const socketRef = useRef<Socket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [typingUsers, setTypingUsers] = useState<Record<string, string[]>>({});

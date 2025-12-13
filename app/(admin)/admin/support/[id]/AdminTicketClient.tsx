@@ -8,15 +8,14 @@ import StatusBadge from "@/components/Support/StatusBadge";
 import PriorityBadge from "@/components/Support/PriorityBadge";
 import MessageBubble from "@/components/Support/MessageBubble";
 import ChatInput from "@/components/Support/ChatInput";
-import { useSocket } from "@/hooks/useSocket";
+import { useUser } from "@/context/UserContext";
 
 interface AdminTicketClientProps {
     ticketId: string;
     adminId: string;
-    socketToken?: string;
 }
 
-export default function AdminTicketClient({ ticketId, adminId, socketToken }: AdminTicketClientProps) {
+export default function AdminTicketClient({ ticketId, adminId }: AdminTicketClientProps) {
     const router = useRouter();
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [ticket, setTicket] = useState<any>(null);
@@ -34,7 +33,7 @@ export default function AdminTicketClient({ ticketId, adminId, socketToken }: Ad
         onNewMessage,
         onTicketStatusChange,
         typingUsers
-    } = useSocket({ userId: adminId, role: 'admin', enabled: !!adminId });
+    } = useUser();
 
     const fetchTicket = async () => {
         try {

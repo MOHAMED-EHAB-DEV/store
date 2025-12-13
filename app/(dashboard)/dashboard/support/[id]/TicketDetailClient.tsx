@@ -8,7 +8,7 @@ import StatusBadge from "@/components/Support/StatusBadge";
 import PriorityBadge from "@/components/Support/PriorityBadge";
 import MessageBubble from "@/components/Support/MessageBubble";
 import ChatInput from "@/components/Support/ChatInput";
-import { useSocket } from "@/hooks/useSocket";
+import { useUser } from "@/context/UserContext";
 
 interface TicketDetailClientProps {
     ticketId: string;
@@ -33,7 +33,7 @@ export default function TicketDetailClient({ ticketId, userId, socketToken }: Ti
         onNewMessage,
         onTicketStatusChange,
         typingUsers
-    } = useSocket({ userId, role: 'user', enabled: !!userId });
+    } = useUser();
 
     const fetchTicket = async () => {
         try {

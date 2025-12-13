@@ -116,7 +116,7 @@ const Sidebar = ({ open, setOpen, user, socketToken }: {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <NotificationCenter userId={user?._id} role={user?.role} />
+                <NotificationCenter />
             </div>
         </div>
     )

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSocket } from "@/hooks/useSocket";
+import { useUser } from "@/context/UserContext";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,8 +18,8 @@ interface Notification {
     createdAt: string;
 }
 
-export default function NotificationCenter({ userId, role }: { userId?: string; role?: string }) {
-    const { onNewNotification } = useSocket({ userId, role, enabled: !!userId });
+export default function NotificationCenter() {
+    const { onNewNotification } = useUser();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
 

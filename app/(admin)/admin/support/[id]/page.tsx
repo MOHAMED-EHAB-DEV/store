@@ -19,9 +19,5 @@ export default async function AdminTicketPage({ params }: PageProps) {
 
     const { id } = await params;
 
-    // Get token for socket connection
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value || "";
-
-    return <AdminTicketClient ticketId={id} adminId={user._id} socketToken={token} />;
+    return <AdminTicketClient ticketId={id} adminId={user._id} />;
 }

@@ -2,9 +2,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types";
-import { useSocket } from "@/hooks/useSocket";
+import { useSocket, SocketInterface } from "@/hooks/useSocket";
 
-interface IUserContext {
+interface IUserContext extends SocketInterface {
     user: IUser | null;
     setUser: Dispatch<SetStateAction<IUser | null>>;
     setReload: Dispatch<SetStateAction<boolean>>;
@@ -24,6 +24,17 @@ const UserContext = createContext<IUserContext>({
     addToFavorites: () => { },
     removeFromFavorites: () => { },
     toggleFavorite: () => { },
+    isConnected: false,
+    joinTicket: () => { },
+    leaveTicket: () => { },
+    sendMessage: () => { },
+    setTyping: () => { },
+    notifyTicketUpdate: () => { },
+    onNewMessage: () => () => { },
+    onTicketStatusChange: () => () => { },
+    onNewNotification: () => () => { },
+    onUserStatusChange: () => () => { },
+    typingUsers: {},
 });
 
 
@@ -35,8 +46,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const [purchasedTemplates, setPurchasedTemplates] = useState([]);
 
     // Initialize socket globally when user is logged in
-    // No token needed here as it uses cookies
-    useSocket({
+    const socket = useSocket({
         enabled: !!user,
         userId: user?._id,
         role: user?.role
@@ -141,6 +151,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 addToFavorites,
                 removeFromFavorites,
                 toggleFavorite,
+                ...socket
             }}
         >
             {children}

@@ -1,6 +1,6 @@
 'use client';
 
-import {motion, useAnimationControls} from 'framer-motion';
+import {motion, useAnimationControls} from 'motion/react';
 import Image from 'next/image';
 import {useEffect, useMemo} from 'react';
 import {Star} from "@/components/ui/svgs/Icons";

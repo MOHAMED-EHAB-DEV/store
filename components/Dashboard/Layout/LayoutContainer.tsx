@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import Sidebar from "@/components/Dashboard/Layout/Sidebar";
 import { IUser } from '@/types';
 
-const LayoutContainer = ({ children, user, socketToken }: { children: React.ReactNode, user: IUser, socketToken?: string }) => {
+const LayoutContainer = ({ children, user }: { children: React.ReactNode, user: IUser }) => {
     const [open, setOpen] = useState(false);
 
     return (
         <div className="lg:w-[calc(100%-18rem)] w-full ms-auto">
-            <Sidebar user={user} open={open} setOpen={setOpen} socketToken={socketToken} />
+            <Sidebar user={user} open={open} setOpen={setOpen} />
             <div className="lg:pt-0 pt-14">
                 {children}
             </div>

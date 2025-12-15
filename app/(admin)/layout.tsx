@@ -14,12 +14,10 @@ export default async function RootLayout(
         children: React.ReactNode;
     }>) {
     const user = await authenticateUser(true, false, true);
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
 
     if (!user || user?.role !== "admin") redirect("/");
     return (
-        <LayoutContainer user={user} socketToken={token}>
+        <LayoutContainer user={user}>
             {children}
         </LayoutContainer>
     )

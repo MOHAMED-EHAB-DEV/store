@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import {
-    Dropdown,
-    DropdownTrigger,
     DropdownMenu,
-    DropdownItem,
-    DropdownSection,
-} from "@heroui/react";
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Notification {
     _id: string;
@@ -145,8 +144,8 @@ export default function NotificationCenter() {
     };
 
     return (
-        <Dropdown placement="bottom-end">
-            <DropdownTrigger>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
                 <button
                     className="relative p-2 rounded-xl hover:bg-white/10 transition-colors outline-none"
                     aria-label="Notifications"
@@ -162,39 +161,25 @@ export default function NotificationCenter() {
                         </span>
                     )}
                 </button>
-            </DropdownTrigger>
+            </DropdownMenuTrigger>
 
-            <DropdownMenu
-                aria-label="Notifications"
-                className="w-80 sm:w-96 glass-no-blur bg-black/90 backdrop-blur-xl border border-white/10 p-0"
-                itemClasses={{
-                    base: "gap-4 p-0"
-                }}
-            >
-                <DropdownItem
-                    key="header"
-                    isReadOnly
-                    className="opacity-100 cursor-default"
-                    textValue="Notifications Header"
-                >
-                    <div className="p-4 border-b border-white/10 flex items-center justify-between w-full">
-                        <h3 className="font-semibold text-white">Notifications</h3>
-                        {unreadCount > 0 && (
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    markAllAsRead();
-                                }}
-                                className="text-xs text-purple-400 hover:text-purple-300 transition-colors cursor-pointer pointer-events-auto"
-                            >
-                                Mark all as read
-                            </button>
-                        )}
-                    </div>
-                </DropdownItem>
-
-                {notifications.length === 0 ? (
-                    <DropdownItem key="empty" isReadOnly className="opacity-100 cursor-default" textValue="No notifications">
+            <DropdownMenuContent className="w-80 sm:w-96 glass-no-blur bg-black/90 backdrop-blur-xl border border-white/10 p-0" align="end">
+                <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                    <h3 className="font-semibold text-white">Notifications</h3>
+                    {unreadCount > 0 && (
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                markAllAsRead();
+                            }}
+                            className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                        >
+                            Mark all as read
+                        </button>
+                    )}
+                </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                    {notifications.length === 0 ? (
                         <div className="p-8 text-center text-muted-foreground">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mx-auto mb-3 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -202,27 +187,9 @@ export default function NotificationCenter() {
                             </svg>
                             <p>No notifications yet</p>
                         </div>
-                    </DropdownItem>
-                ) : (
-                    // We can't map directly inside DropdownMenu in the same way if we want to mix types, but we can return an array or just map.
-                    // Important: DropdownMenu children must be DropdownItem or DropdownSection.
-                    // We can treat each notification as an Item.
-                    // Note: 'asChild' behavior in HeroUI is different, usually just put content in Item.
-                    // We will put the Link INSIDE the DropdownItem, or make the DropdownItem clickable itself.
-                    <DropdownSection aria-label="Notification List" className="max-h-[400px] overflow-y-auto">
-                        {notifications.map((notification) => (
-                            <DropdownItem
-                                key={notification._id}
-                                className="p-0 focus:bg-transparent"
-                                textValue={notification.title}
-                                onPress={() => {
-                                    // Navigate manually or allow Link to handle it?
-                                    // If we use Link inside, it might be nested buttons.
-                                    // Better to use onPress for logic + router.push potentially?
-                                    // Or just wrap content in Link?
-                                    // Keep existing structure: Link inside Item.
-                                }}
-                            >
+                    ) : (
+                        notifications.map((notification) => (
+                            <DropdownMenuItem key={notification._id} asChild className="p-0 focus:bg-transparent">
                                 <Link
                                     href={notification.link || "#"}
                                     onClick={() => {
@@ -252,11 +219,11 @@ export default function NotificationCenter() {
                                         </p>
                                     </div>
                                 </Link>
-                            </DropdownItem>
-                        ))}
-                    </DropdownSection>
-                )}
-            </DropdownMenu>
-        </Dropdown>
+                            </DropdownMenuItem>
+                        ))
+                    )}
+                </div>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }

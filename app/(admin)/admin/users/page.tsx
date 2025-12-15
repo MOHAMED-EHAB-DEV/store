@@ -1,3 +1,4 @@
+"use client";
 import {
     Select,
     SelectContent,
@@ -5,18 +6,13 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
-import { Metadata } from "next";
-import { cookies } from "next/headers";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-    title: "Users Management | Admin",
-    description: "Manage all users"
-};
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { capitalizeFirstChar } from "@/lib/utils";
 
 async function getUsers(searchParams: { [key: string]: string | undefined }) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     const params = new URLSearchParams();
@@ -28,7 +24,6 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
 
     try {
         const response = await fetch(`${baseUrl}/api/admin/users?${params.toString()}`, {
-            headers: { Cookie: `token=${token}` },
             cache: "no-store"
         });
 
@@ -40,13 +35,51 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
     }
 }
 
-interface PageProps {
-    searchParams: Promise<{ [key: string]: string | undefined }>;
-}
+export default function AdminUsersPage() {
+    const router = useRouter();
+    const [users, setUsers] = useState([]);
+    const [pagination, setPagination] = useState({
+        total: 0,
+        pages: 0,
+        page: 0,
+        limit: 0,
+    });
+    const [params, setParams] = useState({
+        page: "1",
+        search: "",
+        role: "all",
+        tier: "all",
+    });
+    const [loading, setLoading] = useState(true);
 
-export default async function AdminUsersPage({ searchParams }: PageProps) {
-    const params = await searchParams;
-    const { users, pagination } = await getUsers(params);
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const searchParams = new URLSearchParams();
+            if (params.page) searchParams.set("page", params.page);
+            if (params.search) searchParams.set("search", params.search);
+            if (params.role !== "all") searchParams.set("role", params.role);
+            if (params.tier !== "all") searchParams.set("tier", params.tier);
+            searchParams.set("limit", "20");
+
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/users?${searchParams.toString()}`, {
+                    cache: "no-store"
+                });
+
+                if (!response.ok) return { users: [], pagination: null };
+                const data = await response.json();
+                setUsers(data.data || []);
+                setPagination(data.pagination);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+                setLoading(false);
+            }
+        };
+        fetchUsers();
+    }, [params]);
+
+    if (loading) return <span>Loading</span>;
 
     return (
         <div className="p-6 space-y-6">
@@ -62,17 +95,18 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
 
             {/* Filters */}
             <div className="glass rounded-xl p-4">
-                <form className="flex flex-wrap gap-4">
+                <form className="flex items-center flex-wrap gap-4">
                     <input
                         type="text"
                         name="search"
                         placeholder="Search by name or email..."
                         defaultValue={params.search || ""}
+                        onChange={(e) => setParams({ ...params, search: e.target.value })}
                         className="flex-1 min-w-[200px] px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <Select
-                        defaultValue={params.role || ""}
-                        // className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors"
+                        defaultValue={params.role}
+                        onValueChange={(value) => setParams({ ...params, role: value })}
                     >
                         <SelectTrigger className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors">
                             <SelectValue placeholder="Select a role" />
@@ -83,21 +117,25 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                             <SelectItem value="admin" className="bg-gray-900 focus:bg-primary hover:bg-primary">Admin</SelectItem>
                         </SelectContent>
                     </Select>
-                    <select
-                        name="tier"
-                        defaultValue={params.tier || ""}
-                        className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors"
+                    <Select
+                        defaultValue={params.tier}
+                        onValueChange={(value) => setParams({ ...params, tier: value })}
                     >
-                        <option value="" className="bg-gray-900">All Tiers</option>
-                        <option value="free" className="bg-gray-900">Free</option>
-                        <option value="premium" className="bg-gray-900">Premium</option>
-                    </select>
-                    <button
+                        <SelectTrigger className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/15 transition-colors">
+                            <SelectValue placeholder="Select a tier" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all" className="bg-gray-900 focus:bg-primary hover:bg-primary">All Tiers</SelectItem>
+                            <SelectItem value="free" className="bg-gray-900 focus:bg-primary hover:bg-primary">Free</SelectItem>
+                            <SelectItem value="premium" className="bg-gray-900 focus:bg-primary hover:bg-primary">Premium</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Button
                         type="submit"
                         className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-500/20"
                     >
                         Filter
-                    </button>
+                    </Button>
                 </form>
             </div>
 
@@ -136,24 +174,24 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                                         <td className="p-4 text-muted-foreground">{user.email}</td>
                                         <td className="p-4">
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${user.role === "admin" ? "bg-purple-500/20 text-purple-400" : "bg-gray-500/20 text-gray-400"}`}>
-                                                {user.role}
+                                                {capitalizeFirstChar(user.role)}
                                             </span>
                                         </td>
                                         <td className="p-4">
                                             <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${user.tier === "premium" ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" : "bg-slate-500/20 text-slate-300 border border-slate-500/30"}`}>
-                                                {user.tier === "premium" ? "Premium" : "Free"}
+                                                {capitalizeFirstChar(user.tier)}
                                             </span>
                                         </td>
                                         <td className="p-4 text-muted-foreground text-sm">
                                             {new Date(user.createdAt).toLocaleDateString()}
                                         </td>
                                         <td className="p-4">
-                                            <Link
-                                                href={`/admin/users/${user._id}`}
-                                                className="text-blue-400 hover:text-blue-300 hover:underline text-sm font-medium transition-colors"
+                                            <Button
+                                                onClick={() => router.push(`/admin/users/${user._id}`)}
+                                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-500/20 cursor-pointer"
                                             >
                                                 View Details
-                                            </Link>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))

@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { ShieldAlert, Home, Mail } from "@/components/ui/svgs/Icons";
 import { Metadata } from "next";
-import { authenticateUser } from "@/middleware/auth";
-import { redirect } from "next/navigation";
-
-export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: "Account Banned | MHD Store",
@@ -13,9 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function BannedPage() {
-    const user = await authenticateUser(true);
-
-    if (!user || !user?.banned) redirect("/");
     return (
         <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
             <div className="absolute inset-0 overflow-hidden">
@@ -76,9 +69,9 @@ export default async function BannedPage() {
                             </Link>
                         </div>
 
-                        <p className="text-center text-gray-500 text-sm mt-8">
+                        {/* <p className="text-center text-gray-500 text-sm mt-8">
                             Ban ID: {user?.banId}
-                        </p>
+                        </p> */}
                     </div>
 
                     <div className="text-center mt-8 text-gray-400 text-sm">

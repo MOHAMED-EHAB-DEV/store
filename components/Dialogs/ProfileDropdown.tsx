@@ -69,17 +69,17 @@ const ProfileDropdown = ({ userImage, userRole, username, userEmail, userFavorit
                         <p className="text-secondary font-medium text-md">{userEmail}</p>
                     </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push(`/dashboard`)} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <LayoutDashboard className="text-gray-400 size-7" />
-                    <span className="text-white font-medium text-md">Dashboard</span>
-                </DropdownMenuItem>
                 {userRole === "admin" && (
                     <DropdownMenuItem onClick={() => router.push("/admin")} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
 
                         <LayoutDashboard className="text-gray-400 size-7" />
-                        <span className="text-white font-medium text-md">Dashboard</span>
+                        <span className="text-white font-medium text-md">Admin Dashboard</span>
                     </DropdownMenuItem>
                 )}
+                <DropdownMenuItem onClick={() => router.push(`/dashboard`)} className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                    <LayoutDashboard className="text-gray-400 size-7" />
+                    <span className="text-white font-medium text-md">Dashboard</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => router.push("/favorites")}
                     className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"

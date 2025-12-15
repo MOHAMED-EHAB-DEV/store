@@ -309,7 +309,7 @@ const AdminSidebarLinks = [
     {
         Icon: LayoutDashboard,
         text: "Dashboard",
-        link: "/admin/dashboard",
+        link: "/admin",
     },
     {
         Icon: Users,

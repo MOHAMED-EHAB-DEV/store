@@ -5,15 +5,15 @@ import { DashboardSidebarLinks } from "@/constants";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import {
+    Dropdown,
+    DropdownTrigger,
     DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+    DropdownItem,
+} from "@heroui/react";
 import { Home } from "@/components/ui/svgs/Icons";
 import { sonnerToast } from "@/components/ui/sonner";
 import { IUser } from '@/types';
-import NotificationCenter from "@/components/NotificationCenter";
+import NotificationCenter from "@/components/shared/NotificationCenter";
 
 const Sidebar = ({ open, setOpen, user, socketToken }: {
     open: Boolean,
@@ -86,36 +86,39 @@ const Sidebar = ({ open, setOpen, user, socketToken }: {
             <div className="relative flex items-center w-full h-20">
                 {/* Line */}
                 <div className="h-1 absolute top-0 left-0 w-full rounded-full bg-white/10" />
-                <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-                    <DropdownMenuTrigger
-                        className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
-                        <div className="w-7 h-7 flex items-center justify-center">
-                            <Image
-                                src={user?.avatar === "" ? "/assets/Icons/profile.svg" : user?.avatar as string}
-                                alt={`${user?.name} Profile`}
-                                width={30}
-                                height={30}
-                                className="p-px rounded-full transition-all duration-500 w-full h-full border hover:border-white"
-                            />
-                        </div>
-                        <div className="flex gap-1 items-center">
-                            <h1 className="text-md font-semibold text-white">{user?.name.split(" ")[0]}</h1>
-                        </div>
-                        {isOpen ? <ChevronUp /> : <ChevronDown />}
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-dark">
-                        <DropdownMenuItem onClick={() => router.push("/")}
-                            className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                            <Home />
-                            <span className="text-white font-medium text-md">Home</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleLogout}
-                            className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                            <LogOut />
-                            <span className="text-white font-medium text-md">Logout</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Dropdown isOpen={isOpen} onOpenChange={setIsOpen}>
+                    <DropdownTrigger>
+                        <button className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
+                            <div className="w-7 h-7 flex items-center justify-center">
+                                <Image
+                                    src={user?.avatar === "" ? "/assets/Icons/profile.svg" : user?.avatar as string}
+                                    alt={`${user?.name} Profile`}
+                                    width={30}
+                                    height={30}
+                                    className="p-px rounded-full transition-all duration-500 w-full h-full border hover:border-white"
+                                />
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <h1 className="text-md font-semibold text-white">{user?.name.split(" ")[0]}</h1>
+                            </div>
+                            {isOpen ? <ChevronUp /> : <ChevronDown />}
+                        </button>
+                    </DropdownTrigger>
+                    <DropdownMenu className="bg-dark" aria-label="User Actions">
+                        <DropdownItem key="home" onPress={() => router.push("/")} textValue="Home">
+                            <div className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                                <Home />
+                                <span className="text-white font-medium text-md">Home</span>
+                            </div>
+                        </DropdownItem>
+                        <DropdownItem key="logout" onPress={(e) => handleLogout(e as any)} textValue="Logout">
+                            <div className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                                <LogOut />
+                                <span className="text-white font-medium text-md">Logout</span>
+                            </div>
+                        </DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
                 <NotificationCenter />
             </div>
         </div>

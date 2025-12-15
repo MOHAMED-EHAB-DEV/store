@@ -97,12 +97,12 @@ export default function AdminTicketClient({ ticketId, adminId }: AdminTicketClie
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handleSendMessage = async (content: string) => {
+    const handleSendMessage = async (content: string, attachments?: string[]) => {
         try {
             const response = await fetch(`/api/support/tickets/${ticketId}/messages`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content })
+                body: JSON.stringify({ content, attachments })
             });
 
             const data = await response.json();

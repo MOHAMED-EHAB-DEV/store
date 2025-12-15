@@ -41,8 +41,8 @@ export const ourFileRouter = {
     // General image uploader for blog covers, FAQ images, etc.
     imageUploader: f({
         image: {
-            maxFileSize: "8MB",
-            maxFileCount: 1,
+            maxFileSize: "4MB",
+            maxFileCount: 4,
         },
     })
         .middleware(async ({ req }) => {

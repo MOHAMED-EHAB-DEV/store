@@ -2,6 +2,11 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface MessageBubbleProps {
     message: {
@@ -85,17 +90,52 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
                 {/* Attachments */}
                 {message.attachments && message.attachments.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {message.attachments.map((url, index) => (
-                            <a
-                                key={index}
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-purple-400 hover:text-purple-300 underline"
-                            >
-                                Attachment {index + 1}
-                            </a>
-                        ))}
+                        {message.attachments.map((url, index) => {
+                            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url) || url.includes("utfs.io");
+
+                            if (isImage) {
+                                return (
+                                    <Dialog key={index}>
+                                        <DialogTrigger asChild>
+                                            <button className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20">
+                                                <Image
+                                                    src={url}
+                                                    alt={`Attachment ${index + 1}`}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </button>
+                                        </DialogTrigger>
+                                        <DialogContent className="max-w-[90vw] max-h-[90vh] w-auto h-auto p-0 bg-transparent border-none shadow-none overflow-hidden flex items-center justify-center">
+                                            <div className="relative w-[90vw] h-[80vh] sm:w-[80vw] sm:h-[80vh]">
+                                                <Image
+                                                    src={url}
+                                                    alt={`Attachment ${index + 1}`}
+                                                    fill
+                                                    className="object-contain"
+                                                />
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                );
+                            }
+
+                            return (
+                                <a
+                                    key={index}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-purple-400 hover:text-purple-300 hover:bg-white/10 transition-all"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                    </svg>
+                                    <span>Attachment {index + 1}</span>
+                                </a>
+                            );
+                        })}
                     </div>
                 )}
 

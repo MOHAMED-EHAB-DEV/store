@@ -5,7 +5,7 @@ import { Menu, X } from '@/components/ui/svgs/Icons';
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
-import NotificationCenter from "@/components/NotificationCenter";
+import NotificationCenter from "@/components/shared/NotificationCenter";
 import { NavigationLinks } from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";

@@ -38,7 +38,7 @@ const Templates = ({ initialData, categories, isHome = false, searchParams }: {
         setSelectedBuiltWithOptions,
         clearFilters,
         hasActiveFilters,
-    } = useFilters(categories, searchParams);
+    } = useFilters(categories, initialData, searchParams);
 
     const { templates, isLoading } = useTemplates(
         initialData,

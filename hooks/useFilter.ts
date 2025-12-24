@@ -1,15 +1,19 @@
 "use client"
 import { useState } from 'react';
-import { ICategory } from '@/types';
+import { ICategory, ITemplate } from '@/types';
 import { builtWithOptions } from '@/constants';
 
 type SelectedCategory = { selected: boolean } & ICategory;
 
-export const useFilters = (initialCategories: ICategory[], searchParams?: {
-    builtWith: string[] | string;
-    categories: string[] | string;
-    tags: string[] | string;
-}) => {
+export const useFilters = (
+    initialCategories: ICategory[],
+    templates: ITemplate[],
+    searchParams?: {
+        builtWith: string[] | string;
+        categories: string[] | string;
+        tags: string[] | string;
+    }
+) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
@@ -25,7 +29,9 @@ export const useFilters = (initialCategories: ICategory[], searchParams?: {
         }))
     );
 
-    const uniqueTags = Array.from(new Set(initialCategories.flatMap((category) => category.tags))).map((tag) => ({
+    const uniqueTags = Array.from(
+        new Set(templates.flatMap((template) => template.tags))
+    ).map((tag) => ({
         tag,
         selected: Array.isArray(searchParams?.tags) ? searchParams.tags.some((t) => t === tag) : searchParams?.tags === tag,
     }));

@@ -25,9 +25,9 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 averageRating={template.averageRating}
                 reviewCount={template.reviews}
             />
-            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-16 py-10 w-screen text-white">
+            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-8 py-10 w-full max-w-screen-xl mx-auto text-white">
                 {/* Top Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-[30%_1fr_22%] gap-8 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-8 items-start">
                     {/* Thumbnail */}
                     <div className="flex justify-center lg:justify-start">
                         <Image
@@ -54,7 +54,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                                 {template.price === 0 ? "Free" : `$${template.price}`}
                             </span>
                         </div>
-                        <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-all">
+                        <p className="text-gray-300 leading-relaxed text-sm sm:text-base break-words">
                             {template.description}
                         </p>
 
@@ -177,7 +177,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                             You might also like
                         </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                             {similarTemplates.map((temp) => (
                                 <SimilarTemplate key={temp._id} template={temp} showPrice={true} />
                             ))}

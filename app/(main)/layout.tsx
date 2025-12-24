@@ -1,6 +1,6 @@
 import { ReactLenis, useLenis } from 'lenis/react'
 import { ReactNode } from 'react';
-import NewFooter from "@/components/home/NewFooter";
+import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";
 
 export default function RootLayout(
@@ -19,7 +19,7 @@ export default function RootLayout(
                     {children}
                 </div>
 
-                <NewFooter />
+                <Footer />
             </div>
         </>
     )

@@ -1,10 +1,10 @@
 'use client';
 
-import {useLayoutEffect} from "react";
-import {Star, ArrowRight} from '@/components/ui/svgs/Icons';
+import { useLayoutEffect } from "react";
+import { Star, ArrowRight } from '@/components/ui/svgs/Icons';
 import gsap from "gsap"
-import {SplitText} from "gsap/all";
-import {Badge} from '@/components/ui/badge';
+import { SplitText } from "gsap/all";
+import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
 import TrustSignals from '@/components/ui/TrustSignals';
 
@@ -17,7 +17,7 @@ const Hero = () => {
             mask: 'words',
         });
 
-        gsap.set('.header', {opacity: 1,});
+        gsap.set('.header', { opacity: 1, });
 
         gsap.from(splitHeader.words, {
             duration: 1.5,
@@ -60,15 +60,22 @@ const Hero = () => {
             role="banner"
         >
             {/* Enhanced Background Layer */}
-            <div className="absolute inset-0 bg-linear-to-br from-primary via-primary/95 to-primary/90"/>
+            <div className="absolute inset-0 bg-linear-to-br from-primary via-primary/95 to-primary/90" />
             <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10"/>
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10" />
             <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent"/>
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent" />
             <div
-                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"/>
-            {/*<div*/}
-            {/*    className="absolute md:top-0 md:-left-44 w-full h-full pointer-events-none before:content-[''] before:absolute before:-left-[350px] before:-top-[500px] md:before:-top-72 md:before:-left-44 before:w-[800px] before:h-[800px] before:rounded-full before:bg-gradient-to-br before:from-white/90 before:to-white/40 before:blur-3xl before:opacity-50 before:rotate-[60deg]"/>*/}
+                className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
+            {/* <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: `linear-gradient(oklch(0.92 0.01 260) 1px, transparent 1px), linear-gradient(90deg, oklch(0.92 0.01 260) 1px, transparent 1px)`,
+                    backgroundSize: "50px 50px",
+                }}
+            />
+            <div
+                className="absolute top-20 md:-left-[400px] w-full h-full pointer-events-none before:content-[''] before:absolute before:-left-[350px] before:-top-[500px] md:before:-top-72 md:before:-left-44 before:w-[800px] before:h-[800px] before:rounded-full before:bg-gradient-to-br before:from-white/90 before:to-white/40 before:blur-3xl before:opacity-50 before:rotate-[60deg]" /> */}
 
             <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
                 <Badge
@@ -78,10 +85,10 @@ const Hero = () => {
                     aria-label="Featured announcement"
                 >
                     <Star
-                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300"/>
+                        className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" />
                     <span className="relative z-10">Unleash Your Creativity</span>
                     <span
-                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent animate-shine"/>
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent animate-shine" />
                 </Badge>
 
                 <div className="flex flex-col gap-4 items-center justify-center w-full">
@@ -93,7 +100,7 @@ const Hero = () => {
                             Elevate
                             <div
                                 aria-hidden="true"
-                                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"/>
+                                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg" />
                         </span>{' '}
                         Your Projects
                     </h1>
@@ -117,10 +124,10 @@ const Hero = () => {
                         <span className="relative z-10 flex items-center gap-2">
                             Explore Templates
                             <ArrowRight
-                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"/>
+                                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                         </span>
                         <div
-                            className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"/>
+                            className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                     </Link>
 
                     {/*<Link*/}

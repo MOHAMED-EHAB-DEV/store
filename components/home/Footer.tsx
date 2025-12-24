@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Logo from '@/components/ui/Logo';
 import { socialImgs, NavigationLinks } from '@/constants';
 
-const NewFooter = () => {
+const Footer = () => {
   return (
     <footer className="w-full bg-dark text-white">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -33,7 +33,7 @@ const NewFooter = () => {
               {NavigationLinks.map(({ id, text, link }) => (
                 <li key={id}>
                   <Link href={link} className="text-secondary hover:text-white transition">
-                      {text}
+                    {text}
                   </Link>
                 </li>
               ))}
@@ -44,12 +44,12 @@ const NewFooter = () => {
             <ul className="flex flex-col gap-2">
               <li>
                 <Link href="/terms-of-service" className="text-secondary hover:text-white transition">
-                    Terms of Service
+                  Terms of Service
                 </Link>
               </li>
               <li>
                 <Link href="/privacy-policy" className="text-secondary hover:text-white transition">
-                    Privacy Policy
+                  Privacy Policy
                 </Link>
               </li>
             </ul>
@@ -57,7 +57,7 @@ const NewFooter = () => {
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800 text-center text-secondary">
           <p>
-            &copy; {new Date().getFullYear()} MHD-Store. All rights reserved.
+            Copyright &copy; {new Date().getFullYear()} Mohammed Ehab. All rights reserved.
           </p>
         </div>
       </div>
@@ -65,4 +65,4 @@ const NewFooter = () => {
   );
 };
 
-export default NewFooter;
+export default Footer;

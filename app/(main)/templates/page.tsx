@@ -71,11 +71,9 @@ interface PageProps {
 }
 
 const Page = async ({ searchParams }: PageProps) => {
-    const params = searchParams;
-    const [templates, categories] = await Promise.all([
-        getInitialData({ ...params }),
-        getCategories(),
-    ]);
+    const params = await searchParams;
+    const templates = await getInitialData({ ...params });
+    const categories = await getCategories() as ICategory[];
 
     return (
         <main className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw px-5 md:px-56"

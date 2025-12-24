@@ -7,7 +7,7 @@ import { connectToDatabase } from "@/lib/database";
 import TemplateModel from "@/lib/models/Template";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 // Generate static params for build-time generation
@@ -95,7 +95,7 @@ const getSimilarTemplates = async (
 
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id } = params;
   const { data: template } = await getTemplate(id);
 
   if (!template) {
@@ -120,7 +120,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const Page = async ({ params }: PageProps) => {
-  const { id } = await params;
+  const { id } = params;
 
   const { data: template, err } = await getTemplate(id);
 
@@ -128,7 +128,8 @@ const Page = async ({ params }: PageProps) => {
     notFound();
   }
 
-  const { data: similarTemplates } = await getSimilarTemplates(
+  // Fetch similar templates in parallel
+  const similarTemplatesPromise = getSimilarTemplates(
     template.categories || [],
     template.builtWith,
     template.tags || [],
@@ -164,6 +165,8 @@ const Page = async ({ params }: PageProps) => {
       name: "Premium Templates",
     },
   };
+
+  const { data: similarTemplates } = await similarTemplatesPromise;
 
   return (
     <>

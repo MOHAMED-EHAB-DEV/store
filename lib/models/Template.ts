@@ -315,6 +315,7 @@ TemplateSchema.statics.searchTemplates = function (
     minRating?: number;
     sortBy?: "popular" | "recent" | "rating" | "price" | "downloads";
     type?: "framer" | "figma" | "coded";
+    includedFields?: string[];
   },
   limit = 20,
   skip = 0
@@ -328,6 +329,7 @@ TemplateSchema.statics.searchTemplates = function (
     minRating,
     sortBy = "popular",
     type,
+    includedFields
   } = searchOptions;
 
   // Build match stage
@@ -446,6 +448,10 @@ TemplateSchema.statics.searchTemplates = function (
         tags: 1,
         builtWith: 1,
         createdAt: 1,
+        ...(includedFields?.length && includedFields.reduce((acc, field) => {
+          acc[field] = 1;
+          return acc;
+        }, {} as Record<string, number>)),
       },
     },
   ];
@@ -667,6 +673,7 @@ export interface ITemplateModel extends Model<ITemplate> {
       minRating?: number;
       sortBy?: "popular" | "recent" | "rating" | "price" | "downloads";
       type?: "framer" | "figma" | "coded";
+      includedFields?: string[];
     },
     limit?: number,
     skip?: number

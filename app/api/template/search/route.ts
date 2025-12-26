@@ -17,6 +17,7 @@ function validateSearchParams(req: NextRequest): {
   try {
     const { searchParams } = new URL(req.url);
 
+    const includedFields = searchParams.get("includedFields")?.split(",");
     const search = searchParams.get("search")?.trim() || "";
     const categories =
       searchParams
@@ -135,6 +136,7 @@ function validateSearchParams(req: NextRequest): {
         minRating: minRatingValue,
         sortBy,
         type,
+        includedFields,
       },
     };
   } catch (error) {
@@ -159,6 +161,7 @@ function generateCacheKey(req: NextRequest): string {
     searchParams.get("sortBy") || "popular",
     searchParams.get("page") || "1",
     searchParams.get("limit") || "20",
+    searchParams.get("includedFields") || ""
   ].join("|");
 
   return `template_search:${Buffer.from(params).toString("base64")}`;
@@ -190,6 +193,7 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
       minRating: params.minRating,
       sortBy: params.sortBy,
       type: params.type,
+      includedFields: params.includedFields,
     };
 
     // Use aggregation for better performance

@@ -1,42 +1,46 @@
-import Link from "next/link";
-import Blogs from "@/components/Admin/Blogs";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import AdminBlogsClient from "@/components/Admin/AdminBlogsClient";
+import { authenticateUser } from "@/middleware/auth";
+import { ErrorState } from "@/components/Dashboard/shared/LoadingStates";
 
-const getData = async () => {
+export const metadata: Metadata = {
+    title: "Blogs Management | Admin Dashboard",
+    description: "Manage blog posts and content",
+    robots: "noindex, nofollow",
+};
+
+export const dynamic = "force-dynamic";
+
+async function getBlogs() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
     try {
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token");
-        const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-        // Adding 'admin=true' to show all posts including drafts
-        const res = await fetch(`${domain}/api/blogs?admin=true&limit=100`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token?.value || ''}`
-            },
-            cache: 'no-store' // Dynamic data
+        const response = await fetch(`${baseUrl}/api/admin/blogs?limit=1000`, {
+            headers: { Cookie: `token=${token}` },
+            cache: "no-store"
         });
 
-        if (!res.ok) {
-            return [];
-        }
-
-        const json = await res.json();
-        return json.success ? json.data : [];
-    } catch (err) {
-        console.error("Failed to fetch blogs:", err);
-        return [];
+        const data = response.ok ? await response.json() : { data: [] };
+        return data.data || [];
+    } catch (error) {
+        console.error("Error fetching blogs:", error);
+        return null;
     }
 }
 
-const Page = async () => {
-    const blogs = await getData();
+export default async function AdminBlogsPage() {
+    const user = await authenticateUser(true, true, true);
+    if (!user) redirect("/");
 
-    return (
-        <div className="grid grid-rows-[auto_1fr] h-full w-full p-8 gap-10">
-            <h1 className="text-white font-bold text-3xl">Blog Management</h1>
-            <Blogs initialData={blogs} />
-        </div>
-    )
-};
-export default Page;
+    const blogs = await getBlogs();
+
+    if (blogs === null) {
+        return <ErrorState message="Failed to load blogs. Please refresh the page." />;
+    }
+
+    return <AdminBlogsClient blogs={blogs} />;
+}

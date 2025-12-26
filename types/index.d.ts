@@ -85,3 +85,18 @@ declare type ICategory = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+declare type IDownloadLog = {
+  userId?: mongoose.Types.ObjectId;
+  templateId: mongoose.Types.ObjectId;
+  ip: string;
+  userAgent?: string;
+  filename: string;
+  fileKey?: string;
+  bytes?: number;
+  status: "success" | "failed";
+  statusCode?: number;
+  meta?: any;
+  createdAt: Date;
+  updatedAt: Date;
+}

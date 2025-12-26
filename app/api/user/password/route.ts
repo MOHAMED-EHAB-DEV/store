@@ -51,7 +51,7 @@ function checkRateLimit(identifier: string, maxAttempts = 5, windowMs = 15 * 60 
     return true;
 }
 
-export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
+export async function PATCH(req: Request): Promise<NextResponse<ApiResponse>> {
     const startTime = Date.now();
     
     try {

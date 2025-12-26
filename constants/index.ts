@@ -290,6 +290,11 @@ const socialImgs = [
 const DashboardSidebarLinks = [
     {
         Icon: LayoutDashboard,
+        text: "Dashboard",
+        link: "/dashboard",
+    },
+    {
+        Icon: Templates,
         text: "Purchased Templates",
         link: "/dashboard/purchased-templates",
     },

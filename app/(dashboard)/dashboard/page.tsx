@@ -1,50 +1,51 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import PurchasedTemplatesClient from "@/components/Dashboard/PurchasedTemplatesClient";
+import DashboardHome from "@/components/Dashboard/DashboardHome";
 import { authenticateUser } from "@/middleware/auth";
 
 export const metadata: Metadata = {
-    title: "Purchased Templates | Dashboard",
-    description: "View and manage your purchased templates"
+    title: "Dashboard | Home",
+    description: "Your personal dashboard overview"
 };
 
 export const dynamic = "force-dynamic";
 
-async function getPurchasedTemplates() {
+async function getDashboardData() {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     try {
-        const [templatesRes, categoriesRes] = await Promise.all([
+        const [templatesRes, ticketsRes] = await Promise.all([
             fetch(`${baseUrl}/api/user/templates`, {
                 headers: { Cookie: `token=${token}` },
                 cache: "no-store"
             }),
-            fetch(`${baseUrl}/api/categories`, {
+            fetch(`${baseUrl}/api/user/tickets`, {
+                headers: { Cookie: `token=${token}` },
                 cache: "no-store"
             })
         ]);
 
         const templates = templatesRes.ok ? await templatesRes.json() : { data: [] };
-        const categories = categoriesRes.ok ? await categoriesRes.json() : { data: [] };
+        const tickets = ticketsRes.ok ? await ticketsRes.json() : { data: [] };
 
         return {
             templates: templates.data || [],
-            categories: categories.data || [],
+            tickets: tickets.data || [],
         };
     } catch (error) {
-        console.error("Error fetching templates:", error);
-        return { templates: [], categories: [] };
+        console.error("Error fetching dashboard data:", error);
+        return { templates: [], tickets: [] };
     }
 }
 
-export default async function PurchasedTemplatesPage() {
+export default async function DashboardPage() {
     const user = await authenticateUser(true, false, true);
     if (!user) redirect("/");
 
-    const data = await getPurchasedTemplates();
+    const data = await getDashboardData();
 
-    return <PurchasedTemplatesClient templates={data.templates} categories={data.categories} />;
+    return <DashboardHome user={user} data={data} />;
 }

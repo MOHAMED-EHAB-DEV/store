@@ -28,6 +28,11 @@ export interface IUser extends Document {
     };
     online: boolean;
     lastSeen: Date;
+    preferences: {
+        emailNotifications: boolean;
+        marketingEmails: boolean;
+        weeklyDigest: boolean;
+    };
 }
 
 const UserSchema = new Schema<IUser>({
@@ -133,7 +138,21 @@ const UserSchema = new Schema<IUser>({
     lastSeen: {
         type: Date,
         default: Date.now,
-    }
+    },
+    preferences: {
+        emailNotifications: {
+            type: Boolean,
+            default: true,
+        },
+        marketingEmails: {
+            type: Boolean,
+            default: false,
+        },
+        weeklyDigest: {
+            type: Boolean,
+            default: true,
+        },
+    },
 }, {
     timestamps: true,
     strict: true,

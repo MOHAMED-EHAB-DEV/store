@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import "./User";
 
 export interface IBlog extends Document {
   _id: string;
@@ -8,7 +9,7 @@ export interface IBlog extends Document {
   excerpt?: string;
   coverImage?: string;
   tags: string[];
-  author?: mongoose.Schema.Types.ObjectId; // Optional for now, or link to User
+  author?: mongoose.Schema.Types.ObjectId;
   isPublished: boolean;
   publishedAt?: Date;
   views: number;

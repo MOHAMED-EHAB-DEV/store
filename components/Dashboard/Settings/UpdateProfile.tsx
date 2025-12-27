@@ -15,7 +15,6 @@ const UpdateProfile = ({user}: { user: IUser }) => {
     const [files, setFiles] = useState<File[]>([]);
     const [isImageLoading, setIsImageLoading] = useState(false);
     const [error, setError] = useState(false);
-    const InputRef = useRef<HTMLInputElement | null>(null);
     const [image, setImage] = useState(user?.avatar === "" ? "/assets/Icons/profile.svg" : user?.avatar as string);
     const [name, setName] = useState(user?.name);
     const [isLoading, setIsLoading] = useState(false);
@@ -74,11 +73,12 @@ const UpdateProfile = ({user}: { user: IUser }) => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-
         try {
+            let avatar;
             if (files.length > 0) {
                 const uploaded = await uploadImage(files[0]);
                 if (uploaded) {
+                    avatar = uploaded;
                     setImage(uploaded);
                     setFilePreview(undefined);
                 }
@@ -88,9 +88,11 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                 method: "POST",
                 body: JSON.stringify({
                     name,
-                    avatar: image,
+                    avatar,
                 }),
             }).then((res) => res.json());
+
+            setFiles([]);
 
             sonnerToast.success("Profile updated successfully!");
             router.refresh();

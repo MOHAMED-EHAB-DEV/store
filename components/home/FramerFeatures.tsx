@@ -192,20 +192,19 @@ const FramerFeatures = () => {
                             className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6 feature-video"
                             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
                         >
-                            <video
-                                src="/assets/Videos/framer-demo.mp4"
-                                autoPlay
-                                loop
-                                muted
-                                className="absolute top-0 left-0 w-full h-full object-cover"
+                            <Image
+                                src="/assets/Icons/cover.jpg"
+                                alt="cover"
+                                fill
+                                className="absolute inset-0 object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
                             />
-                            <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
                             <div className="relative z-10">
                                 <h1 className="text-white font-paras font-bold text-xl md:text-3xl">
-                                    Lightning-Fast Launch
+                                    Built for Scale
                                 </h1>
                                 <p className="text-secondary font-medium text-base md:text-lg">
-                                    Get live in <b>days</b>, not <b>months</b>.
+                                    Clean architecture, responsive layouts, and real-world usability.
                                 </p>
                             </div>
                         </div>

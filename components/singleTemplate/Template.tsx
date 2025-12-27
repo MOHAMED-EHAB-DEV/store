@@ -25,7 +25,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 averageRating={template.averageRating}
                 reviewCount={template.reviews}
             />
-            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-8 py-10 w-full max-w-screen-xl mx-auto text-white">
+            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-8 py-10 w-full max-w-screen-2xl mx-auto text-white">
                 {/* Top Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-8 items-start">
                     {/* Thumbnail */}
@@ -33,10 +33,10 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                         <Image
                             src={template?.thumbnail}
                             alt={template.title}
-                            width={400}
-                            height={400}
-                            sizes="(min-width: 1024px) 350px, (min-width: 640px) 320px, 280px"
-                            className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[350px] rounded-xl shadow-lg object-cover"
+                            width={600}
+                            height={600}
+                            sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
+                            className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl shadow-lg object-cover"
                             priority
                             placeholder="blur"
                             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="

@@ -106,9 +106,9 @@ const UserSchema = new Schema<IUser>({
     },
     banId: {
         type: String,
-        default: "",
+        default: null,
         unique: true,
-        sparse: true // Only enforce uniqueness when banId exists
+        sparse: true,
     },
     banMetadata: {
         reason: {

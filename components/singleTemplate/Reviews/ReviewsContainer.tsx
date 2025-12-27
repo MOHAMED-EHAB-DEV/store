@@ -9,6 +9,7 @@ import AddReview from "@/components/Dialogs/AddReview";
 import {sonnerToast} from "@/components/ui/sonner";
 import {useUser} from "@/context/UserContext";
 import {useRouter} from "next/navigation";
+import { userHasPurchased } from "@/lib/payments";
 
 interface Review {
     _id: string;

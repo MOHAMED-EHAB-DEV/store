@@ -168,7 +168,7 @@ export default function DownloadLogsClient({ logs }: DownloadLogsClientProps) {
             label: "Date",
             sortable: true,
             render: (log) => (
-                <time className="text-sm text-muted-foreground" dateTime={log.createdAt}>
+                <time className="text-sm text-muted-foreground" dateTime={log.createdAt as unknown as string}>
                     {new Date(log.createdAt).toLocaleString()}
                 </time>
             ),

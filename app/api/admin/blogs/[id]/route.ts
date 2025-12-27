@@ -5,8 +5,9 @@ import { authenticateUser } from "@/middleware/auth";
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const user = await authenticateUser(true, true, true);
         if (!user) {
@@ -15,7 +16,7 @@ export async function DELETE(
 
         await connectToDatabase();
 
-        const blog = await Blog.findByIdAndDelete(params.id);
+        const blog = await Blog.findByIdAndDelete(id);
 
         if (!blog) {
             return NextResponse.json(
@@ -38,8 +39,9 @@ export async function DELETE(
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const user = await authenticateUser(true, true, true);
         if (!user) {
@@ -51,7 +53,7 @@ export async function PATCH(
         const body = await req.json();
 
         const blog = await Blog.findByIdAndUpdate(
-            params.id,
+            id,
             { $set: body },
             { new: true, runValidators: true }
         );

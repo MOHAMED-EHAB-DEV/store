@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
     const query: any = {};
 
-    if (searchParams.get("admin") === "true") {
+    if (isAdmin) {
       const user = await authenticateUser(false, true);
       if (user) {
         const dbUser = await User.findById(user._id).select('role').lean();

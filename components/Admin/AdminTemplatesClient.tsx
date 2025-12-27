@@ -80,7 +80,7 @@ export default function AdminTemplatesClient({ templates, categories }: AdminTem
 
         // Category filter
         if (filters.category) {
-            result = result.filter((template) => template.categories.includes(filters.category));
+            result = result.filter((template) => template.categories.some((cat) => typeof cat === "object" ? cat._id === filters.category : cat === filters.category));
         }
 
         // Tier filter
@@ -168,7 +168,7 @@ export default function AdminTemplatesClient({ templates, categories }: AdminTem
             sortable: true,
             render: (template) => (
                 <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
-                    {template.categories?.[0].name || "Uncategorized"}
+                    {typeof template.categories[0] === "object" ? template.categories?.[0].name : "Uncategorized"}
                 </Badge>
             ),
         },
@@ -220,7 +220,7 @@ export default function AdminTemplatesClient({ templates, categories }: AdminTem
             label: "Created",
             sortable: true,
             render: (template) => (
-                <time className="text-sm text-muted-foreground" dateTime={template.createdAt}>
+                <time className="text-sm text-muted-foreground" dateTime={template.createdAt as unknown as string}>
                     {new Date(template.createdAt).toLocaleDateString()}
                 </time>
             ),

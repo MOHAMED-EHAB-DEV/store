@@ -26,6 +26,12 @@ declare type IUser = {
     expiresAt?: Date;
   };
   online: boolean;
+  lastSeen: Date;
+  preferences: {
+    emailNotifications: boolean;
+    marketingEmails: boolean;
+    weeklyDigest: boolean;
+  };
 };
 
 declare type ITemplate = {
@@ -87,6 +93,7 @@ declare type ICategory = {
 };
 
 declare type IDownloadLog = {
+  _id: string;
   userId?: mongoose.Types.ObjectId;
   templateId: mongoose.Types.ObjectId;
   ip: string;

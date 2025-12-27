@@ -40,7 +40,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
                     <div>
                         <h2 className="text-xl font-semibold text-white mb-1">Account Status</h2>
                         <p className="text-muted-foreground">
-                            {user.isVerified ? "Your account is verified" : "Please verify your email"}
+                            {user.isEmailVerified ? "Your account is verified" : "Please verify your email"}
                         </p>
                     </div>
                     <Badge

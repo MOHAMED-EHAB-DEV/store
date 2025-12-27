@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AreaClosed, Line, Bar } from "@visx/shape";
+import { AreaClosed, LinePath, Bar } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import { GridRows, GridColumns } from "@visx/grid";
 import { scaleTime, scaleLinear } from "@visx/scale";
@@ -103,7 +103,7 @@ export default function ChartCard({
                         )}
 
                         {type === "line" && (
-                            <Line
+                            <LinePath
                                 data={data}
                                 x={(d) => xScale(d.date) ?? 0}
                                 y={(d) => yScale(d.value) ?? 0}

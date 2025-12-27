@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import AdminCategoriesClient from "@/components/Admin/AdminCategoriesClient";
-import { authenticateUser } from "@/middleware/auth";
+import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
 export const metadata: Metadata = {
     title: "Categories Management | Admin Dashboard",
@@ -11,27 +11,55 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-async function getCategories() {
+async function getCategories(searchParams: { [key: string]: string | undefined }) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
+    const params = new URLSearchParams();
+    if (searchParams.page) params.set("page", searchParams.page);
+    if (searchParams.search) params.set("search", searchParams.search);
+    if (searchParams.isActive) params.set("includeInactive", searchParams.isActive === "false" ? "true" : "false");
+    params.set("limit", "20");
+
     try {
-        const response = await fetch(`${baseUrl}/api/categories`, {
+        const response = await fetch(`${baseUrl}/api/admin/categories?${params.toString()}`, {
+            headers: { Cookie: `token=${token}` },
             cache: "no-store"
         });
 
-        const data = response.ok ? await response.json() : { data: [] };
-        return data.data || [];
+        if (!response.ok) return null;
+        return await response.json();
     } catch (error) {
         console.error("Error fetching categories:", error);
-        return [];
+        return null;
     }
 }
 
-export default async function AdminCategoriesPage() {
-    const user = await authenticateUser(true, true, true);
-    if (!user) redirect("/");
+interface PageProps {
+    searchParams: Promise<{ [key: string]: string | undefined }>;
+}
 
-    const categories = await getCategories();
+export default async function AdminCategoriesPage({ searchParams }: PageProps) {
+    const params = await searchParams;
+    const data = await getCategories(params);
 
-    return <AdminCategoriesClient categories={categories} />;
+    if (!data) {
+        return (
+            <div className="p-6 text-center">
+                <ErrorState
+                    message="Failed to load categories. Please try again."
+                />
+            </div>
+        );
+    }
+
+    return (
+        <AdminCategoriesClient
+            initialData={data.data}
+            stats={data.stats}
+            pagination={data.pagination}
+            searchParams={params}
+        />
+    );
 }

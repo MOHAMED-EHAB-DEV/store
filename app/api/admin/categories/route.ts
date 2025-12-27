@@ -34,18 +34,39 @@ export async function GET(request: NextRequest) {
             ];
         }
 
-        const [categories, total] = await Promise.all([
+        const [categories, total, stats] = await Promise.all([
             Category.find(query)
                 .sort({ sortOrder: 1, name: 1 })
                 .skip(skip)
                 .limit(limit)
                 .lean(),
             Category.countDocuments(query),
+            Category.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 },
+                        active: { $sum: { $cond: ["$isActive", 1, 0] } },
+                        inactive: { $sum: { $cond: ["$isActive", 0, 1] } },
+                        totalTemplates: { $sum: "$templateCount" }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        total: 1,
+                        active: 1,
+                        inactive: 1,
+                        totalTemplates: 1
+                    }
+                }
+            ])
         ]);
 
         return NextResponse.json({
             success: true,
             data: categories,
+            stats: stats[0] || { total: 0, active: 0, inactive: 0, totalTemplates: 0 },
             pagination: {
                 page,
                 limit,

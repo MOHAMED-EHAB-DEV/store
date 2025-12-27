@@ -1,9 +1,7 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
-import { authenticateUser } from "@/middleware/auth";
-import { ErrorState } from "@/components/Dashboard/shared/LoadingStates";
+import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
 export const metadata: Metadata = {
     title: "Templates Management | Admin Dashboard",
@@ -13,28 +11,41 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-async function getTemplatesData() {
+async function getTemplatesData(searchParams: { [key: string]: string | undefined }) {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
+    const params = new URLSearchParams();
+    if (searchParams.page) params.set("page", searchParams.page);
+    if (searchParams.search) params.set("search", searchParams.search);
+    if (searchParams.category) params.set("category", searchParams.category);
+    if (searchParams.tier) params.set("tier", searchParams.tier);
+    if (searchParams.status) params.set("status", searchParams.status);
+    params.set("limit", "20");
+
     try {
         const [templatesRes, categoriesRes] = await Promise.all([
-            fetch(`${baseUrl}/api/template/search?includedFields=isActive,downloads`, {
+            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`, {
                 headers: { Cookie: `token=${token}` },
                 cache: "no-store"
             }),
-            fetch(`${baseUrl}/api/categories`, {
+            fetch(`${baseUrl}/api/admin/categories?limit=100`, {
+                headers: { Cookie: `token=${token}` },
                 cache: "no-store"
             })
         ]);
 
-        const templates = templatesRes.ok ? await templatesRes.json() : { data: [] };
-        const categories = categoriesRes.ok ? await categoriesRes.json() : { data: [] };
+        if (!templatesRes.ok || !categoriesRes.ok) return null;
+
+        const templatesData = await templatesRes.json();
+        const categoriesData = await categoriesRes.json();
 
         return {
-            templates: templates.data || [],
-            categories: categories.data || [],
+            templates: templatesData.data || [],
+            stats: templatesData.stats,
+            pagination: templatesData.pagination,
+            categories: categoriesData.data || [],
         };
     } catch (error) {
         console.error("Error fetching templates data:", error);
@@ -42,15 +53,31 @@ async function getTemplatesData() {
     }
 }
 
-export default async function AdminTemplatesPage() {
-    const user = await authenticateUser(true, true, true);
-    if (!user) redirect("/");
+interface PageProps {
+    searchParams: Promise<{ [key: string]: string | undefined }>;
+}
 
-    const data = await getTemplatesData();
+export default async function AdminTemplatesPage({ searchParams }: PageProps) {
+    const params = await searchParams;
+    const data = await getTemplatesData(params);
 
     if (!data) {
-        return <ErrorState message="Failed to load templates. Please refresh the page." />;
+        return (
+            <div className="p-6 text-center">
+                <ErrorState
+                    message="Failed to load templates. Please try again."
+                />
+            </div>
+        );
     }
 
-    return <AdminTemplatesClient templates={data.templates} categories={data.categories} />;
+    return (
+        <AdminTemplatesClient
+            initialData={data.templates}
+            stats={data.stats}
+            pagination={data.pagination}
+            categories={data.categories}
+            searchParams={params}
+        />
+    );
 }

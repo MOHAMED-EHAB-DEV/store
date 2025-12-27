@@ -38,13 +38,33 @@ export async function GET(request: NextRequest) {
             ];
         }
 
-        const [faqs, total] = await Promise.all([
+        const [faqs, total, stats] = await Promise.all([
             FAQ.find(query)
                 .sort({ category: 1, order: 1, createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .lean(),
             FAQ.countDocuments(query),
+            FAQ.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 },
+                        published: { $sum: { $cond: ["$isPublished", 1, 0] } },
+                        draft: { $sum: { $cond: ["$isPublished", 0, 1] } },
+                        categories: { $addToSet: "$category" }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        total: 1,
+                        published: 1,
+                        draft: 1,
+                        categories: { $size: "$categories" }
+                    }
+                }
+            ])
         ]);
 
         return NextResponse.json({
@@ -56,6 +76,7 @@ export async function GET(request: NextRequest) {
                 total,
                 pages: Math.ceil(total / limit),
             },
+            stats: stats[0] || { total: 0, published: 0, draft: 0, categories: 0 }
         });
     } catch (error: any) {
         console.error("Error fetching FAQs:", error);

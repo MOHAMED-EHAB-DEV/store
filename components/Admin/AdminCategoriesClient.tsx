@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
+import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import ActionDropdown, { createDefaultActions } from "@/components/Dashboard/shared/ActionDropdown";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import { Templates, Plus } from "@/components/ui/svgs/Icons";
+import { Grid, Plus } from "@/components/ui/svgs/Icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { sonnerToast } from "@/components/ui/sonner";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface Category {
     _id: string;
@@ -23,47 +25,98 @@ interface Category {
 }
 
 interface AdminCategoriesClientProps {
-    categories: Category[];
+    initialData: Category[];
+    stats: {
+        total: number;
+        active: number;
+        inactive: number;
+        totalTemplates: number;
+    };
+    pagination: any;
+    searchParams: any;
 }
 
-export default function AdminCategoriesClient({ categories }: AdminCategoriesClientProps) {
+export default function AdminCategoriesClient({
+    initialData,
+    stats,
+    pagination,
+    searchParams,
+}: AdminCategoriesClientProps) {
     const router = useRouter();
+    const pathname = usePathname();
+    const queryParams = useSearchParams();
+    const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null }>({
+        open: false,
+        id: null,
+    });
 
-    const activeCount = categories.filter((c) => c.isActive).length;
-    const totalTemplates = categories.reduce((sum, c) => sum + (c.templateCount || 0), 0);
+    const filterOptions: FilterOption[] = [
+        {
+            key: "isActive",
+            label: "Status",
+            options: [
+                { value: "true", label: "Active" },
+                { value: "false", label: "Inactive" },
+            ],
+        },
+    ];
 
-    const handleDelete = async (categoryId: string) => {
-        if (!confirm("Are you sure you want to delete this category?")) return;
+    const updateQuery = (updates: Record<string, string | null>) => {
+        const params = new URLSearchParams(queryParams.toString());
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value === null || value === "") {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
+        });
+        if (!updates.page) params.set("page", "1");
+        router.push(`${pathname}?${params.toString()}`);
+    };
 
+    const handleDelete = async () => {
+        if (!deleteDialog.id) return;
+        setLoading(true);
         try {
-            const response = await fetch(`/api/admin/categories/${categoryId}`, {
+            const res = await fetch(`/api/admin/categories/${deleteDialog.id}`, {
                 method: "DELETE",
             });
-
-            if (!response.ok) throw new Error("Failed to delete category");
-
-            toast.success("Category deleted successfully");
-            router.refresh();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to delete category");
+            const data = await res.json();
+            if (data.success) {
+                sonnerToast.success("Category deleted successfully");
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to delete category");
+            }
+        } catch (error) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
+            setDeleteDialog({ open: false, id: null });
         }
     };
 
-    const handleToggleStatus = async (categoryId: string, currentStatus: boolean) => {
+    const handleToggleStatus = async (category: Category) => {
+        setLoading(true);
         try {
-            const response = await fetch(`/api/admin/categories/${categoryId}`, {
+            const res = await fetch(`/api/admin/categories/${category._id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ isActive: !currentStatus }),
+                body: JSON.stringify({ isActive: !category.isActive }),
             });
-
-            if (!response.ok) throw new Error("Failed to update category");
-
-            toast.success(`Category ${!currentStatus ? "activated" : "deactivated"}`);
-            router.refresh();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to update category");
+            const data = await res.json();
+            if (data.success) {
+                sonnerToast.success(`Category ${!category.isActive ? "activated" : "deactivated"} successfully`);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to update category");
+            }
+        } catch (error) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -102,10 +155,11 @@ export default function AdminCategoriesClient({ categories }: AdminCategoriesCli
             sortable: true,
             render: (category) => (
                 <Badge
+                    variant="outline"
                     className={
                         category.isActive
-                            ? "bg-green-500/20 text-green-300 border-green-500/30"
-                            : "bg-red-500/20 text-red-300 border-red-500/30"
+                            ? "bg-green-500/10 text-green-400 border-green-500/20"
+                            : "bg-red-500/10 text-red-400 border-red-500/20"
                     }
                 >
                     {category.isActive ? "Active" : "Inactive"}
@@ -129,12 +183,12 @@ export default function AdminCategoriesClient({ categories }: AdminCategoriesCli
                 <ActionDropdown
                     actions={[
                         ...createDefaultActions({
-                            onEdit: () => router.push(`/admin/categories/${category._id}/edit`),
-                            onDelete: () => handleDelete(category._id)
+                            onEdit: () => router.push(`/admin/categories/edit/${category._id}`),
+                            onDelete: () => setDeleteDialog({ open: true, id: category._id })
                         }),
                         {
                             label: category.isActive ? "Deactivate" : "Activate",
-                            onClick: () => handleToggleStatus(category._id, category.isActive),
+                            onClick: () => handleToggleStatus(category),
                             separator: true,
                         },
                     ]}
@@ -143,69 +197,137 @@ export default function AdminCategoriesClient({ categories }: AdminCategoriesCli
         },
     ];
 
-    const statCards = [
+    const statCardsData = [
         {
             label: "Total Categories",
-            value: categories.length,
-            subtext: `${activeCount} active`,
-            icon: Templates,
+            value: stats.total,
+            icon: Grid,
             gradient: "from-purple-500 to-pink-500",
         },
         {
-            label: "Active Categories",
-            value: activeCount,
-            subtext: `${((activeCount / categories.length) * 100).toFixed(0)}% of total`,
-            icon: Templates,
+            label: "Active",
+            value: stats.active,
+            icon: Grid,
             gradient: "from-green-500 to-emerald-500",
         },
         {
+            label: "Inactive",
+            value: stats.inactive,
+            icon: Grid,
+            gradient: "from-amber-500 to-orange-500",
+        },
+        {
             label: "Total Templates",
-            value: totalTemplates,
-            subtext: `${(totalTemplates / categories.length).toFixed(0)} avg per category`,
-            icon: Templates,
+            value: stats.totalTemplates,
+            icon: Grid,
             gradient: "from-blue-500 to-cyan-500",
         },
     ];
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8 animate-in fade-in duration-500">
             <PageHeader
                 title="Categories Management"
-                description={`${categories.length} total categories`}
+                description="Manage template categories and organization"
                 breadcrumbs={[
-                    { label: "Admin", href: "/admin" },
+                    { label: "Dashboard", href: "/admin" },
                     { label: "Categories" },
                 ]}
                 actions={
-                    <Button onClick={() => router.push("/admin/categories/new")} className="bg-primary cursor-pointer hover:bg-primary/90" aria-label="Add new category">
-                        <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
+                    <Button onClick={() => router.push("/admin/categories/new")} className="bg-primary hover:bg-primary/90">
+                        <Plus className="w-4 h-4 mr-2" />
                         Add Category
                     </Button>
                 }
             />
 
-            <section aria-label="Category statistics">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {statCards.map((stat, index) => (
-                        <StatCard key={index} {...stat} />
-                    ))}
-                </div>
-            </section>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {statCardsData.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
-            <DataTable
-                columns={columns}
-                data={categories}
-                keyExtractor={(category) => category._id}
-                selectable
-                onSelectionChange={setSelectedIds}
-                exportFilename="categories"
-                emptyState={
-                    <EmptyState
-                        icon={Templates}
-                        title="No categories yet"
-                        description="Categories will appear here once added"
-                    />
-                }
+            <div className="space-y-6">
+                <SearchFilterBar
+                    searchPlaceholder="Search categories..."
+                    onSearchChange={(val) => updateQuery({ search: val })}
+                    filters={filterOptions}
+                    onFilterChange={(key, val) => updateQuery({ [key]: val })}
+                    activeFilters={{
+                        isActive: queryParams.get("isActive") || "",
+                    }}
+                    onClearFilters={() => updateQuery({ isActive: "", search: "" })}
+                />
+
+                <DataTable
+                    columns={columns}
+                    data={initialData}
+                    keyExtractor={(category) => category._id}
+                    loading={loading}
+                    selectable
+                    onSelectionChange={(ids) => setSelectedIds(ids as string[])}
+                    exportFilename="categories"
+                    emptyState={
+                        <EmptyState
+                            icon={Grid}
+                            title="No categories found"
+                            description="Try adjusting your filters or add your first category"
+                            action={{
+                                label: "Add Category",
+                                onClick: () => router.push("/admin/categories/new"),
+                                icon: Plus,
+                            }}
+                        />
+                    }
+                    actions={
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground mr-2">
+                                Showing {initialData.length} of {pagination?.total || 0} entries
+                            </span>
+                        </div>
+                    }
+                />
+
+                {/* Pagination */}
+                {pagination && pagination.pages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <p className="text-sm text-muted-foreground">
+                            Page {pagination.page} of {pagination.pages}
+                        </p>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page <= 1}
+                                onClick={() => updateQuery({ page: (pagination.page - 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Previous
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page >= pagination.pages}
+                                onClick={() => updateQuery({ page: (pagination.page + 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <ConfirmDialog
+                open={deleteDialog.open}
+                onOpenChange={(open) => setDeleteDialog({ open, id: null })}
+                onConfirm={handleDelete}
+                title="Delete Category"
+                description="Are you sure you want to delete this category? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
             />
         </div>
     );

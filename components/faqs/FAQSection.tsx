@@ -3,6 +3,7 @@
 import { Accordion } from "@/components/ui/accordion";
 import { FAQ } from "@/constants/faqs";
 import FAQItem from "./FAQItem";
+import { capitalizeFirstChar } from "@/lib/utils";
 
 interface FAQSectionProps {
     categoryId: string;
@@ -26,7 +27,7 @@ export default function FAQSection({
             <div className="mb-6">
                 <h2 className="text-2xl font-bold flex items-center gap-3 text-gray-900 dark:text-white">
                     <span className="text-3xl">{categoryIcon}</span>
-                    {categoryName}
+                    {capitalizeFirstChar(categoryName)}
                 </h2>
                 <div className="h-1.5 w-24 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-full mt-3 shadow-lg shadow-purple-500/50" />
             </div>

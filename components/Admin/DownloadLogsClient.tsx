@@ -1,166 +1,121 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
-import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
-import ChartCard, { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import { Download, Calendar, Users, Templates } from "@/components/ui/svgs/Icons";
+import { Download, Templates, Users, Calendar } from "@/components/ui/svgs/Icons";
 import { Badge } from "@/components/ui/badge";
-import { IDownloadLog } from "@/types";
-import { capitalizeFirstChar } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
-interface DownloadLogsClientProps {
-    logs: IDownloadLog[];
+interface DownloadLog {
+    _id: string;
+    templateId: { _id: string; title: string; thumbnail: string };
+    userId: { _id: string; name: string; email: string; avatar: string };
+    status: string;
+    ipAddress: string;
+    userAgent: string;
+    createdAt: string;
 }
 
-export default function DownloadLogsClient({ logs }: DownloadLogsClientProps) {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [filters, setFilters] = useState<Record<string, string>>({});
+interface DownloadLogsClientProps {
+    initialData: DownloadLog[];
+    stats: {
+        total: number;
+        uniqueTemplates: number;
+        uniqueUsers: number;
+    };
+    pagination: any;
+    searchParams: any;
+}
 
-    // Calculate stats
-    const stats = useMemo(() => {
-        const now = new Date();
-        const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+export default function DownloadLogsClient({
+    initialData,
+    stats,
+    pagination,
+    searchParams,
+}: DownloadLogsClientProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+    const queryParams = useSearchParams();
+    const [loading, setLoading] = useState(false);
 
-        const recentLogs = logs.filter((log) => new Date(log.createdAt) >= last30Days);
-        const weekLogs = logs.filter((log) => new Date(log.createdAt) >= last7Days);
-
-        const successRate = logs.length > 0
-            ? (logs.filter((log) => log.status === "success").length / logs.length) * 100
-            : 0;
-
-        // Get unique users and templates
-        const uniqueUsers = new Set(logs.map((log) => log.userId?._id).filter(Boolean)).size;
-        const uniqueTemplates = new Set(logs.map((log) => log.templateId?._id).filter(Boolean)).size;
-
-        return {
-            total: logs.length,
-            last30Days: recentLogs.length,
-            last7Days: weekLogs.length,
-            successRate: successRate.toFixed(1),
-            uniqueUsers,
-            uniqueTemplates,
-        };
-    }, [logs]);
-
-    // Prepare chart data - Downloads over last 30 days
-    const downloadsChartData: ChartDataPoint[] = useMemo(() => {
-        const last30Days = Array.from({ length: 30 }, (_, i) => {
-            const date = new Date();
-            date.setDate(date.getDate() - (29 - i));
-            return date;
-        });
-
-        return last30Days.map((date) => {
-            const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            const dayEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-
-            const count = logs.filter((log) => {
-                const createdAt = new Date(log.createdAt);
-                return createdAt >= dayStart && createdAt < dayEnd;
-            }).length;
-
-            return {
-                date: dayStart,
-                value: count,
-            };
-        });
-    }, [logs]);
-
-    // Filter options
     const filterOptions: FilterOption[] = [
         {
             key: "status",
             label: "Status",
             options: [
-                { value: "success", label: "Success" },
+                { value: "completed", label: "Completed" },
                 { value: "failed", label: "Failed" },
+                { value: "pending", label: "Pending" },
             ],
         },
     ];
 
-    // Filtered logs
-    const filteredLogs = useMemo(() => {
-        let result = logs;
-
-        // Search filter
-        if (searchQuery) {
-            result = result.filter(
-                (log) =>
-                    log.userId?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    log.userId?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    log.templateId?.title?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        // Status filter
-        if (filters.status) {
-            result = result.filter((log) => log.status === filters.status);
-        }
-
-        return result;
-    }, [logs, searchQuery, filters]);
-
-    const handleFilterChange = (key: string, value: string) => {
-        setFilters((prev) => ({ ...prev, [key]: value }));
+    const updateQuery = (updates: Record<string, string | null>) => {
+        const params = new URLSearchParams(queryParams.toString());
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value === null || value === "") {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
+        });
+        if (!updates.page) params.set("page", "1");
+        router.push(`${pathname}?${params.toString()}`);
     };
 
-    const handleClearFilters = () => {
-        setFilters({});
-        setSearchQuery("");
-    };
-
-    // Table columns
-    const columns: Column<IDownloadLog>[] = [
+    const columns: Column<DownloadLog>[] = [
         {
-            key: "template",
+            key: "templateId",
             label: "Template",
-            sortable: true,
             render: (log) => (
-                <div>
-                    <p className="text-sm font-medium text-white">{log.templateId?.title || "Unknown"}</p>
-                    <p className="text-xs text-muted-foreground">{log.templateId?.slug || "N/A"}</p>
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded overflow-hidden bg-white/5 flex-shrink-0">
+                        {log.templateId?.thumbnail ? (
+                            <img src={log.templateId.thumbnail} alt={log.templateId.title} className="w-full h-full object-cover" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                                <Templates className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                        )}
+                    </div>
+                    <p className="text-sm font-medium text-white line-clamp-1">{log.templateId?.title || "Deleted Template"}</p>
                 </div>
             ),
         },
         {
-            key: "user",
+            key: "userId",
             label: "User",
-            sortable: true,
             render: (log) => (
                 <div>
-                    <p className="text-sm font-medium text-white">{log.userId?.name || "Anonymous"}</p>
+                    <p className="text-sm font-medium text-white">{log.userId?.name || "Guest"}</p>
                     <p className="text-xs text-muted-foreground">{log.userId?.email || "N/A"}</p>
                 </div>
             ),
         },
         {
-            key: "status",
-            label: "Status",
-            sortable: true,
-            render: (log) => (
-                <Badge
-                    className={
-                        log.status === "success"
-                            ? "bg-green-500/20 text-green-300 border-green-500/30"
-                            : "bg-red-500/20 text-red-300 border-red-500/30"
-                    }
-                >
-                    {capitalizeFirstChar(log.status)}
-                </Badge>
-            ),
-        },
-        {
             key: "ipAddress",
             label: "IP Address",
+            render: (log) => <span className="text-xs font-mono text-muted-foreground">{log.ipAddress}</span>,
+        },
+        {
+            key: "status",
+            label: "Status",
             render: (log) => (
-                <span className="text-sm text-muted-foreground font-mono">
-                    {log.ip || "N/A"}
-                </span>
+                <Badge
+                    variant="outline"
+                    className={
+                        log.status === "completed"
+                            ? "bg-green-500/10 text-green-400 border-green-500/20"
+                            : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                    }
+                >
+                    {log.status.toUpperCase()}
+                </Badge>
             ),
         },
         {
@@ -168,112 +123,122 @@ export default function DownloadLogsClient({ logs }: DownloadLogsClientProps) {
             label: "Date",
             sortable: true,
             render: (log) => (
-                <time className="text-sm text-muted-foreground" dateTime={log.createdAt as unknown as string}>
-                    {new Date(log.createdAt).toLocaleString()}
-                </time>
+                <div>
+                    <p className="text-sm text-white">{new Date(log.createdAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(log.createdAt).toLocaleTimeString()}</p>
+                </div>
             ),
         },
     ];
 
-    const statCards = [
+    const statCardsData = [
         {
             label: "Total Downloads",
             value: stats.total,
-            subtext: `${stats.last30Days} in last 30 days`,
             icon: Download,
-            gradient: "from-green-500 to-emerald-500",
+            gradient: "from-blue-500 to-cyan-500",
         },
         {
-            label: "This Week",
-            value: stats.last7Days,
-            subtext: "Last 7 days",
-            icon: Calendar,
-            gradient: "from-blue-500 to-cyan-500",
+            label: "Unique Templates",
+            value: stats.uniqueTemplates,
+            icon: Templates,
+            gradient: "from-purple-500 to-pink-500",
         },
         {
             label: "Unique Users",
             value: stats.uniqueUsers,
-            subtext: "Total downloaders",
             icon: Users,
-            gradient: "from-purple-500 to-pink-500",
+            gradient: "from-amber-500 to-orange-500",
         },
         {
-            label: "Success Rate",
-            value: `${stats.successRate}%`,
-            subtext: "Successful downloads",
-            icon: Templates,
-            gradient: "from-amber-500 to-orange-500",
+            label: "Current Period",
+            value: initialData.length,
+            icon: Calendar,
+            gradient: "from-green-500 to-emerald-500",
         },
     ];
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8 animate-in fade-in duration-500">
             <PageHeader
                 title="Download Logs"
-                description={`${logs.length} total downloads tracked`}
+                description="Monitor and analyze template download activity"
                 breadcrumbs={[
-                    { label: "Admin", href: "/admin" },
+                    { label: "Dashboard", href: "/admin" },
                     { label: "Download Logs" },
                 ]}
             />
 
             {/* Stats Grid */}
-            <section aria-label="Download statistics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {statCards.map((stat, index) => (
-                        <StatCard key={index} {...stat} />
-                    ))}
-                </div>
-            </section>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {statCardsData.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
-            {/* Downloads Chart */}
-            <section aria-label="Download trends">
-                <ChartCard
-                    title="Downloads Over Time (Last 30 Days)"
-                    data={downloadsChartData}
-                    type="area"
-                    gradient="from-green-500 to-emerald-500"
-                    height={250}
-                    showGrid
-                />
-            </section>
-
-            {/* Search and Filters */}
-            <SearchFilterBar
-                searchPlaceholder="Search by template, user, or email..."
-                onSearchChange={setSearchQuery}
-                filters={filterOptions}
-                onFilterChange={handleFilterChange}
-                activeFilters={filters}
-                onClearFilters={handleClearFilters}
-            />
-
-            {/* Download Logs Table */}
-            {filteredLogs.length === 0 && (searchQuery || Object.keys(filters).length > 0) ? (
-                <EmptyState
-                    icon={Download}
-                    title="No downloads found"
-                    description="Try adjusting your search or filters"
-                    action={{
-                        label: "Clear Filters",
-                        onClick: handleClearFilters,
+            <div className="space-y-6">
+                <SearchFilterBar
+                    searchPlaceholder="Search logs..."
+                    onSearchChange={(val) => updateQuery({ search: val })}
+                    filters={filterOptions}
+                    onFilterChange={(key, val) => updateQuery({ [key]: val })}
+                    activeFilters={{
+                        status: queryParams.get("status") || "",
                     }}
+                    onClearFilters={() => updateQuery({ status: "", search: "" })}
                 />
-            ) : (
+
                 <DataTable
                     columns={columns}
-                    data={filteredLogs}
+                    data={initialData}
                     keyExtractor={(log) => log._id}
+                    loading={loading}
                     exportFilename="download-logs"
                     emptyState={
                         <EmptyState
                             icon={Download}
-                            title="No downloads yet"
-                            description="Download logs will appear here when users download templates"
+                            title="No logs found"
+                            description="Try adjusting your filters or search query"
                         />
                     }
+                    actions={
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground mr-2">
+                                Showing {initialData.length} of {pagination?.total || 0} entries
+                            </span>
+                        </div>
+                    }
                 />
-            )}
+
+                {/* Pagination */}
+                {pagination && pagination.pages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <p className="text-sm text-muted-foreground">
+                            Page {pagination.page} of {pagination.pages}
+                        </p>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page <= 1}
+                                onClick={() => updateQuery({ page: (pagination.page - 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Previous
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page >= pagination.pages}
+                                onClick={() => updateQuery({ page: (pagination.page + 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

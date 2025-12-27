@@ -10,6 +10,7 @@ interface EmptyStateProps {
     action?: {
         label: string;
         onClick: () => void;
+        icon?: React.ComponentType<{ className?: string }>;
     };
 }
 
@@ -30,6 +31,7 @@ export default function EmptyState({
             <p className="text-muted-foreground max-w-md mb-6">{description}</p>
             {action && (
                 <Button onClick={action.onClick} className="bg-primary hover:bg-primary/90">
+                    {action.icon && <action.icon className="w-4 h-4 mr-2" />}
                     {action.label}
                 </Button>
             )}

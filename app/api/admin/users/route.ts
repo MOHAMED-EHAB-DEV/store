@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         const sortOptions: any = {};
         sortOptions[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-        const [users, total] = await Promise.all([
+        const [users, total, stats] = await Promise.all([
             User.find(query)
                 .select("-password")
                 .sort(sortOptions)
@@ -49,11 +49,32 @@ export async function GET(request: NextRequest) {
                 .limit(limit)
                 .lean(),
             User.countDocuments(query),
+            User.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 },
+                        free: { $sum: { $cond: [{ $eq: ["$tier", "free"] }, 1, 0] } },
+                        premium: { $sum: { $cond: [{ $eq: ["$tier", "premium"] }, 1, 0] } },
+                        verified: { $sum: { $cond: ["$isVerified", 1, 0] } }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        total: 1,
+                        free: 1,
+                        premium: 1,
+                        verified: 1
+                    }
+                }
+            ])
         ]);
 
         return NextResponse.json({
             success: true,
             data: users,
+            stats: stats[0] || { total: 0, free: 0, premium: 0, verified: 0 },
             pagination: {
                 page,
                 limit,

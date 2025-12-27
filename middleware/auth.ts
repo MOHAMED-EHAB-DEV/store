@@ -6,7 +6,7 @@ import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
 
-export async function authenticateUser(connectDB: Boolean = false, includeId: Boolean = false, lean: Boolean = false): Promise<IUser | null> {
+export async function authenticateUser(connectDB: Boolean = false, includeId: Boolean = false, lean: Boolean = false, includePurchasedTemplates: Boolean = false): Promise<IUser | null> {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get("token");
@@ -24,10 +24,13 @@ export async function authenticateUser(connectDB: Boolean = false, includeId: Bo
 
         if (connectDB) await connectToDatabase();
 
+        let selection = "-favorites";
+        if (includePurchasedTemplates) selection += " purchasedTemplates"; else selection += " -purchasedTemplates";
+        if (includeId) selection += " _id"; else selection += " -_id";
+
         const query = User.findOne(
-            { _id: decoded.id },
-            { _id: includeId ? 1 : 0, purchasedTemplates: 0, favorites: 0, }
-        );
+            { _id: decoded.id }
+        ).select(selection);
 
         const user = lean ? await query.lean() : await query;
 

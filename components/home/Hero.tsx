@@ -117,7 +117,7 @@ const Hero = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
                     <Link
-                        className="hero-btn animate-bounce group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none bg-linear-to-r from-purple-600 via-pink-600 to-cyan-600 hover:from-purple-500 hover:via-pink-500 hover:to-cyan-500 px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-primary"
+                        className="hero-btn animate-bounce group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none  px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
                         href="/templates"
                     >
@@ -126,8 +126,8 @@ const Hero = () => {
                             <ArrowRight
                                 className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                         </span>
-                        <div
-                            className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                        {/* <div
+                            className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" /> */}
                     </Link>
 
                     {/*<Link*/}

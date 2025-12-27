@@ -1,9 +1,7 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import DownloadLogsClient from "@/components/Admin/DownloadLogsClient";
-import { authenticateUser } from "@/middleware/auth";
-import { ErrorState } from "@/components/Dashboard/shared/LoadingStates";
+import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
 export const metadata: Metadata = {
     title: "Download Logs | Admin Dashboard",
@@ -13,34 +11,57 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-async function getDownloadLogs() {
+async function getDownloadLogs(searchParams: { [key: string]: string | undefined }) {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
+    const params = new URLSearchParams();
+    if (searchParams.page) params.set("page", searchParams.page);
+    if (searchParams.search) params.set("search", searchParams.search);
+    if (searchParams.templateId) params.set("templateId", searchParams.templateId);
+    if (searchParams.userId) params.set("userId", searchParams.userId);
+    if (searchParams.status) params.set("status", searchParams.status);
+    params.set("limit", "20");
+
     try {
-        const response = await fetch(`${baseUrl}/api/admin/download-logs?limit=1000`, {
+        const response = await fetch(`${baseUrl}/api/admin/download-logs?${params.toString()}`, {
             headers: { Cookie: `token=${token}` },
             cache: "no-store"
         });
 
-        const data = response.ok ? await response.json() : { data: [] };
-        return data.data || [];
+        if (!response.ok) return null;
+        return await response.json();
     } catch (error) {
         console.error("Error fetching download logs:", error);
         return null;
     }
 }
 
-export default async function DownloadLogsPage() {
-    const user = await authenticateUser(true, true, true);
-    if (!user) redirect("/");
+interface PageProps {
+    searchParams: Promise<{ [key: string]: string | undefined }>;
+}
 
-    const logs = await getDownloadLogs();
+export default async function DownloadLogsPage({ searchParams }: PageProps) {
+    const params = await searchParams;
+    const data = await getDownloadLogs(params);
 
-    if (logs === null) {
-        return <ErrorState message="Failed to load download logs. Please refresh the page." />;
+    if (!data) {
+        return (
+            <div className="p-6 text-center">
+                <ErrorState
+                    message="Failed to load download logs. Please try again."
+                />
+            </div>
+        );
     }
 
-    return <DownloadLogsClient logs={logs} />;
+    return (
+        <DownloadLogsClient
+            initialData={data.data}
+            stats={data.stats}
+            pagination={data.pagination}
+            searchParams={params}
+        />
+    );
 }

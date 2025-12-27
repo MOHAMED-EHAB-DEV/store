@@ -3,6 +3,93 @@ import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
 
+export async function GET(request: NextRequest) {
+    try {
+        const user = await authenticateUser(true);
+        if (!user || user.role !== "admin") {
+            return NextResponse.json(
+                { success: false, message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        await connectToDatabase();
+
+        const { searchParams } = new URL(request.url);
+        const page = parseInt(searchParams.get("page") || "1");
+        const limit = parseInt(searchParams.get("limit") || "20");
+        const search = searchParams.get("search");
+        const category = searchParams.get("category");
+        const tier = searchParams.get("tier");
+        const status = searchParams.get("status");
+
+        const skip = (page - 1) * limit;
+
+        // Build query
+        const query: any = {};
+        if (category) query.categories = category;
+        if (tier === "premium") query.price = { $gt: 0 };
+        if (tier === "free") query.price = 0;
+        if (status === "active") query.isActive = true;
+        if (status === "inactive") query.isActive = false;
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { description: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        const [templates, total, stats] = await Promise.all([
+            Template.find(query)
+                .populate("categories", "name")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            Template.countDocuments(query),
+            Template.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 },
+                        active: { $sum: { $cond: ["$isActive", 1, 0] } },
+                        premium: { $sum: { $cond: [{ $gt: ["$price", 0] }, 1, 0] } },
+                        totalDownloads: { $sum: "$downloads" }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        total: 1,
+                        active: 1,
+                        premium: 1,
+                        totalDownloads: 1
+                    }
+                }
+            ])
+        ]);
+
+        return NextResponse.json({
+            success: true,
+            data: templates,
+            stats: stats[0] || { total: 0, active: 0, premium: 0, totalDownloads: 0 },
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit),
+            },
+        });
+    } catch (error: any) {
+        console.error("Error fetching templates:", error);
+        return NextResponse.json(
+            { success: false, message: error.message || "Failed to fetch templates" },
+            { status: 500 }
+        );
+    }
+}
+
+// POST /api/admin/templates - Create new template
 export async function POST(req: NextRequest) {
     try {
         const user = await authenticateUser();
@@ -41,3 +128,4 @@ export async function POST(req: NextRequest) {
         );
     }
 }
+

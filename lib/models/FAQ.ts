@@ -44,6 +44,7 @@ const FAQSchema = new Schema<IFAQ>(
         coverImage: {
             type: String,
             trim: true,
+            default: "",
         },
     },
     {

@@ -5,7 +5,7 @@ import { authenticateUser } from "@/middleware/auth";
 
 export async function GET(req: NextRequest) {
     try {
-        const user = await authenticateUser(true, false, true);
+        const user = await authenticateUser(true, false, true, true);
         if (!user) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }

@@ -93,7 +93,7 @@ const CodedFeatures = () => {
                                         className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-linear-to-r from-emerald-400 to-teal-500 flex items-center justify-center ring-4 ring-emerald-400/20 group-hover:scale-105 group-hover:rotate-3 transition-transform duration-500">
                                         <Icon className="w-8 h-8 text-white" aria-hidden="true"/>
                                     </div>
-                                    <h3 className="text-lg font-semibold text-white mb-3 tracking-tight">
+                                    <h3 className="text-xl md:text-2xl font-paras font-semibold text-white mb-3 tracking-tight">
                                         {f.title}
                                     </h3>
                                     <p className="text-sm text-gray-300 leading-relaxed">

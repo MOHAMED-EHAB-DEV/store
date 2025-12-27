@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
             if (endDate) query.createdAt.$lte = new Date(endDate);
         }
 
-        const [logs, total] = await Promise.all([
+        const [logs, total, stats] = await Promise.all([
             DownloadLog.find(query)
                 .populate("templateId", "title thumbnail")
                 .populate("userId", "name email avatar")
@@ -47,11 +47,30 @@ export async function GET(request: NextRequest) {
                 .limit(limit)
                 .lean(),
             DownloadLog.countDocuments(query),
+            DownloadLog.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: 1 },
+                        templates: { $addToSet: "$templateId" },
+                        users: { $addToSet: "$userId" }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        total: 1,
+                        uniqueTemplates: { $size: "$templates" },
+                        uniqueUsers: { $size: "$users" }
+                    }
+                }
+            ])
         ]);
 
         return NextResponse.json({
             success: true,
             data: logs,
+            stats: stats[0] || { total: 0, uniqueTemplates: 0, uniqueUsers: 0 },
             pagination: {
                 page,
                 limit,

@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
-import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
+import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
+import ActionDropdown from "@/components/Dashboard/shared/ActionDropdown";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import { Headset, Calendar } from "@/components/ui/svgs/Icons";
+import { Headset, Calendar, Clock, Check } from "@/components/ui/svgs/Icons";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Ticket {
     _id: string;
@@ -23,39 +24,28 @@ interface Ticket {
 }
 
 interface AdminSupportClientProps {
-    tickets: Ticket[];
+    initialData: Ticket[];
+    stats: {
+        total: number;
+        open: number;
+        inProgress: number;
+        closed: number;
+    };
+    pagination: any;
+    searchParams: any;
 }
 
-export default function AdminSupportClient({ tickets }: AdminSupportClientProps) {
+export default function AdminSupportClient({
+    initialData,
+    stats,
+    pagination,
+    searchParams,
+}: AdminSupportClientProps) {
     const router = useRouter();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [filters, setFilters] = useState<Record<string, string>>({});
+    const pathname = usePathname();
+    const queryParams = useSearchParams();
+    const [loading, setLoading] = useState(false);
 
-    // Calculate stats
-    const stats = useMemo(() => {
-        const now = new Date();
-        const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-        const openCount = tickets.filter((t) => t.status === "open").length;
-        const inProgressCount = tickets.filter((t) => t.status === "in-progress").length;
-        const resolvedCount = tickets.filter((t) => t.status === "resolved").length;
-        const recentCount = tickets.filter((t) => new Date(t.createdAt) >= last24h).length;
-
-        const resolutionRate = tickets.length > 0
-            ? (resolvedCount / tickets.length) * 100
-            : 0;
-
-        return {
-            total: tickets.length,
-            open: openCount,
-            inProgress: inProgressCount,
-            resolved: resolvedCount,
-            recent24h: recentCount,
-            resolutionRate: resolutionRate.toFixed(1),
-        };
-    }, [tickets]);
-
-    // Filter options
     const filterOptions: FilterOption[] = [
         {
             key: "status",
@@ -63,7 +53,6 @@ export default function AdminSupportClient({ tickets }: AdminSupportClientProps)
             options: [
                 { value: "open", label: "Open" },
                 { value: "in-progress", label: "In Progress" },
-                { value: "resolved", label: "Resolved" },
                 { value: "closed", label: "Closed" },
             ],
         },
@@ -79,89 +68,62 @@ export default function AdminSupportClient({ tickets }: AdminSupportClientProps)
         },
     ];
 
-    // Filtered tickets
-    const filteredTickets = useMemo(() => {
-        let result = tickets;
-
-        // Search filter
-        if (searchQuery) {
-            result = result.filter(
-                (ticket) =>
-                    ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    ticket.user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    ticket.user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        // Status filter
-        if (filters.status) {
-            result = result.filter((ticket) => ticket.status === filters.status);
-        }
-
-        // Priority filter
-        if (filters.priority) {
-            result = result.filter((ticket) => ticket.priority === filters.priority);
-        }
-
-        return result;
-    }, [tickets, searchQuery, filters]);
-
-    const handleFilterChange = (key: string, value: string) => {
-        setFilters((prev) => ({ ...prev, [key]: value }));
-    };
-
-    const handleClearFilters = () => {
-        setFilters({});
-        setSearchQuery("");
+    const updateQuery = (updates: Record<string, string | null>) => {
+        const params = new URLSearchParams(queryParams.toString());
+        Object.entries(updates).forEach(([key, value]) => {
+            if (value === null || value === "") {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
+        });
+        if (!updates.page) params.set("page", "1");
+        router.push(`${pathname}?${params.toString()}`);
     };
 
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case "urgent":
-                return "bg-red-500/20 text-red-300 border-red-500/30";
+                return "bg-red-500/10 text-red-400 border-red-500/20";
             case "high":
-                return "bg-orange-500/20 text-orange-300 border-orange-500/30";
+                return "bg-orange-500/10 text-orange-400 border-orange-500/20";
             case "medium":
-                return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
+                return "bg-yellow-500/10 text-yellow-400 border-yellow-500/20";
             case "low":
-                return "bg-blue-500/20 text-blue-300 border-blue-500/30";
+                return "bg-blue-500/10 text-blue-400 border-blue-500/20";
             default:
-                return "bg-gray-500/20 text-gray-300 border-gray-500/30";
+                return "bg-gray-500/10 text-gray-400 border-gray-500/20";
         }
     };
 
     const getStatusColor = (status: string) => {
         switch (status) {
             case "open":
-                return "bg-green-500/20 text-green-300 border-green-500/30";
+                return "bg-green-500/10 text-green-400 border-green-500/20";
             case "in-progress":
-                return "bg-blue-500/20 text-blue-300 border-blue-500/30";
-            case "resolved":
-                return "bg-purple-500/20 text-purple-300 border-purple-500/30";
+                return "bg-blue-500/10 text-blue-400 border-blue-500/20";
             case "closed":
-                return "bg-gray-500/20 text-gray-300 border-gray-500/30";
+                return "bg-gray-500/10 text-gray-400 border-gray-500/20";
             default:
-                return "bg-gray-500/20 text-gray-300 border-gray-500/30";
+                return "bg-gray-500/10 text-gray-400 border-gray-500/20";
         }
     };
 
-    // Table columns
     const columns: Column<Ticket>[] = [
         {
             key: "subject",
-            label: "Subject",
+            label: "Ticket",
             sortable: true,
             render: (ticket) => (
                 <div>
                     <p className="text-sm font-medium text-white">{ticket.subject}</p>
-                    <p className="text-xs text-muted-foreground">#{ticket._id.slice(-8)}</p>
+                    <p className="text-xs text-muted-foreground">ID: #{ticket._id.slice(-8)}</p>
                 </div>
             ),
         },
         {
             key: "user",
             label: "User",
-            sortable: true,
             render: (ticket) => (
                 <div>
                     <p className="text-sm font-medium text-white">{ticket.user?.name || "Unknown"}</p>
@@ -174,8 +136,8 @@ export default function AdminSupportClient({ tickets }: AdminSupportClientProps)
             label: "Priority",
             sortable: true,
             render: (ticket) => (
-                <Badge className={getPriorityColor(ticket.priority)}>
-                    {ticket.priority}
+                <Badge variant="outline" className={getPriorityColor(ticket.priority)}>
+                    {ticket.priority.toUpperCase()}
                 </Badge>
             ),
         },
@@ -184,18 +146,9 @@ export default function AdminSupportClient({ tickets }: AdminSupportClientProps)
             label: "Status",
             sortable: true,
             render: (ticket) => (
-                <Badge className={getStatusColor(ticket.status)}>
-                    {ticket.status.replace("-", " ")}
+                <Badge variant="outline" className={getStatusColor(ticket.status)}>
+                    {ticket.status.replace("-", " ").toUpperCase()}
                 </Badge>
-            ),
-        },
-        {
-            key: "category",
-            label: "Category",
-            render: (ticket) => (
-                <span className="text-sm text-muted-foreground">
-                    {ticket.category || "General"}
-                </span>
             ),
         },
         {
@@ -212,102 +165,127 @@ export default function AdminSupportClient({ tickets }: AdminSupportClientProps)
             key: "actions",
             label: "Actions",
             render: (ticket) => (
-                <Link href={`/admin/support/${ticket._id}`}>
-                    <button className="text-sm text-primary hover:underline">
-                        View Details
-                    </button>
-                </Link>
+                <ActionDropdown
+                    actions={[
+                        {
+                            label: "View Chat",
+                            onClick: () => router.push(`/admin/support/${ticket._id}`),
+                        },
+                    ]}
+                />
             ),
         },
     ];
 
-    const statCards = [
+    const statCardsData = [
         {
             label: "Total Tickets",
             value: stats.total,
-            subtext: `${stats.recent24h} in last 24h`,
             icon: Headset,
             gradient: "from-purple-500 to-pink-500",
         },
         {
-            label: "Open Tickets",
+            label: "Open",
             value: stats.open,
-            subtext: "Awaiting response",
-            icon: Headset,
+            icon: Clock,
             gradient: "from-green-500 to-emerald-500",
         },
         {
             label: "In Progress",
             value: stats.inProgress,
-            subtext: "Being handled",
-            icon: Headset,
+            icon: Clock,
             gradient: "from-blue-500 to-cyan-500",
         },
         {
-            label: "Resolution Rate",
-            value: `${stats.resolutionRate}%`,
-            subtext: `${stats.resolved} resolved`,
-            icon: Calendar,
-            gradient: "from-amber-500 to-orange-500",
+            label: "Closed",
+            value: stats.closed,
+            icon: Check,
+            gradient: "from-gray-500 to-slate-500",
         },
     ];
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8 animate-in fade-in duration-500">
             <PageHeader
                 title="Support Tickets"
-                description={`${tickets.length} total tickets`}
+                description="Manage all support tickets and customer inquiries"
                 breadcrumbs={[
-                    { label: "Admin", href: "/admin" },
+                    { label: "Dashboard", href: "/admin" },
                     { label: "Support" },
                 ]}
             />
 
             {/* Stats Grid */}
-            <section aria-label="Ticket statistics">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {statCards.map((stat, index) => (
-                        <StatCard key={index} {...stat} />
-                    ))}
-                </div>
-            </section>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {statCardsData.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
 
-            {/* Search and Filters */}
-            <SearchFilterBar
-                searchPlaceholder="Search by subject, user, or email..."
-                onSearchChange={setSearchQuery}
-                filters={filterOptions}
-                onFilterChange={handleFilterChange}
-                activeFilters={filters}
-                onClearFilters={handleClearFilters}
-            />
-
-            {/* Tickets Table */}
-            {filteredTickets.length === 0 && (searchQuery || Object.keys(filters).length > 0) ? (
-                <EmptyState
-                    icon={Headset}
-                    title="No tickets found"
-                    description="Try adjusting your search or filters"
-                    action={{
-                        label: "Clear Filters",
-                        onClick: handleClearFilters,
+            <div className="space-y-6">
+                <SearchFilterBar
+                    searchPlaceholder="Search tickets..."
+                    onSearchChange={(val) => updateQuery({ search: val })}
+                    filters={filterOptions}
+                    onFilterChange={(key, val) => updateQuery({ [key]: val })}
+                    activeFilters={{
+                        status: queryParams.get("status") || "",
+                        priority: queryParams.get("priority") || "",
                     }}
+                    onClearFilters={() => updateQuery({ status: "", priority: "", search: "" })}
                 />
-            ) : (
+
                 <DataTable
                     columns={columns}
-                    data={filteredTickets}
+                    data={initialData}
                     keyExtractor={(ticket) => ticket._id}
-                    exportFilename="support-tickets"
+                    loading={loading}
+                    exportFilename="tickets"
                     emptyState={
                         <EmptyState
                             icon={Headset}
-                            title="No tickets yet"
-                            description="Support tickets will appear here when users submit them"
+                            title="No tickets found"
+                            description="Try adjusting your filters or search query"
                         />
                     }
+                    actions={
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground mr-2">
+                                Showing {initialData.length} of {pagination?.total || 0} entries
+                            </span>
+                        </div>
+                    }
                 />
-            )}
+
+                {/* Pagination */}
+                {pagination && pagination.pages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <p className="text-sm text-muted-foreground">
+                            Page {pagination.page} of {pagination.pages}
+                        </p>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page <= 1}
+                                onClick={() => updateQuery({ page: (pagination.page - 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Previous
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page >= pagination.pages}
+                                onClick={() => updateQuery({ page: (pagination.page + 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

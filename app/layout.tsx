@@ -8,6 +8,7 @@ import BackToTop from "@/components/ui/BackToTop";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
 import { PersonSchema } from "@/components/SEO/StructuredData";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 export const viewport = {
     width: 'device-width',
@@ -117,6 +118,7 @@ export default async function RootLayout(
 
                     <Analytics />
                     <SpeedInsights />
+                    <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID} />
                     <BackToTop />
                     <PersonSchema
                         name="Mohammed Ehab - Premium Templates"

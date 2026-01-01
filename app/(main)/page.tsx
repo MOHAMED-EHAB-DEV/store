@@ -4,20 +4,23 @@ import Hero from "@/components/home/Hero";
 import { HeroItems, testimonials } from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
-import AboutMe from "@/components/home/AboutMe";
 import dynamic from "next/dynamic";
+// import AboutMe from "@/components/home/AboutMe";
 // import FramerFeatures from "@/components/home/FramerFeatures";
 // import CodedFeatures from "@/components/home/CodedFeatures";
 // import FigmaFeatures from "@/components/home/FigmaFeatures";
 // import Testimonials from "@/components/home/Testimonials";
 // import StickyCTA from "@/components/ui/StickyCTA";
-import Cta from "@/components/home/CTA";
+// import Cta from "@/components/home/CTA";
 // import AnimatedTestimonialsDemo from "@/components/spectrumui/animated_testimonials";
-import Pricing from "@/components/home/Pricing";
+// import Pricing from "@/components/home/Pricing";
 
 const FramerFeatures = dynamic(() => import('@/components/home/FramerFeatures'));
 const CodedFeatures = dynamic(() => import('@/components/home/CodedFeatures'));
 const FigmaFeatures = dynamic(() => import('@/components/home/FigmaFeatures'));
+const Pricing = dynamic(() => import('@/components/home/Pricing'));
+const Cta = dynamic(() => import('@/components/home/CTA'));
+const AboutMe = dynamic(() => import('@/components/home/AboutMe'));
 
 export default async function Home() {
     return (

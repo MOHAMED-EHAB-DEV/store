@@ -1,9 +1,6 @@
-import React from "react";
-import LayoutContainer from "@/components/Admin/Layout/LayoutContainer";
+import LayoutContainer from "@/components/Dashboard/Layout/LayoutContainer";
 import { authenticateUser } from "@/middleware/auth";
 import { redirect } from "next/navigation";
-
-import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +12,7 @@ export default async function RootLayout(
     }>) {
     const user = await authenticateUser(true, false, true);
 
-    if (!user || user?.role !== "admin") redirect("/");
+    if (!user) redirect("/");
     return (
         <LayoutContainer user={user}>
             {children}

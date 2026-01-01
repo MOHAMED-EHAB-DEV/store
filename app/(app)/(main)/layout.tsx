@@ -1,4 +1,4 @@
-import { ReactLenis, useLenis } from 'lenis/react'
+import { ReactLenis } from 'lenis/react'
 import { ReactNode } from 'react';
 import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";

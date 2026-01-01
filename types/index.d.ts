@@ -107,3 +107,10 @@ declare type IDownloadLog = {
   createdAt: Date;
   updatedAt: Date;
 }
+
+declare global {
+  interface Window {
+    dataLayer: any[];
+    __GTM_LOADED__?: boolean;
+  }
+}

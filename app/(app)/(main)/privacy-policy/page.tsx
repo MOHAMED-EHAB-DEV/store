@@ -1,5 +1,3 @@
-import React from 'react';
-
 const PrivacyPolicy = () => {
   return (
     <main className="flex-1 flex flex-col items-center justify-start py-36 px-4 sm:px-6 lg:px-8">

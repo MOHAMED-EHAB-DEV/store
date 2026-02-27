@@ -16,7 +16,7 @@ export interface IUser extends Document {
     isEmailVerified: boolean;
     loginAttempts: number;
     lockUntil?: Date;
-    tier: "free" | "premium";
+    tier: "starter" | "pro" | "lifetime";
     banned: boolean;
     banId: string;
     banMetadata?: {
@@ -95,10 +95,10 @@ const UserSchema = new Schema<IUser>({
     },
     tier: {
         type: String,
-        default: "free",
+        default: "starter",
         index: true,
         lowercase: true,
-        enum: ["free", "premium"],
+        enum: ["starter", "pro", "lifetime"],
     },
     banned: {
         type: Boolean,

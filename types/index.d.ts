@@ -15,7 +15,7 @@ declare type IUser = {
   isEmailVerified: boolean;
   loginAttempts: number;
   lockUntil?: Date;
-  tier: "free" | "premium";
+  tier: "starter" | "pro" | "lifetime";
   banned: boolean;
   banId: string;
   banMetadata?: {

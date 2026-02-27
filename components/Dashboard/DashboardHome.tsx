@@ -21,7 +21,7 @@ export default function DashboardHome({ user, data }: DashboardHomeProps) {
     const { templates, tickets } = data;
 
     const activeTickets = tickets.filter((t: any) => t.status !== "resolved").length;
-    const isPremium = user.tier === "premium";
+    const isPremium = user.tier === "pro";
 
     const stats = [
         {

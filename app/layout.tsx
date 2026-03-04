@@ -10,7 +10,7 @@ import { PersonSchema } from "@/components/SEO/StructuredData";
 import GTMPageView from "@/hooks/GTMPageView";
 import Script from "next/script";
 
-const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
+const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
 
 export const viewport = {
     width: 'device-width',

@@ -86,10 +86,12 @@
     --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     --gradient-warning: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    --gradient-danger: linear-gradient(135deg,
-        #ff4e50 0%,
-        #f44336 50%,
-        #d32f2f 100%);
+    --gradient-danger: linear-gradient(
+      135deg,
+      #ff4e50 0%,
+      #f44336 50%,
+      #d32f2f 100%
+    );
     --gradient-info: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
     --card: var(--color-card);
     --border: var(--color-border);
@@ -118,7 +120,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
@@ -191,22 +192,7 @@
     font-weight: 500;
   }
 
-  /* basic pre/code */
-  .markdown-body pre {
-    border-radius: 0.5rem;
-    overflow: auto;
-    padding: 1rem;
-    position: relative;
-    /* kept here */
-  }
-
-  .markdown-body code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
-      "Helvetica Neue", monospace;
-    font-size: 0.9rem;
-  }
-
-  /* headings & text (no responsive variants inside @apply) */
+  /* headings & text */
   .markdown-body h1 {
     @apply text-2xl font-bold my-6 leading-tight md:text-4xl;
   }
@@ -224,7 +210,7 @@
   }
 
   .markdown-body a {
-    @apply hover:text-blue-400 hover:underline;
+    @apply text-purple-400 hover:text-purple-300 hover:underline transition-colors duration-200;
   }
 
   .markdown-body ul {
@@ -240,36 +226,7 @@
   }
 
   .markdown-body blockquote {
-    @apply border-l-4 border-blue-500 pl-4 italic my-4;
-  }
-
-  /* inline-code: we add a class "inline-code" in the processor */
-  .markdown-body code.inline-code {
-    @apply bg-gray-800 text-pink-400 px-1.5 py-0.5 rounded text-sm;
-  }
-
-  /* Shiki output wrapper */
-  .markdown-body .shiki {
-    @apply rounded-lg p-4 mb-4 overflow-x-auto;
-    white-space: pre;
-  }
-
-  /* Markdown + Shiki styling */
-  .markdown-body pre.shiki {
-    @apply rounded-lg p-4 overflow-x-auto bg-[#0d1117] text-sm leading-relaxed;
-  }
-
-  .markdown-body pre.shiki code {
-    @apply font-mono text-white;
-  }
-
-  /* copy button area */
-  .markdown-body pre {
-    position: relative;
-  }
-
-  .markdown-body pre .copy-btn {
-    @apply absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded;
+    @apply border-l-4 border-purple-500 pl-4 italic my-4 bg-purple-900/20 rounded-r-lg py-2;
   }
 
   /* wrapper & layout */
@@ -280,7 +237,8 @@
   /* Shiki pre area: ensure consistent padding/scroll */
   .shiki-pre {
     @apply overflow-x-auto rounded-lg p-4 text-sm font-mono;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
       "Helvetica Neue", monospace;
     line-height: 1.35;
   }
@@ -463,7 +421,16 @@
 
   .text-gradient-rainbow {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(to right, #c084fc, #f472b6, #f87171, #fbbf24, #4ade80, #60a5fa, #818cf8);
+    background-image: linear-gradient(
+      to right,
+      #c084fc,
+      #f472b6,
+      #f87171,
+      #fbbf24,
+      #4ade80,
+      #60a5fa,
+      #818cf8
+    );
   }
 
   .text-gradient-purple {
@@ -522,20 +489,24 @@
   }
 
   .bg-gradient-cosmic {
-    background: linear-gradient(135deg,
-        #6366f1 0%,
-        #8b5cf6 25%,
-        #ec4899 50%,
-        #06b6d4 75%,
-        #10b981 100%);
+    background: linear-gradient(
+      135deg,
+      #6366f1 0%,
+      #8b5cf6 25%,
+      #ec4899 50%,
+      #06b6d4 75%,
+      #10b981 100%
+    );
     background-size: 400% 400%;
     animation: gradient 8s ease infinite;
   }
 
   .bg-gradient-glass {
-    background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0.05) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -652,7 +623,6 @@
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -688,7 +658,6 @@
 }
 
 @keyframes pulse-slow {
-
   0%,
   100% {
     opacity: 1;
@@ -700,7 +669,6 @@
 }
 
 @keyframes bounce-slow {
-
   0%,
   100% {
     transform: translateY(0);
@@ -712,7 +680,6 @@
 }
 
 @keyframes pulse-glow {
-
   0%,
   100% {
     box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
@@ -739,7 +706,6 @@
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-
   .glass,
   .glass-strong,
   .glass-stronger {
@@ -795,7 +761,6 @@
 }
 
 @keyframes twinkle {
-
   0%,
   100% {
     opacity: 1;
@@ -813,7 +778,6 @@
 }
 
 @keyframes wiggle {
-
   0%,
   100% {
     transform: rotate(0deg);
@@ -833,7 +797,6 @@
 }
 
 @keyframes heartbeat {
-
   0%,
   100% {
     transform: scale(1);
@@ -871,7 +834,8 @@
 
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 

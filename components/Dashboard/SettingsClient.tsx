@@ -7,7 +7,7 @@ import ChangePassword from "@/components/Dashboard/Settings/ChangePassword";
 import Preferences from "@/components/Dashboard/Settings/Preferences";
 import { User } from "@/components/ui/svgs/icons/User";
 import { Lock } from "@/components/ui/svgs/icons/Lock";
-import { Settings as SettingsIcon } from "@/components/ui/svgs/icons/Settings as SettingsIcon";
+import { Settings as SettingsIcon } from "@/components/ui/svgs/icons/Settings";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { Badge } from "@/components/ui/badge";
 import { IUser } from "@/types";

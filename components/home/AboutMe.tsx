@@ -10,7 +10,6 @@ import Link from 'next/link';
 import {stats, skills, badges} from "@/constants";
 
 const AboutMe = () => {
-
     useLayoutEffect(() => {
         let ctx: gsap.Context | null = null;
 

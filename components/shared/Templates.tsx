@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";

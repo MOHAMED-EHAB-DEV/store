@@ -1,8 +1,10 @@
 'use client';
 
 import { useLayoutEffect } from 'react';
-import SpotlightCard from '../ui/SpotlightCard';
 import Link from 'next/link';
+import dynamic from "next/dynamic";
+
+const SpotlightCard = dynamic(() => import('../ui/SpotlightCard'));
 
 const Pricing = () => {
   useLayoutEffect(() => {

@@ -1,19 +1,9 @@
 import * as motion from "motion/react-client";
-import Image from "next/image";
 import Hero from "@/components/home/Hero";
-import { HeroItems, testimonials } from "@/constants";
+import { HeroItems } from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import dynamic from "next/dynamic";
-// import AboutMe from "@/components/home/AboutMe";
-// import FramerFeatures from "@/components/home/FramerFeatures";
-// import CodedFeatures from "@/components/home/CodedFeatures";
-// import FigmaFeatures from "@/components/home/FigmaFeatures";
-// import Testimonials from "@/components/home/Testimonials";
-// import StickyCTA from "@/components/ui/StickyCTA";
-// import Cta from "@/components/home/CTA";
-// import AnimatedTestimonialsDemo from "@/components/spectrumui/animated_testimonials";
-// import Pricing from "@/components/home/Pricing";
 
 const FramerFeatures = dynamic(() => import('@/components/home/FramerFeatures'));
 const CodedFeatures = dynamic(() => import('@/components/home/CodedFeatures'));

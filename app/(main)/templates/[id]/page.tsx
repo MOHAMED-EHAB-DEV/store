@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connectToDatabase } from "@/lib/database";
 import TemplateModel from "@/lib/models/Template";
+import MarkdownCopyHandler from "@/components/Markdown/MarkdownCopyHandler";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -34,9 +35,9 @@ const getTemplate = async (id: string) => {
       {
         next: {
           revalidate: 300, // ISR: 5 minutes fallback
-          tags: [`template-${id}`, "templates"] // Tags for easy revalidation
-        }
-      }
+          tags: [`template-${id}`, "templates"], // Tags for easy revalidation
+        },
+      },
     );
 
     if (!response.ok)
@@ -59,7 +60,7 @@ const getSimilarTemplates = async (
   categoryIds: string[] | ICategory[],
   builtWith: string,
   tags: string[],
-  excludeId: string
+  excludeId: string,
 ) => {
   try {
     const queryParams = new URLSearchParams({
@@ -72,7 +73,7 @@ const getSimilarTemplates = async (
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/templates?${queryParams.toString()}`,
-      { next: { revalidate: 300 } } // ISR: 5 minutes
+      { next: { revalidate: 300 } }, // ISR: 5 minutes
     );
 
     if (!response.ok) {
@@ -93,7 +94,9 @@ const getSimilarTemplates = async (
 };
 
 // Dynamic metadata for SEO
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
   const { data: template } = await getTemplate(id);
 
@@ -103,7 +106,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${template.title} | Premium Templates`,
-    description: template.description?.substring(0, 160) || `Premium ${template.builtWith} template - ${template.title}`,
+    description:
+      template.description?.substring(0, 160) ||
+      `Premium ${template.builtWith} template - ${template.title}`,
     openGraph: {
       title: template.title,
       description: template.description?.substring(0, 160),
@@ -131,7 +136,7 @@ const Page = async ({ params }: PageProps) => {
     template.categories || [],
     template.builtWith,
     template.tags || [],
-    id
+    id,
   );
 
   // JSON-LD structured data for SEO
@@ -170,8 +175,12 @@ const Page = async ({ params }: PageProps) => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <MarkdownCopyHandler />
       <div className="pt-36 sm:pt-46 md:pt-36">
-        <Template template={template} similarTemplates={similarTemplates || []} />
+        <Template
+          template={template}
+          similarTemplates={similarTemplates || []}
+        />
       </div>
     </>
   );

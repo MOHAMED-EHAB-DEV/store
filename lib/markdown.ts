@@ -421,83 +421,6 @@ function rehypeAddClasses() {
   };
 }
 
-/* --------------------------- client copy script --------------------------- */
-
-function getCopyScript() {
-  // This script runs immediately and wires up all .copy-btn elements.
-  // It reads the code text from the sibling <pre><code> innerText (avoids
-  // storing potentially large strings in data-* attributes).
-  // The .success CSS class (defined in globals.css) is toggled to trigger
-  // the green success styles instead of direct class manipulation.
-  return `
-  <script>
-    (function () {
-      function getCodeText(button) {
-        // The button sits inside .code-block-wrapper; the <pre><code> is a sibling.
-        const wrapper = button.closest('.code-block-wrapper');
-        if (!wrapper) return '';
-        const codeEl = wrapper.querySelector('pre code');
-        return codeEl ? codeEl.innerText : '';
-      }
-
-      function wireButtons(root = document) {
-        root.querySelectorAll('.copy-btn').forEach(button => {
-          if (button.__wired) return;
-          button.__wired = true;
-          button.addEventListener('click', async function() {
-            const code = getCodeText(this);
-            const copyIcon   = this.querySelector('.copy-icon');
-            const copiedIcon = this.querySelector('.copied-icon');
-
-            const setSuccess = (on) => {
-              this.classList.toggle('success', on);
-              copyIcon?.classList.toggle('hidden', on);
-              copiedIcon?.classList.toggle('hidden', !on);
-            };
-
-            try {
-              await navigator.clipboard.writeText(code);
-            } catch (_) {
-              // Clipboard API unavailable — use legacy execCommand fallback
-              const ta = document.createElement('textarea');
-              ta.value = code;
-              ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
-              document.body.appendChild(ta);
-              ta.select();
-              document.execCommand('copy');
-              document.body.removeChild(ta);
-            }
-
-            setSuccess(true);
-            setTimeout(() => setSuccess(false), 2000);
-          });
-        });
-      }
-
-      // Run immediately (handles SSR-injected HTML that's already in the DOM)
-      wireButtons();
-
-      // Also run after DOMContentLoaded in case the script executes before parsing is complete
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => wireButtons());
-      }
-
-      // Watch for dynamically injected code blocks (e.g. streaming responses)
-      const mo = new MutationObserver((mutations) => {
-        for (const m of mutations) {
-          m.addedNodes.forEach(node => {
-            if (node.nodeType === 1 && node.querySelector?.('.copy-btn')) {
-              wireButtons(node);
-            }
-          });
-        }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
-    })();
-  </script>
-  `;
-}
-
 /* ----------------------------- export function ---------------------------- */
 
 export async function mdToHtmlAndHeadings(content: string) {
@@ -526,11 +449,8 @@ export async function mdToHtmlAndHeadings(content: string) {
       return { level, text, id };
     });
 
-    // Append the copy script to the HTML
-    const htmlWithScript = String(file) + getCopyScript();
-
     return {
-      html: htmlWithScript,
+      html: String(file),
       headings,
     };
   } catch (err) {

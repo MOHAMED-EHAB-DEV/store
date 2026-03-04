@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { Roboto } from "@/lib/fonts";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
-import BackToTop from "@/components/ui/BackToTop";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
 import { PersonSchema } from "@/components/SEO/StructuredData";
 import GTMPageView from "@/hooks/GTMPageView";
 import Script from "next/script";
+
+const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
 
 export const viewport = {
     width: 'device-width',
@@ -158,8 +158,6 @@ export default async function RootLayout(
                 <Suspense fallback={null}>
                     <GTMPageView />
                 </Suspense>
-                <Analytics />
-                <SpeedInsights />
                 <BackToTop />
                 <PersonSchema
                     name="Mohammed Ehab - Premium Templates"

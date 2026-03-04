@@ -1,162 +1,178 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode, Context, Dispatch, SetStateAction } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  Context,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types";
 import { useSocket, SocketInterface } from "@/hooks/useSocket";
+import { useAnalytics } from "@/context/AnalyticsContext";
 
 interface IUserContext extends SocketInterface {
-    user: IUser | null;
-    setUser: Dispatch<SetStateAction<IUser | null>>;
-    setReload: Dispatch<SetStateAction<boolean>>;
-    favoriteTemplates: String[];
-    purchasedTemplates: String[];
-    addToFavorites: (templateId: string) => void;
-    removeFromFavorites: (templateId: string) => void;
-    toggleFavorite: (templateId: string) => void;
+  user: IUser | null;
+  setUser: Dispatch<SetStateAction<IUser | null>>;
+  setReload: Dispatch<SetStateAction<boolean>>;
+  favoriteTemplates: String[];
+  purchasedTemplates: String[];
+  addToFavorites: (templateId: string) => void;
+  removeFromFavorites: (templateId: string) => void;
+  toggleFavorite: (templateId: string) => void;
 }
 
 const UserContext = createContext<IUserContext>({
-    user: null,
-    setUser: () => { },
-    setReload: () => { },
-    favoriteTemplates: [],
-    purchasedTemplates: [],
-    addToFavorites: () => { },
-    removeFromFavorites: () => { },
-    toggleFavorite: () => { },
-    isConnected: false,
-    joinTicket: () => { },
-    leaveTicket: () => { },
-    sendMessage: () => { },
-    setTyping: () => { },
-    notifyTicketUpdate: () => { },
-    onNewMessage: () => () => { },
-    onTicketStatusChange: () => () => { },
-    onNewNotification: () => () => { },
-    onUserStatusChange: () => () => { },
-    typingUsers: {},
+  user: null,
+  setUser: () => {},
+  setReload: () => {},
+  favoriteTemplates: [],
+  purchasedTemplates: [],
+  addToFavorites: () => {},
+  removeFromFavorites: () => {},
+  toggleFavorite: () => {},
+  isConnected: false,
+  joinTicket: () => {},
+  leaveTicket: () => {},
+  sendMessage: () => {},
+  setTyping: () => {},
+  notifyTicketUpdate: () => {},
+  onNewMessage: () => () => {},
+  onTicketStatusChange: () => () => {},
+  onNewNotification: () => () => {},
+  onUserStatusChange: () => () => {},
+  typingUsers: {},
 });
 
-
 export function UserProvider({ children }: { children: ReactNode }) {
-    const router = useRouter();
-    const [user, setUser] = useState<IUser | null>(null);
-    const [reload, setReload] = useState(false);
-    const [favoriteTemplates, setFavoriteTemplates] = useState<String[]>([]);
-    const [purchasedTemplates, setPurchasedTemplates] = useState([]);
+  const router = useRouter();
+  const [user, setUser] = useState<IUser | null>(null);
+  const [reload, setReload] = useState(false);
+  const [favoriteTemplates, setFavoriteTemplates] = useState<String[]>([]);
+  const [purchasedTemplates, setPurchasedTemplates] = useState([]);
 
-    // Initialize socket globally when user is logged in
-    const socket = useSocket({
-        enabled: !!user,
-        userId: user?._id,
-        role: user?.role
-    });
+  const { visitorId } = useAnalytics();
 
-    const fetchUser = async () => {
-        try {
-            const res = await fetch("/api/user");
-            const data = await res.json();
-            setUser(data.user);
-            return data.user;
-        } catch (error) {
-            setUser(null);
-        }
-    };
+  // Initialize socket globally when visitorId is ready (always), auth users get extra role
+  const socket = useSocket({
+    enabled: !!visitorId,
+    visitorId,
+    userId: user?._id,
+    role: user?.role,
+  });
 
-    const fetchPurchasedTemplates = async () => {
-        try {
-            const res = await fetch(`/api/user/purchased-templates`);
-            const data = await res.json();
-            if (data.success) {
-                setPurchasedTemplates(data.data.map((template: any) => template._id));
-            }
-        } catch (error) {
-            setPurchasedTemplates([]);
-        }
+  const fetchUser = async () => {
+    try {
+      const res = await fetch("/api/user");
+      const data = await res.json();
+      setUser(data.user);
+      return data.user;
+    } catch (error) {
+      setUser(null);
     }
+  };
 
-    const fetchFavorites = async () => {
-        try {
-            const res = await fetch(`/api/user/favorites`);
-            const data = await res.json();
-            if (data.success) {
-                setFavoriteTemplates(data.data.map((template: any) => template._id));
-            }
-        } catch (error) {
-            setFavoriteTemplates([]);
-        }
-    };
+  const fetchPurchasedTemplates = async () => {
+    try {
+      const res = await fetch(`/api/user/purchased-templates`);
+      const data = await res.json();
+      if (data.success) {
+        setPurchasedTemplates(data.data.map((template: any) => template._id));
+      }
+    } catch (error) {
+      setPurchasedTemplates([]);
+    }
+  };
 
-    const addToFavorites = async (templateId: string) => {
-        if (!user) return;
-        setFavoriteTemplates((prev) => [...prev, templateId] as String[]);
-        try {
-            const res = await fetch("/api/user/favorites", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user?._id, templateId, action: "add" }),
-            });
-            const data = await res.json();
-            if (!data.success) {
-                setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
-                console.error("Failed to add to favorites:", data.error);
-            }
-        } catch (error) {
-            setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
-            console.error("Error adding to favorites:", error);
-        }
-    };
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch(`/api/user/favorites`);
+      const data = await res.json();
+      if (data.success) {
+        setFavoriteTemplates(data.data.map((template: any) => template._id));
+      }
+    } catch (error) {
+      setFavoriteTemplates([]);
+    }
+  };
 
-    const removeFromFavorites = async (templateId: string) => {
-        if (!user) return;
+  const addToFavorites = async (templateId: string) => {
+    if (!user) return;
+    setFavoriteTemplates((prev) => [...prev, templateId] as String[]);
+    try {
+      const res = await fetch("/api/user/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user?._id, templateId, action: "add" }),
+      });
+      const data = await res.json();
+      if (!data.success) {
         setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
-        try {
-            const res = await fetch("/api/user/favorites", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user._id, templateId, action: "remove" }),
-            });
-            const data = await res.json();
-            if (!data.success) {
-                setFavoriteTemplates((prev) => [...prev, templateId]);
-                console.error("Failed to remove from favorites:", data.error);
-            }
-        } catch (error) {
-            setFavoriteTemplates((prev) => [...prev, templateId]);
-            console.error("Error removing from favorites:", error);
-        }
-    };
+        console.error("Failed to add to favorites:", data.error);
+      }
+    } catch (error) {
+      setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
+      console.error("Error adding to favorites:", error);
+    }
+  };
 
-    const toggleFavorite = (templateId: string) => {
-        if (!user) return router.push("/signin?message=unauthorized");
-        if (favoriteTemplates.includes(templateId)) removeFromFavorites(templateId);
-        else addToFavorites(templateId);
-    };
+  const removeFromFavorites = async (templateId: string) => {
+    if (!user) return;
+    setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
+    try {
+      const res = await fetch("/api/user/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          templateId,
+          action: "remove",
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setFavoriteTemplates((prev) => [...prev, templateId]);
+        console.error("Failed to remove from favorites:", data.error);
+      }
+    } catch (error) {
+      setFavoriteTemplates((prev) => [...prev, templateId]);
+      console.error("Error removing from favorites:", error);
+    }
+  };
 
-    useEffect(() => {
-        fetchUser().then((u) => {
-            fetchFavorites();
-            fetchPurchasedTemplates();
-        });
-    }, [reload]);
+  const toggleFavorite = (templateId: string) => {
+    if (!user) return router.push("/signin?message=unauthorized");
+    if (favoriteTemplates.includes(templateId)) removeFromFavorites(templateId);
+    else addToFavorites(templateId);
+  };
 
-    return (
-        <UserContext.Provider
-            value={{
-                user,
-                setUser,
-                setReload,
-                favoriteTemplates,
-                purchasedTemplates,
-                addToFavorites,
-                removeFromFavorites,
-                toggleFavorite,
-                ...socket
-            }}
-        >
-            {children}
-        </UserContext.Provider>
-    );
+  useEffect(() => {
+    fetchUser().then((u) => {
+      fetchFavorites();
+      fetchPurchasedTemplates();
+    });
+  }, [reload]);
+
+  return (
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        setReload,
+        favoriteTemplates,
+        purchasedTemplates,
+        addToFavorites,
+        removeFromFavorites,
+        toggleFavorite,
+        ...socket,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export const useUser = () => useContext(UserContext);

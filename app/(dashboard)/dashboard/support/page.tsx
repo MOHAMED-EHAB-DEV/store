@@ -7,7 +7,8 @@ import TicketCard from "@/components/Support/TicketCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
-import { Headset, Plus } from "@/components/ui/svgs/Icons";
+import { Headset } from "@/components/ui/svgs/icons/Headset";
+import { Plus } from "@/components/ui/svgs/icons/Plus";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

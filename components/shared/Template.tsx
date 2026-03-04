@@ -1,7 +1,9 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Heart, Star, ExternalLink } from "@/components/ui/svgs/Icons";
+import { Heart } from "@/components/ui/svgs/icons/Heart";
+import { Star } from "@/components/ui/svgs/icons/Star";
+import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
 import { capitalizeFirstChar } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";

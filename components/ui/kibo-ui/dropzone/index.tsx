@@ -1,6 +1,6 @@
 'use client';
 
-import { Upload } from '@/components/ui/svgs/Icons';
+import { Upload } from "@/components/ui/svgs/icons/Upload";
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import type { DropEvent, DropzoneOptions, FileRejection } from 'react-dropzone';

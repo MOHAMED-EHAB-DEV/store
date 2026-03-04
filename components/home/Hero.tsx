@@ -1,7 +1,8 @@
 'use client';
 
 import { useLayoutEffect } from "react";
-import { Star, ArrowRight } from '@/components/ui/svgs/Icons';
+import { Star } from "@/components/ui/svgs/icons/Star";
+import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import gsap from "gsap"
 import { SplitText } from "gsap/all";
 import { Badge } from '@/components/ui/badge';

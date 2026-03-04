@@ -8,7 +8,9 @@ import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/Sea
 import ActionDropdown, { createDefaultActions } from "@/components/Dashboard/shared/ActionDropdown";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import { FileText, Plus, Eye } from "@/components/ui/svgs/Icons";
+import { FileText } from "@/components/ui/svgs/icons/FileText";
+import { Plus } from "@/components/ui/svgs/icons/Plus";
+import { Eye } from "@/components/ui/svgs/icons/Eye";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { sonnerToast } from "@/components/ui/sonner";

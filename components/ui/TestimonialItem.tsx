@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Star } from "@/components/ui/svgs/Icons";
+import { Star } from "@/components/ui/svgs/icons/Star";
 import { FC } from "react";
 
 interface TestimonialItemProps {

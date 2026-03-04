@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import {Star} from "@/components/ui/svgs/Icons";
+import { Star } from "@/components/ui/svgs/icons/Star";
 import {formatCount} from "@/lib/utils";
 import RatingDistribution from "@/components/singleTemplate/Reviews/RatingDistribution";
 import AddReview from "@/components/Dialogs/AddReview";

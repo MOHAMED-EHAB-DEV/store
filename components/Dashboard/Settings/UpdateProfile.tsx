@@ -7,7 +7,7 @@ import {sonnerToast} from "@/components/ui/sonner";
 import {isBase64Image} from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import {useRouter} from "next/navigation";
-import {User} from "@/components/ui/svgs/Icons";
+import { User } from "@/components/ui/svgs/icons/User";
 import {Dropzone, DropzoneContent, DropzoneEmptyState} from '@/components/ui/kibo-ui/dropzone';
 import { IUser } from "@/types";
 

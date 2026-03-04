@@ -7,7 +7,10 @@ import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
 import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import { Download, Templates, Users, Calendar } from "@/components/ui/svgs/Icons";
+import { Download } from "@/components/ui/svgs/icons/Download";
+import { Templates } from "@/components/ui/svgs/icons/Templates";
+import { Users } from "@/components/ui/svgs/icons/Users";
+import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

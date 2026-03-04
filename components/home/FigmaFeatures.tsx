@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect} from "react";
-import { Figma } from '@/components/ui/svgs/Icons';
+import { Figma } from "@/components/ui/svgs/icons/Figma";
 import SplitText from '../ui/SplitText';
 import {figmaFeatures} from "@/constants";
 

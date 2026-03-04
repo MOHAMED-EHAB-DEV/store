@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronUp, ChevronDown, Download } from "@/components/ui/svgs/Icons";
+import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
+import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
+import { Download } from "@/components/ui/svgs/icons/Download";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 

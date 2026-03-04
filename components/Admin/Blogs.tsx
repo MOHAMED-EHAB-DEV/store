@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from "react";
-import { Search } from "@/components/ui/svgs/Icons";
+import { Search } from "@/components/ui/svgs/icons/Search";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import { formatDate } from "@/lib/utils";
-import { Edit, Trash2 } from "@/components/ui/svgs/Icons";
+import { Edit } from "@/components/ui/svgs/icons/Edit";
+import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 
 interface BlogType {
     _id: string;

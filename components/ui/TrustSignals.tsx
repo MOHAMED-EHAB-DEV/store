@@ -1,6 +1,10 @@
 'use client';
 
-import { Shield, Users, Star, Download, Zap } from '@/components/ui/svgs/Icons';
+import { Shield } from "@/components/ui/svgs/icons/Shield";
+import { Users } from "@/components/ui/svgs/icons/Users";
+import { Star } from "@/components/ui/svgs/icons/Star";
+import { Download } from "@/components/ui/svgs/icons/Download";
+import { Zap } from "@/components/ui/svgs/icons/Zap";
 
 interface TrustSignal {
     icon: React.ComponentType<any>;

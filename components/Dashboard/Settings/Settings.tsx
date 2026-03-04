@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { whatLoseWhenDeleteMyAccount } from "@/constants";
 import { sonnerToast } from "@/components/ui/sonner";
-import { Eye, EyeOff, Lock, Mail, X } from "@/components/ui/svgs/Icons";
+import { Eye } from "@/components/ui/svgs/icons/Eye";
+import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
+import { Lock } from "@/components/ui/svgs/icons/Lock";
+import { Mail } from "@/components/ui/svgs/icons/Mail";
+import { X } from "@/components/ui/svgs/icons/X";
 import { useRouter } from "next/navigation";
 import revalidate from "@/actions/revalidateTag";
 

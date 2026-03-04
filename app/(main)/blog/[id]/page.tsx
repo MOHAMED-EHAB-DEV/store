@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
 import { mdToHtmlAndHeadings } from '@/lib/markdown';
-import { ArrowLeft, Calendar, Clock, Share2, Tag } from '@/components/ui/svgs/Icons';
+import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
+import { Calendar } from "@/components/ui/svgs/icons/Calendar";
+import { Clock } from "@/components/ui/svgs/icons/Clock";
+import { Share2 } from "@/components/ui/svgs/icons/Share2";
+import { Tag } from "@/components/ui/svgs/icons/Tag";
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

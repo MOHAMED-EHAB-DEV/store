@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
-import { Star } from '@/components/ui/svgs/Icons';
+import { Star } from "@/components/ui/svgs/icons/Star";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { Suspense } from "react";

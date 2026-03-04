@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Download, ExternalLink, Star } from "@/components/ui/svgs/Icons";
+import { Download } from "@/components/ui/svgs/icons/Download";
+import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
+import { Star } from "@/components/ui/svgs/icons/Star";
 import Markdown from "./Markdown";
 import { capitalizeFirstChar } from "@/lib/utils";
 import { TemplateSchema } from "@/components/SEO/StructuredData";

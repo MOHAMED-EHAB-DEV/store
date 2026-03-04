@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown } from "@/components/ui/svgs/Icons";
+import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
 
 import { cn } from "@/lib/utils"
 

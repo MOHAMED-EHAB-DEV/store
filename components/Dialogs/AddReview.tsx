@@ -9,7 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Star } from "@/components/ui/svgs/Icons";
+import { Star } from "@/components/ui/svgs/icons/Star";
 
 interface AddReviewProps {
     templateId: string;

@@ -1,5 +1,8 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { ChevronDown, ChevronUp, Search, Star } from "@/components/ui/svgs/Icons";
+import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
+import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
+import { Search } from "@/components/ui/svgs/icons/Search";
+import { Star } from "@/components/ui/svgs/icons/Star";
 import {
     Popover,
     PopoverTrigger,

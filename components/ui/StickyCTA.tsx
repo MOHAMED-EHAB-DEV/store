@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Star } from '@/components/ui/svgs/Icons';
+import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
+import { Star } from "@/components/ui/svgs/icons/Star";
 import Link from 'next/link';
 
 const StickyCTA = () => {

@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { AlertCircle, RefreshCcw } from "@/components/ui/svgs/Icons";
+import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
+import { RefreshCcw } from "@/components/ui/svgs/icons/RefreshCcw";
 import { Button } from "@/components/ui/button";
 
 interface ErrorStateProps {

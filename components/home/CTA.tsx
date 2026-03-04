@@ -2,7 +2,7 @@
 
 import { useLayoutEffect } from "react";
 import Link from "next/link";
-import { Sparkles } from "@/components/ui/svgs/Icons";
+import { Sparkles } from "@/components/ui/svgs/icons/Sparkles";
 import TrustSignals from "@/components/ui/TrustSignals";
 
 const Cta = () => {

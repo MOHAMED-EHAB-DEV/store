@@ -4,7 +4,7 @@ import React, { Suspense } from 'react';
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
-import { Search } from "@/components/ui/svgs/Icons";
+import { Search } from "@/components/ui/svgs/icons/Search";
 import { ICategory, ITemplate } from '@/types';
 import { useFilters } from '@/hooks/useFilter';
 import { useTemplates } from '@/hooks/useTemplates';

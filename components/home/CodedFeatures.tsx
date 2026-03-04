@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from "react";
-import {Code2} from "@/components/ui/svgs/Icons";
+import { Code2 } from "@/components/ui/svgs/icons/Code2";
 import SplitText from "../ui/SplitText";
 import { codeFeatures } from "@/constants";
 

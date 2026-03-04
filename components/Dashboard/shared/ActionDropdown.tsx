@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { MoreVertical, Edit, Trash2, Eye } from "@/components/ui/svgs/Icons";
+import { MoreVertical } from "@/components/ui/svgs/icons/MoreVertical";
+import { Edit } from "@/components/ui/svgs/icons/Edit";
+import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import { Eye } from "@/components/ui/svgs/icons/Eye";
 import {
     DropdownMenu,
     DropdownMenuContent,

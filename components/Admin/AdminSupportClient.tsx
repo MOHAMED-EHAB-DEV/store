@@ -8,7 +8,10 @@ import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/Sea
 import ActionDropdown from "@/components/Dashboard/shared/ActionDropdown";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import { Headset, Calendar, Clock, Check } from "@/components/ui/svgs/Icons";
+import { Headset } from "@/components/ui/svgs/icons/Headset";
+import { Calendar } from "@/components/ui/svgs/icons/Calendar";
+import { Clock } from "@/components/ui/svgs/icons/Clock";
+import { Check } from "@/components/ui/svgs/icons/Check";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 

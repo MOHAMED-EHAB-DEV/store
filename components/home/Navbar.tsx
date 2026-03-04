@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, Suspense, useEffect } from 'react';
-import { Menu, X } from '@/components/ui/svgs/Icons';
+import { Menu } from "@/components/ui/svgs/icons/Menu";
+import { X } from "@/components/ui/svgs/icons/X";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";

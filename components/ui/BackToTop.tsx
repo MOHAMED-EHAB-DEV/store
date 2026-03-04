@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronUp } from '@/components/ui/svgs/Icons';
+import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
 
 const BackToTop = () => {
     const [isVisible, setIsVisible] = useState(false);

@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, FormEvent } from 'react';
-import { Check, Eye, EyeOff, Lock } from "@/components/ui/svgs/Icons";
+import { Check } from "@/components/ui/svgs/icons/Check";
+import { Eye } from "@/components/ui/svgs/icons/Eye";
+import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
+import { Lock } from "@/components/ui/svgs/icons/Lock";
 import { passwordRequirements } from "@/constants";
 import { sonnerToast } from "@/components/ui/sonner";
 import { useUser } from "@/context/UserContext";
@@ -15,7 +18,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { whatLoseWhenDeleteMyAccount } from "@/constants";
-import { Mail, X } from "@/components/ui/svgs/Icons";
+import { Mail } from "@/components/ui/svgs/icons/Mail";
+import { X } from "@/components/ui/svgs/icons/X";
 
 const ChangePassword = () => {
     const { user } = useUser();

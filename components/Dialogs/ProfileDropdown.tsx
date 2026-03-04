@@ -6,12 +6,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-    Settings,
-    LogOut,
-    LayoutDashboard,
-    Heart,
-} from "@/components/ui/svgs/Icons";
+import { Settings } from "@/components/ui/svgs/icons/Settings";
+import { LogOut } from "@/components/ui/svgs/icons/LogOut";
+import { LayoutDashboard } from "@/components/ui/svgs/icons/LayoutDashboard";
+import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 

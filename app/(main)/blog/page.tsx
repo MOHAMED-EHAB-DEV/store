@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
-import { Calendar, Clock, ArrowRight, BookOpen } from '@/components/ui/svgs/Icons';
+import { Calendar } from "@/components/ui/svgs/icons/Calendar";
+import { Clock } from "@/components/ui/svgs/icons/Clock";
+import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
+import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
 import type { Metadata } from 'next';
 
 interface BlogPost {

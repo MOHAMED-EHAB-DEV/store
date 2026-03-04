@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronRight } from "@/components/ui/svgs/Icons";
+import { ChevronRight } from "@/components/ui/svgs/icons/ChevronRight";
 import Link from "next/link";
 
 interface Breadcrumb {

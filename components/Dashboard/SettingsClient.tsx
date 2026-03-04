@@ -5,7 +5,10 @@ import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import UpdateProfile from "@/components/Dashboard/Settings/UpdateProfile";
 import ChangePassword from "@/components/Dashboard/Settings/ChangePassword";
 import Preferences from "@/components/Dashboard/Settings/Preferences";
-import { User, Lock, Settings as SettingsIcon, Star } from "@/components/ui/svgs/Icons";
+import { User } from "@/components/ui/svgs/icons/User";
+import { Lock } from "@/components/ui/svgs/icons/Lock";
+import { Settings as SettingsIcon } from "@/components/ui/svgs/icons/Settings as SettingsIcon";
+import { Star } from "@/components/ui/svgs/icons/Star";
 import { Badge } from "@/components/ui/badge";
 import { IUser } from "@/types";
 

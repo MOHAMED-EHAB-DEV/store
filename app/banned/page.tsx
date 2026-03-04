@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { ShieldAlert, Home, Mail } from "@/components/ui/svgs/Icons";
+import { ShieldAlert } from "@/components/ui/svgs/icons/ShieldAlert";
+import { Home } from "@/components/ui/svgs/icons/Home";
+import { Mail } from "@/components/ui/svgs/icons/Mail";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

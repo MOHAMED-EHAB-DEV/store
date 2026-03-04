@@ -1,35 +1,33 @@
-import {
-    Blocks,
-    Shield,
-    Cpu,
-    Palette,
-    Layers,
-    MousePointer,
-    Smartphone,
-    Code2,
-    LayoutDashboard,
-    Settings,
-    Templates,
-    Instagram,
-    Linkedin,
-    Heart,
-    Zap,
-    Code,
-    ExternalLink,
-    Rocket,
-    Award,
-    Users,
-    Download,
-    Star,
-    Target,
-    Framer,
-    Figma,
-    Vite,
-    NextJS,
-    Headset,
-    FolderOpen,
-    HelpCircle
-} from "@/components/ui/svgs/Icons";
+import { Blocks } from "@/components/ui/svgs/icons/Blocks";
+import { Shield } from "@/components/ui/svgs/icons/Shield";
+import { Cpu } from "@/components/ui/svgs/icons/Cpu";
+import { Palette } from "@/components/ui/svgs/icons/Palette";
+import { Layers } from "@/components/ui/svgs/icons/Layers";
+import { MousePointer } from "@/components/ui/svgs/icons/MousePointer";
+import { Smartphone } from "@/components/ui/svgs/icons/Smartphone";
+import { Code2 } from "@/components/ui/svgs/icons/Code2";
+import { LayoutDashboard } from "@/components/ui/svgs/icons/LayoutDashboard";
+import { Settings } from "@/components/ui/svgs/icons/Settings";
+import { Templates } from "@/components/ui/svgs/icons/Templates";
+import { Instagram } from "@/components/ui/svgs/icons/Instagram";
+import { Linkedin } from "@/components/ui/svgs/icons/Linkedin";
+import { Heart } from "@/components/ui/svgs/icons/Heart";
+import { Zap } from "@/components/ui/svgs/icons/Zap";
+import { Code } from "@/components/ui/svgs/icons/Code";
+import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
+import { Rocket } from "@/components/ui/svgs/icons/Rocket";
+import { Award } from "@/components/ui/svgs/icons/Award";
+import { Users } from "@/components/ui/svgs/icons/Users";
+import { Download } from "@/components/ui/svgs/icons/Download";
+import { Star } from "@/components/ui/svgs/icons/Star";
+import { Target } from "@/components/ui/svgs/icons/Target";
+import { Framer } from "@/components/ui/svgs/icons/Framer";
+import { Figma } from "@/components/ui/svgs/icons/Figma";
+import { Vite } from "@/components/ui/svgs/icons/Vite";
+import { NextJS } from "@/components/ui/svgs/icons/NextJS";
+import { Headset } from "@/components/ui/svgs/icons/Headset";
+import { FolderOpen } from "@/components/ui/svgs/icons/FolderOpen";
+import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
 
 const NavigationLinks = [
     {

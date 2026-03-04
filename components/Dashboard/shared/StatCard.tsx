@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { TrendingUp, TrendingDown } from "@/components/ui/svgs/Icons";
+import { TrendingUp } from "@/components/ui/svgs/icons/TrendingUp";
+import { TrendingDown } from "@/components/ui/svgs/icons/TrendingDown";
 
 interface StatCardProps {
     label: string;

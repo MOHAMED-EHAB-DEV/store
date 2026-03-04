@@ -2,11 +2,9 @@
 
 import {useLayoutEffect} from "react";
 import {Badge} from '@/components/ui/badge';
-import {
-    Code,
-    Coffee,
-    Sparkles,
-} from '@/components/ui/svgs/Icons';
+import { Code } from "@/components/ui/svgs/icons/Code";
+import { Coffee } from "@/components/ui/svgs/icons/Coffee";
+import { Sparkles } from "@/components/ui/svgs/icons/Sparkles";
 import CountUp from '../ui/CountUp';
 import Link from 'next/link';
 import {stats, skills, badges} from "@/constants";

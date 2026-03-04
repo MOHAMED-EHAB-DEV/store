@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Filter, X } from "@/components/ui/svgs/Icons";
+import { Search } from "@/components/ui/svgs/icons/Search";
+import { Filter } from "@/components/ui/svgs/icons/Filter";
+import { X } from "@/components/ui/svgs/icons/X";
 import { Input } from "@/components/ui/input";
 import {
     Select,

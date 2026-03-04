@@ -1,14 +1,12 @@
 "use client";
 
 import {useState, ChangeEvent, FormEvent} from 'react';
-import {
-    Mail,
-    Lock,
-    Eye,
-    EyeOff,
-    User,
-    Check,
-} from "@/components/ui/svgs/Icons";
+import { Mail } from "@/components/ui/svgs/icons/Mail";
+import { Lock } from "@/components/ui/svgs/icons/Lock";
+import { Eye } from "@/components/ui/svgs/icons/Eye";
+import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
+import { User } from "@/components/ui/svgs/icons/User";
+import { Check } from "@/components/ui/svgs/icons/Check";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {passwordRequirements} from "@/constants";

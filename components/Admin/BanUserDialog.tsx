@@ -9,7 +9,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { ShieldAlert, Calendar, FileText, AlertCircle } from "@/components/ui/svgs/Icons";
+import { ShieldAlert } from "@/components/ui/svgs/icons/ShieldAlert";
+import { Calendar } from "@/components/ui/svgs/icons/Calendar";
+import { FileText } from "@/components/ui/svgs/icons/FileText";
+import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { sonnerToast } from "@/components/ui/sonner";
 
 interface BanUserDialogProps {

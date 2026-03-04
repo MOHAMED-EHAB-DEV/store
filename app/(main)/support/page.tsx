@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import TicketForm from "@/components/Support/TicketForm";
 import Link from "next/link";
-import {ThumbsUp, Clock, Chat} from "@/components/ui/svgs/Icons";
+import { ThumbsUp } from "@/components/ui/svgs/icons/ThumbsUp";
+import { Clock } from "@/components/ui/svgs/icons/Clock";
+import { Chat } from "@/components/ui/svgs/icons/Chat";
 
 export const metadata: Metadata = {
     title: "Contact Support | My Store",

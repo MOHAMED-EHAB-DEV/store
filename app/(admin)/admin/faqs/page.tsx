@@ -2,7 +2,11 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import AdminFAQsClient from "@/components/Admin/AdminFAQsClient";
-import { HelpCircle, Check, AlertCircle, Grid, Zap } from "@/components/ui/svgs/Icons";
+import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
+import { Check } from "@/components/ui/svgs/icons/Check";
+import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
+import { Grid } from "@/components/ui/svgs/icons/Grid";
+import { Zap } from "@/components/ui/svgs/icons/Zap";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 

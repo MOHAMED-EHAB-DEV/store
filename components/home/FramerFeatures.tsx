@@ -2,7 +2,8 @@
 
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { Badge } from "../ui/badge";
-import { Framer, Layers } from "@/components/ui/svgs/Icons";
+import { Framer } from "@/components/ui/svgs/icons/Framer";
+import { Layers } from "@/components/ui/svgs/icons/Layers";
 import Image from "next/image";
 import { featuresBusinessSales } from "@/constants";
 import { VerticalMarquee } from "@/components/ui/marquee";

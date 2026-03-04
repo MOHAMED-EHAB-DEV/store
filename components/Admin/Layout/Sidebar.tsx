@@ -1,5 +1,8 @@
 import React, { MouseEvent as ReactMouseEvent, useState } from 'react';
-import { X, ChevronUp, ChevronDown, LogOut } from "@/components/ui/svgs/Icons";
+import { X } from "@/components/ui/svgs/icons/X";
+import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
+import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
+import { LogOut } from "@/components/ui/svgs/icons/LogOut";
 import Logo from "@/components/ui/Logo";
 import { AdminSidebarLinks } from "@/constants";
 import { useRouter, usePathname } from "next/navigation";
@@ -10,7 +13,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Home } from "@/components/ui/svgs/Icons";
+import { Home } from "@/components/ui/svgs/icons/Home";
 import { sonnerToast } from "@/components/ui/sonner";
 import { IUser } from '@/types';
 import NotificationCenter from "@/components/shared/NotificationCenter";

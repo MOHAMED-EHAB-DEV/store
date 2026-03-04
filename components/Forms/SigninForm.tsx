@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import {
-    Mail,
-    Lock,
-    Eye,
-    EyeOff,
-} from "@/components/ui/svgs/Icons";
+import { Mail } from "@/components/ui/svgs/icons/Mail";
+import { Lock } from "@/components/ui/svgs/icons/Lock";
+import { Eye } from "@/components/ui/svgs/icons/Eye";
+import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { Input } from "@/components/ui/input";

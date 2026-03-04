@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { FAQ_CATEGORIES } from "@/constants/faqs";
-import { ChevronRight } from "@/components/ui/svgs/Icons";
+import { ChevronRight } from "@/components/ui/svgs/icons/ChevronRight";
 
 interface CategoryCarouselProps {
     selectedCategory: string | null;

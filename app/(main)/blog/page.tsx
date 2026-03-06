@@ -108,7 +108,11 @@ const Page = async () => {
   const blogs = await getData();
 
   return (
-    <main className="min-h-screen w-full py-36 px-4 md:px-8 lg:px-16 container mx-auto text-white">
+    <main
+      className="min-h-screen w-full py-36 px-4 md:px-8 lg:px-16 container mx-auto text-white"
+      role="main"
+      id="main-content"
+    >
       <div className="mb-16 text-center max-w-2xl mx-auto space-y-4">
         <span className="inline-block py-1 px-3 rounded-full bg-purple-500/10 text-purple-400 text-sm font-semibold border border-purple-500/20">
           Our Blog

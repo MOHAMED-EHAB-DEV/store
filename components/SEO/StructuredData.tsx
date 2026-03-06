@@ -1,5 +1,48 @@
 import React from "react";
 
+export const OrganizationSchema: React.FC = () => {
+    const data = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Mohammed Ehab Templates",
+        "url": "https://mhd-store.vercel.app",
+        "logo": "https://mhd-store.vercel.app/assets/Icons/Logo.svg",
+        "sameAs": [
+            "https://twitter.com/__M__O__H__",
+            "https://github.com/MOHAMED-EHAB-DEV",
+            "https://www.linkedin.com/in/1-mohammed"
+        ]
+    };
+
+    return (
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{__html: JSON.stringify(data)}}
+        />
+    );
+};
+
+export const WebSiteSchema: React.FC = () => {
+    const data = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Mohammed Ehab - Premium Templates Store",
+        "url": "https://mhd-store.vercel.app",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://mhd-store.vercel.app/templates?query={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    };
+
+    return (
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{__html: JSON.stringify(data)}}
+        />
+    );
+};
+
 export const PersonSchema: React.FC<{
     name: string;
     url: string;

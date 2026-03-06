@@ -1,5 +1,11 @@
 import Templates from "@/components/shared/Templates";
 import { ICategory } from "@/types";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Browse Templates | Mohammed Ehab Store",
+  description: "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.",
+};
 
 const getInitialData = async ({
   builtWith,
@@ -92,6 +98,7 @@ const Page = async ({ searchParams }: PageProps) => {
     <main
       className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw px-5 md:px-56"
       role="main"
+      id="main-content"
     >
       <h1 className="text-white font-paras text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold">
         Templates

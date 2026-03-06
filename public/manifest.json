@@ -1,12 +1,20 @@
 {
-  "name": "Mohammed Ehab - Premium Templates Store | Modern Web Templates",
+  "name": "Mohammed Ehab - Premium Templates Store",
   "short_name": "MHD Store",
-  "description": "Discover premium, responsive web templates built with React, Next.js, and Tailwind CSS. Perfect for SaaS, e-commerce, portfolios, and agencies. Created by Mohammed Ehab.",
-  "id": "/",
+  "description": "Premium, responsive web templates for modern businesses and creators",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D0F19",
+  "theme_color": "#0D0F19",
   "icons": [
     {
       "src": "/assets/Icons/Logo.svg",
-      "sizes": "any",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/assets/Icons/Logo.svg",
+      "sizes": "512x512",
       "type": "image/svg+xml"
     }
   ],
@@ -25,10 +33,5 @@
       "form_factor": "narrow",
       "label": "MHD Store Mobile View"
     }
-  ],
-  "theme_color": "#0d0f19",
-  "background_color": "#0d0f19",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait"
+  ]
 }

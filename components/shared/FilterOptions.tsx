@@ -18,6 +18,7 @@ import {
 import { sonnerToast } from "@/components/ui/sonner";
 import { Input } from "@/components/ui/input";
 import { ICategory } from "@/types";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const sortOptions: { value: "popular" | "recent" | "rating" | "price" | "downloads"; label: string; icon: string }[] = [
     { value: "popular", label: "Most Popular", icon: "🔥" },
@@ -133,6 +134,12 @@ const FilterOptions = (
                                         const updated = [...categories];
                                         updated[idx].selected = !updated[idx].selected;
                                         setCategories(updated);
+                                        sendGTMEvent({ 
+                                            event: "filter_change", 
+                                            filter_type: "category", 
+                                            filter_value: cat.name,
+                                            is_selected: updated[idx].selected
+                                        });
                                     }}
                                 >
                                     {cat.name}
@@ -153,6 +160,12 @@ const FilterOptions = (
                                         const updated = [...tags];
                                         updated[idx].selected = !updated[idx].selected;
                                         setTags(updated);
+                                        sendGTMEvent({ 
+                                            event: "filter_change", 
+                                            filter_type: "tag", 
+                                            filter_value: tagObj.tag,
+                                            is_selected: updated[idx].selected
+                                        });
                                     }}
                                 >
                                     {tagObj.tag}
@@ -177,6 +190,12 @@ const FilterOptions = (
                                         const updated = [...builtWithOptions];
                                         updated[idx].selected = !updated[idx].selected;
                                         setBuiltWithOptions(updated);
+                                        sendGTMEvent({ 
+                                            event: "filter_change", 
+                                            filter_type: "built_with", 
+                                            filter_value: obj.text,
+                                            is_selected: updated[idx].selected
+                                        });
                                     }}
                                 >
                                     <obj.Icon className="w-4 h-4" />
@@ -207,7 +226,13 @@ const FilterOptions = (
                                         {sortOptions.map((option) => (
                                             <CommandItem
                                                 key={option.value}
-                                                onSelect={() => setSortedBy(option.value)}
+                                                onSelect={() => {
+                                                    setSortedBy(option.value);
+                                                    sendGTMEvent({ 
+                                                        event: "sort_change", 
+                                                        sort_value: option.value 
+                                                    });
+                                                }}
                                                 className="cursor-pointer flex items-center gap-2 py-2"
                                             >
                                                 <span>{option.icon}</span>
@@ -226,6 +251,7 @@ const FilterOptions = (
                                 onClick={() => {
                                     setMaxPrice(0);
                                     setMinPrice(0);
+                                    sendGTMEvent({ event: "filter_clear", filter_type: "price" });
                                 }}
                                 className="cursor-pointer hover:text-white hover:bg-transparent"
                             >Reset</Button>
@@ -265,7 +291,10 @@ const FilterOptions = (
                         <div className="flex flex-wrap gap-3 items-center">
                             {/* "All Ratings" option */}
                             <button
-                                onClick={() => setMinRating(0)}
+                                onClick={() => {
+                                    setMinRating(0);
+                                    sendGTMEvent({ event: "filter_change", filter_type: "rating", filter_value: 0 });
+                                }}
                                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors
                                 ${minRating === 0 ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
                             >
@@ -276,7 +305,10 @@ const FilterOptions = (
                             {[1, 2, 3, 4, 5].map((rating) => (
                                 <button
                                     key={rating}
-                                    onClick={() => setMinRating(rating)}
+                                    onClick={() => {
+                                        setMinRating(rating);
+                                        sendGTMEvent({ event: "filter_change", filter_type: "rating", filter_value: rating });
+                                    }}
                                     className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors
                                     ${minRating === rating ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
                                 >
@@ -318,10 +350,16 @@ const FilterOptions = (
                             <PopoverContent className="w-[250px] p-0 bg-dark">
                                 <div className="p-2 flex justify-between border-b border-border">
                                     <Button size="sm" variant="ghost"
-                                        onClick={() => handleSelectAll(setCategories, categories)}
+                                        onClick={() => {
+                                            handleSelectAll(setCategories, categories);
+                                            sendGTMEvent({ event: "filter_bulk_change", filter_type: "category", action: "select_all" });
+                                        }}
                                         className="text-xs">Select All</Button>
                                     <Button size="sm" variant="ghost"
-                                        onClick={() => handleClearAll(setCategories, categories)}
+                                        onClick={() => {
+                                            handleClearAll(setCategories, categories);
+                                            sendGTMEvent({ event: "filter_bulk_change", filter_type: "category", action: "clear_all" });
+                                        }}
                                         className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <Command className="max-h-[200px] overflow-auto">
@@ -331,6 +369,12 @@ const FilterOptions = (
                                                 const updated = [...categories];
                                                 updated[idx].selected = !updated[idx].selected;
                                                 setCategories(updated);
+                                                sendGTMEvent({ 
+                                                    event: "filter_change", 
+                                                    filter_type: "category", 
+                                                    filter_value: cat.name,
+                                                    is_selected: updated[idx].selected
+                                                });
                                             }} className="gap-2">
                                                 <Checkbox checked={cat.selected} />
                                                 <span className="capitalize">{cat.name}</span>
@@ -352,9 +396,15 @@ const FilterOptions = (
                             </PopoverTrigger>
                             <PopoverContent className="w-[250px] p-0 bg-dark">
                                 <div className="p-2 flex justify-between border-b border-border">
-                                    <Button size="sm" variant="ghost" onClick={() => handleSelectAll(setTags, tags)}
+                                    <Button size="sm" variant="ghost" onClick={() => {
+                                        handleSelectAll(setTags, tags);
+                                        sendGTMEvent({ event: "filter_bulk_change", filter_type: "tag", action: "select_all" });
+                                    }}
                                         className="text-xs">Select All</Button>
-                                    <Button size="sm" variant="ghost" onClick={() => handleClearAll(setTags, tags)}
+                                    <Button size="sm" variant="ghost" onClick={() => {
+                                        handleClearAll(setTags, tags);
+                                        sendGTMEvent({ event: "filter_bulk_change", filter_type: "tag", action: "clear_all" });
+                                    }}
                                         className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <Command className="max-h-[200px] overflow-auto">
@@ -364,6 +414,12 @@ const FilterOptions = (
                                                 const updated = [...tags];
                                                 updated[idx].selected = !updated[idx].selected;
                                                 setTags(updated);
+                                                sendGTMEvent({ 
+                                                    event: "filter_change", 
+                                                    filter_type: "tag", 
+                                                    filter_value: tag.tag,
+                                                    is_selected: updated[idx].selected
+                                                });
                                             }} className="gap-2">
                                                 <Checkbox checked={tag.selected} />
                                                 <span className="capitalize">{tag.tag}</span>
@@ -384,10 +440,16 @@ const FilterOptions = (
                             <PopoverContent className="w-[250px] p-2 bg-dark">
                                 <div className="p-2 flex justify-between border-b border-border mb-2">
                                     <Button size="sm" variant="ghost"
-                                        onClick={() => handleSelectAll(setBuiltWithOptions, builtWithOptions)}
+                                        onClick={() => {
+                                            handleSelectAll(setBuiltWithOptions, builtWithOptions);
+                                            sendGTMEvent({ event: "filter_bulk_change", filter_type: "built_with", action: "select_all" });
+                                        }}
                                         className="text-xs">Select All</Button>
                                     <Button size="sm" variant="ghost"
-                                        onClick={() => handleClearAll(setBuiltWithOptions, builtWithOptions)}
+                                        onClick={() => {
+                                            handleClearAll(setBuiltWithOptions, builtWithOptions);
+                                            sendGTMEvent({ event: "filter_bulk_change", filter_type: "built_with", action: "clear_all" });
+                                        }}
                                         className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -398,6 +460,12 @@ const FilterOptions = (
                                                 const updated = [...builtWithOptions];
                                                 updated[idx].selected = !updated[idx].selected;
                                                 setBuiltWithOptions(updated);
+                                                sendGTMEvent({ 
+                                                    event: "filter_change", 
+                                                    filter_type: "built_with", 
+                                                    filter_value: bw.text,
+                                                    is_selected: updated[idx].selected
+                                                });
                                             }}
                                             className={`px-3 py-2 rounded-md text-sm flex items-center gap-2
               ${bw.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
@@ -420,7 +488,10 @@ const FilterOptions = (
                             <PopoverContent className="w-[280px] p-4 bg-dark space-y-3">
                                 <div className=" flex items-center justify-between border-b border-border mb-2">
                                     <h1>Price Range</h1>
-                                    <Button size="sm" variant="ghost" onClick={handleClearPriceRange}
+                                    <Button size="sm" variant="ghost" onClick={() => {
+                                        handleClearPriceRange();
+                                        sendGTMEvent({ event: "filter_clear", filter_type: "price" });
+                                    }}
                                         className="text-xs text-red-500 hover:bg-red-500 hover:text-white">Clear</Button>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -461,14 +532,20 @@ const FilterOptions = (
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-[250px] p-3 bg-dark flex flex-col gap-2">
-                                <button onClick={() => setMinRating(0)}
+                                <button onClick={() => {
+                                    setMinRating(0);
+                                    sendGTMEvent({ event: "filter_change", filter_type: "rating", filter_value: 0 });
+                                }}
                                     className={`px-3 py-2 rounded ${minRating === 0 ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
                                     All Ratings
                                 </button>
                                 {[1, 2, 3, 4, 5].map(rating => (
                                     <button
                                         key={rating}
-                                        onClick={() => setMinRating(rating)}
+                                        onClick={() => {
+                                            setMinRating(rating);
+                                            sendGTMEvent({ event: "filter_change", filter_type: "rating", filter_value: rating });
+                                        }}
                                         className={`flex items-center gap-2 px-3 py-2 rounded
             ${minRating === rating ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
                                     >
@@ -494,7 +571,13 @@ const FilterOptions = (
                                         {sortOptions.map(option => (
                                             <CommandItem
                                                 key={option.value}
-                                                onSelect={() => setSortedBy(option.value)}
+                                                onSelect={() => {
+                                                    setSortedBy(option.value);
+                                                    sendGTMEvent({ 
+                                                        event: "sort_change", 
+                                                        sort_value: option.value 
+                                                    });
+                                                }}
                                                 className="cursor-pointer flex items-center gap-2 py-2"
                                             >
                                                 <span>{option.icon}</span>

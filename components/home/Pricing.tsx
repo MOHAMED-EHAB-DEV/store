@@ -3,6 +3,7 @@
 import { useLayoutEffect } from 'react';
 import Link from 'next/link';
 import dynamic from "next/dynamic";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const SpotlightCard = dynamic(() => import('../ui/SpotlightCard'));
 
@@ -145,6 +146,10 @@ const Pricing = () => {
                     : 'bg-neutral-800 text-white hover:bg-neutral-700'
                     }`}
                   href={tier.ctaLink}
+                  onClick={() => sendGTMEvent({ 
+                    event: "pricing_plan_select", 
+                    plan_name: tier.name 
+                  })}
                 >
                   {tier.cta}
                 </Link>

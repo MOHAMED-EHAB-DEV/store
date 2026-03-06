@@ -13,6 +13,7 @@ import Logo from "@/components/ui/Logo";
 import Loader from "@/components/ui/Loader";
 import { useUser } from "@/context/UserContext";
 import { IUser } from "@/types";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const Navbar = () => {
   const router = useRouter();
@@ -49,10 +50,15 @@ const Navbar = () => {
 
         <nav
           className={`md:flex hidden ${user && "md:flex-1"} flex-row gap-4 items-center justify-center`}
+          aria-label="Main Navigation"
         >
-          {NavigationLinks.map(({ id, text, link }) => (
-            <NavbarItem text={text} link={link} key={id} />
-          ))}
+          <ul className="flex flex-row gap-4 items-center justify-center">
+            {NavigationLinks.map(({ id, text, link }) => (
+              <li key={id}>
+                <NavbarItem text={text} link={link} />
+              </li>
+            ))}
+          </ul>
         </nav>
         <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
           <MobileDrawer user={user as IUser} />
@@ -61,6 +67,7 @@ const Navbar = () => {
               className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
               aria-label="Get Started button"
               href="/register"
+              onClick={() => sendGTMEvent({ event: "auth_nav_click", auth_type: "signup" })}
             >
               Signup
             </Link>
@@ -89,6 +96,7 @@ const NavbarItem = ({ text, link }: { text: string; link: string }) => {
       className="decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => sendGTMEvent({ event: "nav_link_click", nav_label: text, nav_path: link })}
     >
       {text}
       <div

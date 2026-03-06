@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Roboto } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
-import { PersonSchema } from "@/components/SEO/StructuredData";
-import GTMPageView from "@/hooks/GTMPageView";
+import { PersonSchema, OrganizationSchema, WebSiteSchema } from "@/components/SEO/StructuredData";
 import Script from "next/script";
 
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
@@ -60,13 +58,24 @@ export const metadata: Metadata = {
     images: ["/assets/Icons/Logo.svg"],
     creator: "@__M__O__H__",
   },
-  icons: "/assets/Icons/Logo.svg",
+  icons: {
+    icon: [
+      { url: "/assets/Icons/Logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" }
+    ],
+    shortcut: ["/assets/Icons/Logo.svg"],
+    apple: [
+      { url: "/assets/Icons/Logo.svg", sizes: "180x180", type: "image/svg+xml" },
+    ],
+  },
+  manifest: "/manifest.json",
   verification: {
     google: process.env.google_verification_code!,
   },
   alternates: {
     canonical: "https://mhd-store.vercel.app",
   },
+  category: "technology",
 };
 
 export default async function RootLayout({
@@ -113,7 +122,7 @@ export default async function RootLayout({
         <Toaster />
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-black px-4 py-2 rounded-md z-50 transition-all duration-200"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 bg-white text-black px-4 py-2 rounded-md z-[100] transition-all duration-200 shadow-2xl border border-black/10 font-bold"
         >
           Skip to main content
         </a>
@@ -160,10 +169,9 @@ export default async function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        <Suspense fallback={null}>
-          <GTMPageView />
-        </Suspense>
         <BackToTop />
+        <OrganizationSchema />
+        <WebSiteSchema />
         <PersonSchema
           name="Mohammed Ehab - Premium Templates"
           url="https://mhd-store.vercel.app"

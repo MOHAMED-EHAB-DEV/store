@@ -7,7 +7,8 @@ import gsap from "gsap"
 import { SplitText } from "gsap/all";
 import { Badge } from '@/components/ui/badge';
 import Link from "next/link";
-import TrustSignals from '@/components/ui/TrustSignals';
+// import TrustSignals from '@/components/ui/TrustSignals';
+import { sendGTMEvent } from "@next/third-parties/google";
 
 gsap.registerPlugin(SplitText);
 
@@ -121,6 +122,7 @@ const Hero = () => {
                         className="hero-btn animate-bounce group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none  px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
                         href="/templates"
+                        onClick={() => sendGTMEvent({ event: "hero_cta_click" })}
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             Explore Templates

@@ -10,6 +10,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
 import { ICategory, ITemplate } from "@/types";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const Template = ({
     template,
@@ -26,6 +27,11 @@ const Template = ({
     return (
         <Link
             href={`/templates/${template._id}`}
+            onClick={() => sendGTMEvent({ 
+                event: "template_card_click", 
+                template_id: template._id, 
+                template_title: template.title 
+            })}
             className="group relative overflow-hidden w-full h-fit rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02] block"
         >
             {/* Gradient Background */}
@@ -53,6 +59,12 @@ const Template = ({
                     e.preventDefault();
                     e.stopPropagation();
                     toggleFavorite(template._id);
+                    sendGTMEvent({ 
+                        event: "template_favorite_toggle", 
+                        template_id: template._id, 
+                        template_title: template.title,
+                        is_favorite: !isFavorite
+                    });
                 }}
             >
                 <Heart
@@ -138,6 +150,11 @@ const Template = ({
                                 e.preventDefault();
                                 e.stopPropagation()
                                 window.open(template.demoLink, "_blank");
+                                sendGTMEvent({ 
+                                    event: "template_demo_click", 
+                                    template_id: template._id, 
+                                    template_title: template.title 
+                                });
                             }}
                             className="px-4 cursor-pointer bg-transparent py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200"
                         >

@@ -8,11 +8,11 @@ const nextConfig: NextConfig = {
   async headers() {
     const cspDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://googletagmanager.com https://tagmanager.google.com",
-      "style-src 'self' 'unsafe-inline' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com",
-      "img-src 'self' blob: data: https://utfs.io https://googletagmanager.com https://ssl.gstatic.com https://www.gstatic.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
+      "img-src 'self' blob: data: https://utfs.io https://www.googletagmanager.com https://www.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com",
       "font-src 'self' https://fonts.gstatic.com data:",
-      "connect-src 'self' https://utfs.io www.googletagmanager.com www.google.com",
+      "connect-src 'self' https://utfs.io https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.google.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",

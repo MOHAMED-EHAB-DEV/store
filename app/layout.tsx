@@ -5,7 +5,11 @@ import { Roboto } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
-import { PersonSchema, OrganizationSchema, WebSiteSchema } from "@/components/SEO/StructuredData";
+import {
+  PersonSchema,
+  OrganizationSchema,
+  WebSiteSchema,
+} from "@/components/SEO/StructuredData";
 import Script from "next/script";
 
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
@@ -61,11 +65,15 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/assets/Icons/Logo.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "32x32" }
+      { url: "/favicon.ico", sizes: "32x32" },
     ],
     shortcut: ["/assets/Icons/Logo.svg"],
     apple: [
-      { url: "/assets/Icons/Logo.svg", sizes: "180x180", type: "image/svg+xml" },
+      {
+        url: "/assets/Icons/Logo.svg",
+        sizes: "180x180",
+        type: "image/svg+xml",
+      },
     ],
   },
   manifest: "/manifest.json",
@@ -87,29 +95,23 @@ export default async function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <Script
-          id="gtm-loader"
+          id="gtm-script"
           strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
-                            function loadGTM() {
-                            (function(w,d,s,l,i){
-                                w[l]=w[l]||[];
-                                w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
-                                var f=d.getElementsByTagName(s)[0],
-                                    j=d.createElement(s),
-                                    dl=l!='dataLayer'?'&l='+l:'';
-                                j.async=true;
-                                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-                                f.parentNode.insertBefore(j,f);
-                            })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
-                            }
-
-                            if ('requestIdleCallback' in window) {
-                                requestIdleCallback(() => setTimeout(loadGTM, 2000));
-                            } else {
-                                setTimeout(loadGTM, 4000);
-                            }
-                        `,
+              function loadGTM() {
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','GTM-TR5KGJS3');
+              }
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(function() { setTimeout(loadGTM, 3000); });
+              } else {
+                setTimeout(loadGTM, 5000);
+              }
+          `,
           }}
         />
       </head>

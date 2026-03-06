@@ -1,75 +1,231 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import { RateLimiter } from "@/lib/utils/api-helpers";
 
-const protectedRoutes = [
-    "/dashboard",
-    "/favourites",
-];
+function addSecurityHeaders(response: NextResponse) {
+  response.headers.delete("X-Powered-By");
+
+  const cspDirectives = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' blob: data: https://utfs.io",
+    "font-src 'self' data:",
+    "connect-src 'self' https://utfs.io https://www.google-analytics.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "frame-src 'self' https:",
+    "media-src 'self' blob:",
+    "manifest-src 'self'",
+    "worker-src 'self' blob:",
+    "child-src 'self' blob:",
+    "frame-ancestors 'self'",
+  ];
+
+  if (process.env.NODE_ENV === "production")
+    cspDirectives.push("upgrade-insecure-requests");
+
+  response.headers.set("Content-Security-Policy", cspDirectives.join("; "));
+
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set(
+    "Cross-Origin-Opener-Policy",
+    "same-origin-allow-popups",
+  );
+  response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+
+  if (process.env.NODE_ENV === "production")
+    response.headers.set(
+      "Strict-Transport-Security",
+      "max-age=63072000; includeSubDomains; preload",
+    );
+
+  return response;
+}
+
+const protectedRoutes = ["/dashboard", "/favourites"];
 const adminRoutes = ["/admin"];
 
 function isProtectedRoute(pathname: string) {
-    return protectedRoutes.some((route) => pathname.includes(route));
+  return protectedRoutes.some((route) => pathname.includes(route));
 }
 
 function isAdminRoute(pathname: string) {
-    return adminRoutes.some((route) => pathname.includes(route));
+  return adminRoutes.some((route) => pathname.includes(route));
+}
+
+function isBannedRoute(pathname: string) {
+  return pathname.includes("/banned");
+}
+
+function isApiRoute(pathname: string) {
+  return pathname.startsWith("/api");
+}
+
+function isAuthRoute(pathname: string) {
+  return (
+    pathname.startsWith("/api/user/login") ||
+    pathname.startsWith("/api/user/register")
+  );
 }
 
 export async function proxy(req: NextRequest) {
-    const pathname = req.nextUrl.pathname;
-    const token = req.cookies.get("token")?.value;
+  const pathname = req.nextUrl.pathname;
+  const token = req.cookies.get("token")?.value;
+  const clientIP =
+    req.headers.get("x-forwarded-for") ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
 
-    if (
-        (pathname.includes("/login") || pathname.includes("/register")) &&
-        token
-    ) {
-        return NextResponse.redirect(
-            new URL(`/dashboard`, req.url)
-        );
-    }
-
-    const reLogin = () => {
-        if (process.env.DisableAuth) return NextResponse.next();
-        // Redirect to login page if not authenticated
-        const response = NextResponse.redirect(
-            new URL(
-                "/signin",
-                req.url
-            )
-        );
-        response.cookies.delete("token");
-        return response;
-    };
-
-    if (isProtectedRoute(pathname)) {
-        if (!token) return reLogin();
-        try {
-            const userResponse = await fetch(
-                new URL('/api/user', req.nextUrl.origin),
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            const userData = await userResponse.json();
-            if (!userData.user?._id) return reLogin();
-        } catch (error) {
-            return reLogin();
-        }
-    }
-
-    if (isAdminRoute(pathname)) {
-        if (!token) return reLogin();
-        try {
-            const userResponse = await fetch(
-                new URL('/api/user', req.nextUrl.origin),
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            const userData = await userResponse.json();
-            if (!userData.user?._id || userData.user?.role !== "admin") {
-                return NextResponse.redirect(new URL("/", req.url));
-            }
-        } catch (error) {
-            return reLogin();
-        }
-    }
-
+  // 1. Early return for internal paths
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/_static") ||
+    pathname.startsWith("/.well-known")
+  ) {
     return NextResponse.next();
+  }
+
+  // 2. Rate Limiting for API routes
+  if (isApiRoute(pathname)) {
+    const isAuth = isAuthRoute(pathname);
+    const limitResult = RateLimiter.check(
+      clientIP + (isAuth ? ":auth" : ":api"),
+      isAuth ? 5 : 60, // 5 per 15min for auth, 60 per 15min for rest
+      15 * 60 * 1000,
+    );
+
+    if (!limitResult.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Too many requests. Please try again later.",
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": (isAuth ? 5 : 60).toString(),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": limitResult.resetTime.toString(),
+          },
+        },
+      );
+    }
+  }
+
+  if (isApiRoute(pathname)) {
+    const response = NextResponse.next();
+    addSecurityHeaders(response);
+    return response;
+  }
+
+  // 3. Auth and Proxy Logic
+  if (
+    (pathname.includes("/login") || pathname.includes("/register")) &&
+    token
+  ) {
+    const response = NextResponse.redirect(new URL(`/dashboard`, req.url));
+    addSecurityHeaders(response);
+    return response;
+  }
+
+  const reLogin = () => {
+    if (process.env.DisableAuth) return NextResponse.next();
+    const response = NextResponse.redirect(new URL("/signin", req.url));
+    response.cookies.delete("token");
+    addSecurityHeaders(response);
+    return response;
+  };
+
+  if (isProtectedRoute(pathname)) {
+    if (!token) return reLogin();
+    try {
+      const userResponse = await fetch(
+        new URL("/api/user", req.nextUrl.origin),
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const userData = await userResponse.json();
+      if (userData.user.banned) {
+        const response = NextResponse.redirect(new URL(`/banned`, req.url));
+        addSecurityHeaders(response);
+        return response;
+      }
+      if (!userData.user?._id) return reLogin();
+    } catch (error) {
+      return reLogin();
+    }
+  }
+
+  if (isAdminRoute(pathname)) {
+    if (!token) return reLogin();
+    try {
+      const userResponse = await fetch(
+        new URL("/api/user", req.nextUrl.origin),
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const userData = await userResponse.json();
+      if (!userData.user?._id || userData.user?.role !== "admin") {
+        const response = NextResponse.redirect(new URL("/", req.url));
+        addSecurityHeaders(response);
+        return response;
+      }
+    } catch (error) {
+      return reLogin();
+    }
+  }
+
+  if (isBannedRoute(pathname)) {
+    if (!token) {
+      const response = NextResponse.redirect(new URL("/", req.url));
+      addSecurityHeaders(response);
+      return response;
+    }
+    try {
+      const userResponse = await fetch(
+        new URL("/api/user", req.nextUrl.origin),
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const userData = await userResponse.json();
+      if (!userData.user?._id || !userData.user?.banned) {
+        const response = NextResponse.redirect(new URL("/", req.url));
+        addSecurityHeaders(response);
+        return response;
+      }
+    } catch (error) {
+      return reLogin();
+    }
+  }
+
+  const response = NextResponse.next();
+  addSecurityHeaders(response);
+  return response;
 }
+
+export const config = {
+  matcher: [
+    {
+      /*
+       * Match all request paths except for the ones starting with:
+       * - _next/static (static files)
+       * - _next/image (image optimization files)
+       * - _static (shared static files)
+       * - favicon.ico, sitemap.xml, robots.txt, manifest.json, sw.js (metadata files)
+       * - assets, Icons, images, Videos (custom static folders)
+       * - Common image/video/font extensions
+       */
+      source:
+        "/((?!api/|_next/static|_next/image|_static|favicon.ico|sitemap.xml|robots.txt|manifest.json|sw.js|assets/|Icons/|images/|Videos/|Logo.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|webm|ogg|mp3|wav|flac|aac|woff2?|eot|ttf|otf)$).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+    // Explicitly include API routes for rate limiting
+    "/api/:path*",
+  ],
+};

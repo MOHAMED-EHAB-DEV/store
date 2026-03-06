@@ -1,27 +1,123 @@
-import type {NextConfig} from "next";
+import type { NextConfig } from "next";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
-    experimental: {
-        optimizePackageImports: ["gsap", "motion"],
-        // inlineCss: true,
-        optimizeCss: true,
-        esmExternals: true,
-    },
-    // typescript: {
-    //     ignoreBuildErrors: true,
-    // },
-    reactStrictMode: true,
-    images: {
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "utfs.io",
-                pathname: "/**",
-            },
+  poweredByHeader: false,
+  compress: true,
+  async headers() {
+    const cspDirectives = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' blob: data: https://utfs.io",
+      "font-src 'self' data:",
+      "connect-src 'self' https://utfs.io https://www.google-analytics.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "frame-src 'self' https:",
+      "media-src 'self' blob:",
+      "manifest-src 'self'",
+      "worker-src 'self' blob:",
+      "child-src 'self' blob:",
+      "frame-ancestors 'self'",
+      ...(isProduction ? ["upgrade-insecure-requests"] : []),
+    ];
+    const ContentSecurityPolicy = cspDirectives.join("; ");
+    return [
+      {
+        // Apply to all routes
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "cross-origin",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: ContentSecurityPolicy,
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, OPTIONS",
+          },
+          ...(isProduction
+            ? [
+                {
+                  key: "Strict-Transport-Security",
+                  value: "max-age=63072000; includeSubDomains; preload",
+                },
+              ]
+            : []),
         ],
-        formats: ['image/avif', 'image/webp'],
-        qualities: [100, 75]
-    },
+      },
+    ];
+  },
+  experimental: {
+    optimizePackageImports: [
+      "@radix-ui/react-accordion",
+      "@radix-ui/react-checkbox",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-select",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-tabs",
+      "react-dropzone",
+      "sonner",
+      "gsap",
+      "@gsap/react",
+      "motion",
+      "@visx/axis",
+      "@visx/event",
+      "@visx/group",
+      "@visx/responsive",
+      "@visx/scale",
+      "@visx/shape",
+      "@visx/tooltip",
+      "socket.io-client",
+    ],
+    // inlineCss: true,
+    optimizeCss: true,
+    esmExternals: true,
+  },
+  // typescript: {
+  //     ignoreBuildErrors: true,
+  // },
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "/**",
+      },
+    ],
+    formats: ["image/avif", "image/webp"],
+    qualities: [100, 75],
+  },
 };
 
 export default nextConfig;

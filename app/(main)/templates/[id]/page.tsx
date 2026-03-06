@@ -34,7 +34,7 @@ const getTemplate = async (id: string) => {
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
       {
         next: {
-          revalidate: 300, // ISR: 5 minutes fallback
+          revalidate: 60 * 5, // ISR: 5 minutes fallback
           tags: [`template-${id}`, "templates"], // Tags for easy revalidation
         },
       },
@@ -73,7 +73,7 @@ const getSimilarTemplates = async (
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/templates?${queryParams.toString()}`,
-      { next: { revalidate: 300 } }, // ISR: 5 minutes
+      { next: { revalidate: 60 * 5 } }, // ISR: 5 minutes
     );
 
     if (!response.ok) {

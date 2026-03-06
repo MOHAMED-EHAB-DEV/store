@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense, useEffect } from "react";
 import { Menu } from "@/components/ui/svgs/icons/Menu";
 import { X } from "@/components/ui/svgs/icons/X";
 import { motion } from "motion/react";
@@ -12,174 +12,155 @@ import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import Loader from "@/components/ui/Loader";
 import { useUser } from "@/context/UserContext";
-import { IUser } from '@/types';
+import { IUser } from "@/types";
 
 const Navbar = () => {
-    const router = useRouter();
-    const { user, favoriteTemplates } = useUser();
-    const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
+  const { user, favoriteTemplates } = useUser();
+  const [scrolled, setScrolled] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const isScrolled = window.scrollY > 50;
-            setScrolled(isScrolled);
-        };
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 50;
+      setScrolled(isScrolled);
+    };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    return (
-        <div
-            className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-full duration-500 ease-in-out translate-y-0 opacity-100 ${scrolled
-                ? 'bg-primary/95 backdrop-blur-xl shadow-2xl border border-white/10 scale-[0.98]'
-                : 'bg-primary/50 backdrop-blur-lg shadow-lg border border-white/5'
-                }`}
+  return (
+    <div
+      className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-4xl duration-500 ease-in-out translate-y-0 opacity-100 ${
+        scrolled
+          ? "bg-primary/95 backdrop-blur-xl shadow-2xl border border-white/10 scale-[0.98]"
+          : "bg-primary/50 backdrop-blur-lg shadow-lg border border-white/5"
+      }`}
+    >
+      <div
+        className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
+          scrolled ? "py-6" : "py-8"
+        }`}
+      >
+        <Logo
+          onClick={() => router.push("/")}
+          className={!user ? "flex-1" : ""}
+        />
+
+        <nav
+          className={`md:flex hidden ${user && "md:flex-1"} flex-row gap-4 items-center justify-center`}
         >
-            <div className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${scrolled ? 'py-6' : 'py-8'
-                }`}>
-                <Logo onClick={() => router.push("/")} className={!user ? "flex-1" : ""} />
-
-                <nav className={`sm:flex hidden ${user && "md:flex-1"} flex-row gap-5 items-center justify-center`}>
-                    {NavigationLinks.map(({ id, text, link }) => (
-                        <NavbarItem text={text} link={link} key={id} />
-                    ))}
-                </nav>
-                <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
-                    <MobileDrawer user={user as IUser} />
-                    {!user ? <div className="hidden sm:flex gap-2 items-center justify-end">
-                        {/* <Link
-                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-6 py-3 rounded-full text-white font-medium text-base backdrop-blur-sm"
-                            aria-label="Sign In button"
-                            href="/signin"
-                        >
-                            Signin
-                        </Link> */}
-                        <Link
-                            className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
-                            aria-label="Get Started button"
-                            href="/register"
-                        >
-                            Signup
-                        </Link>
-                    </div> : (
-                        <Suspense fallback={<Loader />}>
-                            <div className="flex items-center justify-end gap-2">
-                                <NotificationCenter />
-                                <ProfileDropdown username={user?.name} userImage={user?.avatar as string}
-                                    userEmail={user?.email} userRole={user?.role as string} userFavorites={favoriteTemplates.length} />
-                            </div>
-                        </Suspense>
-                    )}
-                </div>
+          {NavigationLinks.map(({ id, text, link }) => (
+            <NavbarItem text={text} link={link} key={id} />
+          ))}
+        </nav>
+        <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
+          <MobileDrawer user={user as IUser} />
+          <div className="hidden sm:flex gap-2 items-center justify-end">
+            <Link
+              className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
+              aria-label="Get Started button"
+              href="/register"
+            >
+              Signup
+            </Link>
+          </div>
+          <Suspense fallback={<Loader />}>
+            <div className="flex items-center justify-end gap-2">
+              {user && <NotificationCenter />}
+              <ProfileDropdown
+                user={user}
+                userFavorites={favoriteTemplates.length}
+              />
             </div>
+          </Suspense>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 export default Navbar;
 
-const NavbarItem = ({ text, link }: { text: string, link: string }) => {
-    const [isHovered, setIsHovered] = useState(false);
-    return (
-        <Link
-            href={link}
-            className="decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            {text}
-            <div
-                className={`w-0 h-[2px] ${isHovered && "w-full!"} bg-linear-to-r from-[#8BFA9E] to-[#3FD6DD] rounded-[2px] transition-all duration-300 ease-out`}
-            />
-        </Link>
-    );
+const NavbarItem = ({ text, link }: { text: string; link: string }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <Link
+      href={link}
+      className="decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {text}
+      <div
+        className={`w-0 h-[2px] ${isHovered && "w-full!"} bg-linear-to-r from-[#8BFA9E] to-[#3FD6DD] rounded-[2px] transition-all duration-300 ease-out`}
+      />
+    </Link>
+  );
 };
 
 const MobileDrawer = ({ user }: { user: IUser }) => {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-    return (
-        <div className="relative sm:hidden block ml-2 self-end">
-            <button
-                aria-label="Menu Button"
-                className="p-3 bg-transparent hover:bg-white/10 rounded-full transition-colors duration-200 active:scale-95"
-                onClick={() => setIsOpen(true)}
-            >
-                <Menu className="w-6 h-6 text-white" />
-            </button>
+  return (
+    <div className="relative sm:hidden block ml-2 self-end">
+      <button
+        aria-label="Menu Button"
+        className="p-3 bg-transparent hover:bg-white/10 rounded-full transition-colors duration-200 active:scale-95"
+        onClick={() => setIsOpen(true)}
+      >
+        <Menu className="w-6 h-6 text-white" />
+      </button>
 
-            {isOpen && (
-                <div>
-                    <div
-                        onClick={() => setIsOpen(false)}
-                        className="fixed inset-0 z-50 w-screen h-screen bg-black/40 backdrop-blur-lg"
-                    ></div>
+      {isOpen && (
+        <div>
+          <div
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-50 w-screen h-screen bg-black/40 backdrop-blur-lg"
+          ></div>
 
-                    <motion.div
-                        className="fixed top-0 right-0 h-screen w-3/4 sm:w-2/4 bg-dark/95 backdrop-blur-xl shadow-2xl z-9999999 border-l border-white/10"
-                        variants={{
-                            hidden: { x: "100%", opacity: 0 },
-                            visible: {
-                                x: 5,
-                                opacity: 1,
-                                transition: { type: "spring", stiffness: 400, damping: 30 },
-                            },
-                            exit: {
-                                x: "100%",
-                                opacity: 0,
-                                transition: { type: "spring", stiffness: 400, damping: 30 },
-                            },
-                        }}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
+          <motion.div
+            className="fixed top-0 right-0 h-screen w-3/4 sm:w-2/4 bg-dark/95 backdrop-blur-xl shadow-2xl z-9999999 border-l border-white/10"
+            variants={{
+              hidden: { x: "100%", opacity: 0 },
+              visible: {
+                x: 5,
+                opacity: 1,
+                transition: { type: "spring", stiffness: 400, damping: 30 },
+              },
+              exit: {
+                x: "100%",
+                opacity: 0,
+                transition: { type: "spring", stiffness: 400, damping: 30 },
+              },
+            }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="p-6 flex flex-col h-full gap-6">
+              <button
+                className="p-3 mb-4 hover:bg-white/10 rounded-full w-fit transition-colors duration-200 active:scale-95"
+                onClick={() => setIsOpen(false)}
+              >
+                <X className="w-6 h-6 text-white" />
+              </button>
+              <ul className="flex flex-col gap-2">
+                {NavigationLinks.map(({ id, link, text }) => (
+                  <li key={id}>
+                    <Link
+                      href={link}
+                      className="block text-white hover:text-secondary hover:bg-white/10 text-xl font-medium p-4 rounded-lg transition-all duration-200 active:scale-95"
+                      onClick={() => setIsOpen(false)}
                     >
-                        <div className="p-6 flex flex-col h-full gap-6">
-                            <button
-                                className="p-3 mb-4 hover:bg-white/10 rounded-full w-fit transition-colors duration-200 active:scale-95"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                <X className="w-6 h-6 text-white" />
-                            </button>
-                            <ul className="flex flex-col gap-2">
-                                {NavigationLinks.map(({ id, link, text }) => (
-                                    <li key={id}>
-                                        <Link
-                                            href={link}
-                                            className="block text-white hover:text-secondary hover:bg-white/10 text-xl font-medium p-4 rounded-lg transition-all duration-200 active:scale-95"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            {text}
-                                        </Link>
-                                    </li>
-                                ))}
-                                {!user && (
-                                    <>
-                                        <div className="flex flex-col gap-3 mt-6">
-                                            {/* <Link
-                                                className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 px-8 py-4 rounded-full text-white text-center font-medium backdrop-blur-sm active:scale-95"
-                                                aria-label="Sign In button"
-                                                href="/signin"
-                                                onClick={() => setIsOpen(false)}
-                                            >
-                                                Signin
-                                            </Link> */}
-                                            <Link
-                                                className="outline-none text-center cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-4 rounded-full text-white font-bold shadow-xl hover:shadow-purple-500/25 active:scale-95"
-                                                aria-label="Get Started button"
-                                                href="/register"
-                                                onClick={() => setIsOpen(false)}
-                                            >
-                                                Signup
-                                            </Link>
-                                        </div>
-                                    </>
-                                )}
-                            </ul>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
+                      {text}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
         </div>
-    );
+      )}
+    </div>
+  );
 };

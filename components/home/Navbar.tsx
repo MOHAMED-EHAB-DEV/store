@@ -5,7 +5,7 @@ import { Menu } from "@/components/ui/svgs/icons/Menu";
 import { X } from "@/components/ui/svgs/icons/X";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
-import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
+// import ProfileDropdown from "@/components/Dialogs/ProfileDropdown";
 import NotificationCenter from "@/components/shared/NotificationCenter";
 import { NavigationLinks } from "@/constants";
 import Link from "next/link";
@@ -14,6 +14,9 @@ import Loader from "@/components/ui/Loader";
 import { useUser } from "@/context/UserContext";
 import { IUser } from "@/types";
 import { sendGTMEvent } from "@next/third-parties/google";
+import dynamic from "next/dynamic";
+
+const ProfileDropdown = dynamic(() => import("@/components/Dialogs/ProfileDropdown"))
 
 const Navbar = () => {
   const router = useRouter();
@@ -62,16 +65,20 @@ const Navbar = () => {
         </nav>
         <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
           <MobileDrawer user={user as IUser} />
-          <div className="hidden sm:flex gap-2 items-center justify-end">
-            <Link
-              className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
-              aria-label="Get Started button"
-              href="/register"
-              onClick={() => sendGTMEvent({ event: "auth_nav_click", auth_type: "signup" })}
-            >
-              Signup
-            </Link>
-          </div>
+          {!user && (
+            <div className="hidden sm:flex gap-2 items-center justify-end">
+              <Link
+                className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
+                aria-label="Get Started button"
+                href="/register"
+                onClick={() =>
+                  sendGTMEvent({ event: "auth_nav_click", auth_type: "signup" })
+                }
+              >
+                Signup
+              </Link>
+            </div>
+          )}
           <Suspense fallback={<Loader />}>
             <div className="flex items-center justify-end gap-2">
               {user && <NotificationCenter />}
@@ -96,7 +103,13 @@ const NavbarItem = ({ text, link }: { text: string; link: string }) => {
       className="decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => sendGTMEvent({ event: "nav_link_click", nav_label: text, nav_path: link })}
+      onClick={() =>
+        sendGTMEvent({
+          event: "nav_link_click",
+          nav_label: text,
+          nav_path: link,
+        })
+      }
     >
       {text}
       <div

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import {
@@ -127,7 +127,7 @@ export default function NotificationCenter() {
         }
     };
 
-    const formatTime = (dateString: string) => {
+    const formatTime = useCallback((dateString: string) => {
         const date = new Date(dateString);
         const now = new Date();
         const diff = now.getTime() - date.getTime();
@@ -141,7 +141,7 @@ export default function NotificationCenter() {
         if (hours < 24) return `${hours}h ago`;
         if (days < 7) return `${days}d ago`;
         return date.toLocaleDateString();
-    };
+    }, []);
 
     return (
         <DropdownMenu>

@@ -107,7 +107,6 @@ const Page = async ({ searchParams }: PageProps) => {
       <Templates
         initialData={templates}
         categories={categories}
-        isHome={true}
         searchParams={params}
       />
     </main>

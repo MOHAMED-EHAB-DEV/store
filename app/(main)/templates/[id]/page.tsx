@@ -34,7 +34,7 @@ const getTemplate = async (id: string) => {
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
       {
         next: {
-          revalidate: 60 * 5, // ISR: 5 minutes fallback
+          revalidate: 60 * 10, // ISR: 10 minutes fallback
           tags: [`template-${id}`, "templates"], // Tags for easy revalidation
         },
       },

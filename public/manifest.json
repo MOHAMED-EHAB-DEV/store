@@ -20,9 +20,9 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/1.png",
+      "src": "/screenshots/1.jpg",
       "sizes": "1280x720",
-      "type": "image/png",
+      "type": "image/jpg",
       "form_factor": "wide",
       "label": "MHD Store Desktop View"
     },

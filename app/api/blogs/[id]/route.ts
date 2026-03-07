@@ -4,6 +4,7 @@ import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
+import revalidate from "@/actions/revalidateTag";
 
 export async function GET(
     req: NextRequest,
@@ -67,8 +68,10 @@ export async function PUT(
             return createErrorResponse("Blog post not found", 404);
         }
 
-        return createAPIResponse(updatedBlog, { message: "Blog post updated successfully" });
+        await revalidate("/blog");
+        await revalidate(`/blog/${updatedBlog.slug}`);
 
+        return createAPIResponse(updatedBlog, { message: "Blog post updated successfully" });
     } catch (error: any) {
         console.error("API Error:", error);
         return createErrorResponse(error.message || "Internal Server Error", 500);

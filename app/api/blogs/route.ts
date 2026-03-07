@@ -4,6 +4,7 @@ import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse, validatePagination } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
+import revalidate from "@/actions/revalidateTag";
 
 export async function GET(req: NextRequest) {
   try {
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
     body.author = user._id;
 
     const newBlog = await Blog.create(body);
+    await revalidate("/blog");
     return createAPIResponse(newBlog, { message: "Blog post created successfully" }); // 201 not directly supported by helper, but 200 is fine for success
 
   } catch (error: any) {

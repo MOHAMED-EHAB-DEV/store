@@ -8,6 +8,25 @@ import { Share2 } from "@/components/ui/svgs/icons/Share2";
 import { Tag } from "@/components/ui/svgs/icons/Tag";
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { connectToDatabase } from '@/lib/database';
+import Blog from '@/lib/models/Blog';
+
+export async function generateStaticParams() {
+  try {
+    await connectToDatabase();
+    const blogs = await Blog.find({ isPublished: true })
+      .select("_id")
+      .limit(100)
+      .lean();
+
+    return blogs.map((blog: any) => ({
+      id: blog._id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
 
 interface BlogPost {
     _id: string;
@@ -33,7 +52,7 @@ const getData = async (idOrSlug: string): Promise<BlogPost | null> => {
         const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
         const res = await fetch(`${domain}/api/blogs/${idOrSlug}?countViews=true`, {
             method: 'GET',
-            next: { revalidate: 60 }
+            next: { revalidate: 60 * 60 * 24 }
         });
 
         if (!res.ok) return null;
@@ -51,7 +70,7 @@ const getRecentPosts = async (): Promise<BlogPost[]> => {
         const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
         const res = await fetch(`${domain}/api/blogs?limit=5`, {
             method: 'GET',
-            next: { revalidate: 3600 }
+            next: { revalidate: 60 * 60 * 24 }
         });
         if (!res.ok) return [];
         const json = await res.json();
@@ -71,11 +90,35 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
+    const domain = process.env.NEXT_PUBLIC_APP_URL;
+    const url = `${domain}/blog/${blog.slug || id}`;
+
     return {
         title: `${blog.title} | Blog`,
         description: blog.excerpt || blog.content.substring(0, 160),
+        authors: blog.author ? [{ name: blog.author.name }] : undefined,
+        keywords: blog.tags || [],
+        alternates: {
+            canonical: url,
+        },
         openGraph: {
-            title: blog.title,
+            title: `${blog.title} | Blog`,
+            description: blog.excerpt || blog.content.substring(0, 160),
+            url: url,
+            type: 'article',
+            publishedTime: blog.createdAt,
+            images: blog.coverImage ? [
+                {
+                    url: blog.coverImage,
+                    width: 1200,
+                    height: 630,
+                    alt: blog.title,
+                }
+            ] : [],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${blog.title} | Blog`,
             description: blog.excerpt || blog.content.substring(0, 160),
             images: blog.coverImage ? [blog.coverImage] : [],
         },

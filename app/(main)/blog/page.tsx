@@ -17,11 +17,31 @@ interface BlogPost {
   isPublished: boolean;
 }
 
-export const metadata: Metadata = {
-  title: "Blog | Insights & Updates",
-  description:
-    "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const title = "Blog | Insights & Updates";
+  const description = "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
+  const domain = process.env.NEXT_PUBLIC_APP_URL || 'https://mohammedehab.com';
+  const url = `${domain}/blog`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
 
 const getData = async () => {
   try {

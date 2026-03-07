@@ -34,7 +34,7 @@ const getTemplate = async (id: string) => {
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
       {
         next: {
-          revalidate: 60 * 10, // ISR: 10 minutes fallback
+          revalidate: 60 * 60 * 24, // ISR: 10 minutes fallback
           tags: [`template-${id}`, "templates"], // Tags for easy revalidation
         },
       },
@@ -73,7 +73,7 @@ const getSimilarTemplates = async (
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/templates?${queryParams.toString()}`,
-      { next: { revalidate: 60 * 5 } }, // ISR: 5 minutes
+      { next: { revalidate: 60 * 60 * 24 } }, // ISR: 5 minutes
     );
 
     if (!response.ok) {
@@ -104,20 +104,38 @@ export async function generateMetadata({
     return { title: "Template Not Found" };
   }
 
+  const domain = process.env.NEXT_PUBLIC_APP_URL || 'https://mohammedehab.com';
+  const url = `${domain}/templates/${id}`;
+
   return {
     title: `${template.title} | Premium Templates`,
     description:
       template.description?.substring(0, 160) ||
       `Premium ${template.builtWith} template - ${template.title}`,
+    keywords: [...(template.tags || []), template.builtWith || "", "template", "web template"].filter(Boolean),
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
-      title: template.title,
+      title: `${template.title} | Premium Templates`,
       description: template.description?.substring(0, 160),
-      images: template.thumbnail ? [template.thumbnail] : [],
+      url: url,
       type: "website",
+      images: template.thumbnail
+        ? [
+            {
+              url: template.thumbnail,
+              width: 1200,
+              height: 630,
+              alt: template.title,
+            },
+          ]
+        : [],
     },
     twitter: {
       card: "summary_large_image",
-      title: template.title,
+      title: `${template.title} | Premium Templates`,
+      description: template.description?.substring(0, 160),
       images: template.thumbnail ? [template.thumbnail] : [],
     },
   };

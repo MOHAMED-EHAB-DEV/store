@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
 
 interface TicketFormProps {
     onSuccess?: () => void;
@@ -24,7 +25,10 @@ const priorities = [
 ];
 
 export default function TicketForm({ onSuccess }: TicketFormProps) {
+    const { user } = useUser();
+
     const router = useRouter();
+    if (!user) router.push("/login?message=unauthorized");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         subject: "",

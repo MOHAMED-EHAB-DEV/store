@@ -37,7 +37,7 @@ function validateSearchParams(req: NextRequest): {
         ?.split(",")
         .map((tech) => tech.trim())
         .filter(Boolean) || [];
-    const type = searchParams.get("type")?.trim() || "";
+    const type = searchParams.get("type") || "";
     const sortBy = searchParams.get("sortBy") || "popular";
 
     // Price range validation

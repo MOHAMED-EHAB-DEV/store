@@ -123,7 +123,7 @@ const MobileDrawer = ({ user }: { user: IUser }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative sm:hidden block ml-2 self-end">
+    <div className="relative md:hidden block ml-2 self-end">
       <button
         aria-label="Menu Button"
         className="p-3 bg-transparent hover:bg-white/10 rounded-full transition-colors duration-200 active:scale-95"

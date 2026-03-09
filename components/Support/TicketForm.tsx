@@ -26,9 +26,9 @@ const priorities = [
 
 export default function TicketForm({ onSuccess }: TicketFormProps) {
     const { user } = useUser();
-
     const router = useRouter();
     if (!user) router.push("/login?message=unauthorized");
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         subject: "",

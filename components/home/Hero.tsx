@@ -119,7 +119,7 @@ const Hero = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
                     <Link
-                        className="hero-btn animate-bounce group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none  px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
+                        className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none  px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
                         aria-label="Browse"
                         href="/templates"
                         onClick={() => sendGTMEvent({ event: "hero_cta_click" })}

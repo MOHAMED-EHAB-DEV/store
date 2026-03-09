@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import {
@@ -22,6 +22,12 @@ export default function NotificationCenter() {
     const { onNewNotification } = useUser();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [startY, setStartY] = useState(0);
+    const [scrollTop, setScrollTop] = useState(0);
+    const [lastY, setLastY] = useState(0);
+    const [dragMoved, setDragMoved] = useState(false);
 
     // Fetch notifications
     const fetchNotifications = async () => {
@@ -143,8 +149,41 @@ export default function NotificationCenter() {
         return date.toLocaleDateString();
     }, []);
 
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (!scrollContainerRef.current) return;
+        setIsDragging(true);
+        setDragMoved(false);
+        setStartY(e.clientY);
+        setLastY(e.clientY);
+        setScrollTop(scrollContainerRef.current.scrollTop);
+        scrollContainerRef.current.style.cursor = "grabbing";
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging || !scrollContainerRef.current) return;
+
+        // Prevent text selection while dragging
+        e.preventDefault();
+
+        const dy = e.clientY - lastY;
+        setLastY(e.clientY);
+
+        if (Math.abs(e.clientY - startY) > 5) {
+            setDragMoved(true);
+        }
+
+        scrollContainerRef.current.scrollTop -= dy * 1.2;
+    };
+
+    const handleMouseUpOrLeave = () => {
+        setIsDragging(false);
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.style.cursor = "grab";
+        }
+    };
+
     return (
-        <DropdownMenu>
+        <DropdownMenu modal={true}>
             <DropdownMenuTrigger asChild>
                 <button
                     className="relative p-2 rounded-xl hover:bg-white/10 transition-colors outline-none"
@@ -163,7 +202,7 @@ export default function NotificationCenter() {
                 </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-80 sm:w-96 glass-no-blur bg-black/90 backdrop-blur-xl border border-white/10 p-0" align="end">
+            <DropdownMenuContent className="w-80 sm:w-96 glass-no-blur bg-black/90 backdrop-blur-xl border border-white/10 p-0 overflow-hidden" align="end">
                 <div className="p-4 border-b border-white/10 flex items-center justify-between">
                     <h3 className="font-semibold text-white">Notifications</h3>
                     {unreadCount > 0 && (
@@ -178,7 +217,20 @@ export default function NotificationCenter() {
                         </button>
                     )}
                 </div>
-                <div className="max-h-[400px] overflow-y-auto">
+                <div
+                    ref={scrollContainerRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUpOrLeave}
+                    onMouseLeave={handleMouseUpOrLeave}
+                    onWheel={(e) => e.stopPropagation()}
+                    className="max-h-[400px] overflow-y-auto overscroll-contain cursor-grab select-none scrollbar-hide relative"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                    {/* Ghost overlay during drag to prevent selection/hover on items */}
+                    {isDragging && (
+                        <div className="absolute inset-0 z-[100] cursor-grabbing bg-transparent" />
+                    )}
                     {notifications.length === 0 ? (
                         <div className="p-8 text-center text-muted-foreground">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 mx-auto mb-3 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -192,7 +244,11 @@ export default function NotificationCenter() {
                             <DropdownMenuItem key={notification._id} asChild className="p-0 focus:bg-transparent">
                                 <Link
                                     href={notification.link || "#"}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        if (dragMoved) {
+                                            e.preventDefault();
+                                            return;
+                                        }
                                         if (!notification.isRead) {
                                             markAsRead(notification._id);
                                         }

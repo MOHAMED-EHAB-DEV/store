@@ -87,6 +87,5 @@ const Blog =
   (mongoose.models.Blog as unknown as IBlogModel) ||
   mongoose.model<IBlog, IBlogModel>("Blog", BlogSchema);
 
-Blog.syncIndexes().catch(console.error);
 
 export default Blog;

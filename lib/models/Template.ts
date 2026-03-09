@@ -646,16 +646,6 @@ TemplateSchema.pre("save", function (next) {
   next();
 });
 
-TemplateSchema.post("init", function () {
-  if (process.env.NODE_ENV === "production") {
-    // Ensure critical indexes exist
-    this.collection.createIndex(
-      { isActive: 1, downloads: -1, averageRating: -1 },
-      { background: true }
-    );
-  }
-});
-
 export interface ITemplateModel extends Model<ITemplate> {
   findPopularTemplates(limit?: number, skip?: number): Promise<ITemplate[]>;
   findByCategory(
@@ -687,8 +677,8 @@ const Template =
   (mongoose.models.Template as unknown as ITemplateModel) ||
   mongoose.model<ITemplate, ITemplateModel>("Template", TemplateSchema);
 
-if (process.env.NODE_ENV !== "production") {
-  Template.syncIndexes().catch(console.error);
-}
+// if (process.env.NODE_ENV !== "production") {
+//   Template.syncIndexes().catch(console.error);
+// }
 
 export default Template;

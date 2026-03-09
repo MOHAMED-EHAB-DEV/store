@@ -317,13 +317,6 @@ UserSchema.pre('save', function (next) {
     next();
 });
 
-UserSchema.post('init', function () {
-    if (process.env.NODE_ENV === 'production') {
-        this.collection.createIndex({ email: 1, role: 1 }, { background: true });
-        this.collection.createIndex({ role: 1, createdAt: -1 }, { background: true });
-    }
-});
-
 // Cleanup expired locks regularly
 UserSchema.statics.cleanupExpiredLocks = function () {
     return this.updateMany(
@@ -348,8 +341,8 @@ const User =
     mongoose.model<IUser, IUserModel>("User", UserSchema);
 
 // Create indexes if they don't exist (development only)
-if (process.env.NODE_ENV !== 'production') {
-    User.syncIndexes().catch(console.error);
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     User.syncIndexes().catch(console.error);
+// }
 
 export default User;

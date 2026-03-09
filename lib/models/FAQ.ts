@@ -113,8 +113,4 @@ const FAQ =
     (mongoose.models.FAQ as unknown as IFAQModel) ||
     mongoose.model<IFAQ, IFAQModel>("FAQ", FAQSchema);
 
-if (process.env.NODE_ENV !== "production") {
-    FAQ.syncIndexes().catch(console.error);
-}
-
 export default FAQ;

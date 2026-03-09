@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema, Document, Types } from "mongoose";
-import User from "./User";
-import Template from "./Template";
+import "./User";
+import "./Template";
 
 export interface IOrder extends Document {
   _id: string;

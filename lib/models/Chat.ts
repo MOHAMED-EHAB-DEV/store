@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import User from "./User";
+import "./User";
 
 // For future user-to-user messaging
 export interface IChat extends Document {

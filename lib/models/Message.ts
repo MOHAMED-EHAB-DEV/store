@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import Chat from "./Chat";
-import User from "./User";
+import "./Chat";
+import "./User";
 
 // For future user-to-user messaging
 export interface IMessage extends Document {

@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
-import User from "./User";
-import Ticket from "./Ticket";
+import "./User";
+import "./Ticket";
 
 export interface INotification extends Document {
     _id: string;

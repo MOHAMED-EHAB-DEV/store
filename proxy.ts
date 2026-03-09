@@ -10,7 +10,7 @@ function addSecurityHeaders(response: NextResponse) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
     "img-src 'self' blob: data: https://utfs.io https://www.googletagmanager.com https://www.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com",
     "font-src 'self' https://fonts.gstatic.com data:",
-    "connect-src 'self' https://utfs.io https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.google.com",
+    "connect-src 'self' https://medo-store-store.hf.space:7860 ws://medo-store-store.hf.space:7860 wss://medo-store-store.hf.space:7860 https://utfs.io https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

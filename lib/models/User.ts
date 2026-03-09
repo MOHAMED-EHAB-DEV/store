@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import "./Template";
+import Template from "./Template";
 
 export interface IUser extends Document {
     _id: string;

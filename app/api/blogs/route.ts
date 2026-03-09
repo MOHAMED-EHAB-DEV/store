@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .populate('author', 'name avatar')
+        // .populate('author', 'name avatar')
         .lean(),
       Blog.countDocuments(query)
     ]);

@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
-import { useUser } from "@/context/UserContext";
 
 interface TicketFormProps {
     onSuccess?: () => void;
@@ -14,6 +13,7 @@ const categories = [
     { value: "billing", label: "Billing & Payments" },
     { value: "technical", label: "Technical Issue" },
     { value: "account", label: "Account Related" },
+    { value: "template customization", label: "Template Customization" },
     { value: "other", label: "Other" }
 ];
 
@@ -25,10 +25,7 @@ const priorities = [
 ];
 
 export default function TicketForm({ onSuccess }: TicketFormProps) {
-    const { user } = useUser();
     const router = useRouter();
-    if (!user) router.push("/login?message=unauthorized");
-
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         subject: "",

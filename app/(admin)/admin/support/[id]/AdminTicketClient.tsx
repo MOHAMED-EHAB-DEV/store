@@ -12,11 +12,11 @@ import { useUser } from "@/context/UserContext";
 
 interface AdminTicketClientProps {
     ticketId: string;
-    adminId: string;
 }
 
-export default function AdminTicketClient({ ticketId, adminId }: AdminTicketClientProps) {
+export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) {
     const router = useRouter();
+    const { user } = useUser();
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [ticket, setTicket] = useState<any>(null);
     const [messages, setMessages] = useState<any[]>([]);
@@ -168,7 +168,7 @@ export default function AdminTicketClient({ ticketId, adminId }: AdminTicketClie
         }
     };
 
-    const otherTyping = typingUsers[ticketId]?.filter(id => id !== adminId) || [];
+    const otherTyping = typingUsers[ticketId]?.filter(id => id !== user?._id) || [];
 
     if (isLoading) {
         return (
@@ -218,7 +218,7 @@ export default function AdminTicketClient({ ticketId, adminId }: AdminTicketClie
                             <MessageBubble
                                 key={message._id}
                                 message={message}
-                                isOwn={message.sender._id === adminId}
+                                isOwn={message.sender._id === user?._id}
                             />
                         ))}
 

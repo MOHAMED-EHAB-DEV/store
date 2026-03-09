@@ -19,6 +19,7 @@ const CodedFeatures = () => {
                 trigger: ".code-section",
                 start: "top 85%",
                 end: "bottom 30%",
+                once: true,
                 onEnter: () => {
                     const codeTl = gsap.timeline();
 

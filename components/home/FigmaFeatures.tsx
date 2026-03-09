@@ -23,6 +23,7 @@ const FigmaFeatures = () => {
                 trigger: ".figma-section",
                 start: "top bottom",
                 end: "bottom 30%",
+                once: true,
                 onEnter: () => {
                     const figmaTl = gsap.timeline();
 

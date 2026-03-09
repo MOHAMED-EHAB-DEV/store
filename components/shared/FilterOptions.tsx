@@ -97,15 +97,15 @@ const FilterOptions = ({
     <div
       className={`w-full flex flex-col gap-4 p-4`}
     >
-      <div>
-        <h4 className="text-white/60 text-xl font-semibold mb-5">Categories</h4>
-        <div className="flex flex-wrap gap-2">
+      <fieldset className="border-none p-0 m-0">
+        <legend className="text-white/60 text-xl font-semibold mb-5">Categories</legend>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by Categories">
           {categories?.map((cat: any, idx) => (
             <button
               key={cat._id}
               type="button"
               aria-pressed={cat.selected}
-              className={`py-2 px-3 cursor-pointer ${cat.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm`}
+              className={`py-2 px-3 cursor-pointer ${cat.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
               onClick={() => {
                 const updated = [...categories];
                 updated[idx].selected = !updated[idx].selected;
@@ -122,14 +122,17 @@ const FilterOptions = ({
             </button>
           ))}
         </div>
-      </div>
-      <div>
-        <h4 className="text-white/60 text-xl font-semibold mb-5">Tags</h4>
-        <div className="flex flex-wrap gap-2">
+      </fieldset>
+
+      <fieldset className="border-none p-0 m-0">
+        <legend className="text-white/60 text-xl font-semibold mb-5">Tags</legend>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by Tags">
           {tags?.map((tagObj: any, idx) => (
-            <span
+            <button
               key={idx}
-              className={`py-2 px-3 cursor-pointer ${tagObj.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm`}
+              type="button"
+              aria-pressed={tagObj.selected}
+              className={`py-2 px-3 cursor-pointer ${tagObj.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
               onClick={() => {
                 const updated = [...tags];
                 updated[idx].selected = !updated[idx].selected;
@@ -143,13 +146,13 @@ const FilterOptions = ({
               }}
             >
               {tagObj.tag}
-            </span>
+            </button>
           ))}
         </div>
-      </div>
-      <div>
-        <h4 className="text-white/60 text-xl font-semibold mb-5">Built With</h4>
-        <div className="flex flex-wrap gap-2">
+      </fieldset>
+      <fieldset className="border-none p-0 m-0">
+        <legend className="text-white/60 text-xl font-semibold mb-5">Built With</legend>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by Technologies">
           {builtWithOptions?.map(
             (
               obj: {
@@ -163,9 +166,11 @@ const FilterOptions = ({
               },
               idx,
             ) => (
-              <span
+              <button
                 key={idx}
-                className={`py-2 px-3 cursor-pointer ${obj.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm flex items-center gap-2`}
+                type="button"
+                aria-pressed={obj.selected}
+                className={`py-2 px-3 cursor-pointer ${obj.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
                 onClick={() => {
                   const updated = [...builtWithOptions];
                   updated[idx].selected = !updated[idx].selected;
@@ -178,24 +183,25 @@ const FilterOptions = ({
                   });
                 }}
               >
-                <obj.Icon className="w-4 h-4" />
+                <obj.Icon className="w-4 h-4" aria-hidden="true" />
                 {obj.text}
-              </span>
+              </button>
             ),
           )}
         </div>
-      </div>
-      <div>
-        <h4 className="text-white/60 text-xl font-semibold mb-5">Sort By</h4>
+      </fieldset>
+      <div className="flex flex-col gap-2">
+        <label id="sort-by-label" className="text-white/60 text-xl font-semibold mb-3">Sort By</label>
 
         <Popover>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="min-w-[220px] flex justify-between items-center outline-none border-none hover:bg-primary bg-conic-300 text-white"
+              aria-labelledby="sort-by-label"
+              className="min-w-[220px] flex justify-between items-center outline-none border-none hover:bg-primary bg-conic-300 text-white focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               {sortOptions.find((o) => o.value === sortedBy)?.label}
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4" aria-hidden="true" />
             </Button>
           </PopoverTrigger>
 
@@ -214,7 +220,7 @@ const FilterOptions = ({
                     }}
                     className="cursor-pointer flex items-center gap-2 py-2"
                   >
-                    <span>{option.icon}</span>
+                    <span aria-hidden="true">{option.icon}</span>
                     <span>{option.label}</span>
                   </CommandItem>
                 ))}
@@ -223,25 +229,27 @@ const FilterOptions = ({
           </PopoverContent>
         </Popover>
       </div>
-      <div>
-        <div className="text-white/60 text-xl font-semibold mb-5 flex items-center gap-2">
+      <fieldset className="border-none p-0 m-0">
+        <legend className="text-white/60 text-xl font-semibold mb-5 flex items-center gap-2">
           Price Range
           <Button
+            type="button"
             onClick={() => {
               setMaxPrice(0);
               setMinPrice(0);
               sendGTMEvent({ event: "filter_clear", filter_type: "price" });
             }}
-            className="cursor-pointer hover:text-white hover:bg-transparent"
+            className="cursor-pointer hover:text-white hover:bg-transparent h-auto p-1 py-0 text-sm focus-visible:ring-2 focus-visible:ring-blue-500"
+            aria-label="Reset price range"
           >
             Reset
           </Button>
-        </div>
+        </legend>
         <div className="flex items-center gap-2">
           <div className="flex flex-col justify-center">
             <label
               htmlFor="minPrice"
-              className="text-secondary text-xs font-black"
+              className="text-secondary text-xs font-black mb-1"
             >
               min.
             </label>
@@ -251,14 +259,15 @@ const FilterOptions = ({
               value={minPrice}
               onChange={(e) => handlePriceChange("min", e.target.value)}
               placeholder="Min"
-              className="w-36 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400"
+              aria-label="Minimum Price"
+              className="w-36 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-blue-500"
             />
           </div>
-          <span className="text-white/60">-</span>
+          <span className="text-white/60" aria-hidden="true">-</span>
           <div className="flex flex-col justify-center">
             <label
               htmlFor="maxPrice"
-              className="text-secondary text-xs font-black"
+              className="text-secondary text-xs font-black mb-1"
             >
               max.
             </label>
@@ -268,18 +277,20 @@ const FilterOptions = ({
               value={maxPrice}
               onChange={(e) => handlePriceChange("max", e.target.value)}
               placeholder="Max"
-              className="w-36 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400"
+              aria-label="Maximum Price"
+              className="w-36 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-blue-500"
             />
           </div>
         </div>
-      </div>
-      <div>
-        <h4 className="text-white/60 text-xl font-semibold mb-5">
+      </fieldset>
+      <fieldset className="border-none p-0 m-0">
+        <legend className="text-white/60 text-xl font-semibold mb-5">
           Minimum Rating
-        </h4>
-        <div className="flex flex-wrap gap-3 items-center">
+        </legend>
+        <div className="flex flex-wrap gap-3 items-center" role="group" aria-label="Filter by Minimum Rating">
           {/* "All Ratings" option */}
           <button
+            type="button"
             onClick={() => {
               setMinRating(0);
               sendGTMEvent({
@@ -288,7 +299,8 @@ const FilterOptions = ({
                 filter_value: 0,
               });
             }}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors
+            aria-pressed={minRating === 0}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500
                                 ${minRating === 0 ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
           >
             All Ratings
@@ -298,6 +310,7 @@ const FilterOptions = ({
           {[1, 2, 3, 4, 5].map((rating) => (
             <button
               key={rating}
+              type="button"
               onClick={() => {
                 setMinRating(rating);
                 sendGTMEvent({
@@ -306,22 +319,24 @@ const FilterOptions = ({
                   filter_value: rating,
                 });
               }}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors
+              aria-pressed={minRating === rating}
+              aria-label={`${rating} star${rating > 1 ? "s" : ""} and up`}
+              className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500
                                     ${minRating === rating ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/10 text-white/70 hover:bg-white/20"}`}
             >
               {Array.from({ length: rating }).map((_, i) => (
-                // <span key={i} className="text-yellow-400">★</span>
                 <Star
                   key={i}
                   className="w-4 h-4 text-yellow-400"
                   isActive={true}
+                  aria-hidden="true"
                 />
               ))}
-              {rating !== 5 && <span className="text-sm">& up</span>}
+              {rating !== 5 && <span className="text-sm" aria-hidden="true">& up</span>}
             </button>
           ))}
         </div>
-      </div>
+      </fieldset>
     </div>
   );
 };

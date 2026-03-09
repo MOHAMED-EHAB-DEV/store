@@ -31,6 +31,7 @@ const supportFeatures = [
 const categories = [
     { name: "General Inquiry", description: "Questions about our services" },
     { name: "Billing & Payments", description: "Payment issues and refunds" },
+    { name: "Template Customization", description: "Request for template customization" },
     { name: "Technical Issue", description: "Help with technical problems" },
     { name: "Account", description: "Login, password, and profile" }
 ];

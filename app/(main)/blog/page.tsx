@@ -20,8 +20,7 @@ interface BlogPost {
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Blog | Insights & Updates";
   const description = "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
-  const domain = process.env.NEXT_PUBLIC_APP_URL || 'https://mohammedehab.com';
-  const url = `${domain}/blog`;
+  const url = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/blog`;
 
   return {
     title,
@@ -46,13 +45,14 @@ export async function generateMetadata(): Promise<Metadata> {
 const getData = async () => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/blogs?limit=10`,
+      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs?limit=10`,
       {
         next: { revalidate: 60 * 60 * 24 },
       },
     );
 
     const data = await res.json();
+    console.log(data);
     if (data.success) return data.data;
     else throw new Error("Failed to fetch templates");
   } catch (error) {

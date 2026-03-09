@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import "./User";
+import User from "./User";
 
 export interface IBlog extends Document {
   _id: string;

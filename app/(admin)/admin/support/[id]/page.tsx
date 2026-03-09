@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { authenticateUser } from "@/middleware/auth";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import AdminTicketClient from "./AdminTicketClient";
 
 export const metadata: Metadata = {
@@ -14,10 +13,7 @@ interface PageProps {
 }
 
 export default async function AdminTicketPage({ params }: PageProps) {
-    const user = await authenticateUser(true);
-    if (!user || user.role !== "admin") redirect("/");
-
     const { id } = await params;
 
-    return <AdminTicketClient ticketId={id} adminId={user._id} />;
+    return <AdminTicketClient ticketId={id} />;
 }

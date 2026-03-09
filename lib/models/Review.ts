@@ -1,6 +1,6 @@
 import mongoose, {Document, Model, Schema, ObjectId} from "mongoose";
-import "./User";
-import "./Template";
+import User from "./User";
+import Template from "./Template";
 
 export interface IReview extends Document {
     _id: string;

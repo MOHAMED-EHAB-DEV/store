@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import User from "./User";
 
 export interface ITicket extends Document {
     _id: string;
@@ -6,7 +7,7 @@ export interface ITicket extends Document {
     subject: string;
     status: "open" | "resolved" | "closed";
     priority: "low" | "medium" | "high" | "urgent";
-    category: "general" | "billing" | "technical" | "account" | "other";
+    category: "general" | "billing" | "technical" | "account" | "other" | "template customization";
     createdAt: Date;
     updatedAt: Date;
     lastMessageAt: Date;

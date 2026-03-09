@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import FAQForm from "@/components/Admin/FAQForm";
@@ -14,15 +13,8 @@ interface PageProps {
 }
 
 async function getFAQ(id: string) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
     try {
-        const response = await fetch(`${baseUrl}/api/admin/faqs/${id}`, {
-            headers: { Cookie: `token=${token}` },
-            cache: "no-store"
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs/${id}`);
 
         if (!response.ok) return null;
         const data = await response.json();

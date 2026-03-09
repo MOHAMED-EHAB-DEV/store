@@ -19,6 +19,7 @@ const Cta = () => {
                 ScrollTrigger.create({
                     trigger: ".cta-section",
                     start: "top 80%",
+                    once: true,
                     onEnter: () => {
                         gsap.fromTo(
                             ".cta-content",

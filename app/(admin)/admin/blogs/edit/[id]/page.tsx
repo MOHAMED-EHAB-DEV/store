@@ -1,19 +1,8 @@
 import BlogForm from "@/components/Admin/BlogForm";
-import { cookies } from "next/headers";
 
 const getBlog = async (id: string) => {
     try {
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token");
-        const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-        const res = await fetch(`${domain}/api/blogs/${id}`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token?.value || ''}`
-            },
-            cache: 'no-store'
-        });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs/${id}`);
 
         if (!res.ok) return null;
 

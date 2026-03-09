@@ -9,8 +9,6 @@ export const metadata: Metadata = {
     robots: "noindex, nofollow",
 };
 
-export const dynamic = "force-dynamic";
-
 async function getTemplatesData(searchParams: { [key: string]: string | undefined }) {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;

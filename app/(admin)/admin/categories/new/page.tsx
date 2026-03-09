@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import CategoryForm from "@/components/Admin/CategoryForm";
 
@@ -9,15 +8,8 @@ export const metadata: Metadata = {
 };
 
 async function getParentCategories() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
     try {
-        const response = await fetch(`${baseUrl}/api/admin/categories?limit=100`, {
-            headers: { Cookie: `token=${token}` },
-            cache: "no-store"
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`);
 
         if (!response.ok) return [];
         const data = await response.json();

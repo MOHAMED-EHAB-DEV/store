@@ -44,7 +44,7 @@ export default async function Home() {
                 key={id}
                 initial={initialView}
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
-                viewport={{ margin: "-100px" }}
+                viewport={{ margin: "-100px", once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{
                   scale: 1.02,

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
-import "./User";
-import "./Template";
+import User from "./User";
+import Template from "./Template";
 
 export interface IDownloadLog extends Document {
     userId?: mongoose.Types.ObjectId;

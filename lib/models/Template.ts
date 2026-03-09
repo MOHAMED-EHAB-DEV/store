@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema, ObjectId } from "mongoose";
-import "./Category";
-import "./User";
+import Category from "./Category";
+import User from "./User";
 
 export interface ITemplate extends Document {
   _id: string;

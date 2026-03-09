@@ -1,12 +1,10 @@
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import AdminFAQsClient from "@/components/Admin/AdminFAQsClient";
 import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
 import { Check } from "@/components/ui/svgs/icons/Check";
 import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { Grid } from "@/components/ui/svgs/icons/Grid";
-import { Zap } from "@/components/ui/svgs/icons/Zap";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
@@ -16,10 +14,6 @@ export const metadata: Metadata = {
 };
 
 async function getFAQsData(searchParams: { [key: string]: string | undefined }) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
     const params = new URLSearchParams();
     if (searchParams.page) params.set("page", searchParams.page);
     if (searchParams.category) params.set("category", searchParams.category);
@@ -28,10 +22,7 @@ async function getFAQsData(searchParams: { [key: string]: string | undefined }) 
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${baseUrl}/api/admin/faqs?${params.toString()}`, {
-            headers: { Cookie: `token=${token}` },
-            cache: "no-store"
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs?${params.toString()}`);
 
         if (!response.ok) return null;
         return await response.json();

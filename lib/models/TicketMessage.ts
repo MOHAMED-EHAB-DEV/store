@@ -1,4 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import Ticket from "./Ticket";
+import User from "./User";
 
 export interface ITicketMessage extends Document {
     _id: string;

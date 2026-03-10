@@ -1,8 +1,11 @@
 import BlogForm from "@/components/Admin/BlogForm";
+import { headers } from "next/headers";
 
 const getBlog = async (id: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs/${id}`, {
+            headers: await headers(),
+        });
 
         if (!res.ok) return null;
 

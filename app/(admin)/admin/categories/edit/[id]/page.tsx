@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CategoryForm from "@/components/Admin/CategoryForm";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Edit Category | Admin",
@@ -14,7 +15,9 @@ interface PageProps {
 
 async function getCategory(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories/${id}`, {
+            headers: await headers(),
+        });
 
         if (!response.ok) return null;
         const data = await response.json();
@@ -26,7 +29,9 @@ async function getCategory(id: string) {
 
 async function getParentCategories() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`, {
+            headers: await headers(),
+        });
 
         if (!response.ok) return [];
         const data = await response.json();

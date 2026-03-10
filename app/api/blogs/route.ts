@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, createErrorResponse, validatePagination } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, handleApiError, validatePagination } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
 import revalidate from "@/actions/revalidateTag";
 
@@ -46,7 +46,6 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        // .populate('author', 'name avatar')
         .lean(),
       Blog.countDocuments(query)
     ]);
@@ -62,8 +61,7 @@ export async function GET(req: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error("API Error:", error);
-    return createErrorResponse(error.message || "Internal Server Error", 500, process.env.NODE_ENV === 'development' ? error : undefined);
+    return handleApiError(error, req, { operation: "getBlogs" });
   }
 }
 
@@ -73,11 +71,11 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
 
     const user = await authenticateUser(false, true);
-    if (!user) return createErrorResponse("Unauthorized", 401);
+    if (!user) return createErrorResponse("Unauthorized", 401, { req });
 
     const dbUser = await User.findById(user._id);
     if (dbUser?.role !== 'admin') {
-      return createErrorResponse("Forbidden: Admin access only", 403);
+      return createErrorResponse("Forbidden: Admin access only", 403, { req });
     }
 
     // Auto-generate slug if missing
@@ -93,10 +91,9 @@ export async function POST(req: NextRequest) {
 
     const newBlog = await Blog.create(body);
     await revalidate("/blog");
-    return createAPIResponse(newBlog, { message: "Blog post created successfully" }); // 201 not directly supported by helper, but 200 is fine for success
+    return createAPIResponse(newBlog, { message: "Blog post created successfully" });
 
   } catch (error: any) {
-    console.error("API Error:", error);
-    return createErrorResponse(error.message || "Internal Server Error", 500, process.env.NODE_ENV === 'development' ? error : undefined);
+    return handleApiError(error, req, { operation: "createBlog" });
   }
 }

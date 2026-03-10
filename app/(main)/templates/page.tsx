@@ -1,6 +1,7 @@
 import Templates from "@/components/shared/Templates";
 import { ICategory } from "@/types";
 import { Metadata } from "next";
+import { getCategories } from "@/static/categories";
 
 type MetadataProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -97,24 +98,6 @@ const getInitialData = async ({
     const data = await response.json();
     if (data.success) return data.data;
     else throw new Error("Failed to fetch templates");
-  } catch (err) {
-    return [];
-  }
-};
-
-const getCategories = async () => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/categories`,
-      {
-        next: { revalidate: 3600 },
-      },
-    );
-
-    const data = await response.json();
-
-    if (data.success) return data.data;
-    else throw new Error("Failed to fetch categories");
   } catch (err) {
     return [];
   }

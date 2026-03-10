@@ -1,6 +1,4 @@
 import { Metadata } from "next";
-import { authenticateUser } from "@/middleware/auth";
-import { redirect } from "next/navigation";
 import AdminTicketClient from "./AdminTicketClient";
 
 export const metadata: Metadata = {

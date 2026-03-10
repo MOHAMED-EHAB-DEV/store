@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Category from "@/lib/models/Category";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/categories - List all categories
 export async function GET(request: NextRequest) {
@@ -75,11 +76,7 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error: any) {
-        console.error("Error fetching categories:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to fetch categories" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminGetCategories" });
     }
 }
 
@@ -100,10 +97,7 @@ export async function POST(request: NextRequest) {
         const { name, description, slug, sortOrder, parentCategory, isActive } = body;
 
         if (!name) {
-            return NextResponse.json(
-                { success: false, message: "Category name is required" },
-                { status: 400 }
-            );
+            return createErrorResponse("Category name is required", 400, { req: request });
         }
 
         // Auto-generate slug if not provided
@@ -123,18 +117,9 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error: any) {
-        console.error("Error creating category:", error);
-
         if (error.code === 11000) {
-            return NextResponse.json(
-                { success: false, message: "Category with this name or slug already exists" },
-                { status: 400 }
-            );
+            return createErrorResponse("Category with this name or slug already exists", 400, { req: request, error });
         }
-
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to create category" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminCreateCategory" });
     }
 }

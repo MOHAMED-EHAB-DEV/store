@@ -1,23 +1,14 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import TemplateForm from "@/components/Admin/TemplateForm";
-import { connectToDatabase } from "@/lib/database";
-import Category from "@/lib/models/Category";
+import { getCategories } from "@/static/categories";
 
 export const metadata: Metadata = {
     title: "Create Template | Admin",
     description: "Create a new template"
 };
 
-async function getCategories() {
-    await connectToDatabase();
-    try {
-        const categories = await Category.find({ isActive: true }).select("_id name").lean();
-        return JSON.parse(JSON.stringify(categories));
-    } catch (error) {
-        return [];
-    }
-}
+
 
 export default async function NewTemplatePage() {
     const categories = await getCategories();

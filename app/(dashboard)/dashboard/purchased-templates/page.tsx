@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import PurchasedTemplatesClient from "@/components/Dashboard/PurchasedTemplatesClient";
 import { authenticateUser } from "@/middleware/auth";
+import { getCategories as fetchCategories } from "@/static/categories";
 
 export const metadata: Metadata = {
     title: "Purchased Templates | Dashboard",
@@ -16,23 +17,20 @@ async function getPurchasedTemplates() {
     const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-    try {
-        const [templatesRes, categoriesRes] = await Promise.all([
+    try { 
+        const [templatesRes, categories] = await Promise.all([
             fetch(`${baseUrl}/api/user/templates`, {
                 headers: { Cookie: `token=${token}` },
                 cache: "no-store"
             }),
-            fetch(`${baseUrl}/api/categories`, {
-                cache: "no-store"
-            })
+            fetchCategories()
         ]);
 
         const templates = templatesRes.ok ? await templatesRes.json() : { data: [] };
-        const categories = categoriesRes.ok ? await categoriesRes.json() : { data: [] };
 
         return {
             templates: templates.data || [],
-            categories: categories.data || [],
+            categories: categories || [],
         };
     } catch (error) {
         console.error("Error fetching templates:", error);
@@ -41,7 +39,7 @@ async function getPurchasedTemplates() {
 }
 
 export default async function PurchasedTemplatesPage() {
-    const user = await authenticateUser(true, false, true);
+    const user = await authenticateUser(true);
     if (!user) redirect("/");
 
     const data = await getPurchasedTemplates();

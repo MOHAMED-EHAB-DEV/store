@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Category from "@/lib/models/Category";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -12,10 +13,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -24,19 +22,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         const category = await Category.findById(id).lean();
 
         if (!category) {
-            return NextResponse.json(
-                { success: false, message: "Category not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Category not found", 404, { req: request, operation: "adminGetCategory" });
         }
 
         return NextResponse.json({ success: true, data: category });
     } catch (error: any) {
-        console.error("Error fetching category:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to fetch category" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminGetCategory" });
     }
 }
 
@@ -45,10 +36,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -71,10 +59,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         }).lean();
 
         if (!category) {
-            return NextResponse.json(
-                { success: false, message: "Category not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Category not found", 404, { req: request, operation: "adminUpdateCategory" });
         }
 
         return NextResponse.json({
@@ -83,19 +68,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             message: "Category updated successfully",
         });
     } catch (error: any) {
-        console.error("Error updating category:", error);
-
         if (error.code === 11000) {
-            return NextResponse.json(
-                { success: false, message: "Category with this name or slug already exists" },
-                { status: 400 }
-            );
+            return createErrorResponse("Category with this name or slug already exists", 400, { req: request, error });
         }
-
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to update category" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminUpdateCategory" });
     }
 }
 
@@ -104,10 +80,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -121,10 +94,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         );
 
         if (!category) {
-            return NextResponse.json(
-                { success: false, message: "Category not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Category not found", 404, { req: request, operation: "adminDeleteCategory" });
         }
 
         return NextResponse.json({
@@ -132,10 +102,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             message: "Category deleted successfully",
         });
     } catch (error: any) {
-        console.error("Error deleting category:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to delete category" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminDeleteCategory" });
     }
 }

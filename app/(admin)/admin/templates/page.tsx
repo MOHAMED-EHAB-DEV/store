@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
+import { getCategories } from "@/static/categories";
 
 export const metadata: Metadata = {
     title: "Templates Management | Admin Dashboard",
@@ -23,27 +24,23 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
     params.set("limit", "20");
 
     try {
-        const [templatesRes, categoriesRes] = await Promise.all([
+        const [templatesRes, categories] = await Promise.all([
             fetch(`${baseUrl}/api/admin/templates?${params.toString()}`, {
                 headers: { Cookie: `token=${token}` },
                 cache: "no-store"
             }),
-            fetch(`${baseUrl}/api/admin/categories?limit=100`, {
-                headers: { Cookie: `token=${token}` },
-                cache: "no-store"
-            })
+            getCategories()
         ]);
 
-        if (!templatesRes.ok || !categoriesRes.ok) return null;
+        if (!templatesRes.ok) return null;
 
         const templatesData = await templatesRes.json();
-        const categoriesData = await categoriesRes.json();
 
         return {
             templates: templatesData.data || [],
             stats: templatesData.stats,
             pagination: templatesData.pagination,
-            categories: categoriesData.data || [],
+            categories: categories || [],
         };
     } catch (error) {
         console.error("Error fetching templates data:", error);

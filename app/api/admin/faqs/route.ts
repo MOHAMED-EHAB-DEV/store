@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import FAQ from "@/lib/models/FAQ";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/faqs - List all FAQs with pagination
 export async function GET(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         await connectToDatabase();
@@ -79,11 +77,7 @@ export async function GET(request: NextRequest) {
             stats: stats[0] || { total: 0, published: 0, draft: 0, categories: 0 }
         });
     } catch (error: any) {
-        console.error("Error fetching FAQs:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to fetch FAQs" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminGetFAQs" });
     }
 }
 
@@ -92,10 +86,7 @@ export async function POST(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         await connectToDatabase();
@@ -104,10 +95,7 @@ export async function POST(request: NextRequest) {
         const { question, answer, category, order, isPublished, coverImage } = body;
 
         if (!question || !answer) {
-            return NextResponse.json(
-                { success: false, message: "Question and answer are required" },
-                { status: 400 }
-            );
+            return createErrorResponse("Question and answer are required", 400, { req: request });
         }
 
         const faq = await FAQ.create({
@@ -124,10 +112,6 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error: any) {
-        console.error("Error creating FAQ:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to create FAQ" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminCreateFAQ" });
     }
 }

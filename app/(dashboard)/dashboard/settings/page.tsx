@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-    const user = await authenticateUser(true, false, true);
+    const user = await authenticateUser(true);
     if (!user) redirect("/");
 
     return <SettingsClient user={user} />;

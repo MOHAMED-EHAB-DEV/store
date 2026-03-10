@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 export async function DELETE(
     req: NextRequest,
@@ -11,7 +12,7 @@ export async function DELETE(
     try {
         const user = await authenticateUser(true, true, true);
         if (!user) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         await connectToDatabase();
@@ -19,21 +20,14 @@ export async function DELETE(
         const template = await Template.findByIdAndDelete(id);
 
         if (!template) {
-            return NextResponse.json(
-                { message: "Template not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Template not found", 404, { req, operation: "adminDeleteTemplate" });
         }
 
         return NextResponse.json({
             message: "Template deleted successfully",
         });
     } catch (error: any) {
-        console.error("Error deleting template:", error);
-        return NextResponse.json(
-            { message: error.message || "Failed to delete template" },
-            { status: 500 }
-        );
+        return handleApiError(error, req, { operation: "adminDeleteTemplate" });
     }
 }
 
@@ -45,7 +39,7 @@ export async function PATCH(
     try {
         const user = await authenticateUser(true, true, true);
         if (!user) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         await connectToDatabase();
@@ -59,10 +53,7 @@ export async function PATCH(
         );
 
         if (!template) {
-            return NextResponse.json(
-                { message: "Template not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Template not found", 404, { req, operation: "adminUpdateTemplate" });
         }
 
         return NextResponse.json({
@@ -70,10 +61,6 @@ export async function PATCH(
             data: template,
         });
     } catch (error: any) {
-        console.error("Error updating template:", error);
-        return NextResponse.json(
-            { message: error.message || "Failed to update template" },
-            { status: 500 }
-        );
+        return handleApiError(error, req, { operation: "adminUpdateTemplate" });
     }
 }

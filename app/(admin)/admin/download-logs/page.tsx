@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import DownloadLogsClient from "@/components/Admin/DownloadLogsClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Download Logs | Admin Dashboard",
@@ -20,7 +21,9 @@ async function getDownloadLogs(searchParams: { [key: string]: string | undefined
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/download-logs?${params.toString()}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/download-logs?${params.toString()}`, {
+            headers: await headers(),
+        });
 
         if (!response.ok) return null;
         return await response.json();

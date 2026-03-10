@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { handleApiError } from "@/lib/utils/api-helpers";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
@@ -191,16 +192,9 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         return response;
 
     } catch (error) {
-        console.error('Login error:', error);
-
-        const duration = Date.now() - startTime;
-
-        return NextResponse.json({
-            success: false,
+        return handleApiError(error, req as unknown as NextRequest, {
             message: "Internal server error",
-            performance: {
-                duration
-            }
-        }, { status: 500 });
+            operation: "userLogin",
+        }) as any;
     }
 }

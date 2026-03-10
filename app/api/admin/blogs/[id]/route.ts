@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 export async function DELETE(
     req: NextRequest,
@@ -9,9 +10,9 @@ export async function DELETE(
 ) {
     const { id } = await params;
     try {
-        const user = await authenticateUser(true, true, true);
+        const user = await authenticateUser(true, true);
         if (!user) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         await connectToDatabase();
@@ -19,21 +20,14 @@ export async function DELETE(
         const blog = await Blog.findByIdAndDelete(id);
 
         if (!blog) {
-            return NextResponse.json(
-                { message: "Blog not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Blog not found", 404, { req, operation: "adminDeleteBlog" });
         }
 
         return NextResponse.json({
             message: "Blog deleted successfully",
         });
     } catch (error: any) {
-        console.error("Error deleting blog:", error);
-        return NextResponse.json(
-            { message: error.message || "Failed to delete blog" },
-            { status: 500 }
-        );
+        return handleApiError(error, req, { operation: "adminDeleteBlog" });
     }
 }
 
@@ -43,12 +37,12 @@ export async function PATCH(
 ) {
     const { id } = await params;
     try {
-        const user = await authenticateUser(true, true, true);
+        await connectToDatabase();
+        const user = await authenticateUser();
         if (!user) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
-        await connectToDatabase();
 
         const body = await req.json();
 
@@ -59,10 +53,7 @@ export async function PATCH(
         );
 
         if (!blog) {
-            return NextResponse.json(
-                { message: "Blog not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("Blog not found", 404, { req, operation: "adminUpdateBlog" });
         }
 
         return NextResponse.json({
@@ -70,10 +61,6 @@ export async function PATCH(
             data: blog,
         });
     } catch (error: any) {
-        console.error("Error updating blog:", error);
-        return NextResponse.json(
-            { message: error.message || "Failed to update blog" },
-            { status: 500 }
-        );
+        return handleApiError(error, req, { operation: "adminUpdateBlog" });
     }
 }

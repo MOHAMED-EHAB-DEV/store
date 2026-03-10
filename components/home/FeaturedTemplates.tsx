@@ -8,8 +8,7 @@ import { ITemplate } from '@/types';
 
 async function getTemplates() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ? process.env.NEXT_PUBLIC_APP_URL : '/'}/api/template/featured`, {
-            method: "GET",
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/template/featured`, {
             next: { revalidate: 24 * 60 * 60 }, // Revalidates in 24 hours
         });
         const data = await response.json();
@@ -20,7 +19,7 @@ async function getTemplates() {
             return [];
         }
     } catch (err) {
-        // console.log(`error getting templates: ${err}`)
+        console.log(`error getting templates: ${err}`)
         return [];
     }
 }

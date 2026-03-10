@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import TemplateForm from "@/components/Admin/TemplateForm";
+import { getCategories } from "@/static/categories";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
-import Category from "@/lib/models/Category";
 
 export const metadata: Metadata = {
     title: "Edit Template | Admin",
@@ -25,15 +25,7 @@ async function getTemplate(id: string) {
     }
 }
 
-async function getCategories() {
-    await connectToDatabase();
-    try {
-        const categories = await Category.find({ isActive: true }).select("_id name").lean();
-        return JSON.parse(JSON.stringify(categories));
-    } catch (error) {
-        return [];
-    }
-}
+
 
 export default async function EditTemplatePage({ params }: PageProps) {
     const { id } = await params;

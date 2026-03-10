@@ -1,57 +1,65 @@
 import { Metadata } from "next";
 import AdminUsersClient from "@/components/Admin/AdminUsersClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-    title: "User Management | Admin Dashboard",
-    description: "Manage all users, roles, and permissions",
-    robots: "noindex, nofollow",
+  title: "User Management | Admin Dashboard",
+  description: "Manage all users, roles, and permissions",
+  robots: "noindex, nofollow",
 };
 
 async function getUsers(searchParams: { [key: string]: string | undefined }) {
-    const params = new URLSearchParams();
-    if (searchParams.page) params.set("page", searchParams.page);
-    if (searchParams.search) params.set("search", searchParams.search);
-    if (searchParams.role) params.set("role", searchParams.role);
-    if (searchParams.tier) params.set("tier", searchParams.tier);
-    if (searchParams.verified) params.set("verified", searchParams.verified);
-    params.set("limit", "20");
+  const params = new URLSearchParams();
+  if (searchParams.page) params.set("page", searchParams.page);
+  if (searchParams.search) params.set("search", searchParams.search);
+  if (searchParams.role) params.set("role", searchParams.role);
+  if (searchParams.tier) params.set("tier", searchParams.tier);
+  if (searchParams.verified) params.set("verified", searchParams.verified);
+  params.set("limit", "20");
 
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/users?${params.toString()}`);
+  try {
+    const headersList = await headers();
+    const cookieHeader = headersList.get("cookie") || "";
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`,
+      {
+        headers: {
+          cookie: cookieHeader,
+        },
+      }
+    );
 
-        if (!response.ok) return null;
-        return await response.json();
-    } catch (error) {
-        console.error("Error fetching users:", error);
-        return null;
-    }
+    if (!response.ok) return null;
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return null;
+  }
 }
 
 interface PageProps {
-    searchParams: Promise<{ [key: string]: string | undefined }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-    const params = await searchParams;
-    const data = await getUsers(params);
+  const params = await searchParams;
+  const data = await getUsers(params);
 
-    if (!data) {
-        return (
-            <div className="p-6 text-center">
-                <ErrorState
-                    message="Failed to load users. Please try again."
-                />
-            </div>
-        );
-    }
-
+  if (!data) {
     return (
-        <AdminUsersClient
-            initialData={data.data}
-            stats={data.stats}
-            pagination={data.pagination}
-            searchParams={params}
-        />
+      <div className="p-6 text-center">
+        <ErrorState message="Failed to load users. Please try again." />
+      </div>
     );
+  }
+
+  return (
+    <AdminUsersClient
+      initialData={data.data}
+      stats={data.stats}
+      pagination={data.pagination}
+      searchParams={params}
+    />
+  );
 }

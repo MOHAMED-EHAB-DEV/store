@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -12,10 +13,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const admin = await authenticateUser(true);
         if (!admin || admin.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -27,19 +25,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             .lean();
 
         if (!user) {
-            return NextResponse.json(
-                { success: false, message: "User not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("User not found", 404, { req: request, operation: "adminGetUser" });
         }
 
         return NextResponse.json({ success: true, data: user });
     } catch (error: any) {
-        console.error("Error fetching user:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to fetch user" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminGetUser" });
     }
 }
 
@@ -48,10 +39,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
         const admin = await authenticateUser(true);
         if (!admin || admin.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -62,10 +50,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
         // Prevent admin from demoting themselves
         if (id === admin._id && role && role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Cannot change your own role" },
-                { status: 400 }
-            );
+            return createErrorResponse("Cannot change your own role", 400, { req: request });
         }
 
         const updateData: any = {};
@@ -83,10 +68,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             .lean();
 
         if (!user) {
-            return NextResponse.json(
-                { success: false, message: "User not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("User not found", 404, { req: request, operation: "adminUpdateUser" });
         }
 
         return NextResponse.json({
@@ -95,11 +77,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             message: "User updated successfully",
         });
     } catch (error: any) {
-        console.error("Error updating user:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to update user" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminUpdateUser" });
     }
 }
 
@@ -108,20 +86,14 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const admin = await authenticateUser(true);
         if (!admin || admin.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
 
         // Prevent admin from deleting themselves
         if (id === admin._id) {
-            return NextResponse.json(
-                { success: false, message: "Cannot delete your own account" },
-                { status: 400 }
-            );
+            return createErrorResponse("Cannot delete your own account", 400, { req: request });
         }
 
         await connectToDatabase();
@@ -129,10 +101,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         const user = await User.findByIdAndDelete(id);
 
         if (!user) {
-            return NextResponse.json(
-                { success: false, message: "User not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("User not found", 404, { req: request, operation: "adminDeleteUser" });
         }
 
         return NextResponse.json({
@@ -140,10 +109,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             message: "User deleted successfully",
         });
     } catch (error: any) {
-        console.error("Error deleting user:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to delete user" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminDeleteUser" });
     }
 }

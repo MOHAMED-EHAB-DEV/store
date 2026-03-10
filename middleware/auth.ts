@@ -5,16 +5,15 @@ import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
 
 export async function authenticateUser(
-  connectDB: Boolean = false,
-  includeId: Boolean = false,
-  lean: Boolean = false,
-  includePurchasedTemplates: Boolean = false,
+  connectDB: boolean = false,
+  includeId: boolean = false,
+  includePurchasedTemplates: boolean = false,
 ): Promise<IUser | null> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
-    if (!token) return null;
+    if (!token) throw new Error("Token is not defined");
 
     const secret = process.env.JWT_SECRET;
     if (!secret) throw new Error("JWT secret is not defined");
@@ -26,17 +25,17 @@ export async function authenticateUser(
     }
 
     if (connectDB) await connectToDatabase();
-    
+
     let selection =
       "name email role avatar googleId isEmailVerified tier online lastSeen createdAt updatedAt lastLogin loginAttempts lockUntil";
     if (includePurchasedTemplates) selection += " purchasedTemplates";
     if (includeId) selection += " _id";
 
-    const query = User.findOne({ _id: decoded.id }).select(selection);
+    const user = await User.findOne({ _id: decoded.id }).select(selection);
 
-    const user = lean ? await query.lean() : await query;
-
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
     return user as IUser;
   } catch (error) {

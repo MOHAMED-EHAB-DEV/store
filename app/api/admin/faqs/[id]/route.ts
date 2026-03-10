@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import FAQ from "@/lib/models/FAQ";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -12,10 +13,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -24,19 +22,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         const faq = await FAQ.findById(id).lean();
 
         if (!faq) {
-            return NextResponse.json(
-                { success: false, message: "FAQ not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("FAQ not found", 404, { req: request, operation: "adminGetFAQ" });
         }
 
         return NextResponse.json({ success: true, data: faq });
     } catch (error: any) {
-        console.error("Error fetching FAQ:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to fetch FAQ" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminGetFAQ" });
     }
 }
 
@@ -45,10 +36,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -71,10 +59,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         ).lean();
 
         if (!faq) {
-            return NextResponse.json(
-                { success: false, message: "FAQ not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("FAQ not found", 404, { req: request, operation: "adminUpdateFAQ" });
         }
 
         return NextResponse.json({
@@ -83,11 +68,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             message: "FAQ updated successfully",
         });
     } catch (error: any) {
-        console.error("Error updating FAQ:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to update FAQ" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminUpdateFAQ" });
     }
 }
 
@@ -96,10 +77,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -108,10 +86,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         const faq = await FAQ.findByIdAndDelete(id);
 
         if (!faq) {
-            return NextResponse.json(
-                { success: false, message: "FAQ not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("FAQ not found", 404, { req: request, operation: "adminDeleteFAQ" });
         }
 
         return NextResponse.json({
@@ -119,10 +94,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             message: "FAQ deleted successfully",
         });
     } catch (error: any) {
-        console.error("Error deleting FAQ:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to delete FAQ" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminDeleteFAQ" });
     }
 }

@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/users/stats - Get user statistics
 export async function GET(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         await connectToDatabase();
@@ -64,10 +62,6 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error: any) {
-        console.error("Error fetching user stats:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to fetch user stats" },
-            { status: 500 }
-        );
+        return handleApiError(error, request, { operation: "adminGetUserStats" });
     }
 }

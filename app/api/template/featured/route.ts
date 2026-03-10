@@ -1,38 +1,49 @@
-import {NextRequest, NextResponse} from "next/server";
-import {connectToDatabase} from "@/lib/database";
+import { NextRequest, NextResponse } from "next/server";
+import { handleApiError } from "@/lib/utils/api-helpers";
+import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import Review from "@/lib/models/Review";
 
 export async function GET(req: NextRequest) {
-    try {
-        await connectToDatabase();
+  try {
+    await connectToDatabase();
 
-        const templates = await Template.find({
-            categories: {
-                $in: ['6895e37824be395fbc0b72ae']
-            },
-            isActive: true,
-        }).select('_id title description thumbnail price tags categories averageRating').populate('categories', "name").limit(4).lean();
+    const templates = await Template.find({
+      categories: {
+        $in: ["6895e37824be395fbc0b72ae"],
+      },
+      isActive: true,
+    })
+      .select(
+        "_id title description thumbnail price tags categories averageRating",
+      )
+      .populate("categories", "name")
+      .limit(4)
+      .lean();
 
-        const templatesWithReviews = await Promise.all(templates.map(
-            async (template) => {
-                const id = template?._id;
+    const templatesWithReviews = await Promise.all(
+      templates.map(async (template) => {
+        const id = template?._id;
 
-                const reviews = await Review.countDocuments({template: id});
+        const reviews = await Review.countDocuments({ template: id });
 
-                return {
-                    ...template,
-                    reviews: reviews ?? 0,
-                }
-            })
-        );
+        return {
+          ...template,
+          reviews: reviews ?? 0,
+        };
+      }),
+    );
 
-        return NextResponse.json(
-            {success: true, data: templatesWithReviews},
-            {status: 200}
-        );
-    } catch (err) {
-        console.error("Error fetching popular templates:", err);
-        return NextResponse.json({success: false, error: err}, {status: 500});
-    }
+    console.log(templatesWithReviews);
+
+    return NextResponse.json(
+      { success: true, data: templatesWithReviews },
+      { status: 200 },
+    );
+  } catch (err) {
+    return handleApiError(err, req, {
+      message: "Error fetching popular templates",
+      operation: "getFeaturedTemplates",
+    });
+  }
 }

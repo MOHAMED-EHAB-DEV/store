@@ -4,18 +4,13 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function RootLayout(
-    {
-        children,
-    }: Readonly<{
-        children: React.ReactNode;
-    }>) {
-    const user = await authenticateUser(true);
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const user = await authenticateUser(true);
 
-    if (!user || user?.role !== "admin") redirect("/");
-    return (
-        <LayoutContainer user={user}>
-            {children}
-        </LayoutContainer>
-    )
+  if (!user || user?.role !== "admin") redirect("/");
+  return <LayoutContainer user={user}>{children}</LayoutContainer>;
 }

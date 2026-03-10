@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { handleApiError } from "@/lib/utils/api-helpers";
 import { authenticateUser } from "@/middleware/auth";
 import Template from "@/lib/models/Template";
 import User from "@/lib/models/User";
@@ -33,11 +34,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: created }, { status: 200 });
   } catch (err) {
-    console.error("Error creating template:", err);
-    return NextResponse.json(
-      { message: "Internal Server Error", success: false },
-      { status: 500 }
-    );
+    return handleApiError(err, req, {
+      message: "Error creating template",
+      operation: "createTemplate",
+    });
   }
 }
 
@@ -50,10 +50,9 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (err) {
-    console.error("Error fetching templates:", err);
-    return NextResponse.json(
-      { message: "Internal Server Error", success: false },
-      { status: 500 }
-    );
+    return handleApiError(err, req as unknown as NextRequest, {
+      message: "Error fetching templates",
+      operation: "getTemplates",
+    });
   }
 }

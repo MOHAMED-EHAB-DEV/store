@@ -4,7 +4,10 @@ import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
 
-const CACHE_DIR = path.join(process.cwd(), ".cache", "images");
+const CACHE_DIR = process.env.VERCEL
+  ? path.join("/tmp", ".cache", "images")
+  : path.join(process.cwd(), ".cache", "images");
+
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 10000; // 10 seconds
 
@@ -12,8 +15,10 @@ const FETCH_TIMEOUT_MS = 10000; // 10 seconds
 async function ensureCacheDir() {
   try {
     await fs.mkdir(CACHE_DIR, { recursive: true });
+    return true;
   } catch (err) {
-    // Already exists or can't create
+    console.error(`[Image Proxy] Failed to create cache dir: ${CACHE_DIR}`, err);
+    return false;
   }
 }
 
@@ -65,8 +70,6 @@ export async function GET(
       .digest("hex");
 
     const cacheFilePath = path.join(CACHE_DIR, `${cacheKey}.webp`);
-
-    await ensureCacheDir();
 
     // Check if cached file exists and is not expired
     try {
@@ -126,8 +129,18 @@ export async function GET(
     // Optimize and convert to WebP
     const outputBuffer = await pipeline.webp({ quality }).toBuffer();
 
-    // Save to cache
-    await fs.writeFile(cacheFilePath, outputBuffer);
+    // Save to cache asynchronously (don't block the response)
+    // We try to create the dir and write the file, but if it fails (read-only FS), 
+    // we just log and continue serving the image.
+    ensureCacheDir().then(async (canCache) => {
+        if (canCache) {
+            try {
+                await fs.writeFile(cacheFilePath, outputBuffer);
+            } catch (writeErr) {
+                console.error(`[Image Proxy] Cache write failed for ${src}:`, writeErr);
+            }
+        }
+    });
 
     return new NextResponse(new Uint8Array(outputBuffer), {
       headers: {

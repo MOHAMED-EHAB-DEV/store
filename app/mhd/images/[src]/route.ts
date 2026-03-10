@@ -3,6 +3,7 @@ import sharp from "sharp";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+import { handleApiError } from "@/lib/utils/api-helpers";
 
 const CACHE_DIR = process.env.VERCEL
   ? path.join("/tmp", ".cache", "images")
@@ -123,7 +124,7 @@ export async function GET(
 
     // Resize if width is provided and smaller than original
     if (width > 0 && metadata.width && width < metadata.width) {
-      pipeline = pipeline.resize(width, null, { withoutEnlargement: true });
+      pipeline = pipeline.resize(width, null, { withoutEnlargement: true, fit: "inside" });
     }
 
     // Optimize and convert to WebP
@@ -156,6 +157,10 @@ export async function GET(
     }
 
     console.error(`[Image Proxy] Error:`, error);
+
+    handleApiError(error, req, {
+      message: "Failed to process Image",
+    });
 
     // Return a generic 1x1 transparent WebP as fallback to prevent broken UI
     const transparentPixel = Buffer.from(

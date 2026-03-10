@@ -4,6 +4,7 @@ import {motion, useAnimationControls} from 'motion/react';
 import Image from 'next/image';
 import {useEffect, useMemo} from 'react';
 import { Star } from "@/components/ui/svgs/icons/Star";
+import {anyImgUrl} from "@/lib/utils/image";
 import {cn} from "@/lib/utils";
 
 interface VerticalMarqueeProps {
@@ -62,11 +63,12 @@ export function VerticalMarquee(
                 {marqueeItems.map(({iconPath, text}, i) => (
                     <span key={i} className="flex items-center w-full shrink-0">
                         <Image
-                            src={iconPath}
+                            src={anyImgUrl(iconPath, { width: 48, quality: 80 })}
                             alt=""
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
                             width={28}
                             height={28}
+                            unoptimized
                         />
                         <span
                             className="whitespace-nowrap w-full bg-primary px-3 py-2 rounded-full font-medium text-sm">
@@ -111,10 +113,11 @@ export default function HorizontialMarquee(
                                     className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold mr-4"
                                 >
                                     <Image
-                                        src={testimonial.avatar}
+                                        src={anyImgUrl(testimonial.avatar, { width: 60, quality: 80 })}
                                         alt="Testimonials"
                                         width={58}
                                         height={58}
+                                        unoptimized
                                     />
                                 </div>
                                 <div className="font-semibold text-sm text-white">

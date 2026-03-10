@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import {
     Dialog,
     DialogContent,
@@ -42,10 +43,11 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
             <div className="shrink-0">
                 {message.sender.avatar ? (
                     <Image
-                        src={message.sender.avatar}
+                        src={anyImgUrl(message.sender.avatar, { width: 80, quality: 80 })}
                         alt={message.sender.name}
                         width={36}
                         height={36}
+                        unoptimized
                         className="rounded-full object-cover"
                     />
                 ) : (
@@ -99,9 +101,10 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
                                         <DialogTrigger asChild>
                                             <button className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20">
                                                 <Image
-                                                    src={url}
+                                                    src={anyImgUrl(url, { width: 200, quality: 80 })}
                                                     alt={`Attachment ${index + 1}`}
                                                     fill
+                                                    unoptimized
                                                     className="object-cover"
                                                 />
                                             </button>
@@ -109,9 +112,10 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
                                         <DialogContent className="max-w-[90vw] max-h-[90vh] w-auto h-auto p-0 bg-transparent border-none shadow-none overflow-hidden flex items-center justify-center">
                                             <div className="relative w-[90vw] h-[80vh] sm:w-[80vw] sm:h-[80vh]">
                                                 <Image
-                                                    src={url}
+                                                    src={anyImgUrl(url, { width: 1200, quality: 90 })}
                                                     alt={`Attachment ${index + 1}`}
                                                     fill
+                                                    unoptimized
                                                     className="object-contain"
                                                 />
                                             </div>

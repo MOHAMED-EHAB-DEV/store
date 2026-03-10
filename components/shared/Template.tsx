@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
 import { ICategory, ITemplate } from "@/types";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { anyImgUrl } from "@/lib/utils/image";
 
 const Template = ({
     template,
@@ -76,14 +77,13 @@ const Template = ({
 
             {/* Thumbnail */}
             <Image
-                src={template.thumbnail}
+                src={anyImgUrl(template.thumbnail, { width: 400, quality: 80 })}
                 alt={template.title}
                 width={400}
                 height={288}
+                unoptimized
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="w-full h-72 object-contain"
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
             />
 
             {/* Template Info */}

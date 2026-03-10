@@ -1,5 +1,6 @@
 import { MouseEvent as ReactMouseEvent, useState } from "react";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,10 +46,11 @@ const ProfileDropdown = ({
     <DropdownMenu open={open} onOpenChange={isOpen}>
       <DropdownMenuTrigger className={`items-center w-10 h-10 outline-none justify-center cursor-pointer ${!user ? "flex sm:hidden" : "flex"}`}>
         <Image
-          src={user?.avatar ? user.avatar : "/assets/Icons/profile.svg"}
+          src={anyImgUrl(user?.avatar ? user.avatar : "/assets/Icons/profile.svg", { width: 100, quality: 85 })}
           alt={`${user?.name} Profile`}
           width={50}
           height={50}
+          unoptimized
           className="p-px rounded-full w-full h-full"
         />
       </DropdownMenuTrigger>
@@ -58,10 +60,11 @@ const ProfileDropdown = ({
             <DropdownMenuItem className="flex items-center flex-row gap-6 p-6 pr-28">
           <div className="items-center w-10 justify-center flex">
             <Image
-              src={user.avatar ? user.avatar : "/assets/Icons/profile.svg"}
+              src={anyImgUrl(user.avatar ? user.avatar : "/assets/Icons/profile.svg", { width: 60, quality: 85 })}
               alt={`${user.name} Profile`}
               width={30}
               height={30}
+              unoptimized
               className="p-px rounded-full transition-all duration-500 w-full h-full"
             />
           </div>

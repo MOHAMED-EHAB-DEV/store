@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Star } from "@/components/ui/svgs/icons/Star";
+import { anyImgUrl } from "@/lib/utils/image";
 import {formatCount} from "@/lib/utils";
 import RatingDistribution from "@/components/singleTemplate/Reviews/RatingDistribution";
 import AddReview from "@/components/Dialogs/AddReview";
@@ -167,11 +168,12 @@ const ReviewsContainer = ({ templateId, averageRating, reviewCount }: { template
                             <div className="flex items-center gap-2">
                                 {review.user.avatar && (
                                     <Image
-                                        src={review.user.avatar}
+                                        src={anyImgUrl(review.user.avatar, { width: 64, quality: 80 })}
                                         alt={review.user.name}
                                         className="w-8 h-8 rounded-full"
                                         width={32}
                                         height={32}
+                                        unoptimized
                                     />
                                 )}
                                 <span className="font-medium">{review.user.name}</span>

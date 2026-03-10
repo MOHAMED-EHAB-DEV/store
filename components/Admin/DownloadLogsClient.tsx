@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
+import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
 import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";

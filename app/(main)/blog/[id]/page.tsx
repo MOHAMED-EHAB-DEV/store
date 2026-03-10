@@ -7,7 +7,9 @@ import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Share2 } from "@/components/ui/svgs/icons/Share2";
 import { Tag } from "@/components/ui/svgs/icons/Tag";
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { anyImgUrl } from '@/lib/utils/image';
 import { connectToDatabase } from '@/lib/database';
 import Blog from '@/lib/models/Blog';
 
@@ -144,11 +146,14 @@ const Page = async ({ params }: PageProps) => {
             <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-gray-950">
                     {blog.coverImage && (
-                        <img
-                            src={blog.coverImage}
+                        <Image
+                            src={anyImgUrl(blog.coverImage, { width: 1200, quality: 90 })}
                             alt={blog.title}
+                            width={1200}
+                            height={600}
+                            unoptimized
                             className="w-full h-full object-cover rounded-md opacity-40 blur-sm scale-105"
-                            loading="eager"
+                            priority
                         />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent rounded-md" />
@@ -208,7 +213,14 @@ const Page = async ({ params }: PageProps) => {
                                 <Link key={post._id} href={`/blog/${post.slug || post._id}`} className="group flex gap-4 items-start">
                                     <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-800 shrink-0">
                                         {post.coverImage ? (
-                                            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" loading="lazy" />
+                                            <Image 
+                                              src={anyImgUrl(post.coverImage, { width: 100, quality: 70 })} 
+                                              alt={post.title} 
+                                              width={100}
+                                              height={100}
+                                              unoptimized
+                                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                                            />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">
                                                 <Share2 className="w-6 h-6" />

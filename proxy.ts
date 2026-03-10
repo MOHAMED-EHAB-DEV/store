@@ -212,13 +212,14 @@ export const config = {
        * Match all request paths except for the ones starting with:
        * - _next/static (static files)
        * - _next/image (image optimization files)
+       * - mhd/images (image optimization files)
        * - _static (shared static files)
        * - favicon.ico, sitemap.xml, robots.txt, manifest.json, sw.js (metadata files)
        * - assets, Icons, images, Videos (custom static folders)
        * - Common image/video/font extensions
        */
       source:
-        "/((?!api/|_next/static|_next/image|_static|favicon.ico|sitemap.xml|robots.txt|manifest.json|sw.js|assets/|Icons/|images/|Videos/|Logo.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|webm|ogg|mp3|wav|flac|aac|woff2?|eot|ttf|otf)$).*)",
+        "/((?!api/|_next/static|_next/image|mhd/images|_static|favicon.ico|sitemap.xml|robots.txt|manifest.json|sw.js|assets/|Icons/|images/|Videos/|Logo.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|webm|ogg|mp3|wav|flac|aac|woff2?|eot|ttf|otf)$).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },

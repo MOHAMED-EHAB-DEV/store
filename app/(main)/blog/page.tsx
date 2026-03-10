@@ -5,6 +5,8 @@ import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
 import type { Metadata } from "next";
+import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 
 interface BlogPost {
   _id: string;
@@ -75,11 +77,14 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
         className={`relative overflow-hidden ${featured ? "h-64 md:h-full" : "h-48"} w-full bg-gray-800`}
       >
         {blog.coverImage ? (
-          <img
-            src={blog.coverImage}
+          <Image
+            src={anyImgUrl(blog.coverImage, { width: 800, quality: 80 })}
             alt={blog.title}
+            width={800}
+            height={400}
+            unoptimized
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading={featured ? "eager" : "lazy"}
+            priority={featured}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">

@@ -2,6 +2,7 @@
 
 import {useState, useRef, ChangeEvent, FormEvent} from "react";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import {useUploadThing} from "@/hooks/useUploadthing";
 import {sonnerToast} from "@/components/ui/sonner";
 import {isBase64Image} from "@/lib/utils";
@@ -126,10 +127,11 @@ const UpdateProfile = ({user}: { user: IUser }) => {
                         <DropzoneContent>
                             {image && (
                                 <Image
-                                    src={filePreview ? filePreview : image}
+                                    src={filePreview ? filePreview : anyImgUrl(image, { width: 120, quality: 85 })}
                                     alt={user?.name}
                                     width={32}
                                     height={32}
+                                    unoptimized={!filePreview}
                                     className="w-full h-full object-contain rounded-full"
                                 />
                             )}

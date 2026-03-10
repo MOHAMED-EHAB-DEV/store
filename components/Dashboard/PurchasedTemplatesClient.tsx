@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import {
     Select,
     SelectContent,
@@ -218,7 +219,8 @@ export default function PurchasedTemplatesClient({
                         >
                             <div className="relative aspect-video overflow-hidden">
                                 <Image
-                                    src={template.image || "/placeholder.png"}
+                                    src={anyImgUrl(template.image || "/placeholder.png", { width: 600, quality: 80 })}
+                                    unoptimized
                                     alt={template.title}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -266,7 +268,8 @@ export default function PurchasedTemplatesClient({
                         >
                             <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
                                 <Image
-                                    src={template.image || "/placeholder.png"}
+                                    src={anyImgUrl(template.image || "/placeholder.png", { width: 200, quality: 80 })}
+                                    unoptimized
                                     alt={template.title}
                                     fill
                                     className="object-cover"

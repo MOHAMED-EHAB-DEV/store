@@ -7,6 +7,7 @@ import { Loader2 } from "@/components/ui/svgs/icons/Loader2";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/ui/dropzone';
 import { useUploadThing } from "@/hooks/useUploadthing";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import Loader from "@/components/ui/Loader";
 
 interface BlogFormProps {
@@ -224,10 +225,11 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
                         <DropzoneContent>
                             {image && (
                                 <Image
-                                    src={filePreview ? filePreview : image}
+                                    src={filePreview ? filePreview : anyImgUrl(image || "", { width: 400, quality: 80 })}
                                     alt={formData?.title}
                                     width={32}
                                     height={32}
+                                    unoptimized={!filePreview}
                                     className="w-full h-full object-contain rounded-full"
                                 />
                             )}

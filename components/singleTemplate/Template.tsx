@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import Link from "next/link";
 import { Download } from "@/components/ui/svgs/icons/Download";
 import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
@@ -33,7 +34,8 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                     {/* Thumbnail */}
                     <div className="flex justify-center lg:justify-start">
                         <Image
-                            src={template?.thumbnail}
+                            src={anyImgUrl(template?.thumbnail, { width: 1200, quality: 80 })}
+                            unoptimized
                             alt={template.title}
                             width={600}
                             height={600}

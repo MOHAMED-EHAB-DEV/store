@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import Link from "next/link";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface TemplatesTableProps {
@@ -188,10 +189,11 @@ export default function TemplatesTable({ templates, pagination, searchParams }: 
                                             <div className="flex items-center gap-3">
                                                 {template.thumbnail && (
                                                     <Image
-                                                        src={template.thumbnail}
+                                                        src={anyImgUrl(template.thumbnail, { width: 120, quality: 80 })}
                                                         alt={template.title}
                                                         width={60}
                                                         height={40}
+                                                        unoptimized
                                                         className="rounded object-cover"
                                                     />
                                                 )}

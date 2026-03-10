@@ -6,6 +6,7 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
 import { useUploadThing } from "@/hooks/useUploadthing";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 
 interface TemplateFormProps {
     initialData?: any;
@@ -298,10 +299,11 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 {thumbnail ? (
                     <div className="relative">
                         <Image
-                            src={thumbnail}
+                            src={anyImgUrl(thumbnail, { width: 800, quality: 80 })}
                             alt="Thumbnail"
                             width={600}
                             height={400}
+                            unoptimized
                             className="rounded-lg object-cover w-full max-h-64"
                         />
                         <button

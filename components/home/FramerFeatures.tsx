@@ -5,6 +5,7 @@ import { Badge } from "../ui/badge";
 import { Framer } from "@/components/ui/svgs/icons/Framer";
 import { Layers } from "@/components/ui/svgs/icons/Layers";
 import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import { featuresBusinessSales } from "@/constants";
 import { VerticalMarquee } from "@/components/ui/marquee";
 
@@ -200,9 +201,10 @@ const FramerFeatures = () => {
               style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
               <Image
-                src="/assets/Icons/cover.jpg"
+                src={anyImgUrl("/assets/Icons/cover.jpg", { width: 1200, quality: 85 })}
                 alt="cover"
                 fill
+                unoptimized
                 className="absolute inset-0 object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
@@ -226,16 +228,18 @@ const FramerFeatures = () => {
           >
             <div className="w-full flex items-center justify-center relative">
               <Image
-                src="/assets/Icons/publish.webp"
+                src={anyImgUrl("/assets/Icons/publish.webp", { width: 300, quality: 85 })}
                 alt="publish"
                 width={150}
                 height={150}
+                unoptimized
               />
               <Image
-                src="/assets/Icons/smCursor.avif"
+                src={anyImgUrl("/assets/Icons/smCursor.avif", { width: 50, quality: 85 })}
                 alt="cursor"
                 width={25}
                 height={25}
+                unoptimized
                 className="absolute bottom-0 right-24"
               />
             </div>

@@ -175,7 +175,7 @@ export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps
                       {new Date(visitor.lastVisit).toLocaleString()}
                     </td>
                     <td className="p-4 text-right">
-                       <a href={`/admin/analytics/${visitor._id}`} className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
+                       <a href={`/admin/analytics/${visitor.visitorId}`} className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
                           View Journey
                        </a>
                     </td>

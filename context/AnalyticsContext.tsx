@@ -11,8 +11,7 @@ import {
 import { usePathname } from "next/navigation";
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL;
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 function generateVisitorId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -96,11 +95,8 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ visitorId, path: pathname }),
-        // keepalive ensures the request completes even if the page navigates away
         keepalive: true,
-      }).catch(() => {
-        // Silent fail – analytics must never affect the user
-      });
+      }).catch(() => {});
     };
 
     if (typeof requestIdleCallback !== "undefined") {
@@ -119,9 +115,6 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
-
 export const useAnalytics = () => useContext(AnalyticsContext);
 
-/** Convenience hook for just the online count */
 export const useOnlineCount = () => useContext(AnalyticsContext).onlineCount;

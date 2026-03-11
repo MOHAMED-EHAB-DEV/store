@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import Logo from '@/components/ui/Logo';
-import { socialImgs, NavigationLinks } from '@/constants';
+import Link from "next/link";
+import Logo from "@/components/ui/Logo";
+import { socialImgs, FooterLinks } from "@/constants";
 
 const Footer = () => {
   return (
@@ -30,9 +30,12 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Navigation</h3>
             <ul className="flex flex-col gap-2">
-              {NavigationLinks.map(({ id, text, link }) => (
+              {FooterLinks.map(({ id, text, link }) => (
                 <li key={id}>
-                  <Link href={link} className="text-secondary hover:text-white transition">
+                  <Link
+                    href={link}
+                    className="text-secondary hover:text-white transition"
+                  >
                     {text}
                   </Link>
                 </li>
@@ -43,12 +46,18 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Legal</h3>
             <ul className="flex flex-col gap-2">
               <li>
-                <Link href="/terms-of-service" className="text-secondary hover:text-white transition">
+                <Link
+                  href="/terms-of-service"
+                  className="text-secondary hover:text-white transition"
+                >
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy-policy" className="text-secondary hover:text-white transition">
+                <Link
+                  href="/privacy-policy"
+                  className="text-secondary hover:text-white transition"
+                >
                   Privacy Policy
                 </Link>
               </li>
@@ -57,7 +66,8 @@ const Footer = () => {
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800 text-center text-secondary">
           <p>
-            Copyright &copy; {new Date().getFullYear()} Mohammed Ehab. All rights reserved.
+            Copyright &copy; {new Date().getFullYear()} Mohammed Ehab. All
+            rights reserved.
           </p>
         </div>
       </div>

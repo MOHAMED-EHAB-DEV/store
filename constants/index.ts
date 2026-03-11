@@ -47,11 +47,44 @@ const NavigationLinks = [
     },
     {
         id: 3,
+        text: "Pricing",
+        link: "/pricing",
+    },
+    {
+        id: 4,
+        text: "Support",
+        link: "/support",
+    },
+];
+
+const FooterLinks = [
+    {
+        id: 0,
+        text: "Home",
+        link: "/",
+    },
+    {
+        id: 1,
+        text: "Templates",
+        link: "/templates",
+    },
+    {
+        id: 2,
+        text: "Blog",
+        link: "/blog",
+    },
+    {
+        id: 3,
+        text: "Pricing",
+        link: "/pricing",
+    },
+    {
+        id: 4,
         text: "FAQs",
         link: "/faqs",
     },
     {
-        id: 4,
+        id: 5,
         text: "Support",
         link: "/support",
     },
@@ -344,6 +377,9 @@ const AdminSidebarLinks = [
         text: "Downloads",
         link: "/admin/download-logs",
     },
+    // {
+    //     Icon: Error
+    // }
     {
         Icon: Headset,
         text: "Support",
@@ -474,4 +510,5 @@ export {
     badges,
     skills,
     builtWithOptions,
+    FooterLinks
 }

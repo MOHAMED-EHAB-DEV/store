@@ -36,7 +36,7 @@ export default function AdminVisitorDetailsClient({
                 description="Analyze visitor behavior and path history"
                 breadcrumbs={[
                     { label: "Dashboard", href: "/admin" },
-                    { label: "Error Logs", href: "/admin/error-logs" },
+                    { label: "Analytics", href: "/admin/analytics" },
                     { label: "Visitor Details" },
                 ]}
             />

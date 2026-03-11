@@ -28,6 +28,8 @@ import { NextJS } from "@/components/ui/svgs/icons/NextJS";
 import { Headset } from "@/components/ui/svgs/icons/Headset";
 import { FolderOpen } from "@/components/ui/svgs/icons/FolderOpen";
 import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
+import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
+import { Analytics } from "@/components/ui/svgs/icons/Analytics";
 
 const NavigationLinks = [
     {
@@ -377,9 +379,16 @@ const AdminSidebarLinks = [
         text: "Downloads",
         link: "/admin/download-logs",
     },
-    // {
-    //     Icon: Error
-    // }
+    {
+        Icon: AlertCircle,
+        text: "Error Logs",
+        link: "/admin/error-logs",
+    },
+    {
+        Icon: Analytics,
+        text: "Analytics",
+        link: "/admin/analytics",
+    },
     {
         Icon: Headset,
         text: "Support",

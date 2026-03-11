@@ -142,7 +142,7 @@ const Page = async ({ params }: PageProps) => {
     const otherPosts = recentPosts.filter((p) => p._id !== blog._id).slice(0, 3);
 
     return (
-        <main className="min-h-screen min-w-6xl py-36 text-gray-200">
+        <main className="min-h-screen min-w-7xl py-36 text-gray-200">
             <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-gray-950">
                     {blog.coverImage && (

@@ -133,7 +133,7 @@ const Page = async () => {
 
   return (
     <main
-      className="min-h-screen w-full py-36 px-4 md:px-8 lg:px-16 container mx-auto text-white"
+      className="min-h-screen w-full py-36 px-4 max-w-6xl container mx-auto text-white"
       role="main"
       id="main-content"
     >

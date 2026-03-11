@@ -119,7 +119,7 @@ const Page = async ({ searchParams }: PageProps) => {
 
   return (
     <main
-      className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw px-5 md:px-56"
+      className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw max-w-6xl"
       role="main"
       id="main-content"
     >

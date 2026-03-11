@@ -5,7 +5,7 @@ const TermsOfService = () => {
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-8">Terms of Service</h1>
         <div className="text-gray-300 leading-relaxed space-y-6">
           <p>
-            Welcome to MHD-Store. By accessing or using our website, you agree to be bound by these Terms of
+            Welcome to MHD Store. By accessing or using our website, you agree to be bound by these Terms of
             Service.
           </p>
           <h2 className="text-2xl font-semibold text-white">1. Use of Our Services</h2>
@@ -21,7 +21,7 @@ const TermsOfService = () => {
           <h2 className="text-2xl font-semibold text-white">3. Copyright</h2>
           <p>
             All content on this website, including text, graphics, logos, and images, is the property of
-            MHD-Store and is protected by international copyright laws.
+            MHD Store and is protected by international copyright laws.
           </p>
         </div>
       </div>

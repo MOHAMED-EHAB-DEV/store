@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 const getBlog = async (id: string) => {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs/${id}`, {
-            headers: await headers(),
+            headers: { Cookie: (await headers()).get("cookie") || "" },
         });
 
         if (!res.ok) return null;

@@ -24,7 +24,7 @@ async function getFAQsData(searchParams: { [key: string]: string | undefined }) 
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs?${params.toString()}`, {
-            headers: await headers(),
+            headers: { Cookie: (await headers()).get("cookie") || "" },
         });
 
         if (!response.ok) return null;

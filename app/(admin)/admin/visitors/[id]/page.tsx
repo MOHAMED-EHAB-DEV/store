@@ -9,7 +9,7 @@ async function getVisitorDetails(id: string) {
     `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/visitors/${id}`,
     {
       cache: "no-store",
-      headers: await headers(),
+      headers: { Cookie: (await headers()).get("cookie") || "" },
     },
   );
 

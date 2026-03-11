@@ -16,7 +16,7 @@ interface PageProps {
 async function getCategory(id: string) {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories/${id}`, {
-            headers: await headers(),
+            headers: { Cookie: (await headers()).get("cookie") || "" },
         });
 
         if (!response.ok) return null;
@@ -30,7 +30,7 @@ async function getCategory(id: string) {
 async function getParentCategories() {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`, {
-            headers: await headers(),
+            headers: { Cookie: (await headers()).get("cookie") || "" },
         });
 
         if (!response.ok) return [];

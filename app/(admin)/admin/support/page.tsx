@@ -19,7 +19,7 @@ async function getSupportTickets(searchParams: { [key: string]: string | undefin
 
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/tickets?${params.toString()}`, {
-            headers: await headers(),
+            headers: { Cookie: (await headers()).get("cookie") || "" },
         });
 
         if (!response.ok) return null;

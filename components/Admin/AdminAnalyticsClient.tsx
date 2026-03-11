@@ -154,7 +154,7 @@ export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps
               </thead>
               <tbody className="divide-y divide-white/5">
                 {recentVisitors.map((visitor) => (
-                  <tr key={visitor._id} className="hover:bg-white/5 transition-colors group">
+                  <tr key={visitor.visitorId} className="hover:bg-white/5 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">

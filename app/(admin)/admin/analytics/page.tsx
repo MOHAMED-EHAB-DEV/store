@@ -23,17 +23,22 @@ async function getAnalyticsData() {
   try {
     const headersList = await headers();
     const cookieHeader = headersList.get("cookie") || "";
-    
+
     // Fetch stats from API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`, {
-      headers: {
-        cookie: cookieHeader,
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`,
+      {
+        headers: {
+          cookie: cookieHeader,
+        },
+        next: { revalidate: 60 }, // Cache for 1 minute
       },
-      next: { revalidate: 60 } // Cache for 1 minute
-    });
-    
+    );
+
     const statsJSON = response.ok ? await response.json() : { data: null };
-    const stats = (statsJSON.success ? statsJSON.data : null) as AnalyticsStatsData | null;
+    const stats = (
+      statsJSON.success ? statsJSON.data : null
+    ) as AnalyticsStatsData | null;
 
     // Fetch recent visitors directly from DB
     await connectToDatabase();
@@ -43,7 +48,7 @@ async function getAnalyticsData() {
       .lean()
       .exec();
 
-    const recentVisitors = recentVisitorsData.map(v => ({
+    const recentVisitors = recentVisitorsData.map((v) => ({
       _id: v._id.toString(),
       visitorId: v.visitorId,
       firstVisit: v.firstVisit.toISOString(),

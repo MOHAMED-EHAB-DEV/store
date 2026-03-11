@@ -34,58 +34,7 @@ const Settings = ({ userId }: { userId: string }) => {
             ...prevData,
             [name]: value,
         }));
-
-    const handleDeleteAccount = async () => {
-        if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/user/delete-account", {
-                method: "DELETE",
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                sonnerToast.error(data.message || "Failed to delete account");
-                return;
-            }
-
-            sonnerToast.success("Account deleted successfully");
-            window.location.href = "/";
-        } catch (error: any) {
-            sonnerToast.error(error.message || "Something went wrong");
-        }
-    };
-
-    const handleSavePreferences = async () => {
-        try {
-            const response = await fetch("/api/user/preferences", {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    // Assuming these state variables exist or are passed
-                    // emailNotifications,
-                    // marketingEmails,
-                    // weeklyDigest,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                sonnerToast.error(data.message || "Failed to update preferences");
-                return;
-            }
-
-            sonnerToast.success("Preferences updated successfully");
-        } catch (error: any) {
-            sonnerToast.error(error.message || "Something went wrong");
-        }
-    };
+        
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);

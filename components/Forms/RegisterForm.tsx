@@ -42,17 +42,23 @@ const RegisterForm = () => {
       return;
     }
     setLoading(true);
-    const response = await fetch("/api/user/register", {
-      method: "POST",
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-      }),
-    });
-    setLoading(false);
 
-    const data = await response.json();
+    try {
+      await fetch("/api/user/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+    // const data = await response.json();
     // console.log(data);
 
     // Redirect to OTP verification with email
@@ -229,11 +235,17 @@ const RegisterForm = () => {
         />
         <span className="ml-2 text-sm text-gray-300">
           I agree to the{" "}
-          <Link href="/terms-of-service" className="text-gold hover:text-yellow-400">
+          <Link
+            href="/terms-of-service"
+            className="text-gold hover:text-yellow-400"
+          >
             Terms of Service
           </Link>{" "}
           and{" "}
-          <Link href="/privacy-policy" className="text-gold hover:text-yellow-400">
+          <Link
+            href="/privacy-policy"
+            className="text-gold hover:text-yellow-400"
+          >
             Privacy Policy
           </Link>
         </span>

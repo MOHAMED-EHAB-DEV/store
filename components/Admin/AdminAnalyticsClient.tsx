@@ -2,7 +2,9 @@
 
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
-import ChartCard, { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+import ChartCard, {
+  ChartDataPoint,
+} from "@/components/Dashboard/shared/ChartCard";
 import { Users } from "@/components/ui/svgs/icons/Users";
 import { Target } from "@/components/ui/svgs/icons/Target";
 import { Globe } from "@/components/ui/svgs/icons/Globe";
@@ -23,13 +25,18 @@ interface AdminAnalyticsClientProps {
   };
 }
 
-export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps) {
+export default function AdminAnalyticsClient({
+  data,
+}: AdminAnalyticsClientProps) {
   const { stats, recentVisitors } = data;
 
   if (!stats) {
     return (
       <div className="p-6">
-        <PageHeader title="Visitor Analytics" description="Could not load analytics data." />
+        <PageHeader
+          title="Visitor Analytics"
+          description="Could not load analytics data."
+        />
       </div>
     );
   }
@@ -42,7 +49,7 @@ export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps
       subtext: "All time unique visitors",
       icon: Users,
       gradient: "from-blue-500 to-indigo-500",
-      trend: { value: 10, isPositive: true }, 
+      trend: { value: 10, isPositive: true },
     },
     {
       label: "Active last 24h",
@@ -115,11 +122,14 @@ export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps
                     className="flex flex-col gap-1 p-4 hover:bg-white/5 transition-colors"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-white truncate max-w-[200px]" title={page.path}>
+                      <span
+                        className="text-sm font-medium text-white truncate max-w-[200px]"
+                        title={page.path}
+                      >
                         {page.path}
                       </span>
                       <span className="text-xs font-bold px-2 py-1 rounded bg-white/10 text-white">
-                        {page.count} {page.count === 1 ? 'visit' : 'visits'}
+                        {page.count} {page.count === 1 ? "visit" : "visits"}
                       </span>
                     </div>
                   </li>
@@ -145,22 +155,38 @@ export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-white/5 bg-white/5">
-                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Visitor ID</th>
-                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Visits</th>
-                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Source OS/Browser</th>
-                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Last Active</th>
-                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">Actions</th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Visitor ID
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Total Visits
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Source OS/Browser
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Last Active
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {recentVisitors.map((visitor) => (
-                  <tr key={visitor.visitorId} className="hover:bg-white/5 transition-colors group">
+                  <tr
+                    key={visitor.visitorId}
+                    className="hover:bg-white/5 transition-colors group"
+                  >
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
                           <Users className="w-4 h-4 text-blue-400" />
                         </div>
-                        <span className="text-sm font-medium text-white font-mono" title={visitor.visitorId}>
+                        <span
+                          className="text-sm font-medium text-white font-mono"
+                          title={visitor.visitorId}
+                        >
                           {visitor.visitorId.substring(0, 8)}...
                         </span>
                       </div>
@@ -168,22 +194,31 @@ export default function AdminAnalyticsClient({ data }: AdminAnalyticsClientProps
                     <td className="p-4 text-sm text-gray-300">
                       {visitor.visitCount} times
                     </td>
-                    <td className="p-4 text-xs text-muted-foreground max-w-[150px] truncate" title={visitor.userAgent}>
+                    <td
+                      className="p-4 text-xs text-muted-foreground max-w-[150px] truncate"
+                      title={visitor.userAgent}
+                    >
                       {visitor.userAgent || "Unknown"}
                     </td>
                     <td className="p-4 text-sm text-gray-300">
                       {new Date(visitor.lastVisit).toLocaleString()}
                     </td>
                     <td className="p-4 text-right">
-                       <a href={`/admin/analytics/${visitor.visitorId}`} className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
-                          View Journey
-                       </a>
+                      <a
+                        href={`/admin/analytics/${visitor.visitorId}`}
+                        className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                      >
+                        View Journey
+                      </a>
                     </td>
                   </tr>
                 ))}
                 {recentVisitors.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="p-8 text-center text-muted-foreground">
+                    <td
+                      colSpan={5}
+                      className="p-8 text-center text-muted-foreground"
+                    >
                       No recent visitors found.
                     </td>
                   </tr>

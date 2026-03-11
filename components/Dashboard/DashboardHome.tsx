@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { IUser } from "@/types";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
@@ -52,8 +51,6 @@ export default function DashboardHome({ user, data }: DashboardHomeProps) {
             gradient: isPremium ? "from-amber-500 to-orange-500" : "from-gray-500 to-slate-500",
         },
     ];
-
-    const recentTemplates = templates.slice(0, 3);
 
     return (
         <div className="p-6 space-y-6">
@@ -113,12 +110,12 @@ export default function DashboardHome({ user, data }: DashboardHomeProps) {
                         </Link>
                     </div>
                     <div className="divide-y divide-white/5">
-                        {recentTemplates.length === 0 ? (
+                        {templates.slice(0, 3).length === 0 ? (
                             <div className="p-8 text-center text-muted-foreground">
                                 No templates yet.
                             </div>
                         ) : (
-                            recentTemplates.map((template: any) => (
+                            templates.slice(0, 3).map((template: any) => (
                                 <div key={template._id} className="flex items-center gap-3 p-4 hover:bg-white/5 transition-colors">
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium text-white truncate">{template.title}</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import { useState, useMemo } from "react";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";

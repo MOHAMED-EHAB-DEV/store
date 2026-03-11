@@ -18,7 +18,10 @@ async function ensureCacheDir() {
     await fs.mkdir(CACHE_DIR, { recursive: true });
     return true;
   } catch (err) {
-    console.error(`[Image Proxy] Failed to create cache dir: ${CACHE_DIR}`, err);
+    console.error(
+      `[Image Proxy] Failed to create cache dir: ${CACHE_DIR}`,
+      err,
+    );
     return false;
   }
 }
@@ -33,6 +36,13 @@ function isSafeUrl(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+function generateUniqueCacheKey(src: string, width: number, quality: number) {
+  return crypto
+    .createHash("md5")
+    .update(`${src}-${width}-${quality}`)
+    .digest("hex");
 }
 
 export async function GET(
@@ -65,10 +75,7 @@ export async function GET(
     }
 
     // Create a unique cache key based on URL, width, and quality
-    const cacheKey = crypto
-      .createHash("md5")
-      .update(`${src}-${width}-${quality}`)
-      .digest("hex");
+    const cacheKey = generateUniqueCacheKey(src, width, quality);
 
     const cacheFilePath = path.join(CACHE_DIR, `${cacheKey}.webp`);
 
@@ -124,23 +131,29 @@ export async function GET(
 
     // Resize if width is provided and smaller than original
     if (width > 0 && metadata.width && width < metadata.width) {
-      pipeline = pipeline.resize(width, null, { withoutEnlargement: true, fit: "inside" });
+      pipeline = pipeline.resize(width, null, {
+        withoutEnlargement: true,
+        fit: "inside",
+      });
     }
 
     // Optimize and convert to WebP
     const outputBuffer = await pipeline.webp({ quality }).toBuffer();
 
     // Save to cache asynchronously (don't block the response)
-    // We try to create the dir and write the file, but if it fails (read-only FS), 
+    // We try to create the dir and write the file, but if it fails (read-only FS),
     // we just log and continue serving the image.
     ensureCacheDir().then(async (canCache) => {
-        if (canCache) {
-            try {
-                await fs.writeFile(cacheFilePath, outputBuffer);
-            } catch (writeErr) {
-                console.error(`[Image Proxy] Cache write failed for ${src}:`, writeErr);
-            }
+      if (canCache) {
+        try {
+          await fs.writeFile(cacheFilePath, outputBuffer);
+        } catch (writeErr) {
+          console.error(
+            `[Image Proxy] Cache write failed for ${src}:`,
+            writeErr,
+          );
         }
+      }
     });
 
     return new NextResponse(new Uint8Array(outputBuffer), {

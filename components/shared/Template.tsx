@@ -77,7 +77,7 @@ const Template = ({
 
             {/* Thumbnail */}
             <Image
-                src={anyImgUrl(template.thumbnail, { width: 400, quality: 80 })}
+                src={anyImgUrl(template.thumbnail, { width: 400, quality: 95 })}
                 alt={template.title}
                 width={400}
                 height={288}

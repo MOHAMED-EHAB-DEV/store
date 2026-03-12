@@ -195,7 +195,7 @@ const Page = async ({ params }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <MarkdownCopyHandler />
-      <div className="max-w-7xl pt-36">
+      <div className="max-w-7xl px-4 pt-36">
         <Template
           template={template}
           similarTemplates={similarTemplates || []}

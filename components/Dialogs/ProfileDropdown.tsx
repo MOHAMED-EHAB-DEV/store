@@ -46,7 +46,7 @@ const ProfileDropdown = ({
     <DropdownMenu open={open} onOpenChange={isOpen}>
       <DropdownMenuTrigger className={`items-center w-10 h-10 outline-none justify-center cursor-pointer ${!user ? "flex sm:hidden" : "flex"}`}>
         <Image
-          src={anyImgUrl(user?.avatar ? user.avatar : "/assets/Icons/profile.svg", { width: 100, quality: 85 })}
+          src={anyImgUrl(user?.avatar ? user.avatar : "/assets/Icons/profile.svg", { width: 100, quality: 95 })}
           alt={`${user?.name} Profile`}
           width={50}
           height={50}

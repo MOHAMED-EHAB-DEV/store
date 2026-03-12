@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
 import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { updateTag } from "next/cache";
 
 async function getAdminTemplates(request: NextRequest) {
     try {
@@ -103,6 +104,8 @@ async function createAdminTemplate(req: NextRequest) {
             reviewCount: 0,
             views: 0,
         });
+
+        updateTag("templates");
 
         return NextResponse.json(
             {

@@ -4,7 +4,7 @@ import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
-import revalidate from "@/actions/revalidateTag";
+import { updateTag } from "next/cache";
 
 async function getBlogPost(
     req: NextRequest,
@@ -68,8 +68,8 @@ async function updateBlogPost(
             return createErrorResponse("Blog post not found", 404, { req });
         }
 
-        await revalidate("/blog");
-        await revalidate(`/blog/${updatedBlog.slug}`);
+        updateTag("blogs");
+        updateTag(`blog-${updatedBlog.slug}`);
 
         return createAPIResponse(updatedBlog, { message: "Blog post updated successfully" });
     } catch (error: any) {

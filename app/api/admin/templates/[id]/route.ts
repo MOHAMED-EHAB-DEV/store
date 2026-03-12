@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
+import { updateTag } from "next/cache";
 import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 async function deleteAdminTemplate(
@@ -56,6 +57,8 @@ async function updateAdminTemplate(
         if (!template) {
             return createErrorResponse("Template not found", 404, { req });
         }
+
+        updateTag(`template-${id}`);
 
         return NextResponse.json({
             message: "Template updated successfully",

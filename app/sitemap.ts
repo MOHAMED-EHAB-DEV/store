@@ -7,7 +7,7 @@ import Blog from "@/lib/models/Blog";
 const getTemplates = async () => {
   "use cache";
   cacheLife({ revalidate: 60 * 60 * 48 });
-  cacheTag("sitemap-templates", "templates");
+  cacheTag("templates");
 
   try {
     await connectToDatabase();
@@ -25,7 +25,7 @@ const getTemplates = async () => {
 const getBlogs = async () => {
   "use cache";
   cacheLife({ revalidate: 60 * 60 * 48 });
-  cacheTag("sitemap-blogs", "blogs");
+  cacheTag("blogs");
 
   try {
     await connectToDatabase();

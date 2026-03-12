@@ -69,6 +69,7 @@ async function updateAdminTicket(request: NextRequest, { params }: RouteParams) 
 
         return createAPIResponse(updatedTicket, { message: "Ticket updated" });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminUpdateTicket" });
     }
 }

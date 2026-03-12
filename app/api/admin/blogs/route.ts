@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: NextRequest) {
+async function getAdminBlogs(req: NextRequest) {
     try {
         const user = await authenticateUser(true, true);
-        if (!user) {
+        if (!user || user.role !== "admin") {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
@@ -77,6 +77,10 @@ export async function GET(req: NextRequest) {
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminGetBlogs" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminBlogs);
+

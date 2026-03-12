@@ -1,16 +1,9 @@
 import AdminVisitorDetailsClient from "@/components/Admin/AdminVisitorDetailsClient";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-
-export const dynamic = "force-dynamic";
 
 async function getVisitorDetails(id: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/visitors/${id}`,
-    {
-      cache: "no-store",
-      headers: { Cookie: (await headers()).get("cookie") || "" },
-    },
   );
 
   if (!res.ok) return null;

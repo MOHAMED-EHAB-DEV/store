@@ -7,7 +7,6 @@ import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { Grid } from "@/components/ui/svgs/icons/Grid";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "FAQs Management | Admin",
@@ -23,13 +22,12 @@ async function getFAQsData(searchParams: { [key: string]: string | undefined }) 
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs?${params.toString()}`, {
-            headers: { Cookie: (await headers()).get("cookie") || "" },
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs?${params.toString()}`);
 
         if (!response.ok) return null;
         return await response.json();
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return null;
     }
 }

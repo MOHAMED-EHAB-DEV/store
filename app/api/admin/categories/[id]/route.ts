@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Category from "@/lib/models/Category";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
 }
 
-// GET /api/admin/categories/[id] - Get single category
-export async function GET(request: NextRequest, { params }: RouteParams) {
+async function getCategory(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -22,17 +21,17 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         const category = await Category.findById(id).lean();
 
         if (!category) {
-            return createErrorResponse("Category not found", 404, { req: request, operation: "adminGetCategory" });
+            return createErrorResponse("Category not found", 404, { req: request });
         }
 
         return NextResponse.json({ success: true, data: category });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetCategory" });
     }
 }
 
-// PUT /api/admin/categories/[id] - Update category
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+async function updateCategory(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -59,7 +58,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         }).lean();
 
         if (!category) {
-            return createErrorResponse("Category not found", 404, { req: request, operation: "adminUpdateCategory" });
+            return createErrorResponse("Category not found", 404, { req: request });
         }
 
         return NextResponse.json({
@@ -68,6 +67,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             message: "Category updated successfully",
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         if (error.code === 11000) {
             return createErrorResponse("Category with this name or slug already exists", 400, { req: request, error });
         }
@@ -75,8 +75,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 }
 
-// DELETE /api/admin/categories/[id] - Delete category (soft delete)
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+async function deleteCategory(request: NextRequest, { params }: RouteParams) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -94,7 +93,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         );
 
         if (!category) {
-            return createErrorResponse("Category not found", 404, { req: request, operation: "adminDeleteCategory" });
+            return createErrorResponse("Category not found", 404, { req: request });
         }
 
         return NextResponse.json({
@@ -102,6 +101,12 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             message: "Category deleted successfully",
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminDeleteCategory" });
     }
 }
+
+export const GET = withAPIMiddleware(getCategory);
+export const PUT = withAPIMiddleware(updateCategory);
+export const DELETE = withAPIMiddleware(deleteCategory);
+

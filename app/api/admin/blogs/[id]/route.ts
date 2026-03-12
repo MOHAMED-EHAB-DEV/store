@@ -2,48 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function DELETE(
+async function deleteAdminBlog(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params;
     try {
         const user = await authenticateUser(true, true);
-        if (!user) {
+        if (!user || user.role !== "admin") {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
+        const { id } = await params;
         await connectToDatabase();
 
         const blog = await Blog.findByIdAndDelete(id);
 
         if (!blog) {
-            return createErrorResponse("Blog not found", 404, { req, operation: "adminDeleteBlog" });
+            return createErrorResponse("Blog not found", 404, { req });
         }
 
         return NextResponse.json({
             message: "Blog deleted successfully",
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminDeleteBlog" });
     }
 }
 
-export async function PATCH(
+async function updateAdminBlog(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params;
     try {
         await connectToDatabase();
         const user = await authenticateUser();
-        if (!user) {
+        if (!user || user.role !== "admin") {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
-
+        const { id } = await params;
         const body = await req.json();
 
         const blog = await Blog.findByIdAndUpdate(
@@ -53,7 +53,7 @@ export async function PATCH(
         );
 
         if (!blog) {
-            return createErrorResponse("Blog not found", 404, { req, operation: "adminUpdateBlog" });
+            return createErrorResponse("Blog not found", 404, { req });
         }
 
         return NextResponse.json({
@@ -61,6 +61,11 @@ export async function PATCH(
             data: blog,
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminUpdateBlog" });
     }
 }
+
+export const DELETE = withAPIMiddleware(deleteAdminBlog);
+export const PATCH = withAPIMiddleware(updateAdminBlog);
+

@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import AdminDashboardHome from "@/components/Admin/AdminDashboardHome";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Analytics",
@@ -17,37 +16,19 @@ interface AnalyticsStatsData {
   dailyVisits: { date: string; count: number }[];
 }
 
+import { connection } from "next/server";
+
 async function getAdminDashboardData() {
   try {
-    const headersList = await headers();
-    const cookieHeader = headersList.get("cookie") || "";
+    await connection();
+
     const [usersRes, templatesRes, downloadsRes, ticketsRes, analyticsRes] =
       await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`, {
-          headers: {
-            cookie: cookieHeader,
-          },
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`, {
-          headers: {
-            cookie: cookieHeader,
-          },
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`, {
-          headers: {
-            cookie: cookieHeader,
-          },
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`, {
-          headers: {
-            cookie: cookieHeader,
-          },
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`, {
-          headers: {
-            cookie: cookieHeader,
-          },
-        }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`),
       ]);
 
     const users = usersRes.ok ? await usersRes.json() : { data: [] };
@@ -71,7 +52,11 @@ async function getAdminDashboardData() {
         ? analytics.data
         : null) as AnalyticsStatsData | null,
     };
-  } catch (error) {
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    if (error && typeof error === "object" && "digest" in error) {
+      throw error;
+    }
     console.error("Error fetching admin dashboard data:", error);
     return {
       users: [],

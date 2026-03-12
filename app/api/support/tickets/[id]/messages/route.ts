@@ -24,6 +24,7 @@ async function getActiveUsers(ticketId: string): Promise<string[]> {
             return data.users || [];
         }
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Failed to fetch active users:", error);
     }
     return [];

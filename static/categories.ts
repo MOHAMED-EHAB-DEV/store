@@ -1,16 +1,15 @@
+import { cacheLife } from "next/cache";
+import { connectToDatabase } from "@/lib/database";
+import Category from "@/lib/models/Category";
+
 export const getCategories = async () => {
+  "use cache";
+  cacheLife("long-cache" as any)
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/categories`,
-      {
-        next: { revalidate: 60 * 60 * 24 * 7 }, // 7 days
-      },
-    );
+    await connectToDatabase();
+    const categories = await Category.find().lean();
 
-    const data = await response.json();
-
-    if (data.success) return data.data;
-    else throw new Error("Failed to fetch categories");
+    return categories;
   } catch (err) {
     return [];
   }

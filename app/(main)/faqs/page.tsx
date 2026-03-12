@@ -1,4 +1,6 @@
+"use cache";
 import { Metadata } from "next";
+import { cacheLife } from "next/cache";
 import { connectToDatabase } from "@/lib/database";
 import FAQ from "@/lib/models/FAQ";
 import FAQsClient from "@/components/faqs/FAQsClient";
@@ -14,8 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 604800; // 7 days in seconds
-
 async function getFAQs() {
   try {
     await connectToDatabase();
@@ -27,6 +27,7 @@ async function getFAQs() {
 
     return JSON.parse(JSON.stringify(faqs));
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching FAQs:", error);
     return [];
   }
@@ -43,12 +44,14 @@ async function getCategories() {
       count: cat.count
     }));
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching FAQ categories:", error);
     return [];
   }
 }
 
 export default async function FAQsPage() {
+  cacheLife("long-cache" as any);
   const [faqs, categories] = await Promise.all([
     getFAQs(),
     getCategories()

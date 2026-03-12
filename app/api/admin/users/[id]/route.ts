@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
 }
 
-// GET /api/admin/users/[id] - Get single user details
-export async function GET(request: NextRequest, { params }: RouteParams) {
+async function getAdminUser(request: NextRequest, { params }: RouteParams) {
     try {
         const admin = await authenticateUser(true);
         if (!admin || admin.role !== "admin") {
@@ -25,17 +24,17 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             .lean();
 
         if (!user) {
-            return createErrorResponse("User not found", 404, { req: request, operation: "adminGetUser" });
+            return createErrorResponse("User not found", 404, { req: request });
         }
 
         return NextResponse.json({ success: true, data: user });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetUser" });
     }
 }
 
-// PUT /api/admin/users/[id] - Update user (role, tier, ban status)
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+async function updateAdminUser(request: NextRequest, { params }: RouteParams) {
     try {
         const admin = await authenticateUser(true);
         if (!admin || admin.role !== "admin") {
@@ -49,7 +48,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         const { name, role, tier, lockUntil, isEmailVerified } = body;
 
         // Prevent admin from demoting themselves
-        if (id === admin._id && role && role !== "admin") {
+        if (id === String(admin?._id) && role && role !== "admin") {
             return createErrorResponse("Cannot change your own role", 400, { req: request });
         }
 
@@ -68,7 +67,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             .lean();
 
         if (!user) {
-            return createErrorResponse("User not found", 404, { req: request, operation: "adminUpdateUser" });
+            return createErrorResponse("User not found", 404, { req: request });
         }
 
         return NextResponse.json({
@@ -77,12 +76,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             message: "User updated successfully",
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminUpdateUser" });
     }
 }
 
-// DELETE /api/admin/users/[id] - Delete user (or soft ban)
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+async function deleteAdminUser(request: NextRequest, { params }: RouteParams) {
     try {
         const admin = await authenticateUser(true);
         if (!admin || admin.role !== "admin") {
@@ -92,7 +91,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         const { id } = await params;
 
         // Prevent admin from deleting themselves
-        if (id === admin._id) {
+        if (id === String(admin?._id)) {
             return createErrorResponse("Cannot delete your own account", 400, { req: request });
         }
 
@@ -101,7 +100,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         const user = await User.findByIdAndDelete(id);
 
         if (!user) {
-            return createErrorResponse("User not found", 404, { req: request, operation: "adminDeleteUser" });
+            return createErrorResponse("User not found", 404, { req: request });
         }
 
         return NextResponse.json({
@@ -109,6 +108,12 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             message: "User deleted successfully",
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminDeleteUser" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminUser);
+export const PUT = withAPIMiddleware(updateAdminUser);
+export const DELETE = withAPIMiddleware(deleteAdminUser);
+

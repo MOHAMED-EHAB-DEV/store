@@ -107,6 +107,23 @@ const nextConfig: NextConfig = {
   // },
   reactStrictMode: true,
   cacheComponents: true,
+  cacheLife: {
+    home: {
+      stale: 60 * 60 * 24 * 2,
+      revalidate: 60 * 60 * 24,
+      expire: 60 * 60 * 24 * 2,
+    },
+    "short-cache": {
+      stale: 60 * 5,
+      revalidate: 60 * 5,
+      expire: 60 * 10,
+    },
+    "long-cache": {
+      stale: 60 * 60 * 24 * 7,
+      revalidate: 60 * 60 * 24 * 7,
+      expire: 60 * 60 * 24 * 7,
+    },
+  },
   images: {
     remotePatterns: [
       {

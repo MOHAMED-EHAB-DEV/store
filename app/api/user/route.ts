@@ -1,20 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import { getUserFromServer } from "@/lib/auth";
+import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(request: Request) {
+async function getUser(request: NextRequest) {
     try {
         await connectToDatabase();
-        // Get token from Authorization header
+        // Get token from Authorization header or cookie (handled by getUserFromServer)
         const authHeader = request.headers.get('Authorization');
         const headerToken = authHeader?.split(' ')[1];
 
         const user = await getUserFromServer({ headerToken: headerToken as string });
         return NextResponse.json({ user });
-    } catch (error) {
-        return NextResponse.json(
-            { error: "Failed to fetch user" },
-            { status: 500 }
-        );
+    } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, request, { operation: "getCurrentUser" });
     }
 }
+
+export const GET = withAPIMiddleware(getUser);
+

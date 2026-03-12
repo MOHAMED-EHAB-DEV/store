@@ -1,39 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import { authenticateUser } from "@/middleware/auth";
 import Template from "@/lib/models/Template";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 
-export async function POST(req: NextRequest) {
+async function createTemplate(req: NextRequest) {
   try {
     const body = await req.json();
     await connectToDatabase();
     const user = await authenticateUser();
 
-    if (!user)
-      return NextResponse.json(
-        { success: false, message: "No Session" },
-        { status: 401 }
-      );
+    if (!user) {
+      return createErrorResponse("Unauthorized", 401, { req });
+    }
 
-    const dtUser = await User.findById(user._id).lean();
-    if (!dtUser)
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+    const dbUser = await User.findById(user._id).lean();
+    if (!dbUser) {
+      return createErrorResponse("User not found", 404, { req });
+    }
 
-    if (dtUser.role !== "admin")
-      return NextResponse.json(
-        { success: false, message: "Invalid access, User isn't admin" },
-        { status: 401 }
-      );
+    if (dbUser.role !== "admin") {
+      return createErrorResponse("Forbidden: Admin access only", 403, { req });
+    }
 
     const created = await Template.create(body);
 
-    return NextResponse.json({ success: true, data: created }, { status: 200 });
+    return NextResponse.json({ success: true, data: created }, { status: 201 });
   } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
     return handleApiError(err, req, {
       message: "Error creating template",
       operation: "createTemplate",
@@ -41,7 +36,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: Request) {
+async function getTemplates(req: NextRequest) {
   try {
     await connectToDatabase();
     const templates = await Template.find({});
@@ -50,9 +45,14 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (err) {
-    return handleApiError(err, req as unknown as NextRequest, {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    return handleApiError(err, req, {
       message: "Error fetching templates",
       operation: "getTemplates",
     });
   }
 }
+
+export const GET = withAPIMiddleware(getTemplates);
+export const POST = withAPIMiddleware(createTemplate);
+

@@ -2,46 +2,47 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function DELETE(
+async function deleteAdminTemplate(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params;
     try {
         const user = await authenticateUser(true, true, true);
-        if (!user) {
+        if (!user || user.role !== "admin") {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
+        const { id } = await params;
         await connectToDatabase();
 
         const template = await Template.findByIdAndDelete(id);
 
         if (!template) {
-            return createErrorResponse("Template not found", 404, { req, operation: "adminDeleteTemplate" });
+            return createErrorResponse("Template not found", 404, { req });
         }
 
         return NextResponse.json({
             message: "Template deleted successfully",
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminDeleteTemplate" });
     }
 }
 
-export async function PATCH(
+async function updateAdminTemplate(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params;
     try {
         const user = await authenticateUser(true, true, true);
-        if (!user) {
+        if (!user || user.role !== "admin") {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
+        const { id } = await params;
         await connectToDatabase();
 
         const body = await req.json();
@@ -53,7 +54,7 @@ export async function PATCH(
         );
 
         if (!template) {
-            return createErrorResponse("Template not found", 404, { req, operation: "adminUpdateTemplate" });
+            return createErrorResponse("Template not found", 404, { req });
         }
 
         return NextResponse.json({
@@ -61,6 +62,11 @@ export async function PATCH(
             data: template,
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminUpdateTemplate" });
     }
 }
+
+export const DELETE = withAPIMiddleware(deleteAdminTemplate);
+export const PATCH = withAPIMiddleware(updateAdminTemplate);
+

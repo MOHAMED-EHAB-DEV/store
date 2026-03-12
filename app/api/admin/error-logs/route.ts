@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import ErrorLog from "@/lib/models/ErrorLog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, handleApiError, validatePagination } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, handleApiError, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: NextRequest) {
+async function getErrorLogs(req: NextRequest) {
   try {
     const user = await authenticateUser(true);
     if (!user || user.role !== "admin") {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+      return createErrorResponse("Unauthorized", 401, { req });
     }
 
     await connectToDatabase();
@@ -49,16 +49,17 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     return handleApiError(error, req, { operation: "adminGetErrorLogs" });
   }
 }
 
-export async function DELETE(req: NextRequest) {
+async function deleteErrorLogs(req: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         await connectToDatabase();
@@ -73,8 +74,13 @@ export async function DELETE(req: NextRequest) {
             return createAPIResponse(null, { message: `Logs older than ${days} days deleted successfully` });
         }
 
-        return NextResponse.json({ success: false, message: "Invalid parameters" }, { status: 400 });
-    } catch (error) {
+        return createErrorResponse("Invalid parameters", 400, { req });
+    } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminDeleteErrorLogs" });
     }
 }
+
+export const GET = withAPIMiddleware(getErrorLogs);
+export const DELETE = withAPIMiddleware(deleteErrorLogs);
+

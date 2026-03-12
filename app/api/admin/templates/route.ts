@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(request: NextRequest) {
+async function getAdminTemplates(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -79,12 +79,12 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetTemplates" });
     }
 }
 
-// POST /api/admin/templates - Create new template
-export async function POST(req: NextRequest) {
+async function createAdminTemplate(req: NextRequest) {
     try {
         const user = await authenticateUser();
 
@@ -113,6 +113,11 @@ export async function POST(req: NextRequest) {
             { status: 201 }
         );
     } catch (err: any) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
         return handleApiError(err, req, { operation: "adminCreateTemplate" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminTemplates);
+export const POST = withAPIMiddleware(createAdminTemplate);
+

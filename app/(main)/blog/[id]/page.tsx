@@ -1,4 +1,6 @@
+"use cache";
 import Link from 'next/link';
+import { cacheLife, cacheTag } from 'next/cache';
 import { formatDate } from '@/lib/utils';
 import { mdToHtmlAndHeadings } from '@/lib/markdown';
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
@@ -25,6 +27,7 @@ export async function generateStaticParams() {
       id: blog._id.toString(),
     }));
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error generating static params:", error);
     return [];
   }
@@ -51,17 +54,29 @@ interface PageProps {
 
 const getData = async (idOrSlug: string): Promise<BlogPost | null> => {
     try {
-        const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const res = await fetch(`${domain}/api/blogs/${idOrSlug}?countViews=true`, {
-            method: 'GET',
-            next: { revalidate: 60 * 60 * 24 }
-        });
+        await connectToDatabase();
 
-        if (!res.ok) return null;
+        // Try finding by ID first, then by slug
+        let blog;
+        if (idOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
+            blog = await Blog.findById(idOrSlug)
+                .populate("author", "name avatar")
+                .lean();
+        }
+        if (!blog) {
+            blog = await Blog.findOne({ slug: idOrSlug })
+                .populate("author", "name avatar")
+                .lean();
+        }
 
-        const json = await res.json();
-        return json.success ? json.data : null;
+        if (!blog) return null;
+
+        // Increment views asynchronously (best-effort)
+        Blog.findByIdAndUpdate(blog._id, { $inc: { views: 1 } }).catch(() => {});
+
+        return JSON.parse(JSON.stringify(blog)) as BlogPost;
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Failed to fetch blog post:", error);
         return null;
     }
@@ -69,18 +84,20 @@ const getData = async (idOrSlug: string): Promise<BlogPost | null> => {
 
 const getRecentPosts = async (): Promise<BlogPost[]> => {
     try {
-        const domain = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const res = await fetch(`${domain}/api/blogs?limit=5`, {
-            method: 'GET',
-            next: { revalidate: 60 * 60 * 24 }
-        });
-        if (!res.ok) return [];
-        const json = await res.json();
-        return json.success ? json.data : [];
+        await connectToDatabase();
+        const blogs = await Blog.find({ isPublished: true })
+            .populate("author", "name avatar")
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .lean();
+
+        return JSON.parse(JSON.stringify(blogs)) as BlogPost[];
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return [];
     }
 };
+
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { id } = await params;
@@ -128,7 +145,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const Page = async ({ params }: PageProps) => {
+    cacheLife("long-cache" as any);
     const { id } = await params;
+    cacheTag(`blog-${id}`, "blogs");
     const [blog, recentPosts] = await Promise.all([
         getData(id),
         getRecentPosts()

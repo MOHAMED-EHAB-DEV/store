@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import DownloadLog from "@/lib/models/DownloadLog";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/download-logs - List download logs with filters
-export async function GET(request: NextRequest) {
+async function getDownloadLogs (request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -77,6 +77,9 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetDownloadLogs" });
     }
-}
+};
+
+export const GET = withAPIMiddleware(getDownloadLogs);

@@ -1,44 +1,57 @@
 import { NextRequest } from 'next/server';
 import User from '@/lib/models/User';
-import { withAPIMiddleware, createAPIResponse, createErrorResponse } from '@/lib/utils/api-helpers';
+import { withAPIMiddleware, createAPIResponse, createErrorResponse, handleApiError } from '@/lib/utils/api-helpers';
 import { authenticateUser } from '@/middleware/auth';
 import { connectToDatabase } from '@/lib/database';
 
 // GET: Get user's favorite templates
 async function handleGET(req: NextRequest) {
-    await connectToDatabase();
-    const user = await authenticateUser();
-    if (!user) return createErrorResponse('unauthorized', 400);
+    try {
+        await connectToDatabase();
+        const user = await authenticateUser();
+        if (!user) return createErrorResponse('unauthorized', 401, { req });
 
-    const favorites = await User.findOne({email: user?.email}).select('favorites').populate('favorites', '_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt');
-    
-    if (!favorites) return createErrorResponse('User not found', 404);
-    return createAPIResponse(favorites?.favorites);
+        const userData = await User.findOne({ email: user?.email })
+            .select('favorites')
+            .populate('favorites', '_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt');
+        
+        if (!userData) return createErrorResponse('User not found', 404, { req });
+        return createAPIResponse(userData?.favorites);
+    } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "getFavorites" });
+    }
 }
 
 // POST: Add/remove favorite template
 async function handlePOST(req: NextRequest) {
-    const body = await req.json();
-    const { userId, templateId, action } = body;
-    if (!userId || !templateId || !['add', 'remove'].includes(action)) {
-        return createErrorResponse('Missing or invalid parameters', 400);
-    }
+    try {
+        await connectToDatabase();
+        const body = await req.json();
+        const { userId, templateId, action } = body;
+        if (!userId || !templateId || !['add', 'remove'].includes(action)) {
+            return createErrorResponse('Missing or invalid parameters', 400, { req });
+        }
 
-    const user = await User.findById(userId);
-    if (!user) return createErrorResponse('User not found', 404);
+        const user = await User.findById(userId);
+        if (!user) return createErrorResponse('User not found', 404, { req });
 
-    if (action === 'add') {
-        if (!user.favorites.includes(templateId)) {
-            user.favorites.push(templateId);
+        if (action === 'add') {
+            if (!user.favorites.includes(templateId)) {
+                user.favorites.push(templateId);
+                await user.save();
+            }
+        } else if (action === 'remove') {
+            user.favorites = user.favorites.filter(id => id.toString() !== templateId);
             await user.save();
         }
-    } else if (action === 'remove') {
-        user.favorites = user.favorites.filter(id => id.toString() !== templateId);
-        await user.save();
-    }
 
-    return createAPIResponse({ favorites: user.favorites });
+        return createAPIResponse({ favorites: user.favorites });
+    } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "updateFavorites" });
+    }
 }
 
 export const GET = withAPIMiddleware(handleGET);
-export const POST = withAPIMiddleware(handlePOST);
+export const POST = withAPIMiddleware(handlePOST);

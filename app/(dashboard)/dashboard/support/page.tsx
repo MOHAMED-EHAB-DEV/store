@@ -41,6 +41,7 @@ export default function DashboardSupportPage() {
                 resolved: allTickets.filter((t: any) => t.status === "resolved").length,
             });
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message || "Failed to fetch tickets");
         } finally {
             setIsLoading(false);

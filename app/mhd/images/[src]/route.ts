@@ -18,6 +18,7 @@ async function ensureCacheDir() {
     await fs.mkdir(CACHE_DIR, { recursive: true });
     return true;
   } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
     console.error(
       `[Image Proxy] Failed to create cache dir: ${CACHE_DIR}`,
       err,
@@ -95,6 +96,7 @@ export async function GET(
         });
       }
     } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
       // File doesn't exist, proceed to fetch
     }
 
@@ -148,6 +150,7 @@ export async function GET(
         try {
           await fs.writeFile(cacheFilePath, outputBuffer);
         } catch (writeErr) {
+    if (writeErr && typeof writeErr === 'object' && 'digest' in writeErr) throw writeErr;
           console.error(
             `[Image Proxy] Cache write failed for ${src}:`,
             writeErr,
@@ -164,6 +167,7 @@ export async function GET(
       },
     });
   } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     if (error.name === "AbortError") {
       console.error(`[Image Proxy] Timeout fetching: ${src}`);
       return new NextResponse("Request Timeout", { status: 504 });

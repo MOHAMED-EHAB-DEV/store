@@ -1,19 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
+import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-interface ApiResponse {
-    success: boolean;
-    message: string;
-    performance?: {
-        duration: number;
-    };
-}
-
-export async function GET(): Promise<NextResponse<ApiResponse>> {
-    const startTime = Date.now();
-
+async function logout(req: NextRequest) {
     try {
         await connectToDatabase();
         // Try to get the current user for logging purposes
@@ -27,19 +18,15 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
                 });
             }
         } catch (authError) {
+    if (authError && typeof authError === 'object' && 'digest' in authError) throw authError;
             // Don't fail logout if we can't authenticate
             console.warn('Authentication check failed during logout:', authError);
         }
 
-        const duration = Date.now() - startTime;
-
         // Create response
         const response = NextResponse.json({
             success: true,
-            message: "Logged out successfully",
-            performance: {
-                duration
-            }
+            message: "Logged out successfully"
         }, { status: 200 });
 
         // Clear the auth cookie
@@ -53,20 +40,14 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
 
         return response;
 
-    } catch (error) {
-        console.error("Logout error:", error);
-
-        const duration = Date.now() - startTime;
-
+    } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        // Fallback for logout - clear cookie even if DB fails
         const response = NextResponse.json({
             success: true,
-            message: "Session cleared",
-            performance: {
-                duration
-            }
+            message: "Session cleared"
         }, { status: 200 });
 
-        // Clear the cookie regardless of errors
         response.cookies.set("token", "", {
             httpOnly: true,
             expires: new Date(0),
@@ -78,3 +59,5 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
         return response;
     }
 }
+
+export const GET = withAPIMiddleware(logout);

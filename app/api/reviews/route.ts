@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Review from "@/lib/models/Review";
-import {authenticateUser} from "@/middleware/auth";
+import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: Request) {
+async function getReviews(req: NextRequest) {
     try {
         await connectToDatabase();
 
@@ -13,7 +14,7 @@ export async function GET(req: Request) {
         const limit = parseInt(searchParams.get("limit") || "6", 10);
 
         if (!templateId) {
-            return NextResponse.json({ success: false, error: "templateId required" }, { status: 400 });
+            return createErrorResponse("templateId required", 400, { req });
         }
 
         const skip = (page - 1) * limit;
@@ -21,22 +22,24 @@ export async function GET(req: Request) {
 
         return NextResponse.json({ success: true, reviews });
     } catch (err) {
-        console.error("Error fetching reviews", err);
-        return NextResponse.json({ success: false, error: "Failed to fetch reviews" }, { status: 500 });
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+        return handleApiError(err, req, { operation: "getReviews" });
     }
 }
 
-export async function POST(req: Request) {
+async function createReview(req: NextRequest) {
     try {
         await connectToDatabase();
         const user = await authenticateUser(false, true);
-        if (!user) return NextResponse.json({success: false, message: "unauthorized access"}, {status: 400});
+        if (!user) {
+            return createErrorResponse("Unauthorized", 401, { req });
+        }
 
         const body = await req.json();
         const { templateId, rating, comment } = body;
 
         if (!templateId || !rating || !comment) {
-            return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+            return createErrorResponse("Missing fields", 400, { req });
         }
 
         const review = await Review.create({
@@ -48,10 +51,14 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ success: true, review }, { status: 201 });
     } catch (err: any) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
         if (err.code === 11000) {
-            return NextResponse.json({ error: "User already reviewed this template" }, { status: 400 });
+            return createErrorResponse("User already reviewed this template", 400, { req, error: err });
         }
-        console.error("Error adding review", err);
-        return NextResponse.json({ success: false, error: "Failed to add review" }, { status: 500 });
+        return handleApiError(err, req, { operation: "createReview" });
     }
 }
+
+export const GET = withAPIMiddleware(getReviews);
+export const POST = withAPIMiddleware(createReview);
+

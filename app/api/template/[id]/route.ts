@@ -3,10 +3,11 @@ import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { revalidateTag } from "next/cache";
+import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-export async function GET(req: NextRequest, context: RouteContext) {
+async function getTemplate(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     await connectToDatabase();
@@ -20,16 +21,16 @@ export async function GET(req: NextRequest, context: RouteContext) {
       { status: 200 }
     );
   } catch (err) {
-    // console.log(`Error while getting the template: ${err}`);
-    return NextResponse.json({ message: err, success: false }, { status: 500 });
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    return handleApiError(err, req, { operation: "getPublicTemplate" });
   }
 }
 
-export async function PATCH(req: NextRequest, context: RouteContext) {
+async function updateTemplate(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     const body = await req.json();
-    const updated = await Template.findByIdAndUpdate(id, body);
+    const updated = await Template.findByIdAndUpdate(id, body, { new: true });
 
     // Revalidate cache for this template and all templates
     revalidateTag(`template-${id}`, 'default');
@@ -44,12 +45,12 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       { status: 200 }
     );
   } catch (err) {
-    // console.log(`Error while updating the template: ${err}`);
-    return NextResponse.json({ success: false, message: err }, { status: 500 });
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    return handleApiError(err, req, { operation: "updatePublicTemplate" });
   }
 }
 
-export async function POST(req: NextRequest, context: RouteContext) {
+async function disableTemplate(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     await Template.findByIdAndUpdate(id, {
@@ -65,12 +66,12 @@ export async function POST(req: NextRequest, context: RouteContext) {
       message: "Template disabled Successfully",
     });
   } catch (err) {
-    // console.log(`Error while disabling the template: ${err}`);
-    return NextResponse.json({ success: false, message: err }, { status: 500 });
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    return handleApiError(err, req, { operation: "disablePublicTemplate" });
   }
 }
 
-export async function DELETE(req: NextRequest, context: RouteContext) {
+async function deleteTemplate(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     await Template.findByIdAndDelete(id); // Delete from database
@@ -84,7 +85,13 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
       message: "Template deleted Successfully",
     });
   } catch (err) {
-    // console.log(`Error while deleting the template: ${err}`);
-    return NextResponse.json({ success: false, message: err }, { status: 500 });
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    return handleApiError(err, req, { operation: "deletePublicTemplate" });
   }
 }
+
+export const GET = withAPIMiddleware(getTemplate);
+export const PATCH = withAPIMiddleware(updateTemplate);
+export const POST = withAPIMiddleware(disableTemplate);
+export const DELETE = withAPIMiddleware(deleteTemplate);
+

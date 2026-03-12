@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import AdminSupportClient from "@/components/Admin/AdminSupportClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Support Tickets | Admin Dashboard",
@@ -18,13 +17,12 @@ async function getSupportTickets(searchParams: { [key: string]: string | undefin
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/tickets?${params.toString()}`, {
-            headers: { Cookie: (await headers()).get("cookie") || "" },
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/tickets?${params.toString()}`);
 
         if (!response.ok) return null;
         return await response.json();
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Error fetching tickets:", error);
         return null;
     }

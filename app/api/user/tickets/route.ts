@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Ticket from "@/lib/models/Ticket";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: NextRequest) {
+async function getUserTickets(req: NextRequest) {
     try {
         const user = await authenticateUser(true, false, true);
         if (!user) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         await connectToDatabase();
@@ -32,10 +33,10 @@ export async function GET(req: NextRequest) {
             data: tickets,
         });
     } catch (error: any) {
-        console.error("Error fetching user tickets:", error);
-        return NextResponse.json(
-            { message: error.message || "Failed to fetch tickets" },
-            { status: 500 }
-        );
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "getUserTickets" });
     }
 }
+
+export const GET = withAPIMiddleware(getUserTickets);
+

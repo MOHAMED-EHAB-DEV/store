@@ -1,19 +1,24 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import User from "@/lib/models/User";
 import revalidate from "@/actions/revalidateTag";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function POST(req: Request) {
+async function updateProfile(req: NextRequest) {
     try {
         const { avatar, name } = await req.json();
         await connectToDatabase();
         const currentUser = await authenticateUser();
 
-        if (!currentUser) return NextResponse.json({ error: "No Session, User not found" }, { status: 404 });
+        if (!currentUser) {
+            return createErrorResponse("No Session, User not found", 404, { req });
+        }
 
         const dtUser = await User.findOne({ email: currentUser?.email });
-        if (!dtUser) return NextResponse.json({ error: "User not found", success: false, }, { status: 404 });
+        if (!dtUser) {
+            return createErrorResponse("User not found", 404, { req });
+        }
 
         const updatedUser = await User.findByIdAndUpdate(
             dtUser._id,
@@ -24,10 +29,7 @@ export async function POST(req: Request) {
         );
 
         if (!updatedUser) {
-            return NextResponse.json(
-                { success: false, error: "User not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("User not found", 404, { req });
         }
 
         await revalidate("/settings");
@@ -38,10 +40,9 @@ export async function POST(req: Request) {
             message: "User updated Successfully"
         }, { status: 200 });
     } catch (err: any) {
-        // console.log("Update user error:", err);
-        return NextResponse.json(
-            { success: false, message: err.message || "Something went wrong" },
-            { status: 400 }
-        );
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+        return handleApiError(err, req, { operation: "updateProfile" });
     }
 }
+
+export const POST = withAPIMiddleware(updateProfile);

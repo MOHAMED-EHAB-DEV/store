@@ -41,6 +41,7 @@ export default function AdminTicketsPage() {
             setTickets(data.data || []);
             setPagination(data.pagination || { page: 1, total: 0, pages: 0 });
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message || "Failed to fetch tickets");
         } finally {
             setIsLoading(false);

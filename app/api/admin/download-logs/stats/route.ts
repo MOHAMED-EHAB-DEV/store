@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import DownloadLog from "@/lib/models/DownloadLog";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-// GET /api/admin/download-logs/stats - Get download statistics
-export async function GET(request: NextRequest) {
+async function getAdminDownloadStats(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -14,7 +13,7 @@ export async function GET(request: NextRequest) {
 
         await connectToDatabase();
 
-        const [stats] = await DownloadLog.aggregate([
+        const [results] = await DownloadLog.aggregate([
             {
                 $facet: {
                     totals: [
@@ -102,13 +101,17 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             success: true,
             data: {
-                totals: stats.totals[0] || { total: 0, success: 0, failed: 0, totalBytes: 0 },
-                topTemplates: stats.topTemplates || [],
-                downloadsByDay: stats.downloadsByDay || [],
-                recentDownloads: stats.recentDownloads || [],
+                totals: results.totals[0] || { total: 0, success: 0, failed: 0, totalBytes: 0 },
+                topTemplates: results.topTemplates || [],
+                downloadsByDay: results.downloadsByDay || [],
+                recentDownloads: results.recentDownloads || [],
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetDownloadStats" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminDownloadStats);
+

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { handleApiError } from "@/lib/utils/api-helpers";
+import { handleApiError, withAPIMiddleware, createErrorResponse } from "@/lib/utils/api-helpers";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
@@ -19,9 +19,6 @@ interface ApiResponse {
         email: string;
         role: string;
     };
-    performance?: {
-        duration: number;
-    };
 }
 
 // Validation helper
@@ -36,51 +33,17 @@ function validateLoginRequest(body: any): body is LoginRequest {
     );
 }
 
-// Rate limiting for login attempts
-const loginAttempts = new Map<string, { count: number; resetTime: number }>();
-
-function checkRateLimit(identifier: string, maxAttempts = 5, windowMs = 15 * 60 * 1000): boolean {
-    const now = Date.now();
-    const attempts = loginAttempts.get(identifier);
-
-    if (!attempts || now > attempts.resetTime) {
-        loginAttempts.set(identifier, { count: 1, resetTime: now + windowMs });
-        return true;
-    }
-
-    if (attempts.count >= maxAttempts) {
-        return false;
-    }
-
-    attempts.count++;
-    return true;
-}
-
-export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
-    const startTime = Date.now();
-
+async function loginHandler(req: NextRequest): Promise<NextResponse<ApiResponse>> {
     try {
         // Parse and validate request body
         const body = await req.json();
 
         if (!validateLoginRequest(body)) {
-            return NextResponse.json({
-                success: false,
-                message: "Invalid request. Valid email and password are required."
-            }, { status: 400 });
+            return createErrorResponse("Invalid request. Valid email and password are required.", 400, { req }) as any;
         }
 
         const { email, password } = body;
         const normalizedEmail = email.toLowerCase().trim();
-
-        // Rate limiting by IP
-        const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-        if (!checkRateLimit(clientIP)) {
-            return NextResponse.json({
-                success: false,
-                message: "Too many login attempts. Please try again in 15 minutes."
-            }, { status: 429 });
-        }
 
         // Connect to database
         await connectToDatabase();
@@ -92,30 +55,22 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         );
 
         if (!user) {
-            return NextResponse.json({
-                success: false,
-                message: "User not Found"
-            }, { status: 401 });
+            return createErrorResponse("User not Found", 401, { req }) as any;
         }
 
         if (user.banned) {
-            return NextResponse.json({
-                success: false,
-                message: "Your account has been banned"
-            }, { status: 403 });
+            return createErrorResponse("Your account has been banned", 403, { req }) as any;
         }
 
         // Check if account is locked
         if (user.lockUntil && user.lockUntil > new Date()) {
+            // Auto ban if they keep trying while locked? (Original behavior)
             await User.findByIdAndUpdate(user._id, {
                 banned: true,
                 banId: Math.random().toString(36).substring(2, 15).toUpperCase(),
             });
             const unlockTime = new Date(user.lockUntil).toLocaleTimeString();
-            return NextResponse.json({
-                success: false,
-                message: `Account is temporarily locked due to multiple failed login attempts. Please try again after ${unlockTime}.`
-            }, { status: 423 }); // 423 Locked
+            return createErrorResponse(`Account is temporarily locked due to multiple failed login attempts. Please try again after ${unlockTime}.`, 423, { req }) as any;
         }
 
         // Verify password
@@ -133,16 +88,10 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
                 await User.findByIdAndUpdate(user._id, {
                     lockUntil: new Date(Date.now() + 15 * 60 * 1000) // Lock for 15 minutes
                 });
-                return NextResponse.json({
-                    success: false,
-                    message: "Account locked due to multiple failed login attempts. Please try again in 15 minutes."
-                }, { status: 423 });
+                return createErrorResponse("Account locked due to multiple failed login attempts. Please try again in 15 minutes.", 423, { req }) as any;
             }
 
-            return NextResponse.json({
-                success: false,
-                message: "Invalid Password"
-            }, { status: 401 });
+            return createErrorResponse("Invalid Password", 401, { req }) as any;
         }
 
         // Generate JWT token
@@ -163,8 +112,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
             $unset: { loginAttempts: 1, lockUntil: 1 } // Reset failed attempts and unlock
         });
 
-        const duration = Date.now() - startTime;
-
         // Create response
         const response = NextResponse.json({
             message: "Login successful",
@@ -174,9 +121,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
                 role: user.role,
             },
             success: true,
-            performance: {
-                duration
-            }
         }, { status: 200 });
 
         // Set secure cookie
@@ -192,9 +136,17 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
         return response;
 
     } catch (error) {
-        return handleApiError(error, req as unknown as NextRequest, {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, {
             message: "Internal server error",
             operation: "userLogin",
         }) as any;
     }
 }
+
+export const POST = withAPIMiddleware(loginHandler, {
+    rateLimit: {
+        maxRequests: 5,
+        windowMs: 15 * 60 * 1000
+    }
+});

@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-type RouteContext = { params: Promise<any> };
+type RouteContext = { params: Promise<{ id: string }> };
 
-export async function POST(request: Request, { params }: RouteContext) {
+async function unbanUser(request: NextRequest, { params }: RouteContext) {
     try {
         const user = await authenticateUser(true, true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         const { id } = await params;
@@ -18,7 +19,7 @@ export async function POST(request: Request, { params }: RouteContext) {
         const dbUser = await User.findById(id);
 
         if (!dbUser) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+            return createErrorResponse("User not found", 404, { req: request });
         }
 
         // Clear ban and metadata
@@ -33,10 +34,9 @@ export async function POST(request: Request, { params }: RouteContext) {
             message: "User unbanned successfully"
         });
     } catch (error: any) {
-        console.error("Unban error:", error);
-        return NextResponse.json({
-            error: "Failed to unban user",
-            message: error.message
-        }, { status: 500 });
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, request, { operation: "unbanUser" });
     }
 }
+
+export const POST = withAPIMiddleware(unbanUser);

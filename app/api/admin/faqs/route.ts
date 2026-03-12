@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import FAQ from "@/lib/models/FAQ";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/faqs - List all FAQs with pagination
-export async function GET(request: NextRequest) {
+async function getAdminFAQs(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -77,12 +77,13 @@ export async function GET(request: NextRequest) {
             stats: stats[0] || { total: 0, published: 0, draft: 0, categories: 0 }
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetFAQs" });
     }
 }
 
 // POST /api/admin/faqs - Create new FAQ
-export async function POST(request: NextRequest) {
+async function createFAQ(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -112,6 +113,11 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminCreateFAQ" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminFAQs);
+export const POST = withAPIMiddleware(createFAQ);
+

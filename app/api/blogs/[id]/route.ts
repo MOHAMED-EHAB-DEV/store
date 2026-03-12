@@ -1,12 +1,12 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, createErrorResponse } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
 import revalidate from "@/actions/revalidateTag";
 
-export async function GET(
+async function getBlogPost(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -28,7 +28,7 @@ export async function GET(
         }
 
         if (!post) {
-            return createErrorResponse("Blog post not found", 404);
+            return createErrorResponse("Blog post not found", 404, { req });
         }
 
         // Increment views if public
@@ -39,12 +39,12 @@ export async function GET(
 
         return createAPIResponse(post);
     } catch (error: any) {
-        console.error("API Error:", error);
-        return createErrorResponse(error.message || "Internal Server Error", 500);
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "getBlogPost" });
     }
 }
 
-export async function PUT(
+async function updateBlogPost(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -55,17 +55,17 @@ export async function PUT(
         await connectToDatabase();
         const user = await authenticateUser(false, true);
 
-        if (!user) return createErrorResponse("Unauthorized", 401);
+        if (!user) return createErrorResponse("Unauthorized", 401, { req });
 
         const dbUser = await User.findById(user._id);
         if (dbUser?.role !== 'admin') {
-            return createErrorResponse("Forbidden", 403);
+            return createErrorResponse("Forbidden", 403, { req });
         }
 
         const updatedBlog = await Blog.findByIdAndUpdate(id, body, { new: true });
 
         if (!updatedBlog) {
-            return createErrorResponse("Blog post not found", 404);
+            return createErrorResponse("Blog post not found", 404, { req });
         }
 
         await revalidate("/blog");
@@ -73,12 +73,12 @@ export async function PUT(
 
         return createAPIResponse(updatedBlog, { message: "Blog post updated successfully" });
     } catch (error: any) {
-        console.error("API Error:", error);
-        return createErrorResponse(error.message || "Internal Server Error", 500);
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "updateBlogPost" });
     }
 }
 
-export async function DELETE(
+async function deleteBlogPost(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -88,23 +88,27 @@ export async function DELETE(
         await connectToDatabase();
         const user = await authenticateUser(false, true);
 
-        if (!user) return createErrorResponse("Unauthorized", 401);
+        if (!user) return createErrorResponse("Unauthorized", 401, { req });
 
         const dbUser = await User.findById(user._id);
         if (dbUser?.role !== 'admin') {
-            return createErrorResponse("Forbidden", 403);
+            return createErrorResponse("Forbidden", 403, { req });
         }
 
         const deletedBlog = await Blog.findByIdAndDelete(id);
 
         if (!deletedBlog) {
-            return createErrorResponse("Blog post not found", 404);
+            return createErrorResponse("Blog post not found", 404, { req });
         }
 
         return createAPIResponse(null, { message: "Blog post deleted successfully" });
-
     } catch (error: any) {
-        console.error("API Error:", error);
-        return createErrorResponse(error.message || "Internal Server Error", 500);
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "deleteBlogPost" });
     }
 }
+
+export const GET = withAPIMiddleware(getBlogPost);
+export const PUT = withAPIMiddleware(updateBlogPost);
+export const DELETE = withAPIMiddleware(deleteBlogPost);
+

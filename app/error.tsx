@@ -31,6 +31,7 @@ export default function Error({
                     }),
                 });
             } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
                 console.error("Failed to report error:", err);
             }
         };

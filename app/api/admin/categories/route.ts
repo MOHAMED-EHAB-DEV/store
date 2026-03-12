@@ -2,17 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Category from "@/lib/models/Category";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/categories - List all categories
-export async function GET(request: NextRequest) {
+async function getAdminCategories(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         await connectToDatabase();
@@ -76,19 +73,17 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetCategories" });
     }
 }
 
 // POST /api/admin/categories - Create new category
-export async function POST(request: NextRequest) {
+async function createCategory(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
         await connectToDatabase();
@@ -117,9 +112,14 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         if (error.code === 11000) {
             return createErrorResponse("Category with this name or slug already exists", 400, { req: request, error });
         }
         return handleApiError(error, request, { operation: "adminCreateCategory" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminCategories);
+export const POST = withAPIMiddleware(createCategory);
+

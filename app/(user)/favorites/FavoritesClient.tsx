@@ -19,6 +19,7 @@ const FavoritesClient = () => {
                     setTemplates(data.data);
                 }
             } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
                 console.error("Failed to fetch favorites:", error);
                 setErrorMessage("Failed to fetch favorites");
             } finally {

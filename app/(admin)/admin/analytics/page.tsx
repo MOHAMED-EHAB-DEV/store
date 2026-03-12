@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import AdminAnalyticsClient from "@/components/Admin/AdminAnalyticsClient";
-import { headers } from "next/headers";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Visitor Analytics",
@@ -21,32 +21,62 @@ interface AnalyticsStatsData {
 
 async function getAnalyticsData() {
   try {
-    const headersList = await headers();
-    const cookieHeader = headersList.get("cookie") || "";
-
-    // Fetch stats from API
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`,
-      {
-        headers: {
-          cookie: cookieHeader,
-        },
-        next: { revalidate: 60 }, // Cache for 1 minute
-      },
-    );
-
-    const statsJSON = response.ok ? await response.json() : { data: null };
-    const stats = (
-      statsJSON.success ? statsJSON.data : null
-    ) as AnalyticsStatsData | null;
-
-    // Fetch recent visitors directly from DB
     await connectToDatabase();
-    const recentVisitorsData = await Visitor.find({})
-      .sort({ lastVisit: -1 })
-      .limit(10)
-      .lean()
-      .exec();
+    await connection();
+
+    const now = new Date();
+    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const [
+      totalVisitors,
+      uniqueLast24h,
+      uniqueLast7d,
+      uniqueLast30d,
+      topPages,
+      dailyVisits,
+      recentVisitorsData,
+    ] = await Promise.all([
+      Visitor.countDocuments(),
+      Visitor.countDocuments({ lastVisit: { $gte: last24h } }),
+      Visitor.countDocuments({ lastVisit: { $gte: last7d } }),
+      Visitor.countDocuments({ lastVisit: { $gte: last30d } }),
+      Visitor.aggregate([
+        { $unwind: "$pathHistory" },
+        { $group: { _id: "$pathHistory.path", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 10 },
+        { $project: { path: "$_id", count: 1, _id: 0 } },
+      ]),
+      Visitor.aggregate([
+        { $match: { lastVisit: { $gte: last30d } } },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: "%Y-%m-%d", date: "$lastVisit" },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+        { $project: { date: "$_id", count: 1, _id: 0 } },
+      ]),
+      Visitor.find({})
+        .sort({ lastVisit: -1 })
+        .limit(10)
+        .lean()
+        .exec(),
+    ]);
+
+    const stats: AnalyticsStatsData = {
+      totalVisitors,
+      uniqueLast24h,
+      uniqueLast7d,
+      uniqueLast30d,
+      topPages,
+      dailyVisits,
+    };
 
     const recentVisitors = recentVisitorsData.map((v) => ({
       _id: v._id.toString(),
@@ -62,6 +92,7 @@ async function getAnalyticsData() {
       recentVisitors,
     };
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching analytics data:", error);
     return {
       stats: null,

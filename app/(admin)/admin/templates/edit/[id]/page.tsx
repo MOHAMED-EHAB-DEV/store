@@ -21,6 +21,7 @@ async function getTemplate(id: string) {
         const template = await Template.findById(id).lean();
         return template ? JSON.parse(JSON.stringify(template)) : null;
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return null;
     }
 }

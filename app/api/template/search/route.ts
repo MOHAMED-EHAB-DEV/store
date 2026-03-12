@@ -140,6 +140,7 @@ function validateSearchParams(req: NextRequest): {
       },
     };
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     return { isValid: false, error: "Invalid request parameters" };
   }
 }
@@ -249,6 +250,7 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
       },
     });
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Template search error:", error);
     return createErrorResponse("Failed to search templates", 500);
   }

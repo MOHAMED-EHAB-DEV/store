@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("[Analytics] track error:", error);
     // Always return 200 – analytics must NEVER break the user experience
     return NextResponse.json({ success: false });

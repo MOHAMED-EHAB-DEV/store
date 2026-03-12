@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import { socialImgs, FooterLinks } from "@/constants";

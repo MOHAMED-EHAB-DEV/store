@@ -48,6 +48,7 @@ function validateSimilarParams(req: NextRequest): {
             },
         };
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return { isValid: false, error: "Invalid request parameters" };
     }
 }
@@ -173,6 +174,7 @@ async function getSimilarTemplatesHandler(
             performance: { duration, cacheHit: false },
         });
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Similar templates error:", error);
         return createErrorResponse("Failed to fetch similar templates", 500);
     }

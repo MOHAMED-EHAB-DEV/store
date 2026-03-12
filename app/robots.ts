@@ -1,51 +1,47 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://mhd-store.vercel.app'
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://mhd-store.vercel.app";
 
-    return {
-        rules: [
-            {
-                userAgent: '*',
-                allow: [
-                    '/',
-                    '/templates',
-                    '/templates/*',
-                    '/blog',
-                    '/blog/*',
-                    '/support',
-                    '/signin',
-                    '/register',
-                ],
-                disallow: [
-                    '/api/',
-                    '/admin/',
-                    '/dashboard/',
-                    '/_next/',
-                    '/private/',
-                    '/*.json$',
-                    '/user/',
-                ],
-            },
-            {
-                userAgent: 'Googlebot',
-                allow: [
-                    '/',
-                    '/templates',
-                    '/templates/*',
-                    '/blog',
-                    '/blog/*',
-                    '/support',
-                ],
-                disallow: [
-                    '/api/',
-                    '/admin/',
-                    '/dashboard/',
-                    '/user/',
-                ],
-            },
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: [
+          "/",
+          "/templates",
+          "/templates/*",
+          "/blog",
+          "/blog/*",
+          "/support",
+          "/signin",
+          "/register",
         ],
-        sitemap: `${baseUrl}/sitemap.xml`,
-        host: baseUrl,
-    }
+        disallow: [
+          "/api/",
+          "/admin/",
+          "/dashboard/",
+          "/_next/",
+          "/private/",
+          "/*.json$",
+          "/user/",
+        ],
+      },
+      {
+        userAgent: "Googlebot",
+        allow: [
+          "/",
+          "/templates",
+          "/templates/*",
+          "/blog",
+          "/blog/*",
+          "/support",
+        ],
+        disallow: ["/api/", "/admin/", "/dashboard/", "/user/"],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
+  };
 }

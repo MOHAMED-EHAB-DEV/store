@@ -3,8 +3,9 @@ import { connectToDatabase } from "@/lib/database";
 import ErrorLog from "@/lib/models/ErrorLog";
 import { getUserFromServer } from "@/lib/auth";
 import { headers } from "next/headers";
+import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function POST(req: NextRequest) {
+async function logError(req: NextRequest) {
   try {
     const body = await req.json();
     const { message, stack, digest, route, visitorId } = body;
@@ -38,8 +39,11 @@ export async function POST(req: NextRequest) {
     await errorLog.save();
 
     return NextResponse.json({ success: true }, { status: 201 });
-  } catch (error) {
-    console.error("Error in error-log API:", error);
-    return NextResponse.json({ error: "Failed to log error" }, { status: 500 });
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    return handleApiError(error, req, { operation: "logClientError" });
   }
 }
+
+export const POST = withAPIMiddleware(logError);
+

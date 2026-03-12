@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { headers } from "next/headers";
-import { getUserFromServer } from "../auth";
 import ErrorLog from "../models/ErrorLog";
 import { authenticateUser } from "@/middleware/auth";
+import { connection } from "next/server";
 
 // Response caching utility
 interface CacheEntry {
@@ -282,80 +282,108 @@ export function createAPIResponse<T>(
 }
 
 export function createErrorResponse(
-    message: string,
-    statusCode: number = 400,
-    options: {
-        details?: any;
-        req?: NextRequest;
-        error?: any;
-        operation?: string;
-        visitorId?: string;
-    } = {}
+  message: string,
+  statusCode: number = 400,
+  options: {
+    details?: any;
+    req?: NextRequest;
+    error?: any;
+    operation?: string;
+    visitorId?: string;
+    userId?: string;
+  } = {},
 ): NextResponse {
-    const { details, req, error, operation, visitorId } = options;
+  const { details, req, error, operation, visitorId, userId } = options;
 
-    // Log the error (Fire and forget to avoid blocking response)
-    (async () => {
-        try {
-            const headerList = await headers(); 
-            const userAgent = headerList.get("user-agent") || undefined;
-            const ip = headerList.get("x-forwarded-for") || headerList.get("x-real-ip") || "unknown";
-            
-            // Get user if authenticated
-            const user = await authenticateUser(true, true);
+  after(async () => {
+    try {
+      let headerList;
+      try {
+        headerList = await headers();
+      } catch {
+        // headers() not available in this context
+      }
 
-            const errorLog = new ErrorLog({
-                message: error instanceof Error ? error.message : (typeof error === 'string' ? error : message),
-                stack: error instanceof Error ? error.stack : undefined,
-                route: req?.nextUrl.pathname,
-                method: req?.method,
-                status: statusCode,
-                operation,
-                userId: user?._id || undefined,
-                visitorId,
-                userAgent,
-                ip,
-                timestamp: new Date(),
-            });
+      const userAgent = headerList?.get("user-agent") || undefined;
+      const ip =
+        headerList?.get("x-forwarded-for") ||
+        headerList?.get("x-real-ip") ||
+        "unknown";
 
-            await errorLog.save();
-        } catch (logErr) {
-            console.error("Critical error in logging logic:", logErr);
-        }
-    })();
+      const errorLog = new ErrorLog({
+        message:
+          error instanceof Error
+            ? error.message
+            : typeof error === "string"
+              ? error
+              : message,
+        stack: error instanceof Error ? error.stack : undefined,
+        route: req?.nextUrl.pathname,
+        method: req?.method,
+        status: statusCode,
+        operation,
+        userId,
+        visitorId,
+        userAgent,
+        ip,
+        timestamp: new Date(),
+      });
 
-    return NextResponse.json({
-        success: false,
-        message,
-        ...(details && { details }),
-        timestamp: new Date().toISOString()
-    }, { status: statusCode });
+      await errorLog.save();
+    } catch (logErr) {
+      console.error("Critical error in logging logic:", logErr);
+    }
+  });
+
+  return NextResponse.json(
+    {
+      success: false,
+      message,
+      ...(details && { details }),
+      timestamp: new Date().toISOString(),
+    },
+    { status: statusCode },
+  );
 }
 
-export function handleApiError(
-    error: any,
-    req?: NextRequest,
-    context: {
-        message?: string;
-        statusCode?: number;
-        operation?: string;
-        visitorId?: string;
-    } = {}
-): NextResponse {
-    const {
-        message = 'Internal server error',
-        statusCode = 500,
-        operation,
-        visitorId
-    } = context;
+export async function handleApiError(
+  error: any,
+  req?: NextRequest,
+  context: {
+    message?: string;
+    statusCode?: number;
+    operation?: string;
+    visitorId?: string;
+  } = {},
+): Promise<NextResponse> {
+  const {
+    message = "Internal server error",
+    statusCode = 500,
+    operation,
+    visitorId,
+  } = context;
 
-    return createErrorResponse(message, statusCode, {
-        error,
-        req,
-        operation,
-        visitorId,
-        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : error) : undefined
-    });
+  let userId: string | undefined;
+  try {
+    const user = await authenticateUser(false, true);
+    userId = user?._id?.toString();
+  } catch (e: any) {
+    if (e && typeof e === "object" && "digest" in e) throw e;
+  }
+
+  return createErrorResponse(message, statusCode, {
+    error,
+    req,
+    operation,
+    visitorId,
+    userId,
+    details:
+      process.env.NODE_ENV === "development"
+        ? error instanceof Error
+          ? error.message
+          : error
+        : undefined,
+  });
 }
 
 // Middleware factory for API routes
@@ -369,6 +397,7 @@ export function withAPIMiddleware(
   } = {},
 ) {
   return async (req: NextRequest, context?: any): Promise<NextResponse> => {
+    await connection();
     const timer = PerformanceMonitor.startTimer(
       req.nextUrl.pathname,
       req.method,
@@ -391,11 +420,10 @@ export function withAPIMiddleware(
 
         if (!rateLimitResult.allowed) {
           rateLimited = true;
-          const response = createErrorResponse(
-              'Too many requests',
-              429,
-              { details: { resetTime: rateLimitResult.resetTime }, req }
-          );
+          const response = createErrorResponse("Too many requests", 429, {
+            details: { resetTime: rateLimitResult.resetTime },
+            req,
+          });
 
           PerformanceMonitor.endTimer(timer, 429, { rateLimited });
           return response;
@@ -437,12 +465,12 @@ export function withAPIMiddleware(
 
       // Validation
       if (options.validate) {
-          const isValid = await options.validate(req);
-          if (!isValid) {
-              const response = createErrorResponse('Invalid request', 400, { req });
-              PerformanceMonitor.endTimer(timer, 400);
-              return response;
-          }
+        const isValid = await options.validate(req);
+        if (!isValid) {
+          const response = createErrorResponse("Invalid request", 400, { req });
+          PerformanceMonitor.endTimer(timer, 400);
+          return response;
+        }
       }
       // Execute handler
       const response = await handler(req, context);

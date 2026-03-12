@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: NextRequest) {
+async function getAnalyticsStats(req: NextRequest) {
   try {
     await connectToDatabase();
     const user = await authenticateUser();
     if (!user || user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return createErrorResponse("Unauthorized", 401, { req });
     }
 
     const now = new Date();
@@ -73,11 +74,10 @@ export async function GET(req: NextRequest) {
         dailyVisits,
       },
     });
-  } catch (error) {
-    console.error("[Analytics] stats error:", error);
-    return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 500 },
-    );
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    return handleApiError(error, req, { operation: "getAnalyticsStats" });
   }
 }
+
+export const GET = withAPIMiddleware(getAnalyticsStats);

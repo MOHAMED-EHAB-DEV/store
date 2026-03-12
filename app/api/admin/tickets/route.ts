@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Ticket from "@/lib/models/Ticket";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: NextRequest) {
+async function getAdminTickets(req: NextRequest) {
     try {
         const user = await authenticateUser(true, true, true);
-        if (!user) {
+        if (!user || user.role !== "admin") {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
@@ -74,6 +74,10 @@ export async function GET(req: NextRequest) {
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, req, { operation: "adminGetTickets" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminTickets);
+

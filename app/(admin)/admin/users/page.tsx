@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import AdminUsersClient from "@/components/Admin/AdminUsersClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "User Management | Admin Dashboard",
@@ -19,20 +18,14 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
   params.set("limit", "20");
 
   try {
-    const headersList = await headers();
-    const cookieHeader = headersList.get("cookie") || "";
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`,
-      {
-        headers: {
-          cookie: cookieHeader,
-        },
-      }
     );
 
     if (!response.ok) return null;
     return await response.json();
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching users:", error);
     return null;
   }

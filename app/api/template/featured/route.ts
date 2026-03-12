@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { handleApiError } from "@/lib/utils/api-helpers";
+import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import Review from "@/lib/models/Review";
 
-export async function GET(req: NextRequest) {
+async function getFeaturedTemplates(req: NextRequest) {
   try {
     await connectToDatabase();
 
@@ -34,16 +34,18 @@ export async function GET(req: NextRequest) {
       }),
     );
 
-    console.log(templatesWithReviews);
-
     return NextResponse.json(
       { success: true, data: templatesWithReviews },
       { status: 200 },
     );
   } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
     return handleApiError(err, req, {
       message: "Error fetching popular templates",
       operation: "getFeaturedTemplates",
     });
   }
 }
+
+export const GET = withAPIMiddleware(getFeaturedTemplates);
+

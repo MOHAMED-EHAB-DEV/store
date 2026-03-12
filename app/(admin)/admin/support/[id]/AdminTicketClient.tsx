@@ -45,6 +45,7 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
             setTicket(data.data.ticket);
             setMessages(data.data.messages);
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
             router.push("/admin/support");
         } finally {
@@ -115,6 +116,7 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
             socketSendMessage(ticketId, newMessage);
             setTyping(ticketId, false);
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
             throw error;
         }
@@ -143,6 +145,7 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
             // Broadcast via socket
             notifyTicketUpdate(ticketId, { status });
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
         }
     };
@@ -164,6 +167,7 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
             // Broadcast via socket
             notifyTicketUpdate(ticketId, { priority });
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
         }
     };

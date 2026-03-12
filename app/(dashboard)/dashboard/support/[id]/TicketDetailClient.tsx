@@ -12,16 +12,15 @@ import { useUser } from "@/context/UserContext";
 
 interface TicketDetailClientProps {
     ticketId: string;
-    userId: string;
-    socketToken?: string;
 }
 
-export default function TicketDetailClient({ ticketId, userId, socketToken }: TicketDetailClientProps) {
+export default function TicketDetailClient({ ticketId }: TicketDetailClientProps) {
     const router = useRouter();
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [ticket, setTicket] = useState<any>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const { user } = useUser();
 
     // Socket connection
     const {
@@ -47,6 +46,7 @@ export default function TicketDetailClient({ ticketId, userId, socketToken }: Ti
             setTicket(data.data.ticket);
             setMessages(data.data.messages);
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
             router.push("/dashboard/support");
         } finally {
@@ -120,6 +120,7 @@ export default function TicketDetailClient({ ticketId, userId, socketToken }: Ti
             socketSendMessage(ticketId, newMessage);
             setTyping(ticketId, false);
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
             throw error;
         }
@@ -149,11 +150,12 @@ export default function TicketDetailClient({ ticketId, userId, socketToken }: Ti
             toast.success("Ticket closed");
             fetchTicket();
         } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
             toast.error(error.message);
         }
     };
 
-    const otherTyping = typingUsers[ticketId]?.filter(id => id !== userId) || [];
+    const otherTyping = typingUsers[ticketId]?.filter(id => id !== user?._id) || [];
 
     if (isLoading) {
         return (
@@ -230,7 +232,7 @@ export default function TicketDetailClient({ ticketId, userId, socketToken }: Ti
                         <MessageBubble
                             key={message._id}
                             message={message}
-                            isOwn={message.sender._id === userId}
+                            isOwn={message.sender._id === user?._id}
                         />
                     ))}
 

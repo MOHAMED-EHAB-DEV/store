@@ -1,3 +1,5 @@
+"use cache";
+import { cacheTag, cacheLife } from "next/cache";
 import Template from "@/components/singleTemplate/Template";
 import { ICategory, ITemplate } from "@/types";
 import type { Metadata } from "next";
@@ -23,6 +25,7 @@ export async function generateStaticParams() {
       id: template._id.toString(),
     }));
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error generating static params:", error);
     return [];
   }
@@ -32,12 +35,6 @@ const getTemplate = async (id: string) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
-      {
-        next: {
-          revalidate: 60 * 60 * 24, // ISR: 10 minutes fallback
-          tags: [`template-${id}`, "templates"], // Tags for easy revalidation
-        },
-      },
     );
 
     if (!response.ok)
@@ -49,6 +46,7 @@ const getTemplate = async (id: string) => {
       ? { data: data.data as ITemplate, err: null }
       : { err: data.message || "No Template Found", data: null };
   } catch (err: any) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
     return {
       err: `Error fetching template with id ${id}: ${err.message || err}`,
       data: null,
@@ -86,6 +84,7 @@ const getSimilarTemplates = async (
       ? { data: data.data as ITemplate[], error: null }
       : { error: data.message || "No similar templates found", data: null };
   } catch (err: any) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
     return {
       error: `Error fetching similar templates: ${err.message || err}`,
       data: null,
@@ -143,6 +142,8 @@ export async function generateMetadata({
 
 const Page = async ({ params }: PageProps) => {
   const { id } = await params;
+  cacheLife("long-cache" as any);
+  cacheTag(`template-${id}`, "templates");
 
   const { data: template, err } = await getTemplate(id);
 

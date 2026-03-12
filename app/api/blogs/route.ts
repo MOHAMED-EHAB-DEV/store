@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, createErrorResponse, handleApiError, validatePagination } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, handleApiError, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
-import revalidate from "@/actions/revalidateTag";
+import { updateTag } from "next/cache";
 
-export async function GET(req: NextRequest) {
+async function getBlogs(req: NextRequest) {
   try {
     await connectToDatabase();
 
@@ -61,11 +61,12 @@ export async function GET(req: NextRequest) {
     });
 
   } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     return handleApiError(error, req, { operation: "getBlogs" });
   }
 }
 
-export async function POST(req: NextRequest) {
+async function createBlog(req: NextRequest) {
   try {
     const body = await req.json();
     await connectToDatabase();
@@ -90,10 +91,14 @@ export async function POST(req: NextRequest) {
     body.author = user._id;
 
     const newBlog = await Blog.create(body);
-    await revalidate("/blog");
+    updateTag("blogs");
     return createAPIResponse(newBlog, { message: "Blog post created successfully" });
 
   } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     return handleApiError(error, req, { operation: "createBlog" });
   }
 }
+
+export const GET = withAPIMiddleware(getBlogs);
+export const POST = withAPIMiddleware(createBlog);

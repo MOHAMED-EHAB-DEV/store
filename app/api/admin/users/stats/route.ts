@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 // GET /api/admin/users/stats - Get user statistics
-export async function GET(request: NextRequest) {
+async function getAdminUserStats(request: NextRequest) {
     try {
         const user = await authenticateUser(true);
         if (!user || user.role !== "admin") {
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
         await connectToDatabase();
 
-        const [stats] = await User.aggregate([
+        const [results] = await User.aggregate([
             {
                 $facet: {
                     totals: [
@@ -56,12 +56,16 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             success: true,
             data: {
-                totals: stats.totals[0] || { total: 0, admins: 0, users: 0, premium: 0, free: 0, verified: 0 },
-                recentUsers: stats.recentUsers || [],
-                signupsByDay: stats.signupsByDay || [],
+                totals: results.totals[0] || { total: 0, admins: 0, users: 0, premium: 0, free: 0, verified: 0 },
+                recentUsers: results.recentUsers || [],
+                signupsByDay: results.signupsByDay || [],
             },
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetUserStats" });
     }
 }
+
+export const GET = withAPIMiddleware(getAdminUserStats);
+

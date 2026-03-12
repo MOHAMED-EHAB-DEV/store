@@ -132,6 +132,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
                     meta: { rangeRequested: Boolean(incomingRange) },
                 });
             } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
                 console.warn("Failed to persist DownloadLog:", err);
             }
         })();
@@ -139,6 +140,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
         const statusToReturn = upstreamRes.status === 206 ? 206 : 200;
         return new NextResponse(upstreamRes.body, { status: statusToReturn, headers: resHeaders });
     } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
         console.error("free download error:", err);
         return createErrorResponse("Server error while processing download", 500);
     }

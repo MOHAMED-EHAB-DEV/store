@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CategoryForm from "@/components/Admin/CategoryForm";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Edit Category | Admin",
@@ -15,28 +14,26 @@ interface PageProps {
 
 async function getCategory(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories/${id}`, {
-            headers: { Cookie: (await headers()).get("cookie") || "" },
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories/${id}`);
 
         if (!response.ok) return null;
         const data = await response.json();
         return data.success ? data.data : null;
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return null;
     }
 }
 
 async function getParentCategories() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`, {
-            headers: { Cookie: (await headers()).get("cookie") || "" },
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`);
 
         if (!response.ok) return [];
         const data = await response.json();
         return data.data || [];
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return [];
     }
 }

@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createErrorResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
 
-// GET /api/admin/users - List all users with pagination and filters
-export async function GET(request: NextRequest) {
+async function getAdminUsers(request: NextRequest) {
   try {
     await connectToDatabase();
     const user = await authenticateUser();
@@ -80,9 +79,13 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     return handleApiError(error, request, {
       message: "Failed to fetch users",
       operation: "adminGetUsers",
     });
   }
 }
+
+export const GET = withAPIMiddleware(getAdminUsers);
+

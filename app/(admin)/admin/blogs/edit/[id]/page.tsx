@@ -1,17 +1,15 @@
 import BlogForm from "@/components/Admin/BlogForm";
-import { headers } from "next/headers";
 
 const getBlog = async (id: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs/${id}`, {
-            headers: { Cookie: (await headers()).get("cookie") || "" },
-        });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs/${id}`);
 
         if (!res.ok) return null;
 
         const json = await res.json();
         return json.success ? json.data : null;
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Failed to fetch blog:", error);
         return null;
     }

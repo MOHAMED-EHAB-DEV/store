@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import AdminCategoriesClient from "@/components/Admin/AdminCategoriesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Categories Management | Admin Dashboard",
@@ -17,15 +16,12 @@ async function getCategories(searchParams: { [key: string]: string | undefined }
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?${params.toString()}`, {
-            headers: {
-                Cookie: (await headers()).get("cookie") || "",
-            },
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?${params.toString()}`);
 
         if (!response.ok) return null;
         return await response.json();
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Error fetching categories:", error);
         return null;
     }

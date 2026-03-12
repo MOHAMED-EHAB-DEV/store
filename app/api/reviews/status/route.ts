@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Review from "@/lib/models/Review";
+import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: Request) {
+async function getReviewStatus(req: NextRequest) {
     try {
         await connectToDatabase();
-        const { searchParams } = new URL(req.url);
-        const templateId = searchParams.get("templateId");
-        const userId = searchParams.get("userId");
+        const templateId = req.nextUrl.searchParams.get("templateId");
+        const userId = req.nextUrl.searchParams.get("userId");
 
         if (!templateId || !userId) {
             return NextResponse.json({ error: "Missing templateId or userId" }, { status: 400 });
@@ -15,8 +15,10 @@ export async function GET(req: Request) {
 
         const existing = await Review.findOne({ template: templateId, user: userId, isActive: true });
         return NextResponse.json({ reviewed: !!existing });
-    } catch (err) {
-        console.error("Error checking review status", err);
-        return NextResponse.json({ error: "Failed to check status" }, { status: 500 });
+    } catch (err: any) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+        return handleApiError(err, req, { operation: "checkReviewStatus" });
     }
 }
+
+export const GET = withAPIMiddleware(getReviewStatus);

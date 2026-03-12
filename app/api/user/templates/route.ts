@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(req: NextRequest) {
+async function getUserTemplates(req: NextRequest) {
     try {
         await connectToDatabase();
         const user = await authenticateUser(false, false, true);
         if (!user) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         const { searchParams } = new URL(req.url);
         const limit = parseInt(searchParams.get("limit") || "100");
 
         // Get user's purchased templates
-        // Assuming user has a purchasedTemplates array or similar
         const templates = await Template.find({
             _id: { $in: user.purchasedTemplates || [] },
         })
@@ -29,10 +29,10 @@ export async function GET(req: NextRequest) {
             data: templates,
         });
     } catch (error: any) {
-        console.error("Error fetching user templates:", error);
-        return NextResponse.json(
-            { message: error.message || "Failed to fetch templates" },
-            { status: 500 }
-        );
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "getUserTemplates" });
     }
 }
+
+export const GET = withAPIMiddleware(getUserTemplates);
+

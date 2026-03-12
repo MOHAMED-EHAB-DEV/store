@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 // Types
 interface RegisterRequest {
@@ -18,9 +19,6 @@ interface ApiResponse {
     name: string;
     email: string;
     role: string;
-  };
-  performance?: {
-    duration: number;
   };
 }
 
@@ -46,51 +44,13 @@ function validateRegisterRequest(body: any): body is RegisterRequest {
   );
 }
 
-// Rate limiting for registration
-const registrationAttempts = new Map<
-  string,
-  { count: number; resetTime: number }
->();
-
-function checkRegistrationRateLimit(
-  identifier: string,
-  maxAttempts = 3,
-  windowMs = 60 * 60 * 1000
-): boolean {
-  const now = Date.now();
-  const attempts = registrationAttempts.get(identifier);
-
-  if (!attempts || now > attempts.resetTime) {
-    registrationAttempts.set(identifier, {
-      count: 1,
-      resetTime: now + windowMs,
-    });
-    return true;
-  }
-
-  if (attempts.count >= maxAttempts) {
-    return false;
-  }
-
-  attempts.count++;
-  return true;
-}
-
-export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
-  const startTime = Date.now();
-
+async function registerHandler(req: NextRequest): Promise<NextResponse<ApiResponse>> {
   try {
     // Parse and validate request body
     const body = await req.json();
 
     if (!validateRegisterRequest(body)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid request. Name, email, and password are required.",
-        },
-        { status: 400 }
-      );
+      return createErrorResponse("Invalid request. Name, email, and password are required.", 400, { req }) as any;
     }
 
     const { name, email, password } = body;
@@ -101,67 +61,27 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
 
     // Validate inputs
     if (!validateName(trimmedName)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Name must be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes.",
-        },
-        { status: 400 }
-      );
+      return createErrorResponse("Name must be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes.", 400, { req }) as any;
     }
 
     if (!validateEmail(normalizedEmail)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Please provide a valid email address.",
-        },
-        { status: 400 }
-      );
+      return createErrorResponse("Please provide a valid email address.", 400, { req }) as any;
     }
 
     if (password.length < 6) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Password must be at least 6 characters long.",
-        },
-        { status: 400 }
-      );
-    }
-
-    // Rate limiting by IP
-    const clientIP =
-      req.headers.get("x-forwarded-for") ||
-      req.headers.get("x-real-ip") ||
-      "unknown";
-    if (!checkRegistrationRateLimit(clientIP)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Too many registration attempts. Please try again later.",
-        },
-        { status: 429 }
-      );
+      return createErrorResponse("Password must be at least 6 characters long.", 400, { req }) as any;
     }
 
     // Connect to database
     await connectToDatabase();
 
     // Check if user already exists
-    const existingUser = await User.findOneAndUpdate({ email: normalizedEmail })
+    const existingUser = await User.findOne({ email: normalizedEmail })
       .select("_id email")
       .lean();
 
     if (existingUser) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User already exists",
-        },
-        { status: 409 }
-      );
+      return createErrorResponse("User already exists", 409, { req }) as any;
     }
 
     // Hash password
@@ -195,8 +115,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
       { expiresIn: "7d" }
     );
 
-    const duration = Date.now() - startTime;
-
     // Create response
     const response = NextResponse.json(
       {
@@ -207,9 +125,6 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
           role: newUser.role,
         },
         success: true,
-        performance: {
-          duration,
-        },
       },
       { status: 200 }
     );
@@ -225,34 +140,16 @@ export async function POST(req: Request): Promise<NextResponse<ApiResponse>> {
     });
 
     return response;
-  } catch (error) {
-    console.error("Registration error:", error);
-
-    const duration = Date.now() - startTime;
-
-    // Handle specific database errors
-    let message = "Internal server error";
-    let status = 500;
-
-    if (error instanceof Error) {
-      if (
-        error.message.includes("duplicate key error") &&
-        error.message.includes("email")
-      ) {
-        message = "User already exists";
-        status = 409;
-      }
-    }
-
-    return NextResponse.json(
-      {
-        message,
-        success: false,
-        performance: {
-          duration,
-        },
-      },
-      { status }
-    );
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    return handleApiError(error, req, { operation: "userRegister" }) as any;
   }
 }
+
+export const POST = withAPIMiddleware(registerHandler, {
+  rateLimit: {
+    maxRequests: 3,
+    windowMs: 60 * 60 * 1000
+  }
+});
+

@@ -1,4 +1,6 @@
+"use cache";
 import Link from "next/link";
+import { cacheLife, cacheTag } from "next/cache";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
@@ -7,6 +9,8 @@ import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
+import { connectToDatabase } from "@/lib/database";
+import Blog from "@/lib/models/Blog";
 
 interface BlogPost {
   _id: string;
@@ -21,8 +25,9 @@ interface BlogPost {
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Blog | Insights & Updates";
-  const description = "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
-  const url = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/blog`;
+  const description =
+    "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
+  const url = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/blog`;
 
   return {
     title,
@@ -46,21 +51,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const getData = async () => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/blogs?limit=10`,
-      {
-        next: { revalidate: 60 * 60 * 24 },
-      },
-    );
+    await connectToDatabase();
+    const blogs = await Blog.find({ isPublished: true })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .lean();
 
-    const data = await res.json();
-    if (data.success) return data.data;
-    else throw new Error("Failed to fetch templates");
+    return JSON.parse(JSON.stringify(blogs)) as BlogPost[];
   } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Failed to fetch public blogs:", error);
     return [];
   }
 };
+
 
 interface BlogCardProps {
   blog: BlogPost;
@@ -129,6 +133,8 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
 };
 
 const Page = async () => {
+  cacheLife("long-cache" as any);
+  cacheTag("blogs")
   const blogs = await getData();
 
   return (
@@ -161,9 +167,9 @@ const Page = async () => {
             </div>
           )}
 
-          {blogs.shift().length > 0 && (
+          {blogs.slice(1).length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom duration-700 delay-150 fill-mode-backwards">
-              {blogs.shift().map((blog: BlogPost) => (
+              {blogs.slice(1).map((blog: BlogPost) => (
                 <BlogCard key={blog._id} blog={blog} />
               ))}
             </div>

@@ -10,14 +10,11 @@ import { Lock } from "@/components/ui/svgs/icons/Lock";
 import { Settings as SettingsIcon } from "@/components/ui/svgs/icons/Settings";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { Badge } from "@/components/ui/badge";
-import { IUser } from "@/types";
+import { useUser } from "@/context/UserContext";
 
-interface SettingsClientProps {
-    user: IUser;
-}
-
-export default function SettingsClient({ user }: SettingsClientProps) {
+export default function SettingsClient() {
     const [activeTab, setActiveTab] = useState("profile");
+    const { user } = useUser();
 
     const tabs = [
         { id: "profile", label: "Profile", icon: User },
@@ -43,17 +40,17 @@ export default function SettingsClient({ user }: SettingsClientProps) {
                     <div>
                         <h2 className="text-xl font-semibold text-white mb-1">Account Status</h2>
                         <p className="text-muted-foreground">
-                            {user.isEmailVerified ? "Your account is verified" : "Please verify your email"}
+                            {user?.isEmailVerified ? "Your account is verified" : "Please verify your email"}
                         </p>
                     </div>
                     <Badge
                         className={
-                            user.tier === "pro"
+                            user?.tier === "pro"
                                 ? "bg-amber-500/20 text-amber-300 border-amber-500/30 text-lg px-4 py-2"
                                 : "bg-slate-500/20 text-slate-300 border-slate-500/30 text-lg px-4 py-2"
                         }
                     >
-                        {user.tier === "pro" ? "Pro" : "Free"}
+                        {user?.tier === "pro" ? "Pro" : "Free"}
                     </Badge>
                 </div>
             </div>
@@ -81,7 +78,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
                 </div>
 
                 <div className="p-6">
-                    {activeTab === "profile" && <UpdateProfile user={user} />}
+                    {activeTab === "profile" && <UpdateProfile user={user!} />}
                     {activeTab === "security" && <ChangePassword />}
                     {activeTab === "preferences" && <Preferences />}
                     {activeTab === "subscription" && (
@@ -90,10 +87,10 @@ export default function SettingsClient({ user }: SettingsClientProps) {
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
                                         <h3 className="text-xl font-semibold text-white mb-2">
-                                            {user.tier === "pro" ? "Pro Plan" : "Free Plan"}
+                                            {user?.tier === "pro" ? "Pro Plan" : "Free Plan"}
                                         </h3>
                                         <p className="text-muted-foreground">
-                                            {user.tier === "pro"
+                                            {user?.tier === "pro"
                                                 ? "You have access to all Pro features"
                                                 : "Upgrade to unlock Pro templates and features"}
                                         </p>
@@ -101,7 +98,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
                                     <Star className="w-8 h-8 text-amber-400" aria-hidden="true" />
                                 </div>
 
-                                {user.tier === "starter" && (
+                                {user?.tier === "starter" && (
                                     <button className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-lg transition-all">
                                         Upgrade to pro
                                     </button>
@@ -110,7 +107,7 @@ export default function SettingsClient({ user }: SettingsClientProps) {
 
                             <div className="space-y-3">
                                 <h4 className="text-sm font-medium text-white">
-                                    {user.tier === "pro" ? "Pro Features" : "Upgrade Benefits"}
+                                    {user?.tier === "pro" ? "Pro Features" : "Upgrade Benefits"}
                                 </h4>
                                 <ul className="space-y-2">
                                     {[

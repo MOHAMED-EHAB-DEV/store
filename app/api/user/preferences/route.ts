@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import User from "@/lib/models/User";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function PATCH(req: Request) {
+async function updatePreferences(req: NextRequest) {
     try {
         const body = await req.json();
         const { emailNotifications, marketingEmails, weeklyDigest } = body;
@@ -12,10 +13,7 @@ export async function PATCH(req: Request) {
         const currentUser = await authenticateUser();
 
         if (!currentUser) {
-            return NextResponse.json(
-                { success: false, message: "Unauthorized" },
-                { status: 401 }
-            );
+            return createErrorResponse("Unauthorized", 401, { req });
         }
 
         const updatedUser = await User.findByIdAndUpdate(
@@ -31,10 +29,7 @@ export async function PATCH(req: Request) {
         ).select("-password");
 
         if (!updatedUser) {
-            return NextResponse.json(
-                { success: false, message: "User not found" },
-                { status: 404 }
-            );
+            return createErrorResponse("User not found", 404, { req });
         }
 
         return NextResponse.json({
@@ -43,10 +38,10 @@ export async function PATCH(req: Request) {
             data: updatedUser,
         });
     } catch (error: any) {
-        console.error("Error updating preferences:", error);
-        return NextResponse.json(
-            { success: false, message: error.message || "Failed to update preferences" },
-            { status: 500 }
-        );
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        return handleApiError(error, req, { operation: "updatePreferences" });
     }
 }
+
+export const PATCH = withAPIMiddleware(updatePreferences);
+

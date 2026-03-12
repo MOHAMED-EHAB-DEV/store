@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
@@ -10,6 +11,8 @@ export async function authenticateUser(
   includePurchasedTemplates: boolean = false,
 ): Promise<IUser | null> {
   try {
+    await connection();
+
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
@@ -38,7 +41,12 @@ export async function authenticateUser(
     }
 
     return user as IUser;
-  } catch (error) {
+  } catch (error: any) {
+    // Re-throw Next.js internal errors (prerender bail-outs, redirects, notFound, etc.)
+    // These carry a `digest` property that the framework relies on to detect dynamic pages.
+    if (error && typeof error === "object" && "digest" in error) {
+      throw error;
+    }
     console.log(`Error while authenticating user: ${error}`);
     return null;
   }

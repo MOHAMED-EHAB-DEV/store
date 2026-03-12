@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 import { getCategories } from "@/static/categories";
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 async function getTemplatesData(searchParams: { [key: string]: string | undefined }) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     const params = new URLSearchParams();
@@ -25,10 +22,7 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
 
     try {
         const [templatesRes, categories] = await Promise.all([
-            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`, {
-                headers: { Cookie: `token=${token}` },
-                cache: "no-store"
-            }),
+            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`),
             getCategories()
         ]);
 
@@ -43,6 +37,7 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
             categories: categories || [],
         };
     } catch (error) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Error fetching templates data:", error);
         return null;
     }

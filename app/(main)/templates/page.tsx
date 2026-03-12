@@ -1,3 +1,4 @@
+import { cacheLife, cacheTag } from "next/cache";
 import Templates from "@/components/shared/Templates";
 import { ICategory } from "@/types";
 import { Metadata } from "next";
@@ -7,25 +8,29 @@ type MetadataProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ searchParams }: MetadataProps): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: MetadataProps): Promise<Metadata> {
   const params = await searchParams;
   const builtWith = params?.builtWith;
   const categories = params?.categories;
 
   let title = "Browse Templates | Mohammed Ehab Store";
-  let description = "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.";
+  let description =
+    "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.";
 
-  if (categories && typeof categories === 'string') {
+  if (categories && typeof categories === "string") {
     // Capitalize first letter
-    const categoryName = categories.charAt(0).toUpperCase() + categories.slice(1);
+    const categoryName =
+      categories.charAt(0).toUpperCase() + categories.slice(1);
     title = `${categoryName} Templates | Premium Web Templates`;
     description = `Browse our premium collection of ${categoryName} templates. High-quality, modern, and optimized for your next project.`;
-  } else if (builtWith && typeof builtWith === 'string') {
+  } else if (builtWith && typeof builtWith === "string") {
     title = `${builtWith} Templates | Premium Web Templates`;
     description = `Explore top-tier templates built with ${builtWith}. Perfect for SaaS, e-commerce, and portfolios.`;
   }
 
-  const domain = process.env.NEXT_PUBLIC_APP_URL || 'https://mohammedehab.com';
+  const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const url = `${domain}/templates`;
 
   return {
@@ -59,6 +64,9 @@ const getInitialData = async ({
   tags: string[] | string;
   type: string;
 }) => {
+  "use cache";
+  cacheLife("short-cache" as any);
+  cacheTag("templates");
   try {
     const params = new URLSearchParams();
 
@@ -90,15 +98,13 @@ const getInitialData = async ({
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${params.toString()}`,
-      {
-        next: { revalidate: 60 * 5 },
-      },
     );
 
     const data = await response.json();
     if (data.success) return data.data;
     else throw new Error("Failed to fetch templates");
   } catch (err) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
     return [];
   }
 };

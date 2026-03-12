@@ -87,6 +87,7 @@ async function getStats(request: NextRequest) {
             recentTickets: result.recentTickets
         });
     } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
         return handleApiError(error, request, { operation: "adminGetSupportStats" });
     }
 }

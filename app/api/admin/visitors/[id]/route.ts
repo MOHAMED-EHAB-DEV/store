@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, handleApiError } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET(
+async function getAdminVisitorDetails(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await authenticateUser(true);
     if (!user || user.role !== "admin") {
-      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+      return createErrorResponse("Unauthorized", 401, { req });
     }
 
     const { id } = await params;
@@ -21,13 +21,17 @@ export async function GET(
     const visitor = await Visitor.findOne({ visitorId: id }).lean();
 
     if (!visitor) {
-      return NextResponse.json({ success: false, message: "Visitor not found" }, { status: 404 });
+      return createErrorResponse("Visitor not found", 404, { req });
     }
 
     return createAPIResponse(visitor, {
       message: "Visitor details fetched successfully",
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
     return handleApiError(error, req, { operation: "adminGetVisitorDetails" });
   }
 }
+
+export const GET = withAPIMiddleware(getAdminVisitorDetails);
+

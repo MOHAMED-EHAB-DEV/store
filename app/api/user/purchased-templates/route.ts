@@ -1,19 +1,30 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
+import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function GET() {
+async function getPurchasedTemplates(req: NextRequest) {
     try {
         await connectToDatabase();
         const user = await authenticateUser(false, true);
-        if (!user) return NextResponse.json({success: false, message: "unauthorized access"}, {status: 400});
+        if (!user) {
+            return createErrorResponse("Unauthorized access", 401, { req });
+        }
 
-        const purchasedTemplates = (await User.findById(user?._id).select("purchasedTemplates"))?.purchasedTemplates;
-        if (!purchasedTemplates) return NextResponse.json({success: false, message: "Something went error"}, {status:400});
+        const dbUser = await User.findById(user?._id).select("purchasedTemplates");
+        if (!dbUser) {
+            return createErrorResponse("User not found", 404, { req });
+        }
 
-        return NextResponse.json({success: true, data: purchasedTemplates}, {status: 200});
-    } catch (err) {
-        return NextResponse.json({success: false, message: `Error while getting purchased templates: ${err}`}, {status: 500});
+        return NextResponse.json({
+            success: true,
+            data: dbUser.purchasedTemplates
+        }, { status: 200 });
+    } catch (err: any) {
+    if (err && typeof err === 'object' && 'digest' in err) throw err;
+        return handleApiError(err, req, { operation: "getPurchasedTemplates" });
     }
 }
+
+export const GET = withAPIMiddleware(getPurchasedTemplates);

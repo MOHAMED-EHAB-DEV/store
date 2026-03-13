@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 
 const FramerFeatures = dynamic(
   () => import("@/components/home/FramerFeatures"),
+  { ssr: true },
 );
 const CodedFeatures = dynamic(() => import("@/components/home/CodedFeatures"));
 const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
@@ -77,7 +78,7 @@ export default async function Home() {
                     {/*<div className="shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-2xl group-hover:bg-accent/20 transition-colors duration-300">*/}
                     {/*    {valueProp.icon}*/}
                     {/*</div>*/}
-                    <h2 className="text-xl font-paras font-bold text-high-contrast group-hover:text-accent transition-colors duration-300 leading-snug">
+                    <h2 className="text-xl font-paras font-bold text-white group-hover:text-accent transition-colors duration-300 leading-snug">
                       {title}
                     </h2>
                   </div>

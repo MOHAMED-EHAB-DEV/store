@@ -1,6 +1,13 @@
 "use client";
 
-import { memo, useState, useEffect, useCallback, useMemo, useTransition } from "react";
+import {
+  memo,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useTransition,
+} from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
@@ -23,31 +30,41 @@ const Templates = ({
   const currentSearchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const [searchQuery, setSearchQuery] = useState((searchParams.search as string) || "");
+  const [searchQuery, setSearchQuery] = useState(
+    (searchParams.search as string) || "",
+  );
 
   // Update search query state when URL changes externally
   useEffect(() => {
     setSearchQuery((searchParams.search as string) || "");
   }, [searchParams.search]);
 
-  const updateFilters = useCallback((newParams: Record<string, string | string[] | undefined>) => {
-    const params = new URLSearchParams(currentSearchParams.toString());
-    
-    Object.entries(newParams).forEach(([key, value]) => {
-      if (value === undefined || value === "" || (Array.isArray(value) && value.length === 0) || value === "0") {
-        params.delete(key);
-      } else if (Array.isArray(value)) {
-        params.delete(key);
-        value.forEach(v => params.append(key, v));
-      } else {
-        params.set(key, value);
-      }
-    });
+  const updateFilters = useCallback(
+    (newParams: Record<string, string | string[] | undefined>) => {
+      const params = new URLSearchParams(currentSearchParams.toString());
 
-    startTransition(() => {
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (
+          value === undefined ||
+          value === "" ||
+          (Array.isArray(value) && value.length === 0) ||
+          value === "0"
+        ) {
+          params.delete(key);
+        } else if (Array.isArray(value)) {
+          params.delete(key);
+          value.forEach((v) => params.append(key, v));
+        } else {
+          params.set(key, value);
+        }
+      });
+
+      startTransition(() => {
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    });
-  }, [currentSearchParams, pathname, router]);
+      });
+    },
+    [currentSearchParams, pathname, router],
+  );
 
   // Handle debounced search
   useEffect(() => {
@@ -61,38 +78,55 @@ const Templates = ({
 
   const clearFilters = () => {
     startTransition(() => {
-        router.push(pathname, { scroll: false });
-        setSearchQuery("");
+      router.push(pathname, { scroll: false });
+      setSearchQuery("");
     });
   };
 
   const hasActiveFilters = useMemo(() => {
     const keys = Object.keys(searchParams);
-    return keys.length > 0 && keys.some(k => searchParams[k] !== undefined && searchParams[k] !== "" && searchParams[k] !== "0");
+    return (
+      keys.length > 0 &&
+      keys.some(
+        (k) =>
+          searchParams[k] !== undefined &&
+          searchParams[k] !== "" &&
+          searchParams[k] !== "0",
+      )
+    );
   }, [searchParams]);
 
   const selectedCategories = useMemo(() => {
-    const selected = Array.isArray(searchParams.categories) ? searchParams.categories : [searchParams.categories].filter(Boolean) as string[];
-    return categories.map(cat => ({
+    const selected = Array.isArray(searchParams.categories)
+      ? searchParams.categories
+      : ([searchParams.categories].filter(Boolean) as string[]);
+    return categories.map((cat) => ({
       ...cat,
-      selected: selected.includes(cat.name)
+      selected: selected.includes(cat.name),
     }));
   }, [categories, searchParams.categories]);
 
-  const allTags = useMemo(() => Array.from(new Set(initialData.flatMap((t) => t.tags))), [initialData]);
+  const allTags = useMemo(
+    () => Array.from(new Set(initialData.flatMap((t) => t.tags))),
+    [initialData],
+  );
   const selectedTags = useMemo(() => {
-    const selected = Array.isArray(searchParams.tags) ? searchParams.tags : [searchParams.tags].filter(Boolean) as string[];
-    return allTags.map(tag => ({
+    const selected = Array.isArray(searchParams.tags)
+      ? searchParams.tags
+      : ([searchParams.tags].filter(Boolean) as string[]);
+    return allTags.map((tag) => ({
       tag,
-      selected: selected.includes(tag)
+      selected: selected.includes(tag),
     }));
   }, [allTags, searchParams.tags]);
 
   const selectedBuiltWithOptions = useMemo(() => {
-    const selected = Array.isArray(searchParams.builtWith) ? searchParams.builtWith : [searchParams.builtWith].filter(Boolean) as string[];
-    return builtWithOptions.map(opt => ({
+    const selected = Array.isArray(searchParams.builtWith)
+      ? searchParams.builtWith
+      : ([searchParams.builtWith].filter(Boolean) as string[]);
+    return builtWithOptions.map((opt) => ({
       ...opt,
-      selected: selected.includes(opt.text.toLowerCase())
+      selected: selected.includes(opt.text.toLowerCase()),
     }));
   }, [searchParams.builtWith]);
 
@@ -108,9 +142,9 @@ const Templates = ({
           placeholder="Search..."
         />
         {isPending && (
-           <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gold" />
-           </div>
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gold" />
+          </div>
         )}
       </div>
 
@@ -118,17 +152,23 @@ const Templates = ({
         <FilterOptions
           categories={selectedCategories}
           setCategories={(updated) => {
-             const selected = (updated as any[]).filter(c => c.selected).map(c => c.name);
-             updateFilters({ categories: selected });
+            const selected = (updated as any[])
+              .filter((c) => c.selected)
+              .map((c) => c.name);
+            updateFilters({ categories: selected });
           }}
           tags={selectedTags}
           setTags={(updated) => {
-            const selected = (updated as any[]).filter(t => t.selected).map(t => t.tag);
+            const selected = (updated as any[])
+              .filter((t) => t.selected)
+              .map((t) => t.tag);
             updateFilters({ tags: selected });
           }}
           builtWithOptions={selectedBuiltWithOptions}
           setBuiltWithOptions={(updated) => {
-            const selected = (updated as any[]).filter(b => b.selected).map(b => b.text.toLowerCase());
+            const selected = (updated as any[])
+              .filter((b) => b.selected)
+              .map((b) => b.text.toLowerCase());
             updateFilters({ builtWith: selected });
           }}
           minPrice={Number(searchParams.minPrice) || 0}
@@ -140,7 +180,7 @@ const Templates = ({
           sortedBy={(searchParams.sortBy as any) || "popular"}
           setSortedBy={(val) => updateFilters({ sortBy: val })}
         />
-        
+
         <div className="flex flex-col gap-6">
           {isPending ? (
             <div className="flex items-center justify-center flex-wrap gap-6">
@@ -199,4 +239,3 @@ const Templates = ({
 };
 
 export default memo(Templates);
-

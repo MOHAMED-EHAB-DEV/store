@@ -53,7 +53,9 @@ export async function generateMetadata({
   };
 }
 
-const getInitialData = async (params: { [key: string]: string | string[] | undefined }) => {
+const getInitialData = async (params: {
+  [key: string]: string | string[] | undefined;
+}) => {
   "use cache";
   cacheLife("short-cache" as any);
   cacheTag("templates");
@@ -75,10 +77,13 @@ const getInitialData = async (params: { [key: string]: string | string[] | undef
     );
 
     const data = await response.json();
-    if (data.success) return data.data;
-    else throw new Error("Failed to fetch templates");
+    if (data.success) {
+      return JSON.parse(JSON.stringify(data.data));
+    } else {
+      throw new Error("Failed to fetch templates");
+    }
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    if (err && typeof err === "object" && "digest" in err) throw err;
     return [];
   }
 };
@@ -90,7 +95,7 @@ interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const templates = await getInitialData(params);
-  const categories = (await getCategories()) as ICategory[];
+  const categories = JSON.parse(JSON.stringify(await getCategories())) as ICategory[];
 
   return (
     <main

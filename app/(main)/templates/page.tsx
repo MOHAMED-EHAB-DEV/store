@@ -53,51 +53,25 @@ export async function generateMetadata({
   };
 }
 
-const getInitialData = async ({
-  builtWith,
-  categories,
-  tags,
-  type,
-}: {
-  builtWith: string[] | string;
-  categories: string[] | string;
-  tags: string[] | string;
-  type: string;
-}) => {
+const getInitialData = async (params: { [key: string]: string | string[] | undefined }) => {
   "use cache";
   cacheLife("short-cache" as any);
   cacheTag("templates");
   try {
-    const params = new URLSearchParams();
+    const urlParams = new URLSearchParams();
 
-    if (type) params.append("type", type);
-
-    if (builtWith) {
-      if (Array.isArray(builtWith)) {
-        builtWith.forEach((b) => params.append("builtWith", b));
-      } else {
-        params.append("builtWith", builtWith);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) {
+        if (Array.isArray(value)) {
+          value.forEach((v) => urlParams.append(key, v));
+        } else {
+          urlParams.append(key, value);
+        }
       }
-    }
-
-    if (categories) {
-      if (Array.isArray(categories)) {
-        categories.forEach((c) => params.append("categories", c));
-      } else {
-        params.append("categories", categories);
-      }
-    }
-
-    if (tags) {
-      if (Array.isArray(tags)) {
-        tags.forEach((t) => params.append("tags", t));
-      } else {
-        params.append("tags", tags);
-      }
-    }
+    });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${params.toString()}`,
+      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${urlParams.toString()}`,
     );
 
     const data = await response.json();
@@ -110,17 +84,12 @@ const getInitialData = async ({
 };
 
 interface PageProps {
-  searchParams: {
-    builtWith: string[] | string;
-    categories: string[] | string;
-    tags: string[] | string;
-    type: string;
-  };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
-  const templates = await getInitialData({ ...params });
+  const templates = await getInitialData(params);
   const categories = (await getCategories()) as ICategory[];
 
   return (

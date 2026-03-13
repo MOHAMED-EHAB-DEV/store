@@ -1,13 +1,13 @@
 "use client";
 
-import { Suspense, memo } from "react";
+import { memo, useState, useEffect, useCallback, useMemo, useTransition } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import FilterOptions from "@/components/shared/FilterOptions";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { Search } from "@/components/ui/svgs/icons/Search";
 import { ICategory, ITemplate } from "@/types";
-import { useFilters } from "@/hooks/useFilter";
-import { useTemplates } from "@/hooks/useTemplates";
+import { builtWithOptions } from "@/constants";
 
 const Templates = ({
   initialData,
@@ -16,44 +16,85 @@ const Templates = ({
 }: {
   initialData: ITemplate[];
   categories: ICategory[];
-  searchParams?: {
-    builtWith: string[] | string;
-    categories: string[] | string;
-    tags: string[] | string;
-  };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const {
-    searchQuery,
-    setSearchQuery,
-    minPrice,
-    setMinPrice,
-    maxPrice,
-    setMaxPrice,
-    minRating,
-    setMinRating,
-    sortedBy,
-    setSortedBy,
-    selectedCategories,
-    setSelectedCategories,
-    selectedTags,
-    setSelectedTags,
-    selectedBuiltWithOptions,
-    setSelectedBuiltWithOptions,
-    clearFilters,
-    hasActiveFilters,
-  } = useFilters(categories, initialData, searchParams);
+  const router = useRouter();
+  const pathname = usePathname();
+  const currentSearchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const { templates, isLoading } = useTemplates(
-    initialData,
-    searchQuery,
-    selectedCategories,
-    selectedTags,
-    selectedBuiltWithOptions,
-    minPrice,
-    maxPrice,
-    minRating,
-    sortedBy,
-  );
+  const [searchQuery, setSearchQuery] = useState((searchParams.search as string) || "");
+
+  // Update search query state when URL changes externally
+  useEffect(() => {
+    setSearchQuery((searchParams.search as string) || "");
+  }, [searchParams.search]);
+
+  const updateFilters = useCallback((newParams: Record<string, string | string[] | undefined>) => {
+    const params = new URLSearchParams(currentSearchParams.toString());
+    
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value === undefined || value === "" || (Array.isArray(value) && value.length === 0) || value === "0") {
+        params.delete(key);
+      } else if (Array.isArray(value)) {
+        params.delete(key);
+        value.forEach(v => params.append(key, v));
+      } else {
+        params.set(key, value);
+      }
+    });
+
+    startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    });
+  }, [currentSearchParams, pathname, router]);
+
+  // Handle debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery !== (searchParams.search || "")) {
+        updateFilters({ search: searchQuery });
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery, searchParams.search, updateFilters]);
+
+  const clearFilters = () => {
+    startTransition(() => {
+        router.push(pathname, { scroll: false });
+        setSearchQuery("");
+    });
+  };
+
+  const hasActiveFilters = useMemo(() => {
+    const keys = Object.keys(searchParams);
+    return keys.length > 0 && keys.some(k => searchParams[k] !== undefined && searchParams[k] !== "" && searchParams[k] !== "0");
+  }, [searchParams]);
+
+  const selectedCategories = useMemo(() => {
+    const selected = Array.isArray(searchParams.categories) ? searchParams.categories : [searchParams.categories].filter(Boolean) as string[];
+    return categories.map(cat => ({
+      ...cat,
+      selected: selected.includes(cat.name)
+    }));
+  }, [categories, searchParams.categories]);
+
+  const allTags = useMemo(() => Array.from(new Set(initialData.flatMap((t) => t.tags))), [initialData]);
+  const selectedTags = useMemo(() => {
+    const selected = Array.isArray(searchParams.tags) ? searchParams.tags : [searchParams.tags].filter(Boolean) as string[];
+    return allTags.map(tag => ({
+      tag,
+      selected: selected.includes(tag)
+    }));
+  }, [allTags, searchParams.tags]);
+
+  const selectedBuiltWithOptions = useMemo(() => {
+    const selected = Array.isArray(searchParams.builtWith) ? searchParams.builtWith : [searchParams.builtWith].filter(Boolean) as string[];
+    return builtWithOptions.map(opt => ({
+      ...opt,
+      selected: selected.includes(opt.text.toLowerCase())
+    }));
+  }, [searchParams.builtWith]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -65,49 +106,51 @@ const Templates = ({
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-12 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
           placeholder="Search..."
-          required
         />
+        {isPending && (
+           <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gold" />
+           </div>
+        )}
       </div>
 
-      <div
-        className="grid grid-cols-1 md:grid-cols-[30%_1fr] gap-4"
-      >
+      <div className="grid grid-cols-1 md:grid-cols-[30%_1fr] gap-4">
         <FilterOptions
           categories={selectedCategories}
-          setCategories={setSelectedCategories}
+          setCategories={(updated) => {
+             const selected = (updated as any[]).filter(c => c.selected).map(c => c.name);
+             updateFilters({ categories: selected });
+          }}
           tags={selectedTags}
-          setTags={setSelectedTags}
+          setTags={(updated) => {
+            const selected = (updated as any[]).filter(t => t.selected).map(t => t.tag);
+            updateFilters({ tags: selected });
+          }}
           builtWithOptions={selectedBuiltWithOptions}
-          setBuiltWithOptions={setSelectedBuiltWithOptions}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          minRating={minRating}
-          setMinRating={setMinRating}
-          setMinPrice={setMinPrice}
-          setMaxPrice={setMaxPrice}
-          sortedBy={sortedBy}
-          setSortedBy={setSortedBy}
+          setBuiltWithOptions={(updated) => {
+            const selected = (updated as any[]).filter(b => b.selected).map(b => b.text.toLowerCase());
+            updateFilters({ builtWith: selected });
+          }}
+          minPrice={Number(searchParams.minPrice) || 0}
+          maxPrice={Number(searchParams.maxPrice) || 0}
+          setMinPrice={(val) => updateFilters({ minPrice: String(val) })}
+          setMaxPrice={(val) => updateFilters({ maxPrice: String(val) })}
+          minRating={Number(searchParams.minRating) || 0}
+          setMinRating={(val) => updateFilters({ minRating: String(val) })}
+          sortedBy={(searchParams.sortBy as any) || "popular"}
+          setSortedBy={(val) => updateFilters({ sortBy: val })}
         />
-        <Suspense
-          fallback={
+        
+        <div className="flex flex-col gap-6">
+          {isPending ? (
             <div className="flex items-center justify-center flex-wrap gap-6">
               {[...Array(6)].map((_, idx) => (
                 <TemplateSkeleton key={idx} />
               ))}
             </div>
-          }
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center flex-wrap gap-6">
-              {[...Array(6)].map((_, idx) => (
-                <TemplateSkeleton key={idx} />
-              ))}
-            </div>
-          ) : templates.length > 0 ? (
-            <div
-              className={`grid grid-cols-1 md:grid-cols-2 gap-5`}
-            >
-              {templates.map((template) => (
+          ) : initialData.length > 0 ? (
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-5`}>
+              {initialData.map((template) => (
                 <Template
                   showActionButtons={true}
                   showPrice={true}
@@ -149,10 +192,11 @@ const Templates = ({
               </div>
             </div>
           )}
-        </Suspense>
+        </div>
       </div>
     </div>
   );
 };
 
 export default memo(Templates);
+

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { Input } from "@/components/ui/input";
 
-const SigninForm = ({ queryMessage }: { queryMessage: String }) => {
+const SigninForm = ({ queryMessage, queryURL }: { queryMessage: String, queryURL: string }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -47,7 +47,7 @@ const SigninForm = ({ queryMessage }: { queryMessage: String }) => {
 
         if (data?.success) {
             setReload(prev => !prev);
-            router.push('/');
+            router.push(queryURL || '/');
         } else {
             if (response.status === 423) {
                 setMessage({
@@ -83,12 +83,6 @@ const SigninForm = ({ queryMessage }: { queryMessage: String }) => {
             }
         }
     };
-
-    useEffect(() => {
-        // remove the message from the query params
-        if (queryMessage === "unauthorized")
-            router.replace(`/signin`, { scroll: false });
-    }, []);
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

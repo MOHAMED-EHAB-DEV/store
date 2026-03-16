@@ -98,13 +98,9 @@ const nextConfig: NextConfig = {
       "@visx/tooltip",
       "socket.io-client",
     ],
-    // inlineCss: true,
     optimizeCss: true,
     esmExternals: true,
   },
-  // typescript: {
-  //     ignoreBuildErrors: true,
-  // },
   reactStrictMode: true,
   cacheComponents: true,
   cacheLife: {

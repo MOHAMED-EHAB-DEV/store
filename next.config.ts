@@ -120,17 +120,6 @@ const nextConfig: NextConfig = {
       expire: 60 * 60 * 24 * 7,
     },
   },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "utfs.io",
-        pathname: "/**",
-      },
-    ],
-    formats: ["image/avif", "image/webp"],
-    qualities: [100, 75],
-  },
 };
 
 export default nextConfig;

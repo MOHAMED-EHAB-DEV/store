@@ -41,7 +41,7 @@ async function getMessages(request: NextRequest, { params }: RouteParams) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) {
         return createErrorResponse("Invalid token", 401);
     }
@@ -74,7 +74,7 @@ async function addMessage(request: NextRequest, { params }: RouteParams) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) {
         return createErrorResponse("Invalid token", 401);
     }

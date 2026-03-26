@@ -78,7 +78,7 @@ const getInitialData = async (params: {
 
     const data = await response.json();
     if (data.success) {
-      return JSON.parse(JSON.stringify(data.data));
+      return data.data;
     } else {
       throw new Error("Failed to fetch templates");
     }
@@ -95,7 +95,7 @@ interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const templates = await getInitialData(params);
-  const categories = JSON.parse(JSON.stringify(await getCategories())) as ICategory[];
+  const categories = await getCategories() as ICategory[];
 
   return (
     <main

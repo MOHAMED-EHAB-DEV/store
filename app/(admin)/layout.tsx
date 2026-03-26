@@ -2,7 +2,6 @@ import LayoutContainer from "@/components/Admin/Layout/LayoutContainer";
 import { authenticateUser } from "@/middleware/auth";
 import { redirect } from "next/navigation";
 
-
 export default async function RootLayout({
   children,
 }: Readonly<{

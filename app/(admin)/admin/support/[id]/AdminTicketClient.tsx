@@ -62,7 +62,10 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
     useEffect(() => {
         if (isConnected && ticketId) {
             joinTicket(ticketId);
-            return () => leaveTicket(ticketId);
+            const leave = (ticketId: string) => {
+                leaveTicket(ticketId);
+            }
+            return () => leave(ticketId);
         }
     }, [isConnected, ticketId, joinTicket, leaveTicket]);
 

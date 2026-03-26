@@ -16,7 +16,7 @@ async function getNotifications(request: NextRequest) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) {
         return createErrorResponse("Unauthorized", 401);
     }
@@ -57,7 +57,7 @@ async function markAsRead(request: NextRequest) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) {
         return createErrorResponse("Unauthorized", 401);
     }

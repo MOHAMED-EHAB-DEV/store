@@ -1,22 +1,22 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import User from "./models/User";
 import { cookies } from "next/headers";
-
 // Verify JWT token and return decoded payload
-export function verifyToken(token: string): { userId: string; role: string } | null {
+export async function verifyToken(token: string): Promise<{ userId: string; role: string; banned?: boolean } | null> {
     try {
         const secret = process.env.JWT_SECRET;
         if (!secret) throw new Error("JWT secret is not defined");
 
-        const decoded = jwt.verify(token, secret);
+        const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
 
-        if (typeof decoded === "string" || !("id" in decoded)) {
+        if (!payload || !payload.id) {
             return null;
         }
 
         return {
-            userId: decoded.id as string,
-            role: (decoded.role as string) || "user"
+            userId: payload.id as string,
+            role: (payload.role as string) || "user",
+            banned: payload.banned as boolean | undefined
         };
     } catch (error) {
         return null;
@@ -34,14 +34,14 @@ export async function getUserFromServer({ headerToken = "" }: { headerToken: str
         const secret = process.env.JWT_SECRET;
         if (!secret) throw new Error("JWT secret is not defined");
 
-        const decoded = jwt.verify(token, secret);
+        const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
 
-        if (typeof decoded === "string" || !("id" in decoded)) {
+        if (!payload || !payload.id) {
             throw new Error("Invalid token payload");
         }
 
-        const user = await User.findById(decoded.id).select(
-            "_id name email avatar role online"
+        const user = await User.findById(payload.id).select(
+            "_id name email avatar role online banned"
         );
         if (!user) return null;
         const data = {
@@ -51,6 +51,7 @@ export async function getUserFromServer({ headerToken = "" }: { headerToken: str
             avatar: user.avatar,
             role: user.role,
             online: user.online,
+            banned: user.banned
         };
         return JSON.parse(JSON.stringify(data));
     } catch (error) {

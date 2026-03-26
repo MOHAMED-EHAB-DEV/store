@@ -37,10 +37,7 @@ async function getDashboardData() {
 }
 
 export default async function DashboardPage() {
-  const user = await authenticateUser(true);
-  if (!user) redirect("/");
-
   const data = await getDashboardData();
 
-  return <DashboardHome user={user} data={data} />;
+  return <DashboardHome data={data} />;
 }

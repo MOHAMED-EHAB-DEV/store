@@ -19,7 +19,7 @@ async function getTickets(request: NextRequest) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) {
         return createErrorResponse("Invalid token", 401);
     }
@@ -57,7 +57,7 @@ async function createTicket(request: NextRequest) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) {
         return createErrorResponse("Invalid token", 401);
     }

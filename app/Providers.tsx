@@ -1,16 +1,13 @@
-import { ReactNode } from "react";
-import { UserProvider } from "@/context/UserContext";
-import { AnalyticsProvider } from "@/context/AnalyticsContext";
-
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
+import { GlobalStoreInitializer } from "@/components/shared/GlobalStoreInitializer";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <Suspense fallback={null}>
-      <AnalyticsProvider>
-        <UserProvider>{children}</UserProvider>
-      </AnalyticsProvider>
+      <GlobalStoreInitializer />
+      {children}
     </Suspense>
   );
 };
+
 export default Providers;

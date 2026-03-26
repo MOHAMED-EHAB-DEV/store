@@ -16,7 +16,7 @@ async function getAdminTickets(request: NextRequest) {
         return createErrorResponse("Unauthorized", 401);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded || decoded.role !== "admin") {
         return createErrorResponse("Forbidden", 403);
     }

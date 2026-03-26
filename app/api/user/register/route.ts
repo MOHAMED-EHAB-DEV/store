@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
@@ -104,26 +104,27 @@ async function registerHandler(req: NextRequest): Promise<NextResponse<ApiRespon
     }
 
     // Generate JWT token
-    const token = jwt.sign(
-      {
-        id: newUser._id,
-        email: newUser.email,
-        avatar: newUser.avatar,
-        role: newUser.role
-      },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const secret = new TextEncoder().encode(JWT_SECRET);
+    const token = await new SignJWT({
+      id: newUser._id.toString(),
+      email: newUser.email,
+      avatar: newUser.avatar,
+    })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('7d')
+    .sign(secret);
+
 
     // Create response
     const response = NextResponse.json(
       {
         message: "Registered successfully",
-        user: {
-          name: newUser.name,
-          email: newUser.email,
-          role: newUser.role,
-        },
+        // user: {
+        //   name: newUser.name,
+        //   email: newUser.email,
+        //   role: newUser.role,
+        //   banned: newUser.banned,
+        // },
         success: true,
       },
       { status: 200 }

@@ -18,7 +18,7 @@ async function getStats(request: NextRequest) {
             return createErrorResponse("Unauthorized", 401, { req: request });
         }
 
-        const decoded = verifyToken(token);
+        const decoded = await verifyToken(token);
         if (!decoded || decoded.role !== "admin") {
             return createErrorResponse("Forbidden", 403, { req: request });
         }

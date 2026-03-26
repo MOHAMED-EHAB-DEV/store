@@ -65,7 +65,7 @@ const RegisterForm = () => {
     // navigate("/verify-email", { state: { email: formData.email } });
 
     // Redirect to Main Page
-    setReload((prev) => !prev);
+    setReload();
     router.push("/");
   };
 

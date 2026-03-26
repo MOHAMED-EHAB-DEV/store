@@ -10,5 +10,7 @@ export default async function RootLayout({
   const user = await authenticateUser(true, false);
 
   if (!user) redirect("/");
+  if (user.banned) redirect("/banned");
+
   return <LayoutContainer user={user}>{children}</LayoutContainer>;
 }

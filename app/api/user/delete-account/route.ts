@@ -2,89 +2,105 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createErrorResponse,
+  handleApiError,
+  withAPIMiddleware,
+} from "@/lib/utils/api-helpers";
 
 // Types for better type safety
 interface DeletingRequest {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 interface ApiResponse {
-    success: boolean;
-    message: string;
+  success: boolean;
+  message: string;
 }
 
 // Validation helper
 function validateDeleteRequest(body: any): body is DeletingRequest {
-    return (
-        body &&
-        typeof body.email === 'string' &&
-        typeof body.password === 'string' &&
-        body.email.length > 0 &&
-        body.password.length > 0 &&
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)
-    );
+  return (
+    body &&
+    typeof body.email === "string" &&
+    typeof body.password === "string" &&
+    body.email.length > 0 &&
+    body.password.length > 0 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)
+  );
 }
 
-async function deleteAccountHandler(req: NextRequest): Promise<NextResponse<ApiResponse>> {
-    try {
-        // Parse and validate request body
-        const body = await req.json();
+async function deleteAccountHandler(
+  req: NextRequest,
+): Promise<NextResponse<ApiResponse>> {
+  try {
+    // Parse and validate request body
+    const body = await req.json();
 
-        if (!validateDeleteRequest(body)) {
-            return createErrorResponse("Invalid request. Valid email and password are required.", 400, { req }) as any;
-        }
-
-        const { email, password } = body;
-        const normalizedEmail = email.toLowerCase().trim();
-
-        // Connect to database
-        await connectToDatabase();
-
-        // Find user with password
-        const user = await User.findOne(
-            { email: normalizedEmail },
-            { password: 1, email: 1 }
-        );
-
-        if (!user) {
-            return createErrorResponse("User not Found", 401, { req }) as any;
-        }
-
-        // Verify password
-        const validPassword = await bcrypt.compare(password, user?.password! as string);
-
-        if (!validPassword) {
-            return createErrorResponse("Invalid Password", 401, { req }) as any;
-        }
-
-        // Delete User
-        await User.findByIdAndDelete(user._id.toString());
-
-        const response = NextResponse.json({
-            message: "Deleted Successfully",
-            success: true,
-        }, { status: 200 });
-
-        response.cookies.set("token", "", {
-            httpOnly: true,
-            expires: new Date(0),
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-        });
-
-        return response;
-    } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "deleteAccount" }) as any;
+    if (!validateDeleteRequest(body)) {
+      return createErrorResponse(
+        "Invalid request. Valid email and password are required.",
+        400,
+        { req },
+      ) as any;
     }
+
+    const { email, password } = body;
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Connect to database
+    await connectToDatabase();
+
+    // Find user with password
+    const user = await User.findOne(
+      { email: normalizedEmail },
+      { password: 1, email: 1 },
+    );
+
+    if (!user) {
+      return createErrorResponse("User not Found", 401, { req }) as any;
+    }
+
+    // Verify password
+    const validPassword = await bcrypt.compare(
+      password,
+      user?.password! as string,
+    );
+
+    if (!validPassword) {
+      return createErrorResponse("Invalid Password", 401, { req }) as any;
+    }
+
+    // Delete User
+    await User.findByIdAndDelete(user._id.toString());
+
+    const response = NextResponse.json(
+      {
+        message: "Deleted Successfully",
+        success: true,
+      },
+      { status: 200 },
+    );
+
+    response.cookies.set("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
+
+    return response;
+  } catch (error: any) {
+    if (error && typeof error === "object" && "digest" in error) throw error;
+    return handleApiError(error, req, { operation: "deleteAccount" }) as any;
+  }
 }
 
 export const DELETE = withAPIMiddleware(deleteAccountHandler, {
-    rateLimit: {
-        maxRequests: 5,
-        windowMs: 15 * 60 * 1000
-    }
-});
+  rateLimit: {
+    maxRequests: 5,
+    windowMs: 15 * 60 * 1000,
+  },
+});

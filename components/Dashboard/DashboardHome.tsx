@@ -11,20 +11,21 @@ import { Settings } from "@/components/ui/svgs/icons/Settings";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { useUserStore } from "@/store/useUserStore";
 
 interface DashboardHomeProps {
-    user: IUser;
     data: {
         templates: any[];
         tickets: any[];
     };
 }
 
-export default function DashboardHome({ user, data }: DashboardHomeProps) {
+export default function DashboardHome({ data }: DashboardHomeProps) {
+    const user = useUserStore((state) => state.user);
     const { templates, tickets } = data;
 
     const activeTickets = tickets.filter((t: any) => t.status !== "resolved").length;
-    const isPremium = user.tier === "pro";
+    const isPremium = user?.tier === "pro";
 
     const stats = [
         {
@@ -55,7 +56,7 @@ export default function DashboardHome({ user, data }: DashboardHomeProps) {
     return (
         <div className="p-6 space-y-6">
             <PageHeader
-                title={`Welcome back, ${user.name.split(" ")[0]}!`}
+                title={`Welcome back, ${user?.name.split(" ")[0]}!`}
                 description="Here's what's happening with your account"
             />
 

@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 import User from "@/lib/models/User";
@@ -18,23 +18,21 @@ export async function authenticateUser(
 
     if (!token) throw new Error("Token is not defined");
 
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error("JWT secret is not defined");
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+    const { payload } = await jwtVerify(token, secret);
 
-    const decoded = jwt.verify(token, secret);
-
-    if (typeof decoded === "string" || !("id" in decoded)) {
+    if (typeof payload === "string" || !("id" in payload)) {
       throw new Error("Invalid token payload");
     }
 
     if (connectDB) await connectToDatabase();
 
     let selection =
-      "name email role avatar googleId isEmailVerified tier online lastSeen createdAt updatedAt lastLogin loginAttempts lockUntil";
+      "name email role avatar isEmailVerified banned tier online lastSeen createdAt updatedAt lastLogin loginAttempts lockUntil";
     if (includePurchasedTemplates) selection += " purchasedTemplates";
     if (includeId) selection += " _id";
 
-    const user = await User.findOne({ _id: decoded.id }).select(selection);
+    const user = await User.findOne({ _id: payload.id }).select(selection);
 
     if (!user) {
       return null;

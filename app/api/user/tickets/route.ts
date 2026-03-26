@@ -6,12 +6,12 @@ import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/ut
 
 async function getUserTickets(req: NextRequest) {
     try {
-        const user = await authenticateUser(true, false, true);
+        await connectToDatabase();
+        const user = await authenticateUser();
         if (!user) {
             return createErrorResponse("Unauthorized", 401, { req });
         }
 
-        await connectToDatabase();
 
         const { searchParams } = new URL(req.url);
         const limit = parseInt(searchParams.get("limit") || "100");

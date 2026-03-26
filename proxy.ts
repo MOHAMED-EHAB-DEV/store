@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { RateLimiter } from "@/lib/utils/api-helpers";
+import { jwtVerify } from "jose";
 
 function addSecurityHeaders(response: NextResponse) {
   response.headers.delete("X-Powered-By");
@@ -125,7 +126,7 @@ export async function proxy(req: NextRequest) {
 
   // 3. Auth and Proxy Logic
   if (
-    (pathname.includes("/login") || pathname.includes("/register")) &&
+    (pathname.includes("/signin") || pathname.includes("/register")) &&
     token
   ) {
     const response = NextResponse.redirect(new URL(`/dashboard`, req.url));
@@ -141,63 +142,27 @@ export async function proxy(req: NextRequest) {
     return response;
   };
 
-  if (isProtectedRoute(pathname)) {
-    if (!token) return reLogin();
+  let decodedToken: any = null;
+  if (token) {
     try {
-      const userResponse = await fetch(
-        new URL("/api/user", req.nextUrl.origin),
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      const userData = await userResponse.json();
-      if (userData.user.banned) {
-        const response = NextResponse.redirect(new URL(`/banned`, req.url));
-        addSecurityHeaders(response);
-        return response;
-      }
-      if (!userData.user?._id) return reLogin();
-    } catch (error) {
-      return reLogin();
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+      const { payload } = await jwtVerify(token, secret);
+      decodedToken = payload;
+    } catch (e) {
+      decodedToken = null;
     }
+  }
+
+  if (isProtectedRoute(pathname)) {
+    if (!token || !decodedToken) return reLogin();
   }
 
   if (isAdminRoute(pathname)) {
-    if (!token) return reLogin();
-    try {
-      const userResponse = await fetch(
-        new URL("/api/user", req.nextUrl.origin),
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      const userData = await userResponse.json();
-      if (!userData.user?._id || userData.user?.role !== "admin") {
-        const response = NextResponse.redirect(new URL("/", req.url));
-        addSecurityHeaders(response);
-        return response;
-      }
-    } catch (error) {
-      return reLogin();
-    }
+    if (!token || !decodedToken) return reLogin();
   }
 
   if (isBannedRoute(pathname)) {
-    if (!token) {
-      const response = NextResponse.redirect(new URL("/", req.url));
-      addSecurityHeaders(response);
-      return response;
-    }
-    try {
-      const userResponse = await fetch(
-        new URL("/api/user", req.nextUrl.origin),
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      const userData = await userResponse.json();
-      if (!userData.user?._id || !userData.user?.banned) {
-        const response = NextResponse.redirect(new URL("/", req.url));
-        addSecurityHeaders(response);
-        return response;
-      }
-    } catch (error) {
-      return reLogin();
-    }
+    if (!token || !decodedToken) return reLogin();
   }
 
   const response = NextResponse.next();

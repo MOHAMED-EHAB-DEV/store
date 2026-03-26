@@ -1,178 +1,114 @@
 "use client";
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-  Context,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { useUserStore } from "@/store/useUserStore";
+import { useSocketStore } from "@/store/useSocketStore";
 import { useRouter } from "next/navigation";
-import { IUser } from "@/types";
-import { useSocket, SocketInterface } from "@/hooks/useSocket";
-import { useAnalytics } from "@/context/AnalyticsContext";
+import { useCallback } from "react";
+import { ITemplate } from "@/types";
 
-interface IUserContext extends SocketInterface {
-  user: IUser | null;
-  setUser: Dispatch<SetStateAction<IUser | null>>;
-  setReload: Dispatch<SetStateAction<boolean>>;
-  favoriteTemplates: String[];
-  purchasedTemplates: String[];
-  addToFavorites: (templateId: string) => void;
-  removeFromFavorites: (templateId: string) => void;
-  toggleFavorite: (templateId: string) => void;
-}
+// Define minimal types to satisfy the backward compat
+interface SocketMessage { ticketId: string; message: any; }
+interface TicketUpdate { ticketId: string; updates: any; }
 
-const UserContext = createContext<IUserContext>({
-  user: null,
-  setUser: () => {},
-  setReload: () => {},
-  favoriteTemplates: [],
-  purchasedTemplates: [],
-  addToFavorites: () => {},
-  removeFromFavorites: () => {},
-  toggleFavorite: () => {},
-  isConnected: false,
-  joinTicket: () => {},
-  leaveTicket: () => {},
-  sendMessage: () => {},
-  setTyping: () => {},
-  notifyTicketUpdate: () => {},
-  onNewMessage: () => () => {},
-  onTicketStatusChange: () => () => {},
-  onNewNotification: () => () => {},
-  onUserStatusChange: () => () => {},
-  typingUsers: {},
-});
-
-export function UserProvider({ children }: { children: ReactNode }) {
+export const useUser = () => {
   const router = useRouter();
-  const [user, setUser] = useState<IUser | null>(null);
-  const [reload, setReload] = useState(false);
-  const [favoriteTemplates, setFavoriteTemplates] = useState<String[]>([]);
-  const [purchasedTemplates, setPurchasedTemplates] = useState([]);
+  const userState = useUserStore();
+  const socketState = useSocketStore();
+  const { socket, typingUsers } = socketState;
 
-  const { visitorId } = useAnalytics();
-
-  // Initialize socket globally when visitorId is ready (always), auth users get extra role
-  const socket = useSocket({
-    enabled: !!visitorId,
-    visitorId,
-    userId: user?._id,
-    role: user?.role,
-  });
-
-  const fetchUser = async () => {
-    try {
-      const res = await fetch("/api/user");
-      const data = await res.json();
-      setUser(data.user);
-      return data.user;
-    } catch (error) {
-      setUser(null);
-    }
-  };
-
-  const fetchPurchasedTemplates = async () => {
-    try {
-      const res = await fetch(`/api/user/purchased-templates`);
-      const data = await res.json();
-      if (data.success) {
-        setPurchasedTemplates(data.data.map((template: any) => template._id));
-      }
-    } catch (error) {
-      setPurchasedTemplates([]);
-    }
-  };
-
-  const fetchFavorites = async () => {
-    try {
-      const res = await fetch(`/api/user/favorites`);
-      const data = await res.json();
-      if (data.success) {
-        setFavoriteTemplates(data.data.map((template: any) => template._id));
-      }
-    } catch (error) {
-      setFavoriteTemplates([]);
-    }
-  };
-
-  const addToFavorites = async (templateId: string) => {
-    if (!user) return;
-    setFavoriteTemplates((prev) => [...prev, templateId] as String[]);
+  const addToFavorites = async (template: ITemplate) => {
+    if (!userState.user) return;
+    userState.addToFavoritesLocal(template);
     try {
       const res = await fetch("/api/user/favorites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user?._id, templateId, action: "add" }),
+        body: JSON.stringify({ userId: userState.user?._id, templateId: template._id, action: "add" }),
       });
       const data = await res.json();
       if (!data.success) {
-        setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
-        console.error("Failed to add to favorites:", data.error);
+        userState.removeFromFavoritesLocal(template);
       }
     } catch (error) {
-      setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
-      console.error("Error adding to favorites:", error);
+      userState.removeFromFavoritesLocal(template);
     }
   };
 
-  const removeFromFavorites = async (templateId: string) => {
-    if (!user) return;
-    setFavoriteTemplates((prev) => prev.filter((id) => id !== templateId));
+  const removeFromFavorites = async (template: ITemplate) => {
+    if (!userState.user) return;
+    userState.removeFromFavoritesLocal(template);
     try {
       const res = await fetch("/api/user/favorites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user._id,
-          templateId,
-          action: "remove",
-        }),
+        body: JSON.stringify({ userId: userState.user._id, templateId: template._id, action: "remove" }),
       });
       const data = await res.json();
       if (!data.success) {
-        setFavoriteTemplates((prev) => [...prev, templateId]);
-        console.error("Failed to remove from favorites:", data.error);
+        userState.addToFavoritesLocal(template);
       }
     } catch (error) {
-      setFavoriteTemplates((prev) => [...prev, templateId]);
-      console.error("Error removing from favorites:", error);
+      userState.addToFavoritesLocal(template);
     }
   };
 
-  const toggleFavorite = (templateId: string) => {
-    if (!user) return router.push("/signin?message=unauthorized");
-    if (favoriteTemplates.includes(templateId)) removeFromFavorites(templateId);
-    else addToFavorites(templateId);
+  const toggleFavorite = (template: ITemplate) => {
+    if (!userState.user) return router.push("/signin?message=unauthorized");
+    if (userState.favoriteTemplates.some(t => t._id === template._id)) removeFromFavorites(template);
+    else addToFavorites(template);
   };
 
-  useEffect(() => {
-    fetchUser().then((u) => {
-      fetchFavorites();
-      fetchPurchasedTemplates();
-    });
-  }, [reload]);
+  // Socket Proxy Methods
+  const joinTicket = useCallback((ticketId: string) => socket?.emit("join-ticket", ticketId), [socket]);
+  const leaveTicket = useCallback((ticketId: string) => socket?.emit("leave-ticket", ticketId), [socket]);
+  const sendMessage = useCallback((ticketId: string, message: any) => socket?.emit("send-message", { ticketId, message }), [socket]);
+  const setTyping = useCallback((ticketId: string, isTyping: boolean) => socket?.emit("typing", { ticketId, isTyping }), [socket]);
+  const notifyTicketUpdate = useCallback((ticketId: string, updates: any) => socket?.emit("ticket-updated", { ticketId, updates }), [socket]);
 
-  return (
-    <UserContext.Provider
-      value={{
-        user,
-        setUser,
-        setReload,
-        favoriteTemplates,
-        purchasedTemplates,
-        addToFavorites,
-        removeFromFavorites,
-        toggleFavorite,
-        ...socket,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
-}
+  const onNewMessage = useCallback((callback: (data: SocketMessage) => void) => {
+    socket?.on("new-message", callback);
+    return () => { socket?.off("new-message", callback); };
+  }, [socket]);
 
-export const useUser = () => useContext(UserContext);
+  const onTicketStatusChange = useCallback((callback: (data: TicketUpdate) => void) => {
+    socket?.on("ticket-status-changed", callback);
+    return () => { socket?.off("ticket-status-changed", callback); };
+  }, [socket]);
+
+  const onNewNotification = useCallback((callback: (notification: any) => void) => {
+    socket?.on("new-notification", callback);
+    return () => { socket?.off("new-notification", callback); };
+  }, [socket]);
+
+  const onUserStatusChange = useCallback((callback: (data: { userId: string; status: "online" | "offline" }) => void) => {
+    const handleOnline = (data: { userId: string }) => callback({ userId: data.userId, status: "online" });
+    const handleOffline = (data: { userId: string }) => callback({ userId: data.userId, status: "offline" });
+    socket?.on("user-online", handleOnline);
+    socket?.on("user-offline", handleOffline);
+    return () => {
+      socket?.off("user-online", handleOnline);
+      socket?.off("user-offline", handleOffline);
+    };
+  }, [socket]);
+
+  return {
+    user: userState.user,
+    setUser: userState.setUser,
+    setReload: userState.triggerReload,
+    favoriteTemplates: userState.favoriteTemplates,
+    purchasedTemplates: userState.purchasedTemplates,
+    addToFavorites,
+    removeFromFavorites,
+    toggleFavorite,
+    isConnected: socketState.isConnected,
+    joinTicket,
+    leaveTicket,
+    sendMessage,
+    setTyping,
+    notifyTicketUpdate,
+    onNewMessage,
+    onTicketStatusChange,
+    onNewNotification,
+    onUserStatusChange,
+    typingUsers,
+  };
+};

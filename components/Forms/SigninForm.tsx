@@ -46,7 +46,7 @@ const SigninForm = ({ queryMessage, queryURL }: { queryMessage: String, queryURL
         const data = await response.json();
 
         if (data?.success) {
-            setReload(prev => !prev);
+            setReload();
             router.push(queryURL || '/');
         } else {
             if (response.status === 423) {

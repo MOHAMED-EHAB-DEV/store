@@ -23,7 +23,7 @@ const Template = ({
     showActionButtons?: Boolean;
 }) => {
     const { favoriteTemplates, toggleFavorite } = useUser();
-    const isFavorite = favoriteTemplates?.includes(template._id);
+    const isFavorite = favoriteTemplates?.some((favTemplate: ITemplate) => favTemplate._id === template._id);
 
     return (
         <Link
@@ -59,7 +59,7 @@ const Template = ({
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleFavorite(template._id);
+                    toggleFavorite(template);
                     sendGTMEvent({ 
                         event: "template_favorite_toggle", 
                         template_id: template._id, 

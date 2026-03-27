@@ -5,7 +5,6 @@ import path from "path";
 import crypto from "crypto";
 import { handleApiError } from "@/lib/utils/api-helpers";
 
-/** Base URL for UploadThing's public CDN. Override via UPLOADTHING_CDN env var if needed. */
 const UT_CDN_BASE =
   process.env.UPLOADTHING_CDN?.replace(/\/$/, "") ?? "https://7ve6btemdp.ufs.sh/f";
 
@@ -59,8 +58,6 @@ export async function GET(
     const { src: encodedSrc } = await params;
     const rawSrc = decodeURIComponent(encodedSrc);
 
-    // If the utility embedded only an UploadThing file key (prefixed with "ut:")
-    // reconstruct the full CDN URL here instead of passing a huge encoded URL.
     src = rawSrc.startsWith("ut:")
       ? `${UT_CDN_BASE}/${rawSrc.slice(3)}`
       : rawSrc;

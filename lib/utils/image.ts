@@ -1,6 +1,4 @@
-/** Known UploadThing CDN hostnames — only the file key is embedded in the proxy path. */
-const UPLOADTHING_HOSTS = new Set(["https://7ve6btemdp.ufs.sh/f"]);
-
+const UPLOADTHING_HOSTS = new Set(["https://7ve6btemdp.ufs.sh/f", "https://utfs.io/f"]);
 /**
  * Constructs a URL for the custom high-performance image proxy.
  *

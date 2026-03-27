@@ -1,0 +1,29 @@
+import * as v from "valibot";
+import { CategorySchema } from "./category";
+
+export const TemplateSchema = v.object({
+  _id: v.string(),
+  title: v.string(),
+  description: v.string(),
+  thumbnail: v.string(),
+  demoLink: v.string(),
+  price: v.number(),
+  content: v.union([v.string(), v.undefined()]),
+  categories: v.array(v.union([v.string(), CategorySchema])),
+  tags: v.array(v.string()),
+  author: v.optional(v.union([v.string(), v.any()])), 
+  downloads: v.number(),
+  averageRating: v.number(),
+  gradient: v.optional(v.string()),
+  reviews: v.optional(v.number()),
+  isActive: v.boolean(),
+  builtWith: v.union([v.literal("framer"), v.literal("figma"), v.literal("vite"), v.literal("next.js")]),
+  views: v.number(),
+  reviewCount: v.number(),
+  type: v.union([v.literal("coded"), v.literal("framer"), v.literal("figma")]),
+  isPaid: v.boolean(),
+  createdAt: v.union([v.date(), v.string()]),
+  updatedAt: v.union([v.date(), v.string()]),
+  lastViewedAt: v.union([v.date(), v.string()]),
+  fileKey: v.string(),
+});

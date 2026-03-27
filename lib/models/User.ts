@@ -9,8 +9,8 @@ export interface IUser extends Document {
     avatar?: string;
     role: string;
     createdAt: Date;
-    purchasedTemplates: String[];
-    favorites: String[];
+    purchasedTemplates: string[];
+    favorites: string[];
     updatedAt: Date;
     lastLogin?: Date;
     isEmailVerified: boolean;

@@ -58,16 +58,16 @@ export function useSocket({
   // Initialize socket connection
   useEffect(() => {
     if (!enabled) {
-      console.log("[Socket] Disabled");
+      // console.log("[Socket] Disabled");
       return;
     }
 
     if (!visitorId) {
-      console.log("[Socket] No visitorId provided");
+      // console.log("[Socket] No visitorId provided");
       return;
     }
 
-    console.log("[Socket] Connecting to:", SOCKET_URL);
+    // console.log("[Socket] Connecting to:", SOCKET_URL);
 
     const socket = io(SOCKET_URL, {
       auth: { userId, visitorId, role },
@@ -79,23 +79,23 @@ export function useSocket({
     });
 
     socket.on("connect", () => {
-      console.log("[Socket] Connected! ID:", socket.id);
+      // console.log("[Socket] Connected! ID:", socket.id);
       setIsConnected(true);
     });
 
     socket.on("disconnect", () => {
-      console.log("[Socket] Disconnected");
+      // console.log("[Socket] Disconnected");
       setIsConnected(false);
     });
 
     socket.on("connect_error", (error) => {
-      console.error("[Socket] Connection error:", error.message);
+      // console.error("[Socket] Connection error:", error.message);
       setIsConnected(false);
     });
 
     // Handle typing status
     socket.on("user-typing", (data: TypingStatus) => {
-      console.log("[Socket] User typing:", data);
+      // console.log("[Socket] User typing:", data);
       setTypingUsers((prev) => {
         const ticketTyping = prev[data.ticketId] || [];
         if (data.isTyping) {
@@ -122,7 +122,7 @@ export function useSocket({
 
   // Join a ticket room
   const joinTicket = useCallback((ticketId: string) => {
-    console.log("[Socket] Joining ticket:", ticketId);
+    // console.log("[Socket] Joining ticket:", ticketId);
     socketRef.current?.emit("join-ticket", ticketId);
   }, []);
 
@@ -138,7 +138,7 @@ export function useSocket({
 
   // Set typing status
   const setTyping = useCallback((ticketId: string, isTyping: boolean) => {
-    console.log("[Socket] Setting typing:", ticketId, isTyping);
+    // console.log("[Socket] Setting typing:", ticketId, isTyping);
     socketRef.current?.emit("typing", { ticketId, isTyping });
   }, []);
 

@@ -20,11 +20,11 @@ export interface ITemplate extends Document {
   views: number;
   reviewCount: number;
   type: "framer" | "coded" | "figma";
-  isPaid: Boolean;
+  isPaid: boolean;
   createdAt: Date;
   updatedAt: Date;
   lastViewedAt: Date;
-  fileKey: String;
+  fileKey: string;
 }
 
 const TemplateSchema = new Schema<ITemplate>(

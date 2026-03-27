@@ -156,7 +156,7 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 </div>
 
                 {/* Content */}
-                <Markdown content={template.content} />
+                <Markdown content={template.content || ""} />
 
                 {/* Author Section */}
                 {/*<div className="flex items-center gap-4 border-t border-white/10 pt-8">*/}

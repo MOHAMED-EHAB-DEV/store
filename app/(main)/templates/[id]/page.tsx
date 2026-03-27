@@ -55,7 +55,7 @@ const getTemplate = async (id: string) => {
 };
 
 const getSimilarTemplates = async (
-  categoryIds: string[] | ICategory[],
+  categoryIds: (string | ICategory)[],
   builtWith: string,
   tags: string[],
   excludeId: string,

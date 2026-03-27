@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import AdminUsersClient from "@/components/Admin/AdminUsersClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "User Management | Admin Dashboard",
@@ -20,6 +21,9 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`,
+      {
+        headers: await headers()
+      }
     );
 
     if (!response.ok) return null;

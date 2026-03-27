@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 import { getCategories } from "@/static/categories";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Templates Management | Admin Dashboard",
@@ -22,7 +23,9 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
 
     try {
         const [templatesRes, categories] = await Promise.all([
-            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`),
+            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`, {
+                headers: await headers()
+            }),
             getCategories()
         ]);
 

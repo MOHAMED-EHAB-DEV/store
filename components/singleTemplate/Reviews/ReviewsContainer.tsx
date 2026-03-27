@@ -42,8 +42,7 @@ const ReviewsContainer = ({
   const router = useRouter();
 
   const addAccess =
-    (!userReviewed && purchasedTemplates.some((id) => id === templateId)) ||
-    user?.role === "admin";
+    !userReviewed && purchasedTemplates.some((id) => id === templateId);
 
   const loadReviews = async (pageNumber: number) => {
     try {

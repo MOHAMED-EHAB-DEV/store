@@ -145,8 +145,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const Page = async ({ params }: PageProps) => {
-    cacheLife("long-cache" as any);
     const { id } = await params;
+    cacheLife("long-cache" as any);
     cacheTag(`blog-${id}`, "blogs");
     const [blog, recentPosts] = await Promise.all([
         getData(id),

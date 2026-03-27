@@ -7,9 +7,15 @@ const Page = () => {
     <div>
       <Button
         className="btn btn-primary"
-        onClick={async () => updateTag("/")}
+        onClick={async () => updateTag("home")}
       >
         Refresh Home Page
+      </Button>
+      <Button
+        className="btn btn-secondary"
+        onClick={async () => updateTag("blogs")}
+      >
+        Refresh Blog Page
       </Button>
     </div>
   );

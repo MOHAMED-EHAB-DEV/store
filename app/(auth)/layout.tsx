@@ -8,7 +8,7 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const user = await authenticateUser();
+  const user = await authenticateUser(true);
 
   if (user) redirect("/");
   return <div>{children}</div>;

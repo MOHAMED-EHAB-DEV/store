@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import AdminBlogsClient from "@/components/Admin/AdminBlogsClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Blogs Management | Admin Dashboard",
@@ -18,10 +17,7 @@ async function getBlogs(searchParams: { [key: string]: string | undefined }) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/blogs?${params.toString()}`,
-      {
-        headers: await headers(),
-      },
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/blogs?${params.toString()}`,
     );
 
     if (!response.ok) return null;
@@ -51,8 +47,8 @@ export default async function AdminBlogsPage({ searchParams }: PageProps) {
 
   return (
     <AdminBlogsClient
-      initialData={data.data}
-      stats={data.stats}
+      initialData={data.data.data}
+      stats={data.data.stats}
       pagination={data.pagination}
       searchParams={params}
     />

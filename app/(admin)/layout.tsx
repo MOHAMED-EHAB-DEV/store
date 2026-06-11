@@ -7,7 +7,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await authenticateUser(true);
+  const user = await authenticateUser(true, false, false, true);
 
   if (!user || user?.role !== "admin") redirect("/");
   return <LayoutContainer user={user}>{children}</LayoutContainer>;

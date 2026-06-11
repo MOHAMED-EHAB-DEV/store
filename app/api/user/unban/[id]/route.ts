@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -35,7 +35,7 @@ async function unbanUser(request: NextRequest, { params }: RouteContext) {
         });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "unbanUser" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "unbanUser" });
     }
 }
 

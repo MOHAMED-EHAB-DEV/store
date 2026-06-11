@@ -1,4 +1,3 @@
-// app/api/free/download/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/database";
@@ -8,6 +7,7 @@ import { generateSignedDownloadUrl } from "@/lib/cloudinary";
 import {
     withAPIMiddleware,
     createErrorResponse,
+    createAPIResponse
 } from "@/lib/utils/api-helpers";
 import { userHasPurchased } from "@/lib/payments";
 import { authenticateUser } from "@/middleware/auth";

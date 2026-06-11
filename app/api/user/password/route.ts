@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import User from "@/lib/models/User";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 interface PasswordUpdateRequest {
     email: string;
@@ -92,7 +92,7 @@ async function updatePassword(req: NextRequest) {
 
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "updatePassword" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "updatePassword" });
     }
 }
 

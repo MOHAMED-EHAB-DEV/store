@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import FAQ from "@/lib/models/FAQ";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware, createAPIResponse, validatePagination } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -25,10 +25,10 @@ async function getAdminFAQ(request: NextRequest, { params }: RouteParams) {
             return createErrorResponse("FAQ not found", 404, { req: request });
         }
 
-        return NextResponse.json({ success: true, data: faq });
+        return createAPIResponse(faq);
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminGetFAQ" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminGetFAQ" });
     }
 }
 
@@ -63,14 +63,10 @@ async function updateAdminFAQ(request: NextRequest, { params }: RouteParams) {
             return createErrorResponse("FAQ not found", 404, { req: request });
         }
 
-        return NextResponse.json({
-            success: true,
-            data: faq,
-            message: "FAQ updated successfully",
-        });
+        return createAPIResponse(faq, { message: "FAQ updated successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminUpdateFAQ" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminUpdateFAQ" });
     }
 }
 
@@ -91,13 +87,12 @@ async function deleteAdminFAQ(request: NextRequest, { params }: RouteParams) {
             return createErrorResponse("FAQ not found", 404, { req: request });
         }
 
-        return NextResponse.json({
-            success: true,
+        return createAPIResponse(null, {
             message: "FAQ deleted successfully",
         });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminDeleteFAQ" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminDeleteFAQ" });
     }
 }
 

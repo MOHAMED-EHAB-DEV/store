@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 async function getUserTemplates(req: NextRequest) {
     try {
@@ -30,7 +30,7 @@ async function getUserTemplates(req: NextRequest) {
         });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "getUserTemplates" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getUserTemplates" });
     }
 }
 

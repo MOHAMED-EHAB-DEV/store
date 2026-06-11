@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
-import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 async function logout(req: NextRequest) {
     try {

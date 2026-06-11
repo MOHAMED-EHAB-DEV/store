@@ -1,5 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { NextRequest } from "next/server";
+import {
+  createErrorResponse,
+  withAPIMiddleware,
+  createAPIResponse,
+  validatePagination,
+} from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
@@ -13,15 +18,12 @@ async function getAdminUsers(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const { limit, skip, page } = validatePagination(request);
     const role = searchParams.get("role");
     const tier = searchParams.get("tier");
     const search = searchParams.get("search");
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
-
-    const skip = (page - 1) * limit;
 
     // Build query
     const query: any = {};
@@ -67,25 +69,25 @@ async function getAdminUsers(request: NextRequest) {
       ]),
     ]);
 
-    return NextResponse.json({
-      success: true,
-      data: users,
-      stats: stats[0] || { total: 0, free: 0, premium: 0, verified: 0 },
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
+    return createAPIResponse(
+      {
+        items: users,
+        stats: stats[0] || { total: 0, free: 0, premium: 0, verified: 0 },
       },
-    });
+      {
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+    );
   } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, request, {
-      message: "Failed to fetch users",
-      operation: "adminGetUsers",
-    });
+    if (error && typeof error === "object" && "digest" in error) throw error;
+    return createErrorResponse("Something went wrong", 500, { req: request, error: error, message: "Failed to fetch users",
+      operation: "adminGetUsers", });
   }
 }
 
 export const GET = withAPIMiddleware(getAdminUsers);
-

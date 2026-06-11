@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
 import { updateTag } from "next/cache";
 
@@ -40,7 +40,7 @@ async function getBlogPost(
         return createAPIResponse(post);
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "getBlogPost" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getBlogPost" });
     }
 }
 
@@ -74,7 +74,7 @@ async function updateBlogPost(
         return createAPIResponse(updatedBlog, { message: "Blog post updated successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "updateBlogPost" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "updateBlogPost" });
     }
 }
 
@@ -104,7 +104,7 @@ async function deleteBlogPost(
         return createAPIResponse(null, { message: "Blog post deleted successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "deleteBlogPost" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "deleteBlogPost" });
     }
 }
 

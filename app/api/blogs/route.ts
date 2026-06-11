@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, createErrorResponse, handleApiError, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
 import { revalidateTag } from "next/cache";
 
@@ -62,7 +62,7 @@ async function getBlogs(req: NextRequest) {
 
   } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, req, { operation: "getBlogs" });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getBlogs" });
   }
 }
 
@@ -96,7 +96,7 @@ async function createBlog(req: NextRequest) {
 
   } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, req, { operation: "createBlog" });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "createBlog" });
   }
 }
 

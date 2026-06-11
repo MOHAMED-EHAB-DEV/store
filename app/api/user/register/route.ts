@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { SignJWT } from "jose";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 // Types
 interface RegisterRequest {
@@ -44,7 +44,7 @@ function validateRegisterRequest(body: any): body is RegisterRequest {
   );
 }
 
-async function registerHandler(req: NextRequest): Promise<NextResponse<ApiResponse>> {
+async function registerHandler(req: NextRequest) {
   try {
     // Parse and validate request body
     const body = await req.json();
@@ -142,8 +142,10 @@ async function registerHandler(req: NextRequest): Promise<NextResponse<ApiRespon
 
     return response;
   } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, req, { operation: "userRegister" }) as any;
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: error,
+    });
   }
 }
 

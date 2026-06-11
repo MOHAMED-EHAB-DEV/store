@@ -1,6 +1,4 @@
-"use cache";
 import Link from "next/link";
-import { cacheLife, cacheTag } from "next/cache";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
@@ -51,13 +49,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const getData = async () => {
   try {
-    await connectToDatabase();
-    const blogs = await Blog.find({ isPublished: true })
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blogs`,{
+      method: 'GET',
+      next: { revalidate: 60 * 60 * 24 }
+    })
 
-    return JSON.parse(JSON.stringify(blogs)) as BlogPost[];
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.success ? data : [];
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Failed to fetch public blogs:", error);
@@ -133,8 +132,6 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
 };
 
 const Page = async () => {
-  cacheLife("long-cache" as any);
-  cacheTag("blogs")
   const blogs = await getData();
 
   return (

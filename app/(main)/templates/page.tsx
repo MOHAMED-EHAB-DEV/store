@@ -1,4 +1,3 @@
-import { cacheLife, cacheTag } from "next/cache";
 import Templates from "@/components/shared/Templates";
 import { ICategory } from "@/types";
 import { Metadata } from "next";
@@ -56,9 +55,6 @@ export async function generateMetadata({
 const getInitialData = async (params: {
   [key: string]: string | string[] | undefined;
 }) => {
-  "use cache";
-  cacheLife("short-cache" as any);
-  cacheTag("templates");
   try {
     const urlParams = new URLSearchParams();
 
@@ -74,6 +70,11 @@ const getInitialData = async (params: {
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${urlParams.toString()}`,
+      {
+        next: {
+          revalidate: 60 * 60 * 5,
+        },
+      },
     );
 
     const data = await response.json();
@@ -95,7 +96,7 @@ interface PageProps {
 const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const templates = await getInitialData(params);
-  const categories = await getCategories() as ICategory[];
+  const categories = (await getCategories()) as ICategory[];
 
   return (
     <main

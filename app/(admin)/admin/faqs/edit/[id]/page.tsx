@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import FAQForm from "@/components/Admin/FAQForm";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Edit FAQ | Admin",
@@ -15,9 +14,7 @@ interface PageProps {
 
 async function getFAQ(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs/${id}`, {
-            headers: await headers()
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs/${id}`);
 
         if (!response.ok) return null;
         const data = await response.json();

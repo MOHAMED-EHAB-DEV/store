@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import { getUserFromServer } from "@/lib/auth";
-import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 async function getUser(request: NextRequest) {
     try {
@@ -14,7 +14,7 @@ async function getUser(request: NextRequest) {
         return NextResponse.json({ user });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "getCurrentUser" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "getCurrentUser" });
     }
 }
 

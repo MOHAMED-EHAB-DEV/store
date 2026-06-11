@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware, createAPIResponse, validatePagination } from "@/lib/utils/api-helpers";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -27,10 +27,10 @@ async function getAdminUser(request: NextRequest, { params }: RouteParams) {
             return createErrorResponse("User not found", 404, { req: request });
         }
 
-        return NextResponse.json({ success: true, data: user });
+        return createAPIResponse(user);
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminGetUser" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminGetUser" });
     }
 }
 
@@ -70,14 +70,10 @@ async function updateAdminUser(request: NextRequest, { params }: RouteParams) {
             return createErrorResponse("User not found", 404, { req: request });
         }
 
-        return NextResponse.json({
-            success: true,
-            data: user,
-            message: "User updated successfully",
-        });
+        return createAPIResponse(user, { message: "User updated successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminUpdateUser" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminUpdateUser" });
     }
 }
 
@@ -103,13 +99,10 @@ async function deleteAdminUser(request: NextRequest, { params }: RouteParams) {
             return createErrorResponse("User not found", 404, { req: request });
         }
 
-        return NextResponse.json({
-            success: true,
-            message: "User deleted successfully",
-        });
+        return createAPIResponse(null, { message: "User deleted successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminDeleteUser" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminDeleteUser" });
     }
 }
 

@@ -1,5 +1,5 @@
 "use client";
-import { updateTag } from "next/cache";
+import revalidate from "@/actions/revalidateTag";
 import { Button } from "@/components/ui/button";
 
 const Page = () => {
@@ -7,13 +7,13 @@ const Page = () => {
     <div>
       <Button
         className="btn btn-primary"
-        onClick={async () => updateTag("home")}
+        onClick={async () => revalidate("/")}
       >
         Refresh Home Page
       </Button>
       <Button
         className="btn btn-secondary"
-        onClick={async () => updateTag("blogs")}
+        onClick={async () => revalidate("/blogs")}
       >
         Refresh Blog Page
       </Button>

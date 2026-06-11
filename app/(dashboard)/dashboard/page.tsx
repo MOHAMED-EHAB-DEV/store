@@ -1,7 +1,5 @@
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 import DashboardHome from "@/components/Dashboard/DashboardHome";
-import { authenticateUser } from "@/middleware/auth";
 
 export const metadata: Metadata = {
   title: "Dashboard | Home",

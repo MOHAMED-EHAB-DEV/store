@@ -5,7 +5,6 @@ import Ticket from "@/lib/models/Ticket";
 import {
     createAPIResponse,
     createErrorResponse,
-    handleApiError,
     withAPIMiddleware
 } from "@/lib/utils/api-helpers";
 import { notifyUserTicketStatusChanged } from "@/lib/utils/notifications";
@@ -70,7 +69,7 @@ async function updateAdminTicket(request: NextRequest, { params }: RouteParams) 
         return createAPIResponse(updatedTicket, { message: "Ticket updated" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminUpdateTicket" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminUpdateTicket" });
     }
 }
 

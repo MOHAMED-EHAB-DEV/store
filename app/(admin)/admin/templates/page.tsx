@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 import { getCategories } from "@/static/categories";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Templates Management | Admin Dashboard",
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 async function getTemplatesData(searchParams: { [key: string]: string | undefined }) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
     const params = new URLSearchParams();
     if (searchParams.page) params.set("page", searchParams.page);
@@ -23,9 +22,7 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
 
     try {
         const [templatesRes, categories] = await Promise.all([
-            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`, {
-                headers: await headers()
-            }),
+            fetch(`${baseUrl}/api/admin/templates?${params.toString()}`),
             getCategories()
         ]);
 
@@ -34,8 +31,8 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
         const templatesData = await templatesRes.json();
 
         return {
-            templates: templatesData.data || [],
-            stats: templatesData.stats,
+            templates: templatesData.data.items || [],
+            stats: templatesData.data.stats,
             pagination: templatesData.pagination,
             categories: categories || [],
         };

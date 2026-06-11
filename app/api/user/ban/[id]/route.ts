@@ -4,7 +4,6 @@ import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import {
   createErrorResponse,
-  handleApiError,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 
@@ -51,7 +50,7 @@ async function banUser(request: NextRequest, { params }: RouteContext) {
     });
   } catch (error: any) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    return handleApiError(error, request, { operation: "banUser" });
+    return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "banUser" });
   }
 }
 

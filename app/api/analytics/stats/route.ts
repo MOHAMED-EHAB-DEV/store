@@ -1,8 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createAPIResponse,
+  createErrorResponse,
+  withAPIMiddleware,
+} from "@/lib/utils/api-helpers";
 
 async function getAnalyticsStats(req: NextRequest) {
   try {
@@ -63,20 +67,17 @@ async function getAnalyticsStats(req: NextRequest) {
       ]),
     ]);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        totalVisitors,
-        uniqueLast24h,
-        uniqueLast7d,
-        uniqueLast30d,
-        topPages,
-        dailyVisits,
-      },
+    return createAPIResponse({
+      totalVisitors,
+      uniqueLast24h,
+      uniqueLast7d,
+      uniqueLast30d,
+      topPages,
+      dailyVisits,
     });
   } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, req, { operation: "getAnalyticsStats" });
+    if (error && typeof error === "object" && "digest" in error) throw error;
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getAnalyticsStats" });
   }
 }
 

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 async function getParentCategories() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/categories?limit=100`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`);
 
         if (!response.ok) return [];
         const data = await response.json();

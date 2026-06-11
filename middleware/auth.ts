@@ -1,6 +1,5 @@
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { connection } from "next/server";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
 import { IUser } from "@/types";
@@ -9,10 +8,9 @@ export async function authenticateUser(
   connectDB: boolean = false,
   includeId: boolean = false,
   includePurchasedTemplates: boolean = false,
+  lean: boolean = false,
 ): Promise<IUser | null> {
   try {
-    await connection();
-
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
@@ -32,7 +30,8 @@ export async function authenticateUser(
     if (includePurchasedTemplates) selection += " purchasedTemplates";
     if (includeId) selection += " _id";
 
-    const user = await User.findOne({ _id: payload.id }).select(selection);
+    const query = User.findOne({ _id: payload.id }).select(selection);
+    const user = lean ? await query.lean() : await query;
 
     if (!user) {
       return null;

@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/lib/database";
 import ErrorLog from "@/lib/models/ErrorLog";
 import { getUserFromServer } from "@/lib/auth";
 import { headers } from "next/headers";
-import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { withAPIMiddleware, createErrorResponse } from "@/lib/utils/api-helpers";
 
 async function logError(req: NextRequest) {
   try {
@@ -41,7 +41,7 @@ async function logError(req: NextRequest) {
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, req, { operation: "logClientError" });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "logClientError" });
   }
 }
 

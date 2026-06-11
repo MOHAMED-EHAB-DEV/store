@@ -1,5 +1,3 @@
-"use cache";
-import { cacheLife, cacheTag } from "next/cache";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Star } from "@/components/ui/svgs/icons/Star";
@@ -49,8 +47,7 @@ async function getTemplates() {
 
 const FeaturedTemplates = async () => {
   const templates: ITemplate[] = await getTemplates();
-  cacheLife("home" as any);
-  cacheTag("home");
+
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 relative">
       {/* Section Background */}

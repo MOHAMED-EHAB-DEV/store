@@ -1,5 +1,4 @@
 import { authenticateUser } from "@/middleware/auth";
-import { connection } from "next/server";
 import Footer from "@/components/home/Footer";
 import Navbar from "@/components/home/Navbar";
 import { redirect } from "next/navigation";

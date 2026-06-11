@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  handleApiError,
   withAPIMiddleware,
   createErrorResponse,
 } from "@/lib/utils/api-helpers";
@@ -39,7 +38,7 @@ function validateLoginRequest(body: any): body is LoginRequest {
 
 async function loginHandler(
   req: NextRequest,
-): Promise<NextResponse<ApiResponse>> {
+) {
   try {
     // Parse and validate request body
     const body = await req.json();
@@ -175,11 +174,10 @@ async function loginHandler(
 
     return response;
   } catch (error) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
-    return handleApiError(error, req, {
-      message: "Internal server error",
-      operation: "userLogin",
-    }) as any;
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: error,
+    });
   }
 }
 

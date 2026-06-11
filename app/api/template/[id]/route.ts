@@ -1,9 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
-import { revalidateTag } from "next/cache";
-import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  withAPIMiddleware,
+  createErrorResponse,
+  createAPIResponse,
+} from "@/lib/utils/api-helpers";
+import revalidate from "@/actions/revalidateTag";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -13,16 +17,19 @@ async function getTemplate(req: NextRequest, context: RouteContext) {
     await connectToDatabase();
 
     const [template, totalReviews] = await Promise.all([
-      Template.findOne({ _id: id }).select('+content').populate("categories", "_id name slug").lean(),
+      Template.findOne({ _id: id })
+        .select("+content")
+        .populate("categories", "_id name slug")
+        .lean(),
       Review.countDocuments({ template: id }),
     ]);
-    return NextResponse.json(
-      { success: true, data: { ...template, reviews: totalReviews } },
-      { status: 200 }
-    );
+    return createAPIResponse({ ...template, reviews: totalReviews });
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return handleApiError(err, req, { operation: "getPublicTemplate" });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "getPublicTemplate",
+    });
   }
 }
 
@@ -32,21 +39,20 @@ async function updateTemplate(req: NextRequest, context: RouteContext) {
     const body = await req.json();
     const updated = await Template.findByIdAndUpdate(id, body, { new: true });
 
-    // Revalidate cache for this template and all templates
-    revalidateTag(`template-${id}`, 'default');
-    revalidateTag('templates', 'default');
+    revalidate(`template-${id}`);
 
-    return NextResponse.json(
+    return createAPIResponse(
+      updated,
       {
-        success: true,
         message: "Template Updated Successfully",
-        data: updated,
       },
-      { status: 200 }
     );
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return handleApiError(err, req, { operation: "updatePublicTemplate" });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "updatePublicTemplate",
+    });
   }
 }
 
@@ -57,17 +63,20 @@ async function disableTemplate(req: NextRequest, context: RouteContext) {
       isActive: false,
     }); // soft delete
 
-    // Revalidate cache for this template and all templates
-    revalidateTag(`template-${id}`, 'default');
-    revalidateTag('templates', 'default');
+    revalidate(`template-${id}`);
 
-    return NextResponse.json({
-      success: true,
-      message: "Template disabled Successfully",
-    });
+    return createAPIResponse(
+      {},
+      {
+        message: "Template disabled successfully",
+      },
+    );
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return handleApiError(err, req, { operation: "disablePublicTemplate" });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "disablePublicTemplate",
+    });
   }
 }
 
@@ -76,17 +85,21 @@ async function deleteTemplate(req: NextRequest, context: RouteContext) {
   try {
     await Template.findByIdAndDelete(id); // Delete from database
 
-    // Revalidate cache for this template and all templates
-    revalidateTag(`template-${id}`, 'default');
-    revalidateTag('templates', 'default');
+    revalidate(`template-${id}`);
 
-    return NextResponse.json({
-      success: true,
-      message: "Template deleted Successfully",
-    });
+    return createAPIResponse(
+      {},
+      {
+        message: "Template deleted successfully",
+      },
+    );
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return handleApiError(err, req, { operation: "deletePublicTemplate" });
+    if (err && typeof err === "object" && "digest" in err) throw err;
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "deletePublicTemplate",
+    });
   }
 }
 
@@ -94,4 +107,3 @@ export const GET = withAPIMiddleware(getTemplate);
 export const PATCH = withAPIMiddleware(updateTemplate);
 export const POST = withAPIMiddleware(disableTemplate);
 export const DELETE = withAPIMiddleware(deleteTemplate);
-

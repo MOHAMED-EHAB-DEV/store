@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Ticket from "@/lib/models/Ticket";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 async function getUserTickets(req: NextRequest) {
     try {
@@ -34,7 +34,7 @@ async function getUserTickets(req: NextRequest) {
         });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "getUserTickets" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getUserTickets" });
     }
 }
 

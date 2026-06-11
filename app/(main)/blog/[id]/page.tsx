@@ -1,6 +1,4 @@
-"use cache";
 import Link from 'next/link';
-import { cacheLife, cacheTag } from 'next/cache';
 import { formatDate } from '@/lib/utils';
 import { mdToHtmlAndHeadings } from '@/lib/markdown';
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
@@ -52,29 +50,16 @@ interface PageProps {
     params: Promise<{ id: string }>;
 }
 
-const getData = async (idOrSlug: string): Promise<BlogPost | null> => {
+const getData = async (idOrSlug: string) => {
     try {
-        await connectToDatabase();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blogs/${idOrSlug}?countViews=true`, {
+            method: 'GET',
+            next: { revalidate: 60 * 60 * 24 }
+        });
+        if (!res.ok) return null;
 
-        // Try finding by ID first, then by slug
-        let blog;
-        if (idOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
-            blog = await Blog.findById(idOrSlug)
-                .populate("author", "name avatar")
-                .lean();
-        }
-        if (!blog) {
-            blog = await Blog.findOne({ slug: idOrSlug })
-                .populate("author", "name avatar")
-                .lean();
-        }
-
-        if (!blog) return null;
-
-        // Increment views asynchronously (best-effort)
-        Blog.findByIdAndUpdate(blog._id, { $inc: { views: 1 } }).catch(() => {});
-
-        return JSON.parse(JSON.stringify(blog)) as BlogPost;
+        const data = await res.json();
+        return data.success ? data : null;
     } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Failed to fetch blog post:", error);
@@ -146,8 +131,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const Page = async ({ params }: PageProps) => {
     const { id } = await params;
-    cacheLife("long-cache" as any);
-    cacheTag(`blog-${id}`, "blogs");
     const [blog, recentPosts] = await Promise.all([
         getData(id),
         getRecentPosts()
@@ -212,7 +195,7 @@ const Page = async ({ params }: PageProps) => {
                                 <Tag className="w-4 h-4" /> Related Topics
                             </h3>
                             <div className="flex flex-wrap gap-2">
-                                {blog.tags.map((tag) => (
+                                {blog.tags.map((tag: string) => (
                                     <span key={tag} className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm hover:bg-purple-900/30 hover:text-purple-300 transition-colors cursor-pointer border border-gray-700 hover:border-purple-500/50">
                                         #{tag}
                                     </span>

@@ -5,7 +5,6 @@ import Ticket from "@/lib/models/Ticket";
 import {
     createAPIResponse,
     createErrorResponse,
-    handleApiError,
     withAPIMiddleware,
     APICache
 } from "@/lib/utils/api-helpers";
@@ -88,7 +87,7 @@ async function getStats(request: NextRequest) {
         });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminGetSupportStats" });
+        return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminGetSupportStats" });
     }
 }
 

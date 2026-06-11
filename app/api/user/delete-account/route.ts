@@ -4,7 +4,6 @@ import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import {
   createErrorResponse,
-  handleApiError,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 
@@ -31,9 +30,7 @@ function validateDeleteRequest(body: any): body is DeletingRequest {
   );
 }
 
-async function deleteAccountHandler(
-  req: NextRequest,
-): Promise<NextResponse<ApiResponse>> {
+async function deleteAccountHandler(req: NextRequest) {
   try {
     // Parse and validate request body
     const body = await req.json();
@@ -93,8 +90,10 @@ async function deleteAccountHandler(
 
     return response;
   } catch (error: any) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
-    return handleApiError(error, req, { operation: "deleteAccount" }) as any;
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: error,
+    });
   }
 }
 

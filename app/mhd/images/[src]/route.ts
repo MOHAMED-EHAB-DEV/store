@@ -3,7 +3,7 @@ import sharp from "sharp";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
-import { handleApiError } from "@/lib/utils/api-helpers";
+import { createErrorResponse } from "@/lib/utils/api-helpers";
 
 const CACHE_DIR = process.env.VERCEL
   ? path.join("/tmp", ".cache", "images")
@@ -175,8 +175,9 @@ export async function GET(
 
     console.error(`[Image Proxy] Error:`, error);
 
-    handleApiError(error, req, {
-      message: "Failed to process Image",
+    createErrorResponse("Failed to process Image", 500, {
+      req: req,
+      error: error,
     });
 
     // Return a generic 1x1 transparent WebP as fallback to prevent broken UI

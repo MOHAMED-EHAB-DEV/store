@@ -1,8 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import ErrorLog from "@/lib/models/ErrorLog";
 import { authenticateUser } from "@/middleware/auth";
-import { createAPIResponse, createErrorResponse, handleApiError, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createAPIResponse,
+  createErrorResponse,
+  validatePagination,
+  withAPIMiddleware,
+} from "@/lib/utils/api-helpers";
 
 async function getErrorLogs(req: NextRequest) {
   try {
@@ -50,37 +55,44 @@ async function getErrorLogs(req: NextRequest) {
       },
     });
   } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return handleApiError(error, req, { operation: "adminGetErrorLogs" });
+    return createErrorResponse("Something went wrong", 500, {
+      req,
+      error,
+      operation: "adminGetErrorLogs",
+    });
   }
 }
 
 async function deleteErrorLogs(req: NextRequest) {
-    try {
-        const user = await authenticateUser(true);
-        if (!user || user.role !== "admin") {
-            return createErrorResponse("Unauthorized", 401, { req });
-        }
-
-        await connectToDatabase();
-
-        const { searchParams } = new URL(req.url);
-        const days = parseInt(searchParams.get("days") || "0");
-
-        if (days > 0) {
-            const cutoffDate = new Date();
-            cutoffDate.setDate(cutoffDate.getDate() - days);
-            await ErrorLog.deleteMany({ timestamp: { $lt: cutoffDate } });
-            return createAPIResponse(null, { message: `Logs older than ${days} days deleted successfully` });
-        }
-
-        return createErrorResponse("Invalid parameters", 400, { req });
-    } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "adminDeleteErrorLogs" });
+  try {
+    const user = await authenticateUser(true);
+    if (!user || user.role !== "admin") {
+      return createErrorResponse("Unauthorized", 401, { req });
     }
+
+    await connectToDatabase();
+
+    const { searchParams } = new URL(req.url);
+    const days = parseInt(searchParams.get("days") || "0");
+
+    if (days > 0) {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+      await ErrorLog.deleteMany({ timestamp: { $lt: cutoffDate } });
+      return createAPIResponse(null, {
+        message: `Logs older than ${days} days deleted successfully`,
+      });
+    }
+
+    return createErrorResponse("Invalid parameters", 400, { req });
+  } catch (error: any) {
+    return createErrorResponse("Something went wrong", 500, {
+      req,
+      error,
+      operation: "adminDeleteErrorLogs",
+    });
+  }
 }
 
 export const GET = withAPIMiddleware(getErrorLogs);
 export const DELETE = withAPIMiddleware(deleteErrorLogs);
-

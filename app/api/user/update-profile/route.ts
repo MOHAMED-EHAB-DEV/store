@@ -5,7 +5,6 @@ import User from "@/lib/models/User";
 import { revalidatePath } from "next/cache";
 import {
   createErrorResponse,
-  handleApiError,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 
@@ -48,7 +47,7 @@ async function updateProfile(req: NextRequest) {
     );
   } catch (err: any) {
     if (err && typeof err === "object" && "digest" in err) throw err;
-    return handleApiError(err, req, { operation: "updateProfile" });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: err, operation: "updateProfile" });
   }
 }
 

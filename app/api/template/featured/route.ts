@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { NextRequest } from "next/server";
+import { createAPIResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import Review from "@/lib/models/Review";
@@ -34,16 +34,10 @@ async function getFeaturedTemplates(req: NextRequest) {
       }),
     );
 
-    return NextResponse.json(
-      { success: true, data: templatesWithReviews },
-      { status: 200 },
-    );
+    return createAPIResponse(templatesWithReviews);
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return handleApiError(err, req, {
-      message: "Error fetching popular templates",
-      operation: "getFeaturedTemplates",
-    });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: err, message: "Error fetching popular templates",
+      operation: "getFeaturedTemplates", });
   }
 }
 

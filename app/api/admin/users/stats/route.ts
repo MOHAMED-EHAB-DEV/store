@@ -2,70 +2,90 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { authenticateUser } from "@/middleware/auth";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createErrorResponse,
+  withAPIMiddleware,
+  createAPIResponse,
+  validatePagination,
+} from "@/lib/utils/api-helpers";
 
 // GET /api/admin/users/stats - Get user statistics
 async function getAdminUserStats(request: NextRequest) {
-    try {
-        const user = await authenticateUser(true);
-        if (!user || user.role !== "admin") {
-            return createErrorResponse("Unauthorized", 401, { req: request });
-        }
-
-        await connectToDatabase();
-
-        const [results] = await User.aggregate([
-            {
-                $facet: {
-                    totals: [
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: 1 },
-                                admins: { $sum: { $cond: [{ $eq: ["$role", "admin"] }, 1, 0] } },
-                                users: { $sum: { $cond: [{ $eq: ["$role", "user"] }, 1, 0] } },
-                                premium: { $sum: { $cond: [{ $eq: ["$tier", "premium"] }, 1, 0] } },
-                                free: { $sum: { $cond: [{ $eq: ["$tier", "free"] }, 1, 0] } },
-                                verified: { $sum: { $cond: [{ $eq: ["$isEmailVerified", true] }, 1, 0] } },
-                            },
-                        },
-                    ],
-                    recentUsers: [
-                        { $sort: { createdAt: -1 } },
-                        { $limit: 5 },
-                        { $project: { name: 1, email: 1, avatar: 1, tier: 1, createdAt: 1 } },
-                    ],
-                    signupsByDay: [
-                        {
-                            $match: {
-                                createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
-                            },
-                        },
-                        {
-                            $group: {
-                                _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-                                count: { $sum: 1 },
-                            },
-                        },
-                        { $sort: { _id: 1 } },
-                    ],
-                },
-            },
-        ]);
-
-        return NextResponse.json({
-            success: true,
-            data: {
-                totals: results.totals[0] || { total: 0, admins: 0, users: 0, premium: 0, free: 0, verified: 0 },
-                recentUsers: results.recentUsers || [],
-                signupsByDay: results.signupsByDay || [],
-            },
-        });
-    } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, request, { operation: "adminGetUserStats" });
+  try {
+    const user = await authenticateUser(true);
+    if (!user || user.role !== "admin") {
+      return createErrorResponse("Unauthorized", 401, { req: request });
     }
+
+    await connectToDatabase();
+
+    const [results] = await User.aggregate([
+      {
+        $facet: {
+          totals: [
+            {
+              $group: {
+                _id: null,
+                total: { $sum: 1 },
+                admins: {
+                  $sum: { $cond: [{ $eq: ["$role", "admin"] }, 1, 0] },
+                },
+                users: { $sum: { $cond: [{ $eq: ["$role", "user"] }, 1, 0] } },
+                premium: {
+                  $sum: { $cond: [{ $eq: ["$tier", "premium"] }, 1, 0] },
+                },
+                free: { $sum: { $cond: [{ $eq: ["$tier", "free"] }, 1, 0] } },
+                verified: {
+                  $sum: { $cond: [{ $eq: ["$isEmailVerified", true] }, 1, 0] },
+                },
+              },
+            },
+          ],
+          recentUsers: [
+            { $sort: { createdAt: -1 } },
+            { $limit: 5 },
+            {
+              $project: { name: 1, email: 1, avatar: 1, tier: 1, createdAt: 1 },
+            },
+          ],
+          signupsByDay: [
+            {
+              $match: {
+                createdAt: {
+                  $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ],
+        },
+      },
+    ]);
+
+    return createAPIResponse({
+      totals: results.totals[0] || {
+        total: 0,
+        admins: 0,
+        users: 0,
+        premium: 0,
+        free: 0,
+        verified: 0,
+      },
+      recentUsers: results.recentUsers || [],
+      signupsByDay: results.signupsByDay || [],
+    });
+  } catch (error: any) {
+    if (error && typeof error === "object" && "digest" in error) throw error;
+    return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminGetUserStats" });
+  }
 }
 
 export const GET = withAPIMiddleware(getAdminUserStats);
-

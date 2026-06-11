@@ -1,6 +1,7 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import { v2 as cloudinary } from "cloudinary";
+import { createAPIResponse, createErrorResponse } from "@/lib/utils/api-helpers";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,7 +13,10 @@ export async function POST(req: NextRequest) {
   try {
     const user = await authenticateUser(false, true);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return createErrorResponse("Unauthorized", 401, {
+        req: req,
+        error: "Unauthorized",
+      });
     }
 
     const body = await req.json();
@@ -35,7 +39,7 @@ export async function POST(req: NextRequest) {
       process.env.CLOUDINARY_API_SECRET!
     );
 
-    return NextResponse.json({
+    return createAPIResponse({
       signature,
       timestamp,
       api_key: process.env.CLOUDINARY_API_KEY,
@@ -45,6 +49,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: any) {
     console.error("Cloudinary sign error:", err);
-    return NextResponse.json({ error: err.message || "Failed to sign" }, { status: 500 });
+    return createErrorResponse("Failed to sign", 500, {
+      req: req,
+      error: err,
+    });
   }
 }

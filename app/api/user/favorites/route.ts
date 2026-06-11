@@ -4,8 +4,7 @@ import {
   withAPIMiddleware,
   createAPIResponse,
   createErrorResponse,
-  handleApiError,
-} from "@/lib/utils/api-helpers";
+  } from "@/lib/utils/api-helpers";
 import { authenticateUser } from "@/middleware/auth";
 import { connectToDatabase } from "@/lib/database";
 
@@ -27,7 +26,7 @@ async function handleGET(req: NextRequest) {
     return createAPIResponse(userData?.favorites);
   } catch (error: any) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    return handleApiError(error, req, { operation: "getFavorites" });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getFavorites" });
   }
 }
 
@@ -59,7 +58,7 @@ async function handlePOST(req: NextRequest) {
     return createAPIResponse({ favorites: user.favorites });
   } catch (error: any) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    return handleApiError(error, req, { operation: "updateFavorites" });
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "updateFavorites" });
   }
 }
 

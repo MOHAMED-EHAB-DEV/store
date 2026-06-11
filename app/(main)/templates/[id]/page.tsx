@@ -1,5 +1,3 @@
-"use cache";
-import { cacheTag, cacheLife } from "next/cache";
 import Template from "@/components/singleTemplate/Template";
 import { ICategory, ITemplate } from "@/types";
 import type { Metadata } from "next";
@@ -35,6 +33,11 @@ const getTemplate = async (id: string) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
+      {
+        next: {
+          revalidate: 60 * 60 * 24 * 7, // 1 week
+        },
+      },
     );
 
     if (!response.ok)
@@ -71,7 +74,11 @@ const getSimilarTemplates = async (
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/templates?${queryParams.toString()}`,
-      { next: { revalidate: 60 * 60 * 24 } }, // ISR: 5 minutes
+      {
+        next: {
+          revalidate: 60 * 60 * 24 * 7, // 1 week
+        },
+      },
     );
 
     if (!response.ok) {
@@ -142,8 +149,6 @@ export async function generateMetadata({
 
 const Page = async ({ params }: PageProps) => {
   const { id } = await params;
-  cacheLife("long-cache" as any);
-  cacheTag(`template-${id}`, "templates");
 
   const { data: template, err } = await getTemplate(id);
 

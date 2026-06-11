@@ -2,7 +2,6 @@ import { NextRequest, NextResponse, after } from "next/server";
 import { headers } from "next/headers";
 import ErrorLog from "../models/ErrorLog";
 import { authenticateUser } from "@/middleware/auth";
-import { connection } from "next/server";
 
 // Response caching utility
 interface CacheEntry {
@@ -256,17 +255,12 @@ export function createAPIResponse<T>(
       total?: number;
       totalPages?: number;
     };
-    performance?: {
-      duration: number;
-      cacheHit?: boolean;
-    };
   } = {},
 ): NextResponse {
   const {
     success = true,
     message = success ? "Success" : "Error",
     pagination,
-    performance,
   } = options;
 
   const response = {
@@ -274,7 +268,6 @@ export function createAPIResponse<T>(
     message,
     data,
     ...(pagination && { pagination }),
-    ...(performance && { performance }),
     timestamp: new Date().toISOString(),
   };
 
@@ -290,25 +283,21 @@ export function createErrorResponse(
     error?: any;
     operation?: string;
     visitorId?: string;
-    userId?: string;
   } = {},
 ): NextResponse {
-  const { details, req, error, operation, visitorId, userId } = options;
+  const { details, req, error, operation, visitorId } = options;
 
-  after(async () => {
+  (async () => {
     try {
-      let headerList;
-      try {
-        headerList = await headers();
-      } catch {
-        // headers() not available in this context
-      }
-
+      const headerList = await headers();
       const userAgent = headerList?.get("user-agent") || undefined;
+
       const ip =
         headerList?.get("x-forwarded-for") ||
         headerList?.get("x-real-ip") ||
         "unknown";
+
+      const user = await authenticateUser(true, true);
 
       const errorLog = new ErrorLog({
         message:
@@ -322,7 +311,7 @@ export function createErrorResponse(
         method: req?.method,
         status: statusCode,
         operation,
-        userId,
+        userId: user?._id || undefined,
         visitorId,
         userAgent,
         ip,
@@ -333,7 +322,7 @@ export function createErrorResponse(
     } catch (logErr) {
       console.error("Critical error in logging logic:", logErr);
     }
-  });
+  })();
 
   return NextResponse.json(
     {
@@ -344,46 +333,6 @@ export function createErrorResponse(
     },
     { status: statusCode },
   );
-}
-
-export async function handleApiError(
-  error: any,
-  req?: NextRequest,
-  context: {
-    message?: string;
-    statusCode?: number;
-    operation?: string;
-    visitorId?: string;
-  } = {},
-): Promise<NextResponse> {
-  const {
-    message = "Internal server error",
-    statusCode = 500,
-    operation,
-    visitorId,
-  } = context;
-
-  let userId: string | undefined;
-  try {
-    const user = await authenticateUser(false, true);
-    userId = user?._id?.toString();
-  } catch (e: any) {
-    if (e && typeof e === "object" && "digest" in e) throw e;
-  }
-
-  return createErrorResponse(message, statusCode, {
-    error,
-    req,
-    operation,
-    visitorId,
-    userId,
-    details:
-      process.env.NODE_ENV === "development"
-        ? error instanceof Error
-          ? error.message
-          : error
-        : undefined,
-  });
 }
 
 // Middleware factory for API routes
@@ -397,7 +346,6 @@ export function withAPIMiddleware(
   } = {},
 ) {
   return async (req: NextRequest, context?: any): Promise<NextResponse> => {
-    await connection();
     const timer = PerformanceMonitor.startTimer(
       req.nextUrl.pathname,
       req.method,

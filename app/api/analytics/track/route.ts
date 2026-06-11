@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import crypto from "crypto";
+import { createAPIResponse, createErrorResponse } from "@/lib/utils/api-helpers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,10 +10,10 @@ export async function POST(req: NextRequest) {
     const { visitorId, path } = body;
 
     if (!visitorId || typeof visitorId !== "string") {
-      return NextResponse.json(
-        { error: "visitorId is required" },
-        { status: 400 },
-      );
+      return createErrorResponse("visitorId is required", 400, {
+        req,
+        operation: "analyticsTrack",
+      });
     }
 
     // Fire-and-forget DB update – keeps response ultra fast
@@ -44,7 +45,7 @@ export async function POST(req: NextRequest) {
     // Don't await – respond immediately and let DB write happen in background
     dbWork.catch((err) => console.error("[Analytics] DB error:", err));
 
-    return NextResponse.json({ success: true });
+    return createAPIResponse({});
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("[Analytics] track error:", error);

@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { authenticateUser } from "@/middleware/auth";
 import { updateTag } from "next/cache";
-import { createErrorResponse, handleApiError, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware, createAPIResponse, validatePagination } from "@/lib/utils/api-helpers";
 
 async function deleteAdminTemplate(
     req: NextRequest,
@@ -24,12 +24,10 @@ async function deleteAdminTemplate(
             return createErrorResponse("Template not found", 404, { req });
         }
 
-        return NextResponse.json({
-            message: "Template deleted successfully",
-        });
+        return createAPIResponse(null, { message: "Template deleted successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "adminDeleteTemplate" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "adminDeleteTemplate" });
     }
 }
 
@@ -60,13 +58,10 @@ async function updateAdminTemplate(
 
         updateTag(`template-${id}`);
 
-        return NextResponse.json({
-            message: "Template updated successfully",
-            data: template,
-        });
+        return createAPIResponse(template, { message: "Template updated successfully" });
     } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return handleApiError(error, req, { operation: "adminUpdateTemplate" });
+        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "adminUpdateTemplate" });
     }
 }
 

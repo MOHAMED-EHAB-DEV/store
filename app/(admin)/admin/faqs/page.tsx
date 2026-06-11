@@ -7,7 +7,6 @@ import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { Grid } from "@/components/ui/svgs/icons/Grid";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
     title: "FAQs Management | Admin",
@@ -23,9 +22,7 @@ async function getFAQsData(searchParams: { [key: string]: string | undefined }) 
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/admin/faqs?${params.toString()}`, {
-            headers: await headers()
-        });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs?${params.toString()}`);
 
         if (!response.ok) return null;
         return await response.json();
@@ -53,14 +50,14 @@ export default async function AdminFAQsPage({ searchParams }: PageProps) {
         );
     }
 
-    const { data: faqs, pagination, stats } = data;
+    const { data2, pagination } = data;
 
     // Default stats if not provided by backend
-    const faqStats = stats || {
+    const faqStats = data2.stats || {
         total: pagination?.total || 0,
-        published: faqs.filter((f: any) => f.isPublished).length,
-        draft: faqs.filter((f: any) => !f.isPublished).length,
-        categories: [...new Set(faqs.map((f: any) => f.category))].length
+        published: data2.items.filter((f: any) => f.isPublished).length,
+        draft: data2.items.filter((f: any) => !f.isPublished).length,
+        categories: [...new Set(data2.items.map((f: any) => f.category))].length
     };
 
     return (
@@ -103,7 +100,7 @@ export default async function AdminFAQsPage({ searchParams }: PageProps) {
             </div>
 
             <AdminFAQsClient
-                initialData={faqs}
+                initialData={data2.items}
                 pagination={pagination}
                 searchParams={params}
             />

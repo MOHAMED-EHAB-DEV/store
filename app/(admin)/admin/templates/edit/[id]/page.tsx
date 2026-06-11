@@ -3,8 +3,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import TemplateForm from "@/components/Admin/TemplateForm";
 import { getCategories } from "@/static/categories";
-import { connectToDatabase } from "@/lib/database";
-import Template from "@/lib/models/Template";
 
 export const metadata: Metadata = {
     title: "Edit Template | Admin",
@@ -16,10 +14,10 @@ interface PageProps {
 }
 
 async function getTemplate(id: string) {
-    await connectToDatabase();
     try {
-        const template = await Template.findById(id).lean();
-        return template ? JSON.parse(JSON.stringify(template)) : null;
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/templates/${id}`);
+        const data = await response.json();
+        return data.success ? data.data : null;
     } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
         return null;

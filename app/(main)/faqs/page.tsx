@@ -1,8 +1,4 @@
-"use cache";
 import { Metadata } from "next";
-import { cacheLife } from "next/cache";
-import { connectToDatabase } from "@/lib/database";
-import FAQ from "@/lib/models/FAQ";
 import FAQsClient from "@/components/faqs/FAQsClient";
 
 export const metadata: Metadata = {
@@ -18,14 +14,15 @@ export const metadata: Metadata = {
 
 async function getFAQs() {
   try {
-    await connectToDatabase();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/faqs`, {
+      method: 'GET',
+      next: { revalidate: 60 * 60 * 24 }
+    });
 
-    const faqs = await FAQ.find({ isPublished: true })
-      .select("_id question answer category order coverImage")
-      .sort({ order: 1, createdAt: -1 })
-      .lean();
+    if (!response.ok) return null;
 
-    return JSON.parse(JSON.stringify(faqs));
+    const data = await response.json();
+    return data.success ? data.faqs : [];
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching FAQs:", error);
@@ -35,14 +32,14 @@ async function getFAQs() {
 
 async function getCategories() {
   try {
-    await connectToDatabase();
-    const categoriesData = await FAQ.getCategories();
-    // Map to include name field (category name is stored in _id)
-    return categoriesData.map(cat => ({
-      _id: cat._id,
-      name: cat._id, // Category name is the _id field
-      count: cat.count
-    }));
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/faqs/categories`, {
+      method: 'GET',
+      next: { revalidate: 60 * 60 * 24 }
+    });
+
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.success ? data.categories : [];
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching FAQ categories:", error);
@@ -51,7 +48,6 @@ async function getCategories() {
 }
 
 export default async function FAQsPage() {
-  cacheLife("long-cache" as any);
   const [faqs, categories] = await Promise.all([
     getFAQs(),
     getCategories()

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useUploadThing } from "@/lib/uploadthing-client";
+import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import { toast } from "sonner";
 import Image from "next/image";
 import { resizeImage } from "@/lib/image-utils";
@@ -23,7 +23,7 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
     const fileInputRef = useRef<HTMLInputElement>(null);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const { startUpload, isUploading } = useUploadThing("imageUploader", {
+    const { startUpload, isUploading } = useCloudinaryUpload("imageUploader", {
         onClientUploadComplete: () => {
             // handled manually in handleSubmit to wait for urls
         },

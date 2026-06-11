@@ -10,10 +10,10 @@ const Logo = ({ onClick, className="" } : { onClick?: () => void, className?: st
             role="img"
             aria-label="Mohammed Ehab Logo"
         >
-            <div className="w-[10px] h-full bg-white" />
+            <div className="w-[10px] h-full bg-white rounded-xs" />
             <div className="flex w-full h-full flex-col gap-1">
-                <div className="w-3 h-3 bg-white" />
-                <div className="w-3 h-3 bg-white" />
+                <div className="w-3 h-3 bg-white rounded-xs" />
+                <div className="w-3 h-3 bg-white rounded-xs" />
             </div>
             {/*<Image*/}
             {/*    src="/assets/Icons/Logo.svg"*/}

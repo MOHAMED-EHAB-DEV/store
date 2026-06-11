@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
-import { useUploadThing } from "@/hooks/useUploadthing";
+import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
 
@@ -33,7 +33,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
     const [thumbnail, setThumbnail] = useState<string | undefined>(initialData?.thumbnail);
     const [fileKey, setFileKey] = useState<string | undefined>(initialData?.fileKey);
 
-    const { startUpload: uploadThumbnail, isUploading: uploadingThumbnail } = useUploadThing("imageUploader", {
+    const { startUpload: uploadThumbnail, isUploading: uploadingThumbnail } = useCloudinaryUpload("imageUploader", {
         onClientUploadComplete: (res) => {
             if (res?.[0]?.ufsUrl) {
                 setThumbnail(res[0].ufsUrl);
@@ -44,7 +44,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         },
     });
 
-    const { startUpload: uploadFile, isUploading: uploadingFile } = useUploadThing("imageUploader", {
+    const { startUpload: uploadFile, isUploading: uploadingFile } = useCloudinaryUpload("imageUploader", {
         onClientUploadComplete: (res) => {
             if (res?.[0]?.key) {
                 setFileKey(res[0].key);

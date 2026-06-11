@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import DownloadLog from "@/lib/models/DownloadLog";
-import { utapi } from "@/lib/uploadthing";
+import { generateSignedDownloadUrl } from "@/lib/cloudinary";
 import {
     withAPIMiddleware,
     createErrorResponse,
@@ -70,7 +70,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
         if (!fileKey) return createErrorResponse("Template file missing from storage", 500);
 
         // Generate short-lived signed URL and fetch server-to-server
-        const signedUrl = await utapi.generateSignedURL(fileKey as string, { expiresIn: 60 });
+        const signedUrl = generateSignedDownloadUrl(fileKey as string, 60);
         if (!signedUrl) {
             console.error("No signed URL for fileKey:", fileKey);
             return createErrorResponse("Failed to generate download link", 502);
@@ -81,7 +81,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
         const incomingRange = req.headers.get("range");
         if (incomingRange) headersToForward["Range"] = incomingRange;
 
-        const upstreamRes = await fetch(signedUrl?.ufsUrl, { method: "GET", headers: headersToForward });
+        const upstreamRes = await fetch(signedUrl, { method: "GET", headers: headersToForward });
         if (!upstreamRes.ok || !upstreamRes.body) {
             if (upstreamRes.status === 416) return createErrorResponse("Requested range not satisfiable", 416);
             console.error("Upstream fetch failed", { status: upstreamRes.status, statusText: upstreamRes.statusText });

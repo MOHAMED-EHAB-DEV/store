@@ -5,9 +5,6 @@ import path from "path";
 import crypto from "crypto";
 import { handleApiError } from "@/lib/utils/api-helpers";
 
-const UT_CDN_BASE =
-  process.env.UPLOADTHING_CDN?.replace(/\/$/, "") ?? "https://7ve6btemdp.ufs.sh/f";
-
 const CACHE_DIR = process.env.VERCEL
   ? path.join("/tmp", ".cache", "images")
   : path.join(process.cwd(), ".cache", "images");
@@ -56,11 +53,7 @@ export async function GET(
   let src = "";
   try {
     const { src: encodedSrc } = await params;
-    const rawSrc = decodeURIComponent(encodedSrc);
-
-    src = rawSrc.startsWith("ut:")
-      ? `${UT_CDN_BASE}/${rawSrc.slice(3)}`
-      : rawSrc;
+    src = decodeURIComponent(encodedSrc);
 
     const { searchParams } = new URL(req.url);
     const width = Math.min(

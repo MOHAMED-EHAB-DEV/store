@@ -3,7 +3,7 @@
 import {useState, useRef, ChangeEvent, FormEvent} from "react";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
-import {useUploadThing} from "@/hooks/useUploadthing";
+import {useCloudinaryUpload} from "@/hooks/useCloudinaryUpload";
 import {sonnerToast} from "@/components/ui/sonner";
 import {isBase64Image} from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
@@ -31,7 +31,7 @@ const UpdateProfile = ({user}: { user: IUser }) => {
         }
     };
 
-    const {startUpload, routeConfig} = useUploadThing("profilePicture", {
+    const {startUpload, routeConfig} = useCloudinaryUpload("profilePicture", {
         onClientUploadComplete: (res) => {
             sonnerToast.success("Image uploaded successfully!");
         },

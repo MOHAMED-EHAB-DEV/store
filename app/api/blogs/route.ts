@@ -4,7 +4,7 @@ import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse, handleApiError, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 async function getBlogs(req: NextRequest) {
   try {
@@ -91,7 +91,7 @@ async function createBlog(req: NextRequest) {
     body.author = user._id;
 
     const newBlog = await Blog.create(body);
-    updateTag("blogs");
+    revalidateTag("blogs", "max");
     return createAPIResponse(newBlog, { message: "Blog post created successfully" });
 
   } catch (error: any) {

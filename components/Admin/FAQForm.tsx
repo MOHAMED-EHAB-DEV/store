@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
-import { useUploadThing } from "@/hooks/useUploadthing";
+import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import Image from "next/image";
 
 interface FAQFormProps {
@@ -25,7 +25,7 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
     const [coverImage, setCoverImage] = useState<string | undefined>(initialData?.coverImage);
     const [imageFile, setImageFile] = useState<File | null>(null);
 
-    const { startUpload, isUploading } = useUploadThing("imageUploader", {
+    const { startUpload, isUploading } = useCloudinaryUpload("imageUploader", {
         onClientUploadComplete: (res) => {
             if (res?.[0]?.ufsUrl) {
                 setCoverImage(res[0].ufsUrl);

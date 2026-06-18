@@ -19,7 +19,7 @@ async function getFAQs() {
       next: { revalidate: 60 * 60 * 24 }
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) return [];
 
     const data = await response.json();
     return data.success ? data.data : [];
@@ -37,7 +37,7 @@ async function getCategories() {
       next: { revalidate: 60 * 60 * 24 }
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) return [];
     const data = await response.json();
     return data.success ? data.data : [];
   } catch (error) {

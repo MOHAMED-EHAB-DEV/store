@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import AdminAnalyticsClient from "@/components/Admin/AdminAnalyticsClient";
+// import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Visitor Analytics",
@@ -9,7 +10,19 @@ export const metadata: Metadata = {
 
 async function getAnalyticsData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/analytics`);
+    // const cookieStore = await cookies();
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+    const res = await fetch(`${baseUrl}/api/admin/analytics`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("Analytics fetch failed:", res.status, await res.text());
+      return { stats: null, recentVisitors: [] };
+    }
+
     const data = await res.json();
     return data.data;
   } catch (error) {
@@ -20,6 +33,7 @@ async function getAnalyticsData() {
     };
   }
 }
+
 
 export default async function AnalyticsPage() {
   const data = await getAnalyticsData();

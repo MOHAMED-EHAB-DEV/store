@@ -121,7 +121,7 @@ export default function FAQsClient({ faqs, categories }: FAQsClientProps) {
                 </div>
             ) : (
                 <div className="space-y-12">
-                    {categoriesToShow.map((category) => {
+                    {categoriesToShow?.map((category) => {
                         const categoryFAQs = groupedFAQs[category.id];
                         if (!categoryFAQs || categoryFAQs.length === 0) return null;
 
@@ -132,7 +132,7 @@ export default function FAQsClient({ faqs, categories }: FAQsClientProps) {
                                 : undefined;
 
                         // Map FAQs to format expected by FAQSection
-                        const sectionFAQs = categoryFAQs.map(faq => ({
+                        const sectionFAQs = categoryFAQs?.map(faq => ({
                             id: faq._id,
                             question: faq.question,
                             answer: faq.answer,

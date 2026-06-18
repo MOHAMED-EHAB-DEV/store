@@ -59,7 +59,7 @@ const getData = async (idOrSlug: string) => {
         if (!res.ok) return null;
 
         const data = await res.json();
-        return data.success ? data : null;
+        return data.success ? data.data : null;
     } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Failed to fetch blog post:", error);
@@ -99,7 +99,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return {
         title: `${blog.title} | Blog`,
-        description: blog.excerpt || blog.content.substring(0, 160),
+        description: blog.excerpt || blog.content?.substring(0, 160),
         authors: blog.author ? [{ name: blog.author.name }] : undefined,
         keywords: blog.tags || [],
         alternates: {
@@ -107,7 +107,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
         openGraph: {
             title: `${blog.title} | Blog`,
-            description: blog.excerpt || blog.content.substring(0, 160),
+            description: blog.excerpt || blog.content?.substring(0, 160),
             url: url,
             type: 'article',
             publishedTime: blog.createdAt,
@@ -149,7 +149,7 @@ const Page = async ({ params }: PageProps) => {
                 <div className="absolute inset-0 bg-gray-950">
                     {blog.coverImage && (
                         <Image
-                            src={anyImgUrl(blog.coverImage, { width: 1200, quality: 90 })}
+                            src={anyImgUrl(blog.coverImage, { width: 1200, quality: 85 })}
                             alt={blog.title}
                             width={1200}
                             height={600}

@@ -22,7 +22,7 @@ async function getFAQs() {
     if (!response.ok) return null;
 
     const data = await response.json();
-    return data.success ? data.faqs : [];
+    return data.success ? data.data : [];
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching FAQs:", error);
@@ -39,7 +39,7 @@ async function getCategories() {
 
     if (!response.ok) return null;
     const data = await response.json();
-    return data.success ? data.categories : [];
+    return data.success ? data.data : [];
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching FAQ categories:", error);

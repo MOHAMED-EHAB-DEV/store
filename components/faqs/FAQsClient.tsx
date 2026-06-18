@@ -82,7 +82,7 @@ export default function FAQsClient({ faqs, categories }: FAQsClientProps) {
 
     // Map database categories to component format
     const categoryItems = useMemo(() => {
-        return categories.map(cat => ({
+        return categories?.map(cat => ({
             id: cat._id,
             name: cat.name,
             icon: "❓", // Default icon

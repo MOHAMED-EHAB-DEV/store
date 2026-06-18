@@ -13,7 +13,6 @@ async function getAnalyticsData() {
     const data = await res.json();
     return data.data;
   } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Error fetching analytics data:", error);
     return {
       stats: null,

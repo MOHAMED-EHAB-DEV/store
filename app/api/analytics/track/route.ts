@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import crypto from "crypto";
-import { createAPIResponse, createErrorResponse } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
-export async function POST(req: NextRequest) {
+async function track(req: NextRequest) {
   try {
     const body = await req.json();
     const { visitorId, path } = body;
@@ -53,3 +53,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false });
   }
 }
+
+export const POST = withAPIMiddleware(track);
+

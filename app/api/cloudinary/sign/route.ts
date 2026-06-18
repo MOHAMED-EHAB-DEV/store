@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { authenticateUser } from "@/middleware/auth";
 import { v2 as cloudinary } from "cloudinary";
-import { createAPIResponse, createErrorResponse } from "@/lib/utils/api-helpers";
+import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -9,7 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function POST(req: NextRequest) {
+async function signCloudinary(req: NextRequest) {
   try {
     const user = await authenticateUser(false, true);
     if (!user) {
@@ -55,3 +55,6 @@ export async function POST(req: NextRequest) {
     });
   }
 }
+
+export const POST = withAPIMiddleware(signCloudinary);
+

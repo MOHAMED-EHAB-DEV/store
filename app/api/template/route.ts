@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createErrorResponse,
+  withAPIMiddleware,
+} from "@/lib/utils/api-helpers";
 import { authenticateUser } from "@/middleware/auth";
 import Template from "@/lib/models/Template";
 import User from "@/lib/models/User";
@@ -28,9 +31,11 @@ async function createTemplate(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: created }, { status: 201 });
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return createErrorResponse("Something went wrong", 500, { req: req, error: err, message: "Error creating template",
-      operation: "createTemplate", });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "createTemplate",
+    });
   }
 }
 
@@ -40,15 +45,16 @@ async function getTemplates(req: NextRequest) {
     const templates = await Template.find({});
     return NextResponse.json(
       { success: true, data: templates },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
-    return createErrorResponse("Something went wrong", 500, { req: req, error: err, message: "Error fetching templates",
-      operation: "getTemplates", });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "getTemplates",
+    });
   }
 }
 
 export const GET = withAPIMiddleware(getTemplates);
 export const POST = withAPIMiddleware(createTemplate);
-

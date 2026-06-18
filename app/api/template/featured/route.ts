@@ -1,5 +1,9 @@
 import { NextRequest } from "next/server";
-import { createAPIResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createAPIResponse,
+  withAPIMiddleware,
+  createErrorResponse,
+} from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import Review from "@/lib/models/Review";
@@ -36,10 +40,12 @@ async function getFeaturedTemplates(req: NextRequest) {
 
     return createAPIResponse(templatesWithReviews);
   } catch (err) {
-    return createErrorResponse("Something went wrong", 500, { req: req, error: err, message: "Error fetching popular templates",
-      operation: "getFeaturedTemplates", });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "getFeaturedTemplates",
+    });
   }
 }
 
 export const GET = withAPIMiddleware(getFeaturedTemplates);
-

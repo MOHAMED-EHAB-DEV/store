@@ -84,9 +84,11 @@ async function getAdminUsers(request: NextRequest) {
       },
     );
   } catch (error: any) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
-    return createErrorResponse("Something went wrong", 500, { req: request, error: error, message: "Failed to fetch users",
-      operation: "adminGetUsers", });
+    return createErrorResponse("Something went wrong", 500, {
+      req: request,
+      error: error,
+      operation: "adminGetUsers",
+    });
   }
 }
 

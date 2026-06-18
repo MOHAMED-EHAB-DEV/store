@@ -4,7 +4,6 @@ import Template from "@/lib/models/Template";
 import mongoose from "mongoose";
 import {
     withAPIMiddleware,
-    validatePagination,
     createAPIResponse,
     createErrorResponse,
 } from "@/lib/utils/api-helpers";
@@ -72,8 +71,6 @@ function generateSimilarCacheKey(req: NextRequest): string {
 async function getSimilarTemplatesHandler(
     req: NextRequest
 ): Promise<NextResponse> {
-    const startTime = Date.now();
-
     try {
         const validation = validateSimilarParams(req);
         if (!validation.isValid) {
@@ -168,11 +165,7 @@ async function getSimilarTemplatesHandler(
 
         const templates = await Template.aggregate(pipeline).allowDiskUse(true);
 
-        const duration = Date.now() - startTime;
-
-        return createAPIResponse(templates, {
-            performance: { duration, cacheHit: false },
-        });
+        return createAPIResponse(templates);
     } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
         console.error("Similar templates error:", error);

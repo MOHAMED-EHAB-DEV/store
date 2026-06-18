@@ -1,45 +1,39 @@
 import { MetadataRoute } from "next";
-import { cacheLife, cacheTag } from "next/cache";
-import { connectToDatabase } from "@/lib/database";
-import Template from "@/lib/models/Template";
-import Blog from "@/lib/models/Blog";
+
+export const revalidate = 172800; // 48 hours
 
 const getTemplates = async () => {
-  "use cache";
-  cacheLife({ revalidate: 60 * 60 * 48 });
-  cacheTag("templates");
-
   try {
-    await connectToDatabase();
-    const templates = await Template.find({ isActive: true })
-      .select("_id updatedAt")
-      .lean();
-    return JSON.parse(JSON.stringify(templates));
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mhd-store.vercel.app";
+    const res = await fetch(`${baseUrl}/api/template`, {
+      next: { revalidate: 172800, tags: ["templates"] },
+    });
+    if (!res.ok) throw new Error("Failed to fetch templates");
+    const json = await res.json();
+    const templates = json.data || [];
+    return templates.filter((t: any) => t.isActive);
   } catch (error) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("Error fetching templates for sitemap:", error);
     return [];
   }
 };
 
 const getBlogs = async () => {
-  "use cache";
-  cacheLife({ revalidate: 60 * 60 * 48 });
-  cacheTag("blogs");
-
   try {
-    await connectToDatabase();
-    const blogs = await Blog.find({ isPublished: true })
-      .select("_id slug updatedAt")
-      .limit(100)
-      .lean();
-    return JSON.parse(JSON.stringify(blogs));
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mhd-store.vercel.app";
+    const res = await fetch(`${baseUrl}/api/blogs?limit=100`, {
+      next: { revalidate: 172800, tags: ["blogs"] },
+    });
+    if (!res.ok) throw new Error("Failed to fetch blogs");
+    const json = await res.json();
+    return json.data || [];
   } catch (error) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("Error fetching blogs for sitemap:", error);
     return [];
   }
 };
+
+
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =

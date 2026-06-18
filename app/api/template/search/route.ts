@@ -243,11 +243,7 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
         limit,
         total: totalCount,
         totalPages,
-      },
-      performance: {
-        duration,
-        cacheHit: false,
-      },
+      }
     });
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;

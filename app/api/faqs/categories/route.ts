@@ -3,10 +3,11 @@ import FAQ from "@/lib/models/FAQ";
 import {
   createAPIResponse,
   createErrorResponse,
+  withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
+async function getCategories(req: NextRequest) {
   try {
     await connectToDatabase();
 
@@ -20,3 +21,6 @@ export async function GET(req: NextRequest) {
     });
   }
 }
+
+export const GET = withAPIMiddleware(getCategories);
+

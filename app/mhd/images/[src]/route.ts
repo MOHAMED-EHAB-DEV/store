@@ -3,7 +3,7 @@ import sharp from "sharp";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
-import { createErrorResponse } from "@/lib/utils/api-helpers";
+import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 const CACHE_DIR = process.env.VERCEL
   ? path.join("/tmp", ".cache", "images")
@@ -46,7 +46,7 @@ function generateUniqueCacheKey(src: string, width: number, quality: number) {
     .digest("hex");
 }
 
-export async function GET(
+async function proxyImage(
   req: NextRequest,
   { params }: { params: Promise<{ src: string }> },
 ) {
@@ -195,3 +195,5 @@ export async function GET(
     });
   }
 }
+
+export const GET = withAPIMiddleware(proxyImage);

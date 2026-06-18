@@ -7,8 +7,8 @@ import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
-import { connectToDatabase } from "@/lib/database";
-import Blog from "@/lib/models/Blog";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 interface BlogPost {
   _id: string;
@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Blog | Insights & Updates";
   const description =
     "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
-  const url = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/blog`;
+  const url = `${APP_URL}/blog`;
 
   return {
     title,
@@ -49,14 +49,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const getData = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blogs`,{
+    const response = await fetch(`${APP_URL}/api/blogs`,{
       method: 'GET',
       next: { revalidate: 60 * 60 * 24 }
     })
 
-    if (!response.ok) return null;
+    if (!response.ok) return [];
     const data = await response.json();
-    return data.success ? data : [];
+    return data.success ? (data.data as BlogPost[]) : [];
   } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
     console.error("Failed to fetch public blogs:", error);

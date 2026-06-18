@@ -10,26 +10,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { anyImgUrl } from '@/lib/utils/image';
-import { connectToDatabase } from '@/lib/database';
-import Blog from '@/lib/models/Blog';
 
-export async function generateStaticParams() {
-  try {
-    await connectToDatabase();
-    const blogs = await Blog.find({ isPublished: true })
-      .select("_id")
-      .limit(100)
-      .lean();
-
-    return blogs.map((blog: any) => ({
-      id: blog._id.toString(),
-    }));
-  } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    console.error("Error generating static params:", error);
-    return [];
-  }
-}
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 interface BlogPost {
     _id: string;
@@ -52,7 +34,7 @@ interface PageProps {
 
 const getData = async (idOrSlug: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blogs/${idOrSlug}?countViews=true`, {
+        const res = await fetch(`${APP_URL}/api/blogs/${idOrSlug}?countViews=true`, {
             method: 'GET',
             next: { revalidate: 60 * 60 * 24 }
         });
@@ -68,15 +50,15 @@ const getData = async (idOrSlug: string) => {
 };
 
 const getRecentPosts = async (): Promise<BlogPost[]> => {
-    try {
-        await connectToDatabase();
-        const blogs = await Blog.find({ isPublished: true })
-            .populate("author", "name avatar")
-            .sort({ createdAt: -1 })
-            .limit(5)
-            .lean();
+  try {
+        const response = await fetch(`${APP_URL}/api/blogs?limit=5`, {
+            next: { revalidate: 60 * 60 * 24 },
+        });
 
-        return JSON.parse(JSON.stringify(blogs)) as BlogPost[];
+        if (!response.ok) return [];
+
+        const data = await response.json();
+        return data.success ? (data.data as BlogPost[]) : [];
     } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
         return [];
@@ -94,8 +76,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
-    const domain = process.env.NEXT_PUBLIC_APP_URL;
-    const url = `${domain}/blog/${blog.slug || id}`;
+    const url = `${APP_URL}/blog/${blog.slug || id}`;
 
     return {
         title: `${blog.title} | Blog`,

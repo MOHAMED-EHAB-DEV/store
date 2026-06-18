@@ -2,37 +2,18 @@ import Template from "@/components/singleTemplate/Template";
 import { ICategory, ITemplate } from "@/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { connectToDatabase } from "@/lib/database";
-import TemplateModel from "@/lib/models/Template";
 import MarkdownCopyHandler from "@/components/Markdown/MarkdownCopyHandler";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-// Generate static params for build-time generation
-export async function generateStaticParams() {
-  try {
-    await connectToDatabase();
-    const templates = await TemplateModel.find({ isActive: true })
-      .select("_id")
-      .limit(100)
-      .lean();
-
-    return templates.map((template: any) => ({
-      id: template._id.toString(),
-    }));
-  } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    console.error("Error generating static params:", error);
-    return [];
-  }
-}
-
 const getTemplate = async (id: string) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/${id}`,
+      `${APP_URL}/api/template/${id}`,
       {
         next: {
           revalidate: 60 * 60 * 24 * 7, // 1 week
@@ -73,7 +54,7 @@ const getSimilarTemplates = async (
     });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/templates?${queryParams.toString()}`,
+      `${APP_URL}/api/templates?${queryParams.toString()}`,
       {
         next: {
           revalidate: 60 * 60 * 24 * 7, // 1 week
@@ -110,8 +91,7 @@ export async function generateMetadata({
     return { title: "Template Not Found" };
   }
 
-  const domain = process.env.NEXT_PUBLIC_APP_URL || 'https://mohammedehab.com';
-  const url = `${domain}/templates/${id}`;
+  const url = `${APP_URL}/templates/${id}`;
 
   return {
     title: `${template.title} | Premium Templates`,
@@ -150,7 +130,7 @@ export async function generateMetadata({
 const Page = async ({ params }: PageProps) => {
   const { id } = await params;
 
-  const { data: template, err } = await getTemplate(id);
+  const { data: template } = await getTemplate(id);
 
   if (!template) {
     notFound();
@@ -170,7 +150,7 @@ const Page = async ({ params }: PageProps) => {
     name: template.title,
     description: template.description,
     image: template.thumbnail,
-    url: `${process.env.NEXT_PUBLIC_APP_URL || ""}/templates/${id}`,
+    url: `${APP_URL}/templates/${id}`,
     offers: {
       "@type": "Offer",
       price: template.price || 0,

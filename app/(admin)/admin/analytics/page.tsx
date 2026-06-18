@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import AdminAnalyticsClient from "@/components/Admin/AdminAnalyticsClient";
-// import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Visitor Analytics",
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 
 async function getAnalyticsData() {
   try {
-    // const cookieStore = await cookies();
     const baseUrl =
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./fonts.css";
 @import "tw-animate-css";
 
 @theme {
@@ -14,8 +13,6 @@
   --color-card: #15161b;
   --color-border: #24262c;
   --color-accent: #f6e96a;
-
-  --font-paras: "Parastoo", serif;
 
   /* Typography Scale */
   --text-xs: 0.75rem;

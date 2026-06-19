@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import dynamic from "next/dynamic";
-import { Roboto } from "@/lib/fonts";
+import { Roboto, Parastoo } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import Providers from "./Providers";
@@ -119,6 +119,7 @@ export default async function RootLayout({
         className={cn(
           "antialiased scroll-smooth bg-primary text-white",
           Roboto.className,
+          Parastoo.variable,
         )}
       >
         <Toaster />

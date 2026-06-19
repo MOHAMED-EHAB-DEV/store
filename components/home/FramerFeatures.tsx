@@ -233,6 +233,7 @@ const FramerFeatures = () => {
                 width={150}
                 height={150}
                 unoptimized
+                className="w-auto h-auto"
               />
               <Image
                 src={anyImgUrl("/assets/Icons/smCursor.avif", { width: 50, quality: 85 })}
@@ -240,7 +241,7 @@ const FramerFeatures = () => {
                 width={25}
                 height={25}
                 unoptimized
-                className="absolute bottom-0 right-24"
+                className="absolute bottom-0 right-24 w-auto h-auto"
               />
             </div>
             <div className="flex flex-col gap-1">

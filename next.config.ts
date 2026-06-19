@@ -104,6 +104,9 @@ const nextConfig: NextConfig = {
   logging: {
     browserToTerminal: true,
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   reactStrictMode: true,
 };
 

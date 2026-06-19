@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse, after } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import ErrorLog from "../models/ErrorLog";
 import { authenticateUser } from "@/middleware/auth";

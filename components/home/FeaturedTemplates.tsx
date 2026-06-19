@@ -3,42 +3,15 @@ import Link from "next/link";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import TemplateComponent from "@/components/shared/Template";
 import { ITemplate } from "@/types";
-import { connectToDatabase } from "@/lib/database";
-import Template from "@/lib/models/Template";
-import Review from "@/lib/models/Review";
 
 async function getTemplates() {
   try {
-    await connectToDatabase();
-
-    const templates = await Template.find({
-      categories: {
-        $in: ["6895e37824be395fbc0b72ae"],
-      },
-      isActive: true,
-    })
-      .select(
-        "_id title description thumbnail price tags categories averageRating",
-      )
-      .populate("categories", "name")
-      .limit(4)
-      .lean();
-
-    const templatesWithReviews = await Promise.all(
-      templates.map(async (template) => {
-        const id = template?._id;
-
-        const reviews = await Review.countDocuments({ template: id });
-
-        return {
-          ...template,
-          _id: template._id.toString(),
-          reviews: reviews ?? 0,
-        };
-      }),
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/template/featured`,
+      { next: { revalidate: 60 * 60 * 24 * 2 } },
     );
-
-    return templatesWithReviews;
+    const data = await response.json();
+    return data.data;
   } catch (err) {
     console.log(`error getting templates: ${err}`);
     return [];

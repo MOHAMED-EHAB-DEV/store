@@ -3,56 +3,39 @@
 import { useLayoutEffect } from "react";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
-import gsap from "gsap";
-import { SplitText } from "gsap/all";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 // import TrustSignals from '@/components/ui/TrustSignals';
 import { sendGTMEvent } from "@next/third-parties/google";
 
-gsap.registerPlugin(SplitText);
-
 const Hero = () => {
   useLayoutEffect(() => {
-    const splitHeader = SplitText.create(".header", {
-      type: "words",
-      mask: "words",
-    });
+    let ctx: gsap.Context | null = null;
+    (async () => {
+      const { gsap } = await import("gsap");
+      const { SplitText } = await import("gsap/SplitText");
+      gsap.registerPlugin(SplitText);
 
-    gsap.set(".header", { opacity: 1 });
+      ctx = gsap.context(() => {
+        const splitHeader = SplitText.create(".header", {
+          type: "words",
+          mask: "words",
+        });
 
-    gsap.from(splitHeader.words, {
-      duration: 1.5,
-      y: 80,
-      autoAlpha: 0,
-      opacity: 0,
-      stagger: 0.08,
-      filter: "blur(6px)",
-      ease: "power2.out",
-    });
+        gsap.set(".header", { opacity: 1 });
 
-    gsap.to(".hero-btn", {
-      y: -9,
-      repeat: -1,
-      yoyo: true,
-      duration: 1.8,
-      ease: "power1.inOut",
-    });
-
-    // Animate gradient orbs
-    gsap.to(".gradient-orb-1", {
-      rotation: 360,
-      duration: 20,
-      repeat: -1,
-      ease: "none",
-    });
-
-    gsap.to(".gradient-orb-2", {
-      rotation: -360,
-      duration: 25,
-      repeat: -1,
-      ease: "none",
-    });
+        gsap.from(splitHeader.words, {
+          duration: 1.5,
+          y: 80,
+          autoAlpha: 0,
+          opacity: 0,
+          stagger: 0.08,
+          filter: "blur(6px)",
+          ease: "power2.out",
+        });
+      });
+    })();
+    return () => ctx?.revert();
   }, []);
 
   return (
@@ -89,7 +72,7 @@ const Hero = () => {
         </Badge>
 
         <div className="flex flex-col gap-4 items-center justify-center w-full">
-          <h1 className="font-bold header opacity-0 text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-white leading-none tracking-tighter px-2 sm:px-0">
+          <h1 className="font-bold header text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-white leading-none tracking-tighter px-2 sm:px-0">
             Premium Templates to{" "}
             <span className="relative">
               Elevate
@@ -101,7 +84,7 @@ const Hero = () => {
             Your Projects
           </h1>
           <p
-            className="text-base md:text-lg header opacity-0 lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
+            className="text-base md:text-lg header lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
             aria-label="Hero Description"
           >
             Smart templates. Clean design. Built to help you move fast and look

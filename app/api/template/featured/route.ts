@@ -25,18 +25,22 @@ async function getFeaturedTemplates(req: NextRequest) {
       .limit(4)
       .lean();
 
-    const templatesWithReviews = await Promise.all(
-      templates.map(async (template) => {
-        const id = template?._id;
+    const templateIds = templates.map((t) => t._id);
 
-        const reviews = await Review.countDocuments({ template: id });
+    const reviewCounts = await Review.aggregate([
+      { $match: { template: { $in: templateIds } } },
+      { $group: { _id: "$template", count: { $sum: 1 } } },
+    ]);
 
-        return {
-          ...template,
-          reviews: reviews ?? 0,
-        };
-      }),
+    const reviewCountMap = new Map(
+      reviewCounts.map((r) => [r._id.toString(), r.count]),
     );
+
+    const templatesWithReviews = templates.map((template) => ({
+      ...template,
+      _id: template._id.toString(),
+      reviews: reviewCountMap.get(template._id.toString()) ?? 0,
+    }));
 
     return createAPIResponse(templatesWithReviews);
   } catch (err) {

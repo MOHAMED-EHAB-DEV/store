@@ -1,6 +1,6 @@
 import { authenticateUser } from "@/middleware/auth";
-import Footer from "@/components/home/Footer";
-import Navbar from "@/components/home/Navbar";
+import Footer from "@/components/ui/Footer";
+import Navbar from "@/components/ui/Navbar";
 import { redirect } from "next/navigation";
 
 export default async function RootLayout({

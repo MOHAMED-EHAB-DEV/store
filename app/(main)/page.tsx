@@ -117,10 +117,10 @@ export default async function Home() {
         {/* Enhanced background effects */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* Main gradient orb */}
-          <div className="gradient-orb-1 absolute -top-32 -right-32 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96bg-gradient-to-br from-purple-500/30 via-pink-500/20 to-cyan-500/10rounded-full blur-3xl" />
+          <div className="animate-bounce absolute -top-32 -right-32 w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96bg-gradient-to-br from-purple-500/30 via-pink-500/20 to-cyan-500/10rounded-full blur-3xl" />
 
           {/* Secondary gradient orb */}
-          <div className="gradient-orb-2 absolute -bottom-32 -left-32 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-linear-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl" />
+          <div className="animate-bounce absolute -bottom-32 -left-32 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 bg-linear-to-tr from-blue-500/20 via-teal-500/15 to-green-500/10 rounded-full blur-3xl" />
 
           {/* Floating particles */}
           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-float opacity-60" />

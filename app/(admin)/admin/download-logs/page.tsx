@@ -24,7 +24,7 @@ async function getDownloadLogs(searchParams: {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?${params.toString()}`, { headers: await headers() });
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?${params.toString()}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
     if (!response.ok) return null;
     return await response.json();

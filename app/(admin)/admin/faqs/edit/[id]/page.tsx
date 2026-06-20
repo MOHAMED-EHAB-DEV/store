@@ -15,7 +15,7 @@ interface PageProps {
 
 async function getFAQ(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs/${id}`, { headers: await headers() });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs/${id}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
         if (!response.ok) return null;
         const data = await response.json();

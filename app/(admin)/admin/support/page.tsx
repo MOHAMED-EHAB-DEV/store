@@ -18,7 +18,7 @@ async function getSupportTickets(searchParams: { [key: string]: string | undefin
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?${params.toString()}`, { headers: await headers() });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?${params.toString()}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
         if (!response.ok) return null;
         return await response.json();

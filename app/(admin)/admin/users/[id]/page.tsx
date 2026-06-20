@@ -15,7 +15,7 @@ interface PageProps {
 
 async function getUser(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users/${id}`, { headers: await headers() });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users/${id}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
         if (!response.ok) return null;
         const data = await response.json();

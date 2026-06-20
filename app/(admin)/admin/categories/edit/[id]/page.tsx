@@ -17,7 +17,7 @@ async function getCategory(id: string) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories/${id}`,
-      { headers: await headers() }
+      { headers: { cookie: (await headers()).get("cookie") || "" } }
     );
 
     if (!response.ok) return null;
@@ -33,7 +33,7 @@ async function getParentCategories() {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`,
-      { headers: await headers() }
+      { headers: { cookie: (await headers()).get("cookie") || "" } }
     );
 
     if (!response.ok) return [];

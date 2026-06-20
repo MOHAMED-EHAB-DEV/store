@@ -24,7 +24,7 @@ async function getTemplatesData(searchParams: { [key: string]: string | undefine
     try {
         const [templatesRes, categories] = await Promise.all([
             fetch(`${baseUrl}/api/admin/templates?${params.toString()}`, {
-                headers: await headers(),
+                headers: { cookie: (await headers()).get("cookie") || "" },
             }),
             getCategories()
         ]);

@@ -15,7 +15,7 @@ async function getAnalyticsData() {
 
     const res = await fetch(`${baseUrl}/api/admin/analytics`, {
       cache: "no-store",
-      headers: await headers(),
+      headers: { cookie: (await headers()).get("cookie") || "" },
     });
 
     if (!res.ok) {

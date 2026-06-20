@@ -19,13 +19,14 @@ interface AnalyticsStatsData {
 
 async function getAdminDashboardData() {
   try {
+    const cookie = (await headers()).get("cookie") || "";
     const [usersRes, templatesRes, downloadsRes, ticketsRes, analyticsRes] =
       await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`, { headers: await headers() }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`, { headers: await headers() }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`, { headers: await headers() }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`, { headers: await headers() }),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`, { headers: await headers() })
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`, { headers: { cookie } })
       ]);
 
     const users = usersRes.ok ? await usersRes.json() : { data: [] };

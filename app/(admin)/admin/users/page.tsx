@@ -21,7 +21,7 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`,
-      { headers: await headers() }
+      { headers: { cookie: (await headers()).get("cookie") || "" } }
     );
 
     if (!response.ok) return null;

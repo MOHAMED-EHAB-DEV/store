@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 async function getParentCategories() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`, { headers: await headers() });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
         if (!response.ok) return [];
         const data = await response.json();

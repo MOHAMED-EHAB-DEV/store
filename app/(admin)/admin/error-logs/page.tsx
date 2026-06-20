@@ -6,7 +6,7 @@ async function getErrorLogs(searchParams: any) {
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/error-logs?${query}`,
-    { headers: await headers() }
+    { headers: { cookie: (await headers()).get("cookie") || "" } }
   );
 
   if (!res.ok) return { data: [], pagination: {} };

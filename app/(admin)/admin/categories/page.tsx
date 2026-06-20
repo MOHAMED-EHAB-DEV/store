@@ -17,7 +17,7 @@ async function getCategories(searchParams: { [key: string]: string | undefined }
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?${params.toString()}`, { headers: await headers() });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?${params.toString()}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
         if (!response.ok) return null;
         return await response.json();

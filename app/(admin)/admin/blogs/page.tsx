@@ -19,7 +19,7 @@ async function getBlogs(searchParams: { [key: string]: string | undefined }) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/blogs?${params.toString()}`,
-      { headers: await headers() }
+      { headers: { cookie: (await headers()).get("cookie") || "" } }
     );
 
     if (!response.ok) return null;

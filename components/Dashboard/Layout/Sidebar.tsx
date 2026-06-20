@@ -93,7 +93,7 @@ const Sidebar = ({ open, setOpen, user }: {
                         className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
                         <div className="w-7 h-7 flex items-center justify-center">
                             <Image
-                                src={anyImgUrl(user?.avatar === "" ? "/assets/Icons/profile.svg" : user?.avatar as string, { width: 60, quality: 85 })}
+                                src={anyImgUrl(user?.avatar === "" ? "/assets/Icons/profile.svg" : user?.avatar as string, { width: 60, quality: 85, original: user?.avatar ? false : true })}
                                 unoptimized
                                 alt={`${user?.name} Profile`}
                                 width={30}

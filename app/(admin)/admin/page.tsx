@@ -45,10 +45,10 @@ async function getAdminDashboardData() {
       : { data: null };
 
     return {
-      users: users.data || [],
-      templates: templates.data || [],
-      downloads: downloads.data || [],
-      tickets: tickets.data || [],
+      users: users.data?.items || [],
+      templates: templates.data?.items || [],
+      downloads: downloads.data?.logs || [],
+      tickets: tickets.data?.items || [],
       analytics: (analytics.success
         ? analytics.data
         : null) as AnalyticsStatsData | null,

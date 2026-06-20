@@ -37,7 +37,7 @@ export async function authenticateUser(
       return null;
     }
 
-    return user as IUser;
+    return JSON.parse(JSON.stringify(user)) as IUser;
   } catch (error: any) {
     // Re-throw Next.js internal errors (prerender bail-outs, redirects, notFound, etc.)
     // These carry a `digest` property that the framework relies on to detect dynamic pages.

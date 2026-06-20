@@ -17,12 +17,8 @@ interface AnalyticsStatsData {
   dailyVisits: { date: string; count: number }[];
 }
 
-import { connection } from "next/server";
-
 async function getAdminDashboardData() {
   try {
-    await connection();
-
     const [usersRes, templatesRes, downloadsRes, ticketsRes, analyticsRes] =
       await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`, { headers: await headers() }),

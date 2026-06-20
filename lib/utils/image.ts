@@ -9,7 +9,7 @@
  */
 export const anyImgUrl = (
   src: string,
-  options: { width?: number; quality?: number } = {},
+  options: { width?: number; quality?: number; original?: boolean } = {},
 ): string => {
   if (!src) return "";
 
@@ -18,6 +18,7 @@ export const anyImgUrl = (
 
   if (options.width) params.set("w", options.width.toString());
   if (options.quality) params.set("q", options.quality.toString());
+  if (options.original) params.set("original", "true");
 
   const queryString = params.toString();
   const suffix = queryString ? `?${queryString}` : "";

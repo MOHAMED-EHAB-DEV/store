@@ -224,7 +224,7 @@ async function processingImage(
       const tag = makeETag(originalBuf);
       if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
       const meta = await sharp(originalBuf).metadata();
-      const mime = meta.format ? `image/${meta.format}` : "application/octet-stream";
+      const mime = meta.format === "svg" ? "image/svg+xml" : meta.format ? `image/${meta.format}` : "application/octet-stream";
       return imageResponse(originalBuf, tag, "HIT", mime);
     }
   }
@@ -296,7 +296,7 @@ async function processingImage(
       const tag = makeETag(inputBuffer);
       if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
       const meta = await sharp(inputBuffer).metadata();
-      const mime = meta.format ? `image/${meta.format}` : "application/octet-stream";
+      const mime = meta.format === "svg" ? "image/svg+xml" : meta.format ? `image/${meta.format}` : "application/octet-stream";
       return imageResponse(inputBuffer, tag, "MISS", mime);
     }
   }

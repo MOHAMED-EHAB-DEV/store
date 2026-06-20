@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import AdminBlogsClient from "@/components/Admin/AdminBlogsClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
@@ -18,6 +19,7 @@ async function getBlogs(searchParams: { [key: string]: string | undefined }) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/blogs?${params.toString()}`,
+      { headers: await headers() }
     );
 
     if (!response.ok) return null;

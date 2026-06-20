@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import UserDetailClient from "@/components/Admin/UserDetailClient";
@@ -14,7 +15,7 @@ interface PageProps {
 
 async function getUser(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users/${id}`, { headers: await headers() });
 
         if (!response.ok) return null;
         const data = await response.json();

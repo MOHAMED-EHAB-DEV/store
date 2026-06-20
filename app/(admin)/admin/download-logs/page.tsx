@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import DownloadLogsClient from "@/components/Admin/DownloadLogsClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
@@ -23,7 +24,7 @@ async function getDownloadLogs(searchParams: {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?${params.toString()}`);
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?${params.toString()}`, { headers: await headers() });
 
     if (!response.ok) return null;
     return await response.json();

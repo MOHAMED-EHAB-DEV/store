@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import AdminDashboardHome from "@/components/Admin/AdminDashboardHome";
 
 export const metadata: Metadata = {
@@ -24,11 +25,11 @@ async function getAdminDashboardData() {
 
     const [usersRes, templatesRes, downloadsRes, ticketsRes, analyticsRes] =
       await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`),
-        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`)
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`, { headers: await headers() }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`, { headers: await headers() }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`, { headers: await headers() }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`, { headers: await headers() }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`, { headers: await headers() })
       ]);
 
     const users = usersRes.ok ? await usersRes.json() : { data: [] };

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CategoryForm from "@/components/Admin/CategoryForm";
@@ -16,6 +17,7 @@ async function getCategory(id: string) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories/${id}`,
+      { headers: await headers() }
     );
 
     if (!response.ok) return null;
@@ -31,6 +33,7 @@ async function getParentCategories() {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`,
+      { headers: await headers() }
     );
 
     if (!response.ok) return [];

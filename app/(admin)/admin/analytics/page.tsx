@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import AdminAnalyticsClient from "@/components/Admin/AdminAnalyticsClient";
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ async function getAnalyticsData() {
 
     const res = await fetch(`${baseUrl}/api/admin/analytics`, {
       cache: "no-store",
+      headers: await headers(),
     });
 
     if (!res.ok) {

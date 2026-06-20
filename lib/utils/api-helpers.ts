@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import ErrorLog from "../models/ErrorLog";
 import { authenticateUser } from "@/middleware/auth";
+import { connectToDatabase } from "../database";
 
 // Response caching utility
 interface CacheEntry {
@@ -296,6 +297,8 @@ export function createErrorResponse(
         headerList?.get("x-forwarded-for") ||
         headerList?.get("x-real-ip") ||
         "unknown";
+
+      await connectToDatabase();
 
       const user = await authenticateUser(true, true);
 

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import TemplateForm from "@/components/Admin/TemplateForm";
@@ -15,7 +16,7 @@ interface PageProps {
 
 async function getTemplate(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/templates/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/templates/${id}`, { headers: await headers() });
         const data = await response.json();
         return data.success ? data.data : null;
     } catch (error) {

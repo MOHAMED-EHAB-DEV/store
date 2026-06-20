@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import FAQForm from "@/components/Admin/FAQForm";
@@ -14,7 +15,7 @@ interface PageProps {
 
 async function getFAQ(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs/${id}`, { headers: await headers() });
 
         if (!response.ok) return null;
         const data = await response.json();

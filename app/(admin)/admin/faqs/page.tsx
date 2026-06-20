@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import AdminFAQsClient from "@/components/Admin/AdminFAQsClient";
 import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
@@ -22,7 +23,7 @@ async function getFAQsData(searchParams: { [key: string]: string | undefined }) 
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs?${params.toString()}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs?${params.toString()}`, { headers: await headers() });
 
         if (!response.ok) return null;
         return await response.json();

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import AdminUsersClient from "@/components/Admin/AdminUsersClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
@@ -19,7 +20,8 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`,
+      { headers: await headers() }
     );
 
     if (!response.ok) return null;

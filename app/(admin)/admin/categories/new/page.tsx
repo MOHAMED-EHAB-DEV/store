@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import CategoryForm from "@/components/Admin/CategoryForm";
 
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 async function getParentCategories() {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?limit=100`, { headers: await headers() });
 
         if (!response.ok) return [];
         const data = await response.json();

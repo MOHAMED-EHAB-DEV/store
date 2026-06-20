@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import AdminCategoriesClient from "@/components/Admin/AdminCategoriesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
@@ -16,7 +17,7 @@ async function getCategories(searchParams: { [key: string]: string | undefined }
     params.set("limit", "20");
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?${params.toString()}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/categories?${params.toString()}`, { headers: await headers() });
 
         if (!response.ok) return null;
         return await response.json();

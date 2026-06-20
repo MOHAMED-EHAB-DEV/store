@@ -12,12 +12,12 @@ import { revalidateTag } from "next/cache";
 
 async function getAdminTemplates(request: NextRequest) {
   try {
-    const user = await authenticateUser(true);
+    await connectToDatabase();
+
+    const user = await authenticateUser();
     if (!user || user.role !== "admin") {
       return createErrorResponse("Unauthorized", 401, { req: request });
     }
-
-    await connectToDatabase();
 
     const { searchParams } = new URL(request.url);
     const { limit, skip, page } = validatePagination(request);
@@ -91,7 +91,11 @@ async function getAdminTemplates(request: NextRequest) {
     );
   } catch (error: any) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    return createErrorResponse("Something went wrong", 500, { req: request, error: error, operation: "adminGetTemplates" });
+    return createErrorResponse("Something went wrong", 500, {
+      req: request,
+      error: error,
+      operation: "adminGetTemplates",
+    });
   }
 }
 
@@ -122,7 +126,11 @@ async function createAdminTemplate(req: NextRequest) {
     });
   } catch (err: any) {
     if (err && typeof err === "object" && "digest" in err) throw err;
-    return createErrorResponse("Something went wrong", 500, { req: req, error: err, operation: "adminCreateTemplate" });
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "adminCreateTemplate",
+    });
   }
 }
 

@@ -1,9 +1,11 @@
 import AdminVisitorDetailsClient from "@/components/Admin/AdminVisitorDetailsClient";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 async function getVisitorDetails(id: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/visitors/${id}`,
+    { headers: await headers() }
   );
 
   if (!res.ok) return null;

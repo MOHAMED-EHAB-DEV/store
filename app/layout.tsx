@@ -10,6 +10,7 @@ import {
   OrganizationSchema,
   WebSiteSchema,
 } from "@/components/SEO/StructuredData";
+import { GoogleTagManager } from "@next/third-parties/google";
 import Script from "next/script";
 
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
@@ -94,26 +95,6 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <Script
-          id="gtm-script"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              function loadGTM() {
-                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-TR5KGJS3');
-              }
-              if ('requestIdleCallback' in window) {
-                requestIdleCallback(function() { setTimeout(loadGTM, 3000); });
-              } else {
-                setTimeout(loadGTM, 5000);
-              }
-          `,
-          }}
-        />
       </head>
       <body
         className={cn(
@@ -122,6 +103,7 @@ export default async function RootLayout({
           Parastoo.variable,
         )}
       >
+        <GoogleTagManager gtmId="GTM-TR5KGJS3" />
         <Toaster />
         <a
           href="#main-content"
@@ -164,14 +146,7 @@ export default async function RootLayout({
           <Providers>{children}</Providers>
         </div>
 
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=GTM-TR5KGJS3`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
+
         <BackToTop />
         <OrganizationSchema />
         <WebSiteSchema />

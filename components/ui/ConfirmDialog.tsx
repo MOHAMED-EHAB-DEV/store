@@ -8,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "./button";
 
 interface ConfirmDialogProps {
     open: boolean;
@@ -44,22 +45,23 @@ export default function ConfirmDialog({
                         {description}
                     </DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="gap-2 sm:gap-0">
-                    <button
+                <DialogFooter className="gap-2">
+                    <Button
+                        variant="outline"
                         onClick={() => onOpenChange(false)}
-                        className="px-4 py-2 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/15 transition-colors font-medium"
+                        className="w-full sm:w-auto hover:bg-primary"
                     >
                         {cancelText}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={handleConfirm}
-                        className={`px-4 py-2 rounded-lg font-medium transition-colors shadow-lg ${variant === "destructive"
+                        className={`w-full sm:w-auto ${variant === "destructive"
                                 ? "bg-red-600 text-white hover:bg-red-700 shadow-red-500/20"
                                 : "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/20"
                             }`}
                     >
                         {confirmText}
-                    </button>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

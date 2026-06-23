@@ -5,6 +5,17 @@ import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import BanUserDialog from "@/components/Admin/BanUserDialog";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { capitalizeFirstChar } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 interface UserDetailClientProps {
     user: any;
@@ -18,7 +29,7 @@ export default function UserDetailClient({ user }: UserDetailClientProps) {
     const [formData, setFormData] = useState({
         name: user.name || "",
         role: user.role || "user",
-        tier: user.tier || "free",
+        tier: user.tier || "starter",
         isEmailVerified: user.isEmailVerified || false,
     });
 
@@ -124,10 +135,16 @@ export default function UserDetailClient({ user }: UserDetailClientProps) {
                         <p className="text-muted-foreground">{user.email}</p>
                         <div className="flex gap-2 mt-2">
                             <span className={`text-xs px-2 py-0.5 rounded-full ${user.role === "admin" ? "bg-purple-500/20 text-purple-400" : "bg-gray-500/20 text-gray-400"}`}>
-                                {user.role}
+                                {capitalizeFirstChar(user.role)}
                             </span>
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${user.tier === "premium" ? "bg-yellow-500/20 text-yellow-400" : "bg-gray-500/20 text-gray-400"}`}>
-                                {user.tier}
+                            <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                user.tier === "pro"
+                                    ? "bg-amber-500/20 text-amber-400"
+                                    : user.tier === "lifetime"
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : "bg-gray-500/20 text-gray-400"
+                            }`}>
+                                {capitalizeFirstChar(user.tier)}
                             </span>
                             {isBanned && (
                                 <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">
@@ -170,61 +187,66 @@ export default function UserDetailClient({ user }: UserDetailClientProps) {
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Name</label>
-                        <input
+                        <Input
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="bg-white/5 border-white/10 text-white"
                         />
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Role</label>
-                        <select
-                            name="role"
+                        <Select
                             value={formData.role}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            onValueChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
                         >
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                            <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
+                                <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-dark border-white/10 text-white">
+                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Tier</label>
-                        <select
-                            name="tier"
+                        <Select
                             value={formData.tier}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            onValueChange={(value) => setFormData(prev => ({ ...prev, tier: value }))}
                         >
-                            <option value="free">Free</option>
-                            <option value="premium">Premium</option>
-                        </select>
+                            <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
+                                <SelectValue placeholder="Select tier" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-dark border-white/10 text-white">
+                                <SelectItem value="starter">Starter</SelectItem>
+                                <SelectItem value="pro">Pro</SelectItem>
+                                <SelectItem value="lifetime">Lifetime</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            name="isEmailVerified"
+                    <div className="flex items-center gap-2 pt-6">
+                        <Checkbox
                             id="isEmailVerified"
                             checked={formData.isEmailVerified}
-                            onChange={handleChange}
-                            className="w-4 h-4"
+                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isEmailVerified: !!checked }))}
+                            className="border-white/20 text-white"
                         />
-                        <label htmlFor="isEmailVerified" className="text-sm text-muted-foreground">
+                        <label htmlFor="isEmailVerified" className="text-sm text-muted-foreground cursor-pointer select-none">
                             Email Verified
                         </label>
                     </div>
                 </div>
 
                 <div className="flex gap-2 pt-4">
-                    <button
+                    <Button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                        className="bg-primary text-white hover:bg-primary/90"
                     >
                         {loading ? "Saving..." : "Save Changes"}
-                    </button>
+                    </Button>
                 </div>
             </form>
 
@@ -233,29 +255,32 @@ export default function UserDetailClient({ user }: UserDetailClientProps) {
                 <h3 className="text-lg font-semibold text-red-400 mb-4">Danger Zone</h3>
                 <div className="flex flex-wrap gap-2">
                     {isBanned ? (
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={handleUnban}
                             disabled={loading}
-                            className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors disabled:opacity-50"
+                            className="bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20 hover:text-green-300"
                         >
                             Unban User
-                        </button>
+                        </Button>
                     ) : (
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={handleBan}
                             disabled={loading}
-                            className="px-4 py-2 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-colors disabled:opacity-50"
+                            className="bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20 hover:text-orange-300"
                         >
                             Ban User
-                        </button>
+                        </Button>
                     )}
-                    <button
+                    <Button
+                        variant="outline"
                         onClick={handleDelete}
                         disabled={loading}
-                        className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
+                        className="hover:bg-red-500 hover:text-white hover:border-red-500"
                     >
                         Delete User
-                    </button>
+                    </Button>
                 </div>
             </div>
 

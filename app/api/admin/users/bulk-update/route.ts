@@ -32,7 +32,7 @@ async function bulkUpdateUsers(req: NextRequest) {
     const result = await User.updateMany(
       {
         _id: { $in: userIds },
-        role: { $ne: "admin" }, // Prevent updating admin users
+        // role: { $ne: "admin" }, // Prevent updating admin users
       },
       { $set: updates },
     );

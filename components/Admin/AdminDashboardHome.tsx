@@ -215,11 +215,11 @@ export default function AdminDashboardHome({ data }: AdminDashboardHomeProps) {
               />
             </div>
             <p className="text-3xl font-bold text-white">
-              {users.filter((u: any) => u.tier === "premium").length}
+              {users.filter((u: any) => u.tier === "pro" || u.tier === "lifetime").length}
             </p>
             <p className="text-xs text-muted-foreground mt-2">
               {(
-                (users.filter((u: any) => u.tier === "premium").length /
+                (users.filter((u: any) => u.tier === "pro" || u.tier === "lifetime").length /
                   users.length) *
                 100
               ).toFixed(1)}

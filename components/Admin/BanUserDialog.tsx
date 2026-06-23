@@ -14,6 +14,17 @@ import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { FileText } from "@/components/ui/svgs/icons/FileText";
 import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { sonnerToast } from "@/components/ui/sonner";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 interface BanUserDialogProps {
     open: boolean;
@@ -31,6 +42,7 @@ export default function BanUserDialog({
     onSuccess
 }: BanUserDialogProps) {
     const [loading, setLoading] = useState(false);
+    const [isOtherReason, setIsOtherReason] = useState(false);
     const [formData, setFormData] = useState({
         reason: "",
         notes: "",
@@ -73,6 +85,7 @@ export default function BanUserDialog({
                 expiresAt: "",
                 isTemporary: false
             });
+            setIsOtherReason(false);
         } catch (error: any) {
             sonnerToast.error(error.message || "Failed to ban user");
         } finally {
@@ -115,33 +128,45 @@ export default function BanUserDialog({
                             <FileText className="w-4 h-4 text-purple-400" />
                             Ban Reason <span className="text-red-400">*</span>
                         </label>
-                        <select
-                            value={formData.reason}
-                            onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500 hover:bg-white/15 transition-colors"
+                        <Select
+                            value={isOtherReason ? "Other" : formData.reason}
+                            onValueChange={(value) => {
+                                if (value === "Other") {
+                                    setIsOtherReason(true);
+                                    setFormData({ ...formData, reason: "" });
+                                } else {
+                                    setIsOtherReason(false);
+                                    setFormData({ ...formData, reason: value });
+                                }
+                            }}
                         >
-                            <option value="" className="bg-gray-900">Select a reason...</option>
-                            <option value="Violation of Terms of Service" className="bg-gray-900">Violation of Terms of Service</option>
-                            <option value="Spam or Abusive Behavior" className="bg-gray-900">Spam or Abusive Behavior</option>
-                            <option value="Fraudulent Activity" className="bg-gray-900">Fraudulent Activity</option>
-                            <option value="Inappropriate Content" className="bg-gray-900">Inappropriate Content</option>
-                            <option value="Multiple Account Violations" className="bg-gray-900">Multiple Account Violations</option>
-                            <option value="Security Threat" className="bg-gray-900">Security Threat</option>
-                            <option value="Other" className="bg-gray-900">Other</option>
-                        </select>
+                            <SelectTrigger className="w-full bg-white/10 border-white/20 text-white">
+                                <SelectValue placeholder="Select a reason..." />
+                            </SelectTrigger>
+                            <SelectContent className="bg-dark border-white/20 text-white">
+                                <SelectItem value="Violation of Terms of Service">Violation of Terms of Service</SelectItem>
+                                <SelectItem value="Spam or Abusive Behavior">Spam or Abusive Behavior</SelectItem>
+                                <SelectItem value="Fraudulent Activity">Fraudulent Activity</SelectItem>
+                                <SelectItem value="Inappropriate Content">Inappropriate Content</SelectItem>
+                                <SelectItem value="Multiple Account Violations">Multiple Account Violations</SelectItem>
+                                <SelectItem value="Security Threat">Security Threat</SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {/* Custom Reason (if Other) */}
-                    {formData.reason === "Other" && (
+                    {isOtherReason && (
                         <div>
                             <label className="block text-white font-medium mb-2">
                                 Custom Reason
                             </label>
-                            <input
+                            <Input
                                 type="text"
                                 placeholder="Enter custom ban reason..."
+                                value={formData.reason}
                                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+                                className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus-visible:ring-red-500"
                             />
                         </div>
                     )}
@@ -151,23 +176,22 @@ export default function BanUserDialog({
                         <label className="block text-white font-medium mb-2">
                             Additional Notes (Optional)
                         </label>
-                        <textarea
+                        <Textarea
                             value={formData.notes}
                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                             placeholder="Add any additional context or warnings given to the user..."
                             rows={3}
-                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none transition-colors"
+                            className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus-visible:ring-red-500 resize-none"
                         />
                     </div>
 
                     {/* Temporary Ban Toggle */}
                     <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-                        <label className="flex items-center gap-3 cursor-pointer">
-                            <input
-                                type="checkbox"
+                        <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <Checkbox
                                 checked={formData.isTemporary}
-                                onChange={(e) => setFormData({ ...formData, isTemporary: e.target.checked })}
-                                className="w-5 h-5 rounded border-white/20 bg-white/10 text-purple-600 focus:ring-2 focus:ring-purple-500"
+                                onCheckedChange={(checked) => setFormData({ ...formData, isTemporary: !!checked })}
+                                className="border-white/20 text-white"
                             />
                             <div className="flex-1">
                                 <p className="text-white font-medium">Temporary Ban</p>
@@ -182,33 +206,34 @@ export default function BanUserDialog({
                                     <Calendar className="w-4 h-4 text-purple-400" />
                                     Expiration Date
                                 </label>
-                                <input
+                                <Input
                                     type="datetime-local"
                                     value={formData.expiresAt}
                                     onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
                                     min={new Date().toISOString().slice(0, 16)}
-                                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+                                    className="bg-white/10 border-white/20 text-white focus-visible:ring-purple-500"
                                 />
                             </div>
                         )}
                     </div>
                 </div>
 
-                <DialogFooter className="gap-2 sm:gap-0">
-                    <button
+                <DialogFooter className="gap-2">
+                    <Button
+                        variant="outline"
                         onClick={() => onOpenChange(false)}
                         disabled={loading}
-                        className="px-6 py-3 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/15 transition-colors font-medium disabled:opacity-50"
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/15"
                     >
                         Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={handleSubmit}
                         disabled={loading || !formData.reason}
-                        className="px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-300 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white shadow-lg shadow-red-500/30 hover:shadow-red-500/50"
                     >
                         {loading ? "Banning..." : "Ban User"}
-                    </button>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

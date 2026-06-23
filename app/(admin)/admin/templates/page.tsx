@@ -54,8 +54,6 @@ export default async function AdminTemplatesPage({ searchParams }: PageProps) {
     const params = await searchParams;
     const data = await getTemplatesData(params);
 
-    console.log(data);
-
     if (!data) {
         return (
             <div className="p-6 text-center">

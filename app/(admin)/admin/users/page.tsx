@@ -41,8 +41,6 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const data = await getUsers(params);
 
-  console.log(data);
-
   if (!data) {
     return (
       <div className="p-6 text-center">

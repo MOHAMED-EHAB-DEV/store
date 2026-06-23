@@ -78,8 +78,7 @@ function SearchFilterBar({
             onClick={() => setShowFilters(!showFilters)}
             className="bg-white/5 border-white/10 text-white hover:bg-white/10 relative"
           >
-            <Filter className="w-4 h-4 mr-2" />
-            Filters
+            <Filter className="w-4 h-4" />
             {activeFilterCount > 0 && (
               <Badge className="ml-2 bg-primary text-white px-1.5 py-0.5 text-xs">
                 {activeFilterCount}

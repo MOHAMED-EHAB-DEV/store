@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+    Modal,
+    ModalContent,
+    ModalDescription,
+    ModalFooter,
+    ModalHeader,
+    ModalTitle,
+} from "@/components/ui/Modal";
 import { ShieldAlert } from "@/components/ui/svgs/icons/ShieldAlert";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { FileText } from "@/components/ui/svgs/icons/FileText";
@@ -94,21 +94,21 @@ export default function BanUserDialog({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="glass border-white/20 max-w-2xl">
-                <DialogHeader>
+        <Modal open={open} onOpenChange={onOpenChange}>
+            <ModalContent className="glass border-white/20 max-w-2xl">
+                <ModalHeader>
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-3 bg-red-500/20 rounded-full">
                             <ShieldAlert className="w-6 h-6 text-red-400" />
                         </div>
                         <div>
-                            <DialogTitle className="text-white text-2xl">Ban User</DialogTitle>
-                            <DialogDescription className="text-gray-400">
+                            <ModalTitle className="text-white text-2xl">Ban User</ModalTitle>
+                            <ModalDescription className="text-gray-400">
                                 Banning: <span className="text-white font-medium">{userName}</span>
-                            </DialogDescription>
+                            </ModalDescription>
                         </div>
                     </div>
-                </DialogHeader>
+                </ModalHeader>
 
                 <div className="space-y-6 py-4">
                     {/* Warning */}
@@ -218,7 +218,7 @@ export default function BanUserDialog({
                     </div>
                 </div>
 
-                <DialogFooter className="gap-2">
+                <ModalFooter className="gap-2">
                     <Button
                         variant="outline"
                         onClick={() => onOpenChange(false)}
@@ -234,8 +234,8 @@ export default function BanUserDialog({
                     >
                         {loading ? "Banning..." : "Ban User"}
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }

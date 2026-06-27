@@ -16,6 +16,7 @@ import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 import { Eye } from "@/components/ui/svgs/icons/Eye";
 import { ChevronRight } from "@/components/ui/svgs/icons/ChevronRight";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface ErrorLog {
     _id: string;
@@ -52,6 +53,7 @@ export default function AdminErrorLogsClient({
     const queryParams = useSearchParams();
     const [loading, setLoading] = useState(false);
     const [selectedLog, setSelectedLog] = useState<ErrorLog | null>(null);
+    const [deleteOldLogsDialog, setDeleteOldLogsDialog] = useState<number | null>(null);
 
     const updateQuery = (updates: Record<string, string | null>) => {
         const params = new URLSearchParams(queryParams.toString());
@@ -66,11 +68,11 @@ export default function AdminErrorLogsClient({
         router.push(`${pathname}?${params.toString()}`);
     };
 
-    const deleteOldLogs = async (days: number) => {
-        if (!confirm(`Are you sure you want to delete logs older than ${days} days?`)) return;
+    const executeDeleteOldLogs = async () => {
+        if (!deleteOldLogsDialog) return;
         setLoading(true);
         try {
-            const res = await fetch(`/api/admin/error-logs?days=${days}`, { method: "DELETE" });
+            const res = await fetch(`/api/admin/error-logs?days=${deleteOldLogsDialog}`, { method: "DELETE" });
             const data = await res.json();
             if (data.success) {
                 sonnerToast.success(data.message);
@@ -82,6 +84,7 @@ export default function AdminErrorLogsClient({
             sonnerToast.error("An error occurred");
         } finally {
             setLoading(false);
+            setDeleteOldLogsDialog(null);
         }
     };
 
@@ -206,7 +209,7 @@ export default function AdminErrorLogsClient({
                         <Button 
                             variant="outline" 
                             size="sm" 
-                            onClick={() => deleteOldLogs(30)}
+                            onClick={() => setDeleteOldLogsDialog(30)}
                             className="bg-red-500/5 hover:bg-red-500/10 text-red-400 border-red-500/20"
                         >
                             <Trash2 className="w-4 h-4 mr-2" />
@@ -381,6 +384,19 @@ export default function AdminErrorLogsClient({
                     </div>
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={deleteOldLogsDialog !== null}
+                onOpenChange={(open) => {
+                    if (!open) setDeleteOldLogsDialog(null);
+                }}
+                onConfirm={executeDeleteOldLogs}
+                title="Clear Old Logs"
+                description={`Are you sure you want to delete logs older than ${deleteOldLogsDialog} days? This action cannot be undone.`}
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
         </div>
     );
 }

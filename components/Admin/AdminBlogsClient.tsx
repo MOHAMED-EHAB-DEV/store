@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { sonnerToast } from "@/components/ui/sonner";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import Link from "next/link";
+import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 
 interface Blog {
     _id: string;
@@ -52,10 +54,12 @@ export default function AdminBlogsClient({
     const queryParams = useSearchParams();
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null }>({
         open: false,
         id: null,
     });
+    const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
 
     const filterOptions: FilterOption[] = [
         {
@@ -119,6 +123,55 @@ export default function AdminBlogsClient({
                 sonnerToast.error(data.message || "Failed to update blog post");
             }
         } catch (error) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch("/api/admin/blogs/bulk-delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ blogIds: selectedIds }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} posts deleted successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to delete posts");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleBulkStatusChange = async (isPublished: boolean) => {
+        setLoading(true);
+        try {
+            const response = await fetch("/api/admin/blogs/bulk-update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ blogIds: selectedIds, updates: { isPublished } }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} posts updated successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to update posts");
+            }
+        } catch (error: any) {
             sonnerToast.error("An error occurred. Please try again.");
         } finally {
             setLoading(false);
@@ -252,9 +305,15 @@ export default function AdminBlogsClient({
                     { label: "Blogs" },
                 ]}
                 actions={
-                    <Button onClick={() => router.push("/admin/blogs/new")} className="bg-primary hover:bg-primary/90">
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Post
+                    <Button
+                        variant="default"
+                        className="bg-primary hover:bg-primary/90"
+                        asChild
+                    >
+                        <Link href="/admin/blogs/new">
+                            <Plus className="w-4 h-4 mr-2" />
+                            New Post
+                        </Link>
                     </Button>
                 }
             />
@@ -277,6 +336,44 @@ export default function AdminBlogsClient({
                     }}
                     onClearFilters={() => updateQuery({ status: "", search: "" })}
                 />
+
+                {/* Bulk Actions */}
+                {selectedIds.length > 0 && (
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
+                        <span className="text-sm text-white">
+                            {selectedIds.length} post{selectedIds.length !== 1 ? "s" : ""} selected
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange(true)}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Publish
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange(false)}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Unpublish
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => setBulkDeleteDialog(true)}
+                                disabled={isDeleting}
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete ({selectedIds.length})
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 <DataTable
                     columns={columns}
@@ -343,6 +440,16 @@ export default function AdminBlogsClient({
                 onConfirm={handleDelete}
                 title="Delete Blog Post"
                 description="Are you sure you want to delete this blog post? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
+            <ConfirmDialog
+                open={bulkDeleteDialog}
+                onOpenChange={setBulkDeleteDialog}
+                onConfirm={handleBulkDelete}
+                title="Delete Posts"
+                description={`Are you sure you want to delete ${selectedIds.length} posts? This action cannot be undone.`}
                 confirmText="Delete"
                 cancelText="Cancel"
                 variant="destructive"

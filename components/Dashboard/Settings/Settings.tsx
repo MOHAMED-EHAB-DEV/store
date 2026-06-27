@@ -1,12 +1,11 @@
 import { useState, FormEvent } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Modal,
+  ModalContent,
+  ModalDescription,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/Modal";
 import { whatLoseWhenDeleteMyAccount } from "@/constants";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Eye } from "@/components/ui/svgs/icons/Eye";
@@ -22,6 +21,7 @@ const Settings = ({ userId }: { userId: string }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     currentPassword: "",
@@ -68,21 +68,24 @@ const Settings = ({ userId }: { userId: string }) => {
       <h1 className="text-white font-bold text-3xl">Danger Zone</h1>
       <p className="text-secondary text-md font-medium">Delete your account.</p>
 
-      <Dialog>
-        <DialogTrigger>
-          <div className="bg-gradient-danger rounded-md w-fit cursor-pointer px-4 py-2 font-bold text-white">
-            Delete your account
-          </div>
-        </DialogTrigger>
-        <DialogContent className="bg-primary border-none w-[900px] data-[state=open]:animate-in data-[state=closed]:animate-out">
-          <DialogHeader className="gap-3">
-            <DialogTitle className="font-paras text-3xl">
+      <button
+        type="button"
+        onClick={() => setIsDialogOpen(true)}
+        className="bg-gradient-danger rounded-md w-fit cursor-pointer px-4 py-2 font-bold text-white border-none outline-none focus:outline-none"
+      >
+        Delete your account
+      </button>
+
+      <Modal open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <ModalContent className="bg-primary border-none w-[900px] data-[state=open]:animate-in data-[state=closed]:animate-out">
+          <ModalHeader className="gap-3">
+            <ModalTitle className="font-paras text-3xl">
               Delete account
-            </DialogTitle>
-            <DialogDescription className="text-md font-light ">
+            </ModalTitle>
+            <ModalDescription className="text-md font-light ">
               Are you sure to delete your account? Before go, we want you to
               understand what deleting your account means
-            </DialogDescription>
+            </ModalDescription>
             <div className="flex justify-center flex-col gap-3">
               {whatLoseWhenDeleteMyAccount.map((v, idx) => (
                 <div key={idx} className="flex gap-2">
@@ -188,9 +191,9 @@ const Settings = ({ userId }: { userId: string }) => {
                 {isLoading ? "Confirming" : "Confirm"}
               </button>
             </form>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+          </ModalHeader>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

@@ -10,13 +10,12 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+    Modal,
+    ModalContent,
+    ModalDescription,
+    ModalHeader,
+    ModalTitle,
+} from "@/components/ui/Modal";
 import { whatLoseWhenDeleteMyAccount } from "@/constants";
 import { Mail } from "@/components/ui/svgs/icons/Mail";
 import { X } from "@/components/ui/svgs/icons/X";
@@ -28,6 +27,7 @@ const ChangePassword = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [passwordData, setPasswordData] = useState({
         currentPassword: "",
         newPassword: "",
@@ -248,25 +248,26 @@ const ChangePassword = () => {
                 </button>
             </form>
 
-            {/* Delete Account Section */}
-            <div className="w-full rounded-lg bg-red-500/5 flex flex-col gap-4">
+            {/* Danger Zone */}
+            <div className="border border-white/10 w-full p-8 rounded-sm bg-transparent flex flex-col gap-4 mt-8">
                 <h2 className="text-white font-bold text-2xl">Danger Zone</h2>
-                <p className="text-muted-foreground text-sm font-medium">
-                    Permanently delete your account and all associated data.
-                </p>
+                <p className="text-secondary text-md font-medium">Delete your account permanently.</p>
 
-                <Dialog>
-                    <DialogTrigger>
-                        <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-md w-fit cursor-pointer px-4 py-2 font-bold text-white hover:from-red-700 hover:to-red-800 transition-all">
-                            Delete Account
-                        </div>
-                    </DialogTrigger>
-                    <DialogContent className="bg-primary border-none w-[900px] max-w-[90vw]">
-                        <DialogHeader className="gap-3">
-                            <DialogTitle className="font-bold text-2xl">Delete Account</DialogTitle>
-                            <DialogDescription className="text-md font-light">
+                <button
+                    type="button"
+                    onClick={() => setIsDialogOpen(true)}
+                    className="bg-gradient-danger rounded-md w-fit cursor-pointer px-4 py-2 font-bold text-white border-none outline-none focus:outline-none"
+                >
+                    Delete your account
+                </button>
+
+                <Modal open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <ModalContent className="bg-primary border-none w-full max-w-[900px] data-[state=open]:animate-in data-[state=closed]:animate-out max-h-[90vh] overflow-y-auto">
+                        <ModalHeader className="gap-3">
+                            <ModalTitle className="font-paras text-3xl">Delete Account</ModalTitle>
+                            <ModalDescription className="text-md font-light">
                                 Are you sure you want to delete your account? Before you proceed, understand what deleting your account means:
-                            </DialogDescription>
+                            </ModalDescription>
                             <div className="flex justify-center flex-col gap-3">
                                 {whatLoseWhenDeleteMyAccount.map((v, idx) => (
                                     <div key={idx} className="flex gap-2">
@@ -336,9 +337,9 @@ const ChangePassword = () => {
                                     {isDeleteLoading ? "Deleting..." : "Confirm Delete"}
                                 </button>
                             </form>
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
+                        </ModalHeader>
+                    </ModalContent>
+                </Modal>
             </div>
         </div>
     );

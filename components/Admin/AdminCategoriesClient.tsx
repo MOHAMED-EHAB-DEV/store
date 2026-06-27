@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { sonnerToast } from "@/components/ui/sonner";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import Link from "next/link";
+import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 
 interface Category {
     _id: string;
@@ -48,10 +50,12 @@ export default function AdminCategoriesClient({
     const queryParams = useSearchParams();
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null }>({
         open: false,
         id: null,
     });
+    const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
 
     const filterOptions: FilterOption[] = [
         {
@@ -115,6 +119,55 @@ export default function AdminCategoriesClient({
                 sonnerToast.error(data.message || "Failed to update category");
             }
         } catch (error) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch("/api/admin/categories/bulk-delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ categoryIds: selectedIds }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} categories deleted successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to delete categories");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleBulkStatusChange = async (isActive: boolean) => {
+        setLoading(true);
+        try {
+            const response = await fetch("/api/admin/categories/bulk-update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ categoryIds: selectedIds, updates: { isActive } }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} categories updated successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to update categories");
+            }
+        } catch (error: any) {
             sonnerToast.error("An error occurred. Please try again.");
         } finally {
             setLoading(false);
@@ -235,9 +288,15 @@ export default function AdminCategoriesClient({
                     { label: "Categories" },
                 ]}
                 actions={
-                    <Button onClick={() => router.push("/admin/categories/new")} className="bg-primary hover:bg-primary/90">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Category
+                    <Button
+                        variant="default"
+                        className="bg-primary hover:bg-primary/90"
+                        asChild
+                    >
+                        <Link href="/admin/categories/new">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Category
+                        </Link>
                     </Button>
                 }
             />
@@ -260,6 +319,44 @@ export default function AdminCategoriesClient({
                     }}
                     onClearFilters={() => updateQuery({ isActive: "", search: "" })}
                 />
+
+                {/* Bulk Actions */}
+                {selectedIds.length > 0 && (
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
+                        <span className="text-sm text-white">
+                            {selectedIds.length} categor{selectedIds.length !== 1 ? "ies" : "y"} selected
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange(true)}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Activate
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange(false)}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Deactivate
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => setBulkDeleteDialog(true)}
+                                disabled={isDeleting}
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete ({selectedIds.length})
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 <DataTable
                     columns={columns}
@@ -326,6 +423,16 @@ export default function AdminCategoriesClient({
                 onConfirm={handleDelete}
                 title="Delete Category"
                 description="Are you sure you want to delete this category? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
+            <ConfirmDialog
+                open={bulkDeleteDialog}
+                onOpenChange={setBulkDeleteDialog}
+                onConfirm={handleBulkDelete}
+                title="Delete Categories"
+                description={`Are you sure you want to delete ${selectedIds.length} categories? This action cannot be undone.`}
                 confirmText="Delete"
                 cancelText="Cancel"
                 variant="destructive"

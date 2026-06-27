@@ -31,10 +31,13 @@ export default function AdminFAQsClient({
     const pathname = usePathname();
     const queryParams = useSearchParams();
     const [loading, setLoading] = useState(false);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null }>({
         open: false,
         id: null,
     });
+    const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
 
     // Filtering options
     const filterOptions: FilterOption[] = [
@@ -93,6 +96,55 @@ export default function AdminFAQsClient({
         } finally {
             setLoading(false);
             setDeleteDialog({ open: false, id: null });
+        }
+    };
+
+    const handleBulkDelete = async () => {
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch("/api/admin/faqs/bulk-delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ faqIds: selectedIds }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} FAQs deleted successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to delete FAQs");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleBulkStatusChange = async (isPublished: boolean) => {
+        setLoading(true);
+        try {
+            const response = await fetch("/api/admin/faqs/bulk-update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ faqIds: selectedIds, updates: { isPublished } }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} FAQs updated successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to update FAQs");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -191,11 +243,51 @@ export default function AdminFAQsClient({
                 </Button>
             </div>
 
+            {/* Bulk Actions */}
+            {selectedIds.length > 0 && (
+                <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
+                    <span className="text-sm text-white">
+                        {selectedIds.length} FAQ{selectedIds.length !== 1 ? "s" : ""} selected
+                    </span>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBulkStatusChange(true)}
+                            className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                            disabled={loading}
+                        >
+                            Publish
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBulkStatusChange(false)}
+                            className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                            disabled={loading}
+                        >
+                            Unpublish
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setBulkDeleteDialog(true)}
+                            disabled={isDeleting}
+                        >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete ({selectedIds.length})
+                        </Button>
+                    </div>
+                </div>
+            )}
+
             <DataTable
                 columns={columns}
                 data={initialData}
                 keyExtractor={(faq) => faq._id}
                 loading={loading}
+                selectable
+                onSelectionChange={(ids) => setSelectedIds(ids as string[])}
                 emptyState={
                     <EmptyState
                         title="No FAQs found"
@@ -228,7 +320,7 @@ export default function AdminFAQsClient({
                             size="sm"
                             disabled={pagination.page <= 1}
                             onClick={() => updateQuery({ page: (pagination.page - 1).toString() })}
-                            className="bg-white/5 border-white/10"
+                            className="bg-white/5 border-white/10 text-white"
                         >
                             Previous
                         </Button>
@@ -237,7 +329,7 @@ export default function AdminFAQsClient({
                             size="sm"
                             disabled={pagination.page >= pagination.pages}
                             onClick={() => updateQuery({ page: (pagination.page + 1).toString() })}
-                            className="bg-white/5 border-white/10"
+                            className="bg-white/5 border-white/10 text-white"
                         >
                             Next
                         </Button>
@@ -251,6 +343,16 @@ export default function AdminFAQsClient({
                 onConfirm={handleDelete}
                 title="Delete FAQ"
                 description="Are you sure you want to delete this FAQ? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
+            <ConfirmDialog
+                open={bulkDeleteDialog}
+                onOpenChange={setBulkDeleteDialog}
+                onConfirm={handleBulkDelete}
+                title="Delete FAQs"
+                description={`Are you sure you want to delete ${selectedIds.length} FAQs? This action cannot be undone.`}
                 confirmText="Delete"
                 cancelText="Cancel"
                 variant="destructive"

@@ -14,6 +14,9 @@ import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Check } from "@/components/ui/svgs/icons/Check";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { sonnerToast } from "@/components/ui/sonner";
+import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface Ticket {
     _id: string;
@@ -48,6 +51,9 @@ export default function AdminSupportClient({
     const pathname = usePathname();
     const queryParams = useSearchParams();
     const [loading, setLoading] = useState(false);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
 
     const filterOptions: FilterOption[] = [
         {
@@ -82,6 +88,55 @@ export default function AdminSupportClient({
         });
         if (!updates.page) params.set("page", "1");
         router.push(`${pathname}?${params.toString()}`);
+    };
+
+    const handleBulkDelete = async () => {
+
+        setIsDeleting(true);
+        try {
+            const response = await fetch("/api/admin/support/bulk-delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ticketIds: selectedIds }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} tickets deleted successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to delete tickets");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleBulkStatusChange = async (status: string) => {
+        setLoading(true);
+        try {
+            const response = await fetch("/api/admin/support/bulk-update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ticketIds: selectedIds, updates: { status } }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} tickets updated successfully`);
+                setSelectedIds([]);
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to update tickets");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const getPriorityColor = (priority: string) => {
@@ -238,11 +293,51 @@ export default function AdminSupportClient({
                     onClearFilters={() => updateQuery({ status: "", priority: "", search: "" })}
                 />
 
+                {/* Bulk Actions */}
+                {selectedIds.length > 0 && (
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
+                        <span className="text-sm text-white">
+                            {selectedIds.length} ticket{selectedIds.length !== 1 ? "s" : ""} selected
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange("closed")}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Mark Closed
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange("open")}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Mark Open
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => setBulkDeleteDialog(true)}
+                                disabled={isDeleting}
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete ({selectedIds.length})
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
                 <DataTable
                     columns={columns}
                     data={initialData}
                     keyExtractor={(ticket) => ticket._id}
                     loading={loading}
+                    selectable
+                    onSelectionChange={(ids) => setSelectedIds(ids as string[])}
                     exportFilename="tickets"
                     emptyState={
                         <EmptyState
@@ -289,6 +384,16 @@ export default function AdminSupportClient({
                     </div>
                 )}
             </div>
+            <ConfirmDialog
+                open={bulkDeleteDialog}
+                onOpenChange={setBulkDeleteDialog}
+                onConfirm={handleBulkDelete}
+                title="Delete Tickets"
+                description={`Are you sure you want to delete ${selectedIds.length} tickets? This action cannot be undone.`}
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
         </div>
     );
 }

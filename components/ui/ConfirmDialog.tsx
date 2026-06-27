@@ -1,13 +1,13 @@
 "use client";
 
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+    Modal,
+    ModalContent,
+    ModalDescription,
+    ModalFooter,
+    ModalHeader,
+    ModalTitle,
+} from "@/components/ui/Modal";
 import { Button } from "./button";
 
 interface ConfirmDialogProps {
@@ -37,15 +37,15 @@ export default function ConfirmDialog({
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="glass border-white/20">
-                <DialogHeader>
-                    <DialogTitle className="text-white text-xl">{title}</DialogTitle>
-                    <DialogDescription className="text-muted-foreground">
+        <Modal open={open} onOpenChange={onOpenChange}>
+            <ModalContent className="glass border-white/20">
+                <ModalHeader>
+                    <ModalTitle className="text-white text-xl">{title}</ModalTitle>
+                    <ModalDescription className="text-muted-foreground">
                         {description}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter className="gap-2">
+                    </ModalDescription>
+                </ModalHeader>
+                <ModalFooter className="gap-2">
                     <Button
                         variant="outline"
                         onClick={() => onOpenChange(false)}
@@ -62,8 +62,8 @@ export default function ConfirmDialog({
                     >
                         {confirmText}
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }

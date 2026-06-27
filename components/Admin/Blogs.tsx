@@ -8,6 +8,18 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { formatDate } from "@/lib/utils";
 import { Edit } from "@/components/ui/svgs/icons/Edit";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+
+interface BlogType {
+    _id: string;
+    title: string;
+    slug: string;
+    isPublished: boolean;
+    views: number;
+    createdAt: string;
+    author: {
+        name: string;
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface BlogType {
     _id: string;
@@ -25,10 +37,15 @@ interface BlogType {
 const Blogs = ({ initialData }: { initialData: any[] }) => {
     const [blogs, setBlogs] = useState<BlogType[]>(initialData);
     const [searchQuery, setSearchQuery] = useState('');
+    const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null }>({
+        open: false,
+        id: null,
+    });
     const router = useRouter();
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this blog post?")) return;
+    const handleDelete = async () => {
+        if (!deleteDialog.id) return;
+        const id = deleteDialog.id;
 
         try {
             const res = await fetch(`/api/blogs/${id}`, {
@@ -46,6 +63,8 @@ const Blogs = ({ initialData }: { initialData: any[] }) => {
         } catch (error) {
             console.error(error);
             sonnerToast.error("An error occurred");
+        } finally {
+            setDeleteDialog({ open: false, id: null });
         }
     };
 
@@ -106,7 +125,7 @@ const Blogs = ({ initialData }: { initialData: any[] }) => {
                                             <Link href={`/admin/blogs/edit/${blog._id}`} className="p-2 hover:bg-blue-500/10 rounded-lg text-gray-400 hover:text-blue-500 transition-colors" title="Edit">
                                                 <Edit className="w-4 h-4" />
                                             </Link>
-                                            <button onClick={() => handleDelete(blog._id)} className="p-2 hover:bg-red-500/10 rounded-lg text-gray-400 hover:text-red-500 transition-colors cursor-pointer" title="Delete">
+                                            <button onClick={() => setDeleteDialog({ open: true, id: blog._id })} className="p-2 hover:bg-red-500/10 rounded-lg text-gray-400 hover:text-red-500 transition-colors cursor-pointer" title="Delete">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
@@ -117,6 +136,16 @@ const Blogs = ({ initialData }: { initialData: any[] }) => {
                     </tbody>
                 </table>
             </div>
+            <ConfirmDialog
+                open={deleteDialog.open}
+                onOpenChange={(open) => setDeleteDialog({ open, id: null })}
+                onConfirm={handleDelete}
+                title="Delete Blog Post"
+                description="Are you sure you want to delete this blog post? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Modal, ModalContent, ModalHeader, ModalTitle, ModalDescription } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -17,14 +17,14 @@ export function LoginToDownloadDialog({ isOpen, onClose }: LoginToDownloadDialog
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-dark">
-        <DialogHeader>
-          <DialogTitle>Login to Download</DialogTitle>
-          <DialogDescription>
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent className="sm:max-w-[425px] bg-dark">
+        <ModalHeader>
+          <ModalTitle>Login to Download</ModalTitle>
+          <ModalDescription>
             Please log in to your account to download this free template.
-          </DialogDescription>
-        </DialogHeader>
+          </ModalDescription>
+        </ModalHeader>
         <div className="py-4">
           <p>Creating an account is fast and easy. Join our community to get access to exclusive content and features!</p>
         </div>
@@ -36,7 +36,7 @@ export function LoginToDownloadDialog({ isOpen, onClose }: LoginToDownloadDialog
             Register a New Account
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </ModalContent>
+    </Modal>
   );
 }

@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+    Modal,
+    ModalContent,
+    ModalDescription,
+    ModalHeader,
+    ModalTitle,
+} from "@/components/ui/Modal";
 import { Star } from "@/components/ui/svgs/icons/Star";
 
 interface AddReviewProps {
@@ -31,17 +30,18 @@ const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="cursor-pointer px-4 py-2 bg-blue-600 text-white hover:bg-blue-500 transition-colors rounded-lg">
+        <>
+            <button type="button" onClick={() => setOpen(true)} className="cursor-pointer px-4 py-2 bg-blue-600 text-white hover:bg-blue-500 transition-colors rounded-lg">
                 Add Review
-            </DialogTrigger>
-            <DialogContent className="border-none outline-none focus:outline-none focus:border-none bg-[#1f1f23] text-white rounded-xl max-w-md">
-                <DialogHeader className="border-b pb-2 border-b-white/20">
-                    <DialogTitle>Add Review</DialogTitle>
-                    <DialogDescription className="text-gray-400">
-                        Share your experience with this template
-                    </DialogDescription>
-                </DialogHeader>
+            </button>
+            <Modal open={open} onOpenChange={setOpen}>
+                <ModalContent className="border-none outline-none focus:outline-none focus:border-none bg-[#1f1f23] text-white rounded-xl max-w-md">
+                    <ModalHeader className="border-b pb-2 border-b-white/20">
+                        <ModalTitle>Add Review</ModalTitle>
+                        <ModalDescription className="text-gray-400">
+                            Share your experience with this template
+                        </ModalDescription>
+                    </ModalHeader>
 
                 {/* Rating stars */}
                 <div className="flex gap-2 my-4 justify-center">
@@ -86,8 +86,9 @@ const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
                         Submit
                     </button>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </ModalContent>
+        </Modal>
+        </>
     );
 };
 

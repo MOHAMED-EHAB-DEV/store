@@ -1,13 +1,10 @@
 "use client";
 
+import React from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
-import {
-    Dialog,
-    DialogContent,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Modal, ModalContent } from "@/components/ui/Modal";
 
 interface MessageBubbleProps {
     message: {
@@ -34,49 +31,41 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
         });
     };
 
+    const formattedTime = formatTime(message.createdAt);
+
     return (
         <div className={cn(
             "flex gap-3 max-w-[80%]",
             isOwn ? "ml-auto flex-row-reverse" : "mr-auto"
         )}>
             {/* Avatar */}
-            <div className="shrink-0">
+            <div className="flex-shrink-0">
                 {message.sender.avatar ? (
-                    <Image
-                        src={anyImgUrl(message.sender.avatar, { width: 80, quality: 80 })}
-                        alt={message.sender.name}
-                        width={36}
-                        height={36}
-                        unoptimized
-                        className="rounded-full object-cover"
-                    />
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                        <Image
+                            src={message.sender.avatar}
+                            alt={message.sender.name}
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
                 ) : (
-                    <div className={cn(
-                        "w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold",
-                        isOwn
-                            ? "bg-gradient-to-br from-purple-500 to-pink-500"
-                            : "bg-gradient-to-br from-blue-500 to-cyan-500"
-                    )}>
-                        {message.sender.name.charAt(0).toUpperCase()}
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                        <span className="text-sm font-medium text-primary">
+                            {message.sender.name.charAt(0).toUpperCase()}
+                        </span>
                     </div>
                 )}
             </div>
 
-            {/* Message content */}
+            {/* Content */}
             <div className={cn(
-                "flex flex-col",
+                "flex flex-col gap-1",
                 isOwn ? "items-end" : "items-start"
             )}>
-                <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-muted-foreground">
-                        {message.sender.name}
-                    </span>
-                    {message.senderType === "admin" && (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400">
-                            Support
-                        </span>
-                    )}
-                </div>
+                <span className="text-sm text-white/60 px-1">
+                    {message.sender.name}
+                </span>
 
                 <div className={cn(
                     "rounded-2xl px-4 py-2.5 [overflow-wrap:any-where]",
@@ -96,32 +85,7 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
                             const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url) || url.includes("utfs.io");
 
                             if (isImage) {
-                                return (
-                                    <Dialog key={index}>
-                                        <DialogTrigger asChild>
-                                            <button className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20">
-                                                <Image
-                                                    src={anyImgUrl(url, { width: 200, quality: 80 })}
-                                                    alt={`Attachment ${index + 1}`}
-                                                    fill
-                                                    unoptimized
-                                                    className="object-cover"
-                                                />
-                                            </button>
-                                        </DialogTrigger>
-                                        <DialogContent className="max-w-[90vw] max-h-[90vh] w-auto h-auto p-0 bg-transparent border-none shadow-none overflow-hidden flex items-center justify-center">
-                                            <div className="relative w-[90vw] h-[80vh] sm:w-[80vw] sm:h-[80vh]">
-                                                <Image
-                                                    src={anyImgUrl(url, { width: 1200, quality: 90 })}
-                                                    alt={`Attachment ${index + 1}`}
-                                                    fill
-                                                    unoptimized
-                                                    className="object-contain"
-                                                />
-                                            </div>
-                                        </DialogContent>
-                                    </Dialog>
-                                );
+                                return <ImageAttachment key={index} url={url} index={index} />;
                             }
 
                             return (
@@ -142,11 +106,42 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
                         })}
                     </div>
                 )}
-
-                <span className="text-xs text-muted-foreground mt-1">
-                    {formatTime(message.createdAt)}
+                {/* Time */}
+                <span className="text-xs text-white/40 mt-1 px-1">
+                    {formattedTime}
                 </span>
             </div>
         </div>
+    );
+}
+
+function ImageAttachment({ url, index }: { url: string; index: number }) {
+    const [open, setOpen] = React.useState(false);
+
+    return (
+        <>
+            <button onClick={() => setOpen(true)} className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20 cursor-pointer">
+                <Image
+                    src={anyImgUrl(url, { width: 200, quality: 80 })}
+                    alt={`Attachment ${index + 1}`}
+                    fill
+                    unoptimized
+                    className="object-cover pointer-events-none"
+                />
+            </button>
+            <Modal open={open} onOpenChange={setOpen}>
+                <ModalContent showCloseButton={false} className="max-w-[90vw] max-h-[90vh] w-auto h-auto p-0 bg-transparent border-none shadow-none overflow-hidden flex items-center justify-center">
+                    <div className="relative w-[90vw] h-[80vh] sm:w-[80vw] sm:h-[80vh]" onClick={() => setOpen(false)}>
+                        <Image
+                            src={anyImgUrl(url, { width: 1200, quality: 90 })}
+                            alt={`Attachment ${index + 1}`}
+                            fill
+                            unoptimized
+                            className="object-contain"
+                        />
+                    </div>
+                </ModalContent>
+            </Modal>
+        </>
     );
 }

@@ -2,17 +2,39 @@
 @import "tw-animate-css";
 
 @theme {
-  --color-primary: #0d0f19;
-  --color-secondary: #8c86a7;
-  --color-muted-foreground: #a0a0ab;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
   --color-dark: #121620;
   --color-gold: hsl(45 90% 60%);
   --color-gold-foreground: hsl(220 27% 8%);
   --color-glass: hsl(210 40% 98% / 0.1);
   --color-glass-border: hsl(210 40% 98% / 0.2);
-  --color-card: #15161b;
-  --color-border: #24262c;
-  --color-accent: #f6e96a;
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-muted: var(--muted);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Utility colors */
+  --color-success: #10b981;
+  --color-success-foreground: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+  --color-info: #3b82f6;
+  --color-info-foreground: #ffffff;
 
   --font-paras: var(--font-paras);
 
@@ -81,6 +103,26 @@
 
 @layer base {
   :root {
+    --background: #0d0f19;
+    --foreground: #ffffff;
+    --card: #15161b;
+    --card-foreground: #ffffff;
+    --popover: #121620;
+    --popover-foreground: #ffffff;
+    --primary: #0d0f19;
+    --primary-foreground: #ffffff;
+    --secondary: #8c86a7;
+    --secondary-foreground: #0d0f19;
+    --muted: #1d1e24;
+    --muted-foreground: #a0a0ab;
+    --accent: #f6e96a;
+    --accent-foreground: #0d0f19;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #24262c;
+    --input: #24262c;
+    --ring: #3b82f6;
+
     --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -92,9 +134,6 @@
       #d32f2f 100%
     );
     --gradient-info: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    --card: var(--color-card);
-    --border: var(--color-border);
-    --accent: var(--color-accent);
   }
 
   ::selection {

@@ -79,7 +79,7 @@ const Sidebar = ({ open, setOpen, user }: {
                 </div>
             </div>
 
-            <div className="relative flex items-center w-full h-20">
+            <div className="relative flex items-center gap-1 w-full h-20">
                 {/* Line */}
                 <div className="h-1 absolute top-0 left-0 w-full rounded-full bg-white/10" />
                 <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>

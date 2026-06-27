@@ -66,6 +66,7 @@ export default function AdminUsersClient({
     id: null,
   });
   const [isDeleting, setIsDeleting] = useState(false);
+  const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
 
   const filterOptions: FilterOption[] = [
     {
@@ -131,10 +132,6 @@ export default function AdminUsersClient({
   };
 
   const handleBulkDelete = async () => {
-    if (
-      !confirm(`Are you sure you want to delete ${selectedIds.length} users?`)
-    )
-      return;
 
     setIsDeleting(true);
     try {
@@ -370,29 +367,26 @@ export default function AdminUsersClient({
             </span>
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
+                variant="glass"
                 size="sm"
                 onClick={() => handleChangeTier("starter")}
-                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                 disabled={loading}
               >
                 Make Starter
               </Button>
               <Button
-                variant="outline"
+                variant="gold"
                 size="sm"
                 onClick={() => handleChangeTier("pro")}
-                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                 disabled={loading}
               >
                 <Star className="w-4 h-4 mr-2" />
                 Make Pro
               </Button>
               <Button
-                variant="outline"
+                variant="gradient-primary"
                 size="sm"
                 onClick={() => handleChangeTier("lifetime")}
-                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                 disabled={loading}
               >
                 <Star className="w-4 h-4 mr-2" />
@@ -401,7 +395,7 @@ export default function AdminUsersClient({
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={handleBulkDelete}
+                onClick={() => setBulkDeleteDialog(true)}
                 disabled={isDeleting}
               >
                 <Trash2 className="w-4 h-4 mr-2" />
@@ -480,6 +474,16 @@ export default function AdminUsersClient({
         onConfirm={handleDelete}
         title="Delete User"
         description="Are you sure you want to delete this user? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
+      <ConfirmDialog
+        open={bulkDeleteDialog}
+        onOpenChange={setBulkDeleteDialog}
+        onConfirm={handleBulkDelete}
+        title="Delete Users"
+        description={`Are you sure you want to delete ${selectedIds.length} users? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         variant="destructive"

@@ -19,17 +19,6 @@ interface BlogType {
     createdAt: string;
     author: {
         name: string;
-import ConfirmDialog from "@/components/ui/ConfirmDialog";
-
-interface BlogType {
-    _id: string;
-    title: string;
-    slug: string;
-    isPublished: boolean;
-    views: number;
-    createdAt: string;
-    author: {
-        name: string;
         avatar?: string;
     }
 }

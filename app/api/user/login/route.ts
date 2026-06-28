@@ -85,7 +85,7 @@ async function loginHandler(
     // Check if account is locked
     if (user.lockUntil && user.lockUntil > new Date()) {
       // Auto ban if they keep trying while locked? (Original behavior)
-      await User.findByIdAndUpdate(user._id, {
+      await User.findByIdAndUpdate(user?._id, {
         banned: true,
         banId: Math.random().toString(36).substring(2, 15).toUpperCase(),
       });
@@ -105,14 +105,14 @@ async function loginHandler(
 
     if (!validPassword) {
       // Increment login attempts using the model method
-      await User.findByIdAndUpdate(user._id, {
+      await User.findByIdAndUpdate(user?._id, {
         $inc: { loginAttempts: 1 },
       });
 
       // Check if we need to lock the account (5 failed attempts)
-      const updatedUser = await User.findById(user._id).select("loginAttempts");
+      const updatedUser = await User.findById(user?._id).select("loginAttempts");
       if (updatedUser && updatedUser.loginAttempts >= 5) {
-        await User.findByIdAndUpdate(user._id, {
+        await User.findByIdAndUpdate(user?._id, {
           lockUntil: new Date(Date.now() + 15 * 60 * 1000), // Lock for 15 minutes
         });
         return createErrorResponse(
@@ -134,7 +134,7 @@ async function loginHandler(
     // Generate JWT token
     const secret = new TextEncoder().encode(JWT_SECRET);
     const token = await new SignJWT({
-      id: user._id.toString(),
+      id: String(user?._id),
       email: user.email,
       avatar: user.avatar,
     })
@@ -143,7 +143,7 @@ async function loginHandler(
       .sign(secret);
 
     // Update last login and reset login attempts
-    await User.findByIdAndUpdate(user._id.toString(), {
+    await User.findByIdAndUpdate(String(user?._id), {
       lastLogin: new Date(),
       $unset: { loginAttempts: 1, lockUntil: 1 }, // Reset failed attempts and unlock
     });

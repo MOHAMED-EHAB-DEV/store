@@ -3,7 +3,7 @@ import "./Ticket";
 import "./User";
 
 export interface ITicketMessage extends Document {
-    _id: string;
+
     ticketId: mongoose.Types.ObjectId;
     sender: mongoose.Types.ObjectId;
     senderType: "user" | "admin";

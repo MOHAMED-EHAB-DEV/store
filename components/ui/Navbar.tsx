@@ -31,17 +31,15 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div
-      className={`z-40 w-12/13 md:w-4/5 self-center mt-1 top-0 fixed transition-all rounded-4xl duration-500 ease-in-out translate-y-0 opacity-100 ${
+    <header
+      className={`z-50 fixed top-2 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full ${
         scrolled
-          ? "bg-primary/95 backdrop-blur-xl shadow-2xl border border-white/10 scale-[0.98]"
-          : "bg-primary/50 backdrop-blur-lg shadow-lg border border-white/5"
+          ? "bg-primary/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 py-3 mt-0"
+          : "bg-primary/40 backdrop-blur-md shadow-lg border border-white/5 py-4 mt-2"
       }`}
     >
       <div
-        className={`mx-auto max-w-7xl px-4 sm:px-8 flex items-center justify-between transition-all duration-300 ${
-          scrolled ? "py-6" : "py-8"
-        }`}
+        className="flex items-center justify-between px-6 md:px-8"
       >
         <Logo
           onClick={() => router.push("/")}
@@ -87,7 +85,7 @@ const Navbar = () => {
           </Suspense>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 export default Navbar;

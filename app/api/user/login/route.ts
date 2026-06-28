@@ -134,7 +134,7 @@ async function loginHandler(
     // Generate JWT token
     const secret = new TextEncoder().encode(JWT_SECRET);
     const token = await new SignJWT({
-      id: user._id.toString(),
+      id: String(user._id),
       email: user.email,
       avatar: user.avatar,
     })
@@ -143,7 +143,7 @@ async function loginHandler(
       .sign(secret);
 
     // Update last login and reset login attempts
-    await User.findByIdAndUpdate(user._id.toString(), {
+    await User.findByIdAndUpdate(String(user._id), {
       lastLogin: new Date(),
       $unset: { loginAttempts: 1, lockUntil: 1 }, // Reset failed attempts and unlock
     });

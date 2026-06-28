@@ -96,7 +96,7 @@ async function createTicket(request: NextRequest) {
     await notifyAdminsNewTicket((ticket as any)?._id.toString(), subject.trim(), userName);
 
     return createAPIResponse({
-        _id: ticket._id,
+        _id: (ticket as any)?._id,
         subject: ticket.subject,
         status: ticket.status,
         priority: ticket.priority,

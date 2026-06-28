@@ -3,7 +3,7 @@ import "./Category";
 import "./User";
 
 export interface ITemplate extends Document {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   title: string;
   description: string;
   thumbnail: string;

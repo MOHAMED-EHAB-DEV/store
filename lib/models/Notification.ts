@@ -3,7 +3,7 @@ import "./User";
 import "./Ticket";
 
 export interface INotification extends Document {
-    _id: string;
+    _id: mongoose.Types.ObjectId;
     recipient: mongoose.Types.ObjectId;
     type: "ticket_created" | "ticket_reply" | "ticket_status_changed" | "system";
     title: string;

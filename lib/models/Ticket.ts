@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import "./User";
 
 export interface ITicket extends Document {
-    _id: string;
+    _id: mongoose.Types.ObjectId;
     user: mongoose.Types.ObjectId;
     subject: string;
     status: "open" | "resolved" | "closed";

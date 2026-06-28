@@ -3,7 +3,7 @@ import "./User";
 import "./Template";
 
 export interface IReview extends Document {
-    _id: string;
+    _id: mongoose.Types.ObjectId;
     user: ObjectId;
     template: ObjectId;
     rating: Number;
@@ -214,7 +214,7 @@ interface ReviewModel extends Model<IReview> {
     templateId: string
   ): Promise<
     {
-      _id: string;
+      _id: mongoose.Types.ObjectId;
       averageRating: number;
       totalReviews: number;
       ratingDistribution: number[];

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IFAQ extends Document {
-    _id: string;
+    _id: mongoose.Types.ObjectId;
     question: string;
     answer: string;
     category: string;
@@ -105,7 +105,7 @@ FAQSchema.statics.getStats = function () {
 export interface IFAQModel extends Model<IFAQ> {
     findPublished(category?: string): Promise<IFAQ[]>;
     findByCategory(category: string): Promise<IFAQ[]>;
-    getCategories(): Promise<{ _id: string; count: number }[]>;
+    getCategories(): Promise<{ _id: mongoose.Types.ObjectId; count: number }[]>;
     getStats(): Promise<any[]>;
 }
 

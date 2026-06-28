@@ -106,7 +106,7 @@ async function registerHandler(req: NextRequest) {
     // Generate JWT token
     const secret = new TextEncoder().encode(JWT_SECRET);
     const token = await new SignJWT({
-      id: String(newUser._id),
+      id: newUser._id.toString(),
       email: newUser.email,
       avatar: newUser.avatar,
     })

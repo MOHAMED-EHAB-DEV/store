@@ -13,26 +13,26 @@ export interface IReview extends Document {
 }
 
 const ReviewSchema = new Schema<IReview>({
-    user: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "User", 
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
         index: true
     },
-    template: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Template", 
+    template: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Template",
         required: true,
         index: true
     },
-    rating: { 
-        type: Number, 
-        min: 1, 
-        max: 5, 
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5,
         required: true,
         index: true // For rating queries
     },
-    comment: { 
+    comment: {
         type: String,
         trim: true,
         maxlength: 1000 // Prevent overly long comments
@@ -47,7 +47,7 @@ const ReviewSchema = new Schema<IReview>({
         default: 0,
         min: 0
     }
-}, { 
+}, {
     timestamps: true,
     versionKey: false
 });
@@ -60,9 +60,9 @@ ReviewSchema.index({ user: 1, template: 1 }, { unique: true }); // Prevent dupli
 
 // Static methods for optimized queries
 ReviewSchema.statics.findTemplateReviews = function(templateId: string, limit = 10, skip = 0) {
-    return this.find({ 
-        template: templateId, 
-        isActive: true 
+    return this.find({
+        template: templateId,
+        isActive: true
     })
         .select('rating comment helpfulCount createdAt user')
         .populate('user', 'name avatar')
@@ -74,11 +74,11 @@ ReviewSchema.statics.findTemplateReviews = function(templateId: string, limit = 
 
 ReviewSchema.statics.getTemplateRatingStats = function(templateId: string) {
     return this.aggregate([
-        { 
-            $match: { 
-                template: new mongoose.Types.ObjectId(templateId), 
-                isActive: true 
-            } 
+        {
+            $match: {
+                template: new mongoose.Types.ObjectId(templateId),
+                isActive: true
+            }
         },
         {
             $group: {
@@ -122,9 +122,9 @@ ReviewSchema.statics.getTemplateRatingStats = function(templateId: string) {
 };
 
 ReviewSchema.statics.getUserReviews = function(userId: string, limit = 20, skip = 0) {
-    return this.find({ 
-        user: userId, 
-        isActive: true 
+    return this.find({
+        user: userId,
+        isActive: true
     })
         .select('rating comment template createdAt')
         .populate('template', 'title thumbnail')
@@ -139,11 +139,11 @@ ReviewSchema.post('save', async function() {
     try {
         const Review = this.constructor as Model<IReview>;
         const stats = await Review.aggregate([
-            { 
-                $match: { 
-                    template: this.template, 
-                    isActive: true 
-                } 
+            {
+                $match: {
+                    template: this.template,
+                    isActive: true
+                }
             },
             {
                 $group: {
@@ -172,11 +172,11 @@ ReviewSchema.post('findOneAndUpdate', async function() {
         if (doc && doc.template) {
             const Review = this.model;
             const stats = await Review.aggregate([
-                { 
-                    $match: { 
-                        template: doc.template, 
-                        isActive: true 
-                    } 
+                {
+                    $match: {
+                        template: doc.template,
+                        isActive: true
+                    }
                 },
                 {
                     $group: {
@@ -214,7 +214,7 @@ interface ReviewModel extends Model<IReview> {
     templateId: string
   ): Promise<
     {
-      _id: string;
+
       averageRating: number;
       totalReviews: number;
       ratingDistribution: number[];

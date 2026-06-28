@@ -2,7 +2,6 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 // 1️⃣ Define the document interface
 export interface ICategory extends Document {
-  _id: string;
   name: string;
   description: string;
   slug: string;

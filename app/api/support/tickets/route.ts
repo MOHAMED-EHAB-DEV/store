@@ -84,7 +84,7 @@ async function createTicket(request: NextRequest) {
     });
 
     await TicketMessage.create({
-        ticketId: ticket._id,
+        ticketId: (ticket as any)?._id,
         sender: decoded.userId,
         senderType: "user",
         content: description.trim(),
@@ -93,10 +93,10 @@ async function createTicket(request: NextRequest) {
     });
 
     // Notify admins about new ticket
-    await notifyAdminsNewTicket(ticket._id.toString(), subject.trim(), userName);
+    await notifyAdminsNewTicket((ticket as any)?._id.toString(), subject.trim(), userName);
 
     return createAPIResponse({
-        _id: ticket._id,
+        _id: (ticket as any)?._id,
         subject: ticket.subject,
         status: ticket.status,
         priority: ticket.priority,

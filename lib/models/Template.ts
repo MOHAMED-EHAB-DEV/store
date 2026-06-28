@@ -3,7 +3,7 @@ import "./Category";
 import "./User";
 
 export interface ITemplate extends Document {
-  _id: string;
+
   title: string;
   description: string;
   thumbnail: string;

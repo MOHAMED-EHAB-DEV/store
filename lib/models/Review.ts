@@ -3,7 +3,7 @@ import "./User";
 import "./Template";
 
 export interface IReview extends Document {
-    _id: string;
+
     user: ObjectId;
     template: ObjectId;
     rating: Number;

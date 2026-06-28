@@ -93,7 +93,7 @@ async function createTicket(request: NextRequest) {
     });
 
     // Notify admins about new ticket
-    await notifyAdminsNewTicket((ticket as any)?._id.toString(), subject.trim(), userName);
+    await notifyAdminsNewTicket(String((ticket as any)?._id), subject.trim(), userName);
 
     return createAPIResponse({
         _id: (ticket as any)?._id,

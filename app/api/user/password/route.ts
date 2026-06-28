@@ -74,7 +74,7 @@ async function updatePassword(req: NextRequest) {
 
         // Update password
         const updatedUser = await User.findByIdAndUpdate(
-            dbUser._id.toString(),
+            String(dbUser?._id),
             { 
                 password: hashedNewPassword,
                 passwordUpdatedAt: new Date()

@@ -20,20 +20,26 @@ interface AnalyticsStatsData {
 async function getAdminDashboardData() {
   try {
     const cookie = (await headers()).get("cookie") || "";
-
-    const fetchAndParse = async (url: string) => {
-      const res = await fetch(url, { headers: { cookie } });
-      return res.ok ? res.json() : { data: Array.isArray(res) ? [] : null };
-    };
-
-    const [users, templates, downloads, tickets, analytics] =
+    const [usersRes, templatesRes, downloadsRes, ticketsRes, analyticsRes] =
       await Promise.all([
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`)
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`, { headers: { cookie } }),
+        fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`, { headers: { cookie } })
       ]);
+
+    const users = usersRes.ok ? await usersRes.json() : { data: [] };
+    const templates = templatesRes.ok
+      ? await templatesRes.json()
+      : { data: [] };
+    const downloads = downloadsRes.ok
+      ? await downloadsRes.json()
+      : { data: [] };
+    const tickets = ticketsRes.ok ? await ticketsRes.json() : { data: [] };
+    const analytics = analyticsRes.ok
+      ? await analyticsRes.json()
+      : { data: null };
 
     return {
       users: users.data?.items || [],

@@ -3,7 +3,7 @@ import "./User";
 
 // For future user-to-user messaging
 export interface IChat extends Document {
-
+    _id: string;
     participants: mongoose.Types.ObjectId[];
     lastMessageAt: Date;
     createdAt: Date;

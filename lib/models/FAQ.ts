@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IFAQ extends Document {
-
+    _id: string;
     question: string;
     answer: string;
     category: string;

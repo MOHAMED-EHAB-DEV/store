@@ -70,7 +70,7 @@ async function deleteAccountHandler(req: NextRequest) {
     }
 
     // Delete User
-    await User.findByIdAndDelete((user as any)?._id.toString());
+    await User.findByIdAndDelete(user._id.toString());
 
     const response = NextResponse.json(
       {

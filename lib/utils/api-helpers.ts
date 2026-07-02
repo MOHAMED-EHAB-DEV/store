@@ -323,7 +323,8 @@ export function createErrorResponse(
 
       await errorLog.save();
     } catch (logErr) {
-      console.error("Critical error in logging logic:", logErr);
+      // Silent Failure
+      // console.error("Critical error in logging logic:", logErr);
     }
   })();
 
@@ -441,7 +442,8 @@ export function withAPIMiddleware(
             `public, max-age=${Math.floor(options.cache.ttl / 1000)}`,
           );
         } catch (error) {
-          console.warn("Failed to cache response:", error);
+          // Silent Failure
+          // console.warn("Failed to cache response:", error);
         }
       }
 
@@ -451,7 +453,7 @@ export function withAPIMiddleware(
       });
       return response;
     } catch (error) {
-      console.error("API middleware error:", error);
+      // console.error("API middleware error:", error);
       const response = createErrorResponse("Internal server error", 500);
       PerformanceMonitor.endTimer(timer, 500);
       return response;

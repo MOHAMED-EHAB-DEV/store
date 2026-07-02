@@ -25,7 +25,6 @@ async function handleGET(req: NextRequest) {
     if (!userData) return createErrorResponse("User not found", 404, { req });
     return createAPIResponse(userData?.favorites);
   } catch (error: any) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
     return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "getFavorites" });
   }
 }
@@ -57,7 +56,6 @@ async function handlePOST(req: NextRequest) {
 
     return createAPIResponse({ favorites: user.favorites });
   } catch (error: any) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
     return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "updateFavorites" });
   }
 }

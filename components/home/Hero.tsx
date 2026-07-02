@@ -89,9 +89,9 @@ const Hero = () => {
           >
             Smart templates. Clean design. Built to help you move fast and look
             great doing it.
-            <span className="block mt-3 text-base md:text-lg text-secondary font-normal">
+            {/* <span className="block mt-3 text-base md:text-lg text-secondary font-normal">
               Join 10,000+ developers who trust our templates
-            </span>
+            </span> */}
           </p>
         </div>
 
@@ -106,8 +106,7 @@ const Hero = () => {
               Explore Templates
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </span>
-            {/* <div
-                            className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" /> */}
+            <div className="absolute inset-0 bg-linear-to-r from-purple-400 via-blue-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
           </Link>
 
           {/*<Link*/}

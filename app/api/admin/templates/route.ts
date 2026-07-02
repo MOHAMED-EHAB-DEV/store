@@ -10,6 +10,7 @@ import {
 } from "@/lib/utils/api-helpers";
 import { revalidateTag } from "next/cache";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToGoogleDrive } from "@/lib/google-drive";
 
 async function getAdminTemplates(request: NextRequest) {
   try {
@@ -109,18 +110,23 @@ async function createAdminTemplate(req: NextRequest) {
     }
 
     await connectToDatabase();
-    
+
     const formData = await req.formData();
     const body: any = {};
-    
+
     for (const [key, value] of formData.entries()) {
-      if (key === 'categories' || key === 'tags') {
+      if (key === "categories" || key === "tags") {
         if (!body[key]) body[key] = [];
         body[key].push(value as string);
-      } else if (key !== 'thumbnailFile' && key !== 'templateFile' && key !== 'thumbnailUrl' && key !== 'fileKeyStr') {
-        if (value === 'true') body[key] = true;
-        else if (value === 'false') body[key] = false;
-        else if (key === 'price') body[key] = parseFloat(value as string) || 0;
+      } else if (
+        key !== "thumbnailFile" &&
+        key !== "templateFile" &&
+        key !== "thumbnailUrl" &&
+        key !== "fileKeyStr"
+      ) {
+        if (value === "true") body[key] = true;
+        else if (value === "false") body[key] = false;
+        else if (key === "price") body[key] = parseFloat(value as string) || 0;
         else body[key] = value;
       }
     }
@@ -131,22 +137,21 @@ async function createAdminTemplate(req: NextRequest) {
     const fileKeyStr = formData.get("fileKeyStr") as string | null;
 
     if (thumbnailFile) {
-        const uploadResult = await uploadToCloudinary(thumbnailFile, "templates_thumbnails", "image");
-        body.thumbnail = uploadResult.secure_url;
+      const uploadResult = await uploadToCloudinary(
+        thumbnailFile,
+        "templates_thumbnails",
+        "image",
+      );
+      body.thumbnail = uploadResult.secure_url;
     } else if (thumbnailUrl) {
-        body.thumbnail = thumbnailUrl;
+      body.thumbnail = thumbnailUrl;
     }
 
     if (templateFile) {
-        const isZip = templateFile.name.endsWith(".zip") || templateFile.name.endsWith(".rar");
-        const uploadResult = await uploadToCloudinary(
-            templateFile, 
-            isZip ? "templates" : "uploads", 
-            isZip ? "raw" : "auto"
-        );
-        body.fileKey = uploadResult.public_id;
+      const driveFileId = await uploadToGoogleDrive(templateFile);
+      body.fileKey = driveFileId;
     } else if (fileKeyStr) {
-        body.fileKey = fileKeyStr;
+      body.fileKey = fileKeyStr;
     }
 
     const template = await Template.create({

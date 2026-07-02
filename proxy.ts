@@ -126,7 +126,7 @@ export async function proxy(req: NextRequest) {
 
   // 3. Auth and Proxy Logic
   if (
-    (pathname.includes("/signin") || pathname.includes("/register")) &&
+    (pathname.includes("/login") || pathname.includes("/register")) &&
     token
   ) {
     const response = NextResponse.redirect(new URL(`/dashboard`, req.url));
@@ -136,7 +136,7 @@ export async function proxy(req: NextRequest) {
 
   const reLogin = () => {
     if (process.env.DisableAuth) return NextResponse.next();
-    const response = NextResponse.redirect(new URL("/signin", req.url));
+    const response = NextResponse.redirect(new URL("/login", req.url));
     response.cookies.delete("token");
     addSecurityHeaders(response);
     return response;

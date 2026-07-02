@@ -16,7 +16,7 @@ interface PageProps {
 
 async function getTemplate(id: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/templates/${id}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates/${id}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
         const data = await response.json();
         return data.success ? data.data : null;
     } catch (error) {
@@ -33,7 +33,7 @@ export default async function EditTemplatePage({ params }: PageProps) {
     ]);
 
     if (!template) {
-        notFound();
+        return notFound();
     }
 
     return (

@@ -10,7 +10,7 @@ export default async function RootLayout({
 }>) {
   const user = await authenticateUser(true);
 
-  if (!user) redirect("/signin?message=unauthorized");
+  if (!user) redirect("/login?message=unauthorized");
   return (
     <div className="relative px-4 md:px-0 z-10 flex flex-col min-h-screen">
       <Navbar />

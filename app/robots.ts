@@ -15,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
           "/blog",
           "/blog/*",
           "/support",
-          "/signin",
+          "/login",
           "/register",
         ],
         disallow: [

@@ -17,7 +17,7 @@ const getTemplate = async (id: string) => {
       {
         next: {
           revalidate: 60 * 60 * 24 * 7, // 1 week
-          tags: ["everyTemplate", `template-${id}`]
+          tags: ["everyTemplate", `template-${id}`],
         },
       },
     );
@@ -31,7 +31,7 @@ const getTemplate = async (id: string) => {
       ? { data: data.data as ITemplate, err: null }
       : { err: data.message || "No Template Found", data: null };
   } catch (err: any) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    if (err && typeof err === "object" && "digest" in err) throw err;
     return {
       err: `Error fetching template with id ${id}: ${err.message || err}`,
       data: null,
@@ -73,7 +73,7 @@ const getSimilarTemplates = async (
       ? { data: data.data as ITemplate[], error: null }
       : { error: data.message || "No similar templates found", data: null };
   } catch (err: any) {
-    if (err && typeof err === 'object' && 'digest' in err) throw err;
+    if (err && typeof err === "object" && "digest" in err) throw err;
     return {
       error: `Error fetching similar templates: ${err.message || err}`,
       data: null,
@@ -99,7 +99,12 @@ export async function generateMetadata({
     description:
       template.description?.substring(0, 160) ||
       `Premium ${template.builtWith} template - ${template.title}`,
-    keywords: [...(template.tags || []), template.builtWith || "", "template", "web template"].filter(Boolean),
+    keywords: [
+      ...(template.tags || []),
+      template.builtWith || "",
+      "template",
+      "web template",
+    ].filter(Boolean),
     alternates: {
       canonical: url,
     },

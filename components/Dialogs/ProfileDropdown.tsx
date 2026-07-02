@@ -122,7 +122,7 @@ const ProfileDropdown = ({
         </>
         ) : (
             <>
-                <DropdownMenuItem onClick={() => router.push("/signin")} aria-label="Sign In button" className="flex flex-row gap-10 items-center p-3 hover:bg-secondary/30 cursor-pointer transition-all w-full">
+                <DropdownMenuItem onClick={() => router.push("/login")} aria-label="Sign In button" className="flex flex-row gap-10 items-center p-3 hover:bg-secondary/30 cursor-pointer transition-all w-full">
                     <Login className="text-gray-400 size-7" />
                     <span className="text-white font-medium text-md">Signin</span>
                 </DropdownMenuItem>

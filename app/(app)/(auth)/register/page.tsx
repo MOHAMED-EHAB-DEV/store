@@ -22,8 +22,8 @@ const Page = () => {
         <RegisterForm />
         <div>
           Have an account?{" "}
-          <Link href="/signin" className="text-gradient-purple">
-            Signin Here
+          <Link href="/login" className="text-gradient-purple">
+            Login Here
           </Link>
         </div>
       </div>

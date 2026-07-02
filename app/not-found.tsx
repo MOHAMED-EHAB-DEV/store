@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
+import "./globals.css";
 
 const MagneticElement = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
     const ref = useRef<HTMLDivElement>(null);

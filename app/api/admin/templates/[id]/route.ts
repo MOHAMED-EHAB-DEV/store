@@ -82,5 +82,35 @@ async function updateAdminTemplate(
   }
 }
 
+async function getAdminTemplate(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const user = await authenticateUser(true, true, true);
+    if (!user || user.role !== "admin") {
+      return createErrorResponse("Unauthorized", 401, { req });
+    }
+
+    const { id } = await params;
+    await connectToDatabase();
+
+    const template = await Template.findById(id).select("title description content categories tags demoLink price thumbnail builtWith type isPaid").lean();
+
+    if (!template) {
+      return createErrorResponse("Template not found", 404, { req });
+    }
+
+    return createAPIResponse(template);
+  } catch (error: any) {
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: error,
+      operation: "adminGetTemplate",
+    });
+  }
+}
+
 export const DELETE = withAPIMiddleware(deleteAdminTemplate);
 export const PATCH = withAPIMiddleware(updateAdminTemplate);
+export const GET = withAPIMiddleware(getAdminTemplate);

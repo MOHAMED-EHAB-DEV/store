@@ -52,7 +52,7 @@ export const useUser = () => {
   };
 
   const toggleFavorite = (template: ITemplate) => {
-    if (!userState.user) return router.push("/signin?message=unauthorized");
+    if (!userState.user) return router.push("/login?message=unauthorized");
     if (userState.favoriteTemplates.some(t => t._id === template._id)) removeFromFavorites(template);
     else addToFavorites(template);
   };

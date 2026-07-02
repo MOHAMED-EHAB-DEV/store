@@ -3,6 +3,7 @@ import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToGoogleDrive } from "@/lib/google-drive";
 import {
   withAPIMiddleware,
   createErrorResponse,
@@ -72,13 +73,8 @@ async function updateTemplate(req: NextRequest, context: RouteContext) {
       }
 
       if (templateFile) {
-          const isZip = templateFile.name.endsWith(".zip") || templateFile.name.endsWith(".rar");
-          const uploadResult = await uploadToCloudinary(
-              templateFile, 
-              isZip ? "templates" : "uploads", 
-              isZip ? "raw" : "auto"
-          );
-          body.fileKey = uploadResult.public_id;
+          const driveFileId = await uploadToGoogleDrive(templateFile);
+          body.fileKey = driveFileId;
       } else if (fileKeyStr) {
           body.fileKey = fileKeyStr;
       }

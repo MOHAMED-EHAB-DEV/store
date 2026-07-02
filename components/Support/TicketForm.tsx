@@ -54,7 +54,7 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
 
     if (!user) {
       sessionStorage.setItem("ticket", JSON.stringify(formData));
-      router.push("/signin?message=unauthorized&url=/support");
+      router.push("/login?message=unauthorized&url=/support");
     }
 
     setIsSubmitting(true);

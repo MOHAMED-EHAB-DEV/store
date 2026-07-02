@@ -1,74 +1,63 @@
 'use client';
 
-import {useEffect} from "react";
 import { Figma } from "@/components/ui/svgs/icons/Figma";
 import SplitText from '../ui/SplitText';
 import {figmaFeatures} from "@/constants";
-
-let gsap: any;
-let ScrollTrigger: any;
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const FigmaFeatures = () => {
-    useEffect(() => {
-        (async () => {
-            const mod = await import("gsap");
-            const { ScrollTrigger: ST, TextPlugin } = await import("gsap/all");
+    useGSAP(() => {
+        ScrollTrigger.create({
+            trigger: ".figma-section",
+            start: "top bottom",
+            end: "bottom 30%",
+            once: true,
+            onEnter: () => {
+                const figmaTl = gsap.timeline();
 
-            gsap = mod.gsap || mod.default;
-            ScrollTrigger = ST;
+                const figmaChars = document.querySelectorAll(".figma-title .char");
+                figmaTl.fromTo(
+                    figmaChars,
+                    { opacity: 0, y: 100, rotationX: -90 },
+                    {
+                        duration: 0.8,
+                        y: 0,
+                        opacity: 1,
+                        rotationX: 0,
+                        stagger: 0.02,
+                        ease: "power3.out",
+                    }
+                );
 
-            gsap.registerPlugin(ScrollTrigger, TextPlugin);
+                figmaTl.fromTo(
+                    ".figma-feature",
+                    { opacity: 0, x: -50 },
+                    {
+                        duration: 1,
+                        x: 0,
+                        opacity: 1,
+                        stagger: 0.1,
+                        ease: "power2.out",
+                    },
+                    "-=0.3"
+                );
 
-            ScrollTrigger.create({
-                trigger: ".figma-section",
-                start: "top bottom",
-                end: "bottom 30%",
-                once: true,
-                onEnter: () => {
-                    const figmaTl = gsap.timeline();
-
-                    const figmaChars = document.querySelectorAll(".figma-title .char");
-                    figmaTl.fromTo(
-                        figmaChars,
-                        { opacity: 0, y: 100, rotationX: -90 },
-                        {
-                            duration: 0.8,
-                            y: 0,
-                            opacity: 1,
-                            rotationX: 0,
-                            stagger: 0.02,
-                            ease: "power3.out",
-                        }
-                    );
-
-                    figmaTl.fromTo(
-                        ".figma-feature",
-                        { opacity: 0, x: -50 },
-                        {
-                            duration: 1,
-                            x: 0,
-                            opacity: 1,
-                            stagger: 0.1,
-                            ease: "power2.out",
-                        },
-                        "-=0.3"
-                    );
-
-                    figmaTl.fromTo(
-                        ".figma-preview",
-                        { opacity: 0, scale: 0.8, rotation: -5 },
-                        {
-                            duration: 1.2,
-                            scale: 1,
-                            opacity: 1,
-                            rotation: 0,
-                            ease: "power3.out",
-                        },
-                        "-=0.5"
-                    );
-                },
-            });
-        })();
+                figmaTl.fromTo(
+                    ".figma-preview",
+                    { opacity: 0, scale: 0.8, rotation: -5 },
+                    {
+                        duration: 1.2,
+                        scale: 1,
+                        opacity: 1,
+                        rotation: 0,
+                        ease: "power3.out",
+                    },
+                    "-=0.5"
+                );
+            },
+        });
     }, []);
 
     return (

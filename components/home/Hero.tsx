@@ -1,41 +1,33 @@
 "use client";
 
-import { useLayoutEffect } from "react";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 // import TrustSignals from '@/components/ui/TrustSignals';
 import { sendGTMEvent } from "@next/third-parties/google";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/SplitText";
 
 const Hero = () => {
-  useLayoutEffect(() => {
-    let ctx: gsap.Context | null = null;
-    (async () => {
-      const { gsap } = await import("gsap");
-      const { SplitText } = await import("gsap/SplitText");
-      gsap.registerPlugin(SplitText);
+  useGSAP(() => {
+    const splitHeader = SplitText.create(".header", {
+      type: "words",
+      mask: "words",
+    });
 
-      ctx = gsap.context(() => {
-        const splitHeader = SplitText.create(".header", {
-          type: "words",
-          mask: "words",
-        });
+    gsap.set(".header", { opacity: 1 });
 
-        gsap.set(".header", { opacity: 1 });
-
-        gsap.from(splitHeader.words, {
-          duration: 1.5,
-          y: 80,
-          autoAlpha: 0,
-          opacity: 0,
-          stagger: 0.08,
-          filter: "blur(6px)",
-          ease: "power2.out",
-        });
-      });
-    })();
-    return () => ctx?.revert();
+    gsap.from(splitHeader.words, {
+      duration: 1.5,
+      y: 80,
+      autoAlpha: 0,
+      opacity: 0,
+      stagger: 0.08,
+      filter: "blur(6px)",
+      ease: "power2.out",
+    });
   }, []);
 
   return (

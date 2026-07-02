@@ -6,6 +6,14 @@ import { io, Socket } from "socket.io-client";
 import { useUserStore } from "@/store/useUserStore";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useSocketStore } from "@/store/useSocketStore";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
+import { SplitText } from "gsap/SplitText";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, TextPlugin, SplitText);
+}
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 

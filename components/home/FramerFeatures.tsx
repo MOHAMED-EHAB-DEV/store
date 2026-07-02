@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { Framer } from "@/components/ui/svgs/icons/Framer";
 import { Layers } from "@/components/ui/svgs/icons/Layers";
@@ -8,6 +8,8 @@ import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
 import { featuresBusinessSales } from "@/constants";
 import { VerticalMarquee } from "@/components/ui/marquee";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const FramerFeatures = () => {
   const scrollableRef = useRef(null);
@@ -28,65 +30,53 @@ const FramerFeatures = () => {
     };
   }, []);
 
-  useLayoutEffect(() => {
-    let ctx: gsap.Context | null = null;
+  useGSAP(() => {
+    // Animate section header
+    gsap.from(".framer-header", {
+      scrollTrigger: {
+        trigger: ".framer-header",
+        start: "top 85%",
+        end: "bottom 30%",
+      },
+      opacity: 0,
+      y: 40,
+      duration: 1,
+      ease: "power3.out",
+    });
 
-    (async () => {
-      const { gsap } = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
+    // Animate all feature cards
+    gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+          end: "bottom 30%",
+        },
+        opacity: 0,
+        y: 60,
+        duration: 1,
+        delay: i * 0.1,
+        ease: "power3.out",
+      });
+    });
 
-      ctx = gsap.context(() => {
-        // Animate section header
-        gsap.from(".framer-header", {
+    // Animate videos
+    gsap.utils
+      .toArray<HTMLElement>(".feature-video")
+      .forEach((video, i) => {
+        gsap.from(video, {
           scrollTrigger: {
-            trigger: ".framer-header",
+            trigger: video,
             start: "top 85%",
             end: "bottom 30%",
           },
           opacity: 0,
-          y: 40,
-          duration: 1,
+          scale: 0.95,
+          duration: 1.2,
+          delay: i * 0.15,
           ease: "power3.out",
         });
-
-        // Animate all feature cards
-        gsap.utils.toArray<HTMLElement>(".feature-card").forEach((card, i) => {
-          gsap.from(card, {
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              end: "bottom 30%",
-            },
-            opacity: 0,
-            y: 60,
-            duration: 1,
-            delay: i * 0.1,
-            ease: "power3.out",
-          });
-        });
-
-        // Animate videos
-        gsap.utils
-          .toArray<HTMLElement>(".feature-video")
-          .forEach((video, i) => {
-            gsap.from(video, {
-              scrollTrigger: {
-                trigger: video,
-                start: "top 85%",
-                end: "bottom 30%",
-              },
-              opacity: 0,
-              scale: 0.95,
-              duration: 1.2,
-              delay: i * 0.15,
-              ease: "power3.out",
-            });
-          });
       });
-    })();
-
-    return () => ctx?.revert();
   }, []);
 
   return (

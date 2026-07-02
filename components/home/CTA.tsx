@@ -1,45 +1,32 @@
 "use client";
 
-import { useLayoutEffect } from "react";
 import Link from "next/link";
 import { Sparkles } from "@/components/ui/svgs/icons/Sparkles";
 // import TrustSignals from "@/components/ui/TrustSignals";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Cta = () => {
-    useLayoutEffect(() => {
-        let ctx: any = null;
-
-        (async () => {
-            const { gsap } = await import('gsap');
-            const { ScrollTrigger } = await import('gsap/all');
-
-            gsap.registerPlugin(ScrollTrigger);
-
-            ctx = gsap.context(() => {
-                ScrollTrigger.create({
-                    trigger: ".cta-section",
-                    start: "top 80%",
-                    once: true,
-                    onEnter: () => {
-                        gsap.fromTo(
-                            ".cta-content",
-                            { opacity: 0, scale: 0.9, y: 50 },
-                            {
-                                duration: 1.2,
-                                scale: 1,
-                                opacity: 1,
-                                y: 0,
-                                ease: "power3.out",
-                            },
-                        );
+    useGSAP(() => {
+        ScrollTrigger.create({
+            trigger: ".cta-section",
+            start: "top 80%",
+            once: true,
+            onEnter: () => {
+                gsap.fromTo(
+                    ".cta-content",
+                    { opacity: 0, scale: 0.9, y: 50 },
+                    {
+                        duration: 1.2,
+                        scale: 1,
+                        opacity: 1,
+                        y: 0,
+                        ease: "power3.out",
                     },
-                });
-            });
-        })();
-
-        return () => {
-            ctx?.revert?.();
-        };
+                );
+            },
+        });
     }, []);
 
     return (

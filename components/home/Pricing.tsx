@@ -1,55 +1,44 @@
 'use client';
 
-import { useLayoutEffect } from 'react';
 import Link from 'next/link';
 import dynamic from "next/dynamic";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const SpotlightCard = dynamic(() => import('../ui/SpotlightCard'));
 
 const Pricing = () => {
-  useLayoutEffect(() => {
-    let ctx: gsap.Context | null = null;
+  useGSAP(() => {
+    // Animate section header
+    gsap.from('.pricing-header', {
+      scrollTrigger: {
+        trigger: '.pricing-header',
+        start: 'top 85%',
+        end: "bottom 30%"
+      },
+      opacity: 0,
+      y: 40,
+      duration: 1,
+      ease: 'power3.out',
+    });
 
-    (async () => {
-      const { gsap } = await import('gsap');
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      gsap.registerPlugin(ScrollTrigger);
-
-      ctx = gsap.context(() => {
-        // Animate section header
-        gsap.from('.pricing-header', {
-          scrollTrigger: {
-            trigger: '.pricing-header',
-            start: 'top 85%',
-            end: "bottom 30%"
-          },
-          opacity: 0,
-          y: 40,
-          duration: 1,
-          ease: 'power3.out',
-        });
-
-        // Animate pricing cards with stagger
-        gsap.utils.toArray<HTMLElement>('.pricing-card').forEach((card, i) => {
-          const isHighlighted = card.classList.contains('highlighted-card');
-          gsap.from(card, {
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-            },
-            opacity: 0,
-            y: 60,
-            scale: isHighlighted ? 0.95 : 1,
-            duration: 1,
-            delay: i * 0.1,
-            ease: 'power3.out',
-          });
-        });
+    // Animate pricing cards with stagger
+    gsap.utils.toArray<HTMLElement>('.pricing-card').forEach((card, i) => {
+      const isHighlighted = card.classList.contains('highlighted-card');
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+        },
+        opacity: 0,
+        y: 60,
+        scale: isHighlighted ? 0.95 : 1,
+        duration: 1,
+        delay: i * 0.1,
+        ease: 'power3.out',
       });
-    })();
-
-    return () => ctx?.revert();
+    });
   }, []);
 
   const tiers = [

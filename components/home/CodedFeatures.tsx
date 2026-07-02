@@ -1,69 +1,62 @@
 'use client';
 
-import { useEffect } from "react";
 import { Code2 } from "@/components/ui/svgs/icons/Code2";
 import SplitText from "../ui/SplitText";
 import { codeFeatures } from "@/constants";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const CodedFeatures = () => {
-    useEffect(() => {
-        (async () => {
-            const mod = await import("gsap");
-            const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-            const { TextPlugin } = await import("gsap/TextPlugin");
+    useGSAP(() => {
+        ScrollTrigger.create({
+            trigger: ".code-section",
+            start: "top 85%",
+            end: "bottom 30%",
+            once: true,
+            onEnter: () => {
+                const codeTl = gsap.timeline();
 
-            const gsap = mod.gsap || mod.default;
-            gsap.registerPlugin(ScrollTrigger, TextPlugin);
+                const codeChars = document.querySelectorAll(".code-title .char");
+                codeTl.fromTo(
+                    codeChars,
+                    { opacity: 0, y: 100, rotationX: -90 },
+                    {
+                        duration: 0.8,
+                        y: 0,
+                        opacity: 1,
+                        rotationX: 0,
+                        stagger: 0.02,
+                        ease: "power3.out",
+                    }
+                );
 
-            ScrollTrigger.create({
-                trigger: ".code-section",
-                start: "top 85%",
-                end: "bottom 30%",
-                once: true,
-                onEnter: () => {
-                    const codeTl = gsap.timeline();
+                codeTl.fromTo(
+                    ".code-feature",
+                    { opacity: 0, y: 50 },
+                    {
+                        duration: 0.6,
+                        y: 0,
+                        opacity: 1,
+                        stagger: 0.02,
+                        ease: "power2.out",
+                    },
+                    "-=0.3"
+                );
 
-                    const codeChars = document.querySelectorAll(".code-title .char");
-                    codeTl.fromTo(
-                        codeChars,
-                        { opacity: 0, y: 100, rotationX: -90 },
-                        {
-                            duration: 0.8,
-                            y: 0,
-                            opacity: 1,
-                            rotationX: 0,
-                            stagger: 0.02,
-                            ease: "power3.out",
-                        }
-                    );
-
-                    codeTl.fromTo(
-                        ".code-feature",
-                        { opacity: 0, y: 50 },
-                        {
-                            duration: 0.6,
-                            y: 0,
-                            opacity: 1,
-                            stagger: 0.02,
-                            ease: "power2.out",
-                        },
-                        "-=0.3"
-                    );
-
-                    codeTl.fromTo(
-                        ".code-preview",
-                        { opacity: 0, y: 100 },
-                        {
-                            duration: 0.6,
-                            y: 0,
-                            opacity: 1,
-                            ease: "power2.out",
-                        },
-                        "-=0.5"
-                    );
-                },
-            });
-        })();
+                codeTl.fromTo(
+                    ".code-preview",
+                    { opacity: 0, y: 100 },
+                    {
+                        duration: 0.6,
+                        y: 0,
+                        opacity: 1,
+                        ease: "power2.out",
+                    },
+                    "-=0.5"
+                );
+            },
+        });
     }, []);
 
     return (

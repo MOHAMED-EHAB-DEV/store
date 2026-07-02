@@ -1,22 +1,19 @@
 import type { ReactNode } from "react";
-
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+import { connectToDatabase } from "@/lib/database";
+import Blog from "@/lib/models/Blog";
 
 export async function generateStaticParams() {
   try {
-    const response = await fetch(`${APP_URL}/api/blogs?limit=100`);
-
-    if (!response.ok) return [];
-
-    const data = await response.json();
-    const blogs = data.success ? data.data : [];
+    await connectToDatabase();
+    // Only generate pages for published blogs
+    const blogs = await Blog.find({ isPublished: true }).select('slug').lean();
 
     return blogs.map((blog: any) => ({
-      id: blog._id.toString(),
+      id: blog.slug.toString(),
     }));
   } catch (error) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    console.error("Error generating blog static params:", error);
+    console.error("Error generating blog static params (DB query failed):", error);
     return [];
   }
 }

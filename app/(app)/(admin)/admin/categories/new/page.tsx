@@ -14,9 +14,9 @@ async function getParentCategories() {
 
         if (!response.ok) return [];
         const data = await response.json();
-        return data.data || [];
+        return data.data.data || [];
     } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
+        if (error && typeof error === 'object' && 'digest' in error) throw error;
         return [];
     }
 }

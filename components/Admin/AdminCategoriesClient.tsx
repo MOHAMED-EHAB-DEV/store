@@ -328,19 +328,17 @@ export default function AdminCategoriesClient({
                         </span>
                         <div className="flex items-center gap-2">
                             <Button
-                                variant="outline"
+                                variant="glass"
                                 size="sm"
                                 onClick={() => handleBulkStatusChange(true)}
-                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                                 disabled={loading}
                             >
                                 Activate
                             </Button>
                             <Button
-                                variant="outline"
+                                variant="glass"
                                 size="sm"
                                 onClick={() => handleBulkStatusChange(false)}
-                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                                 disabled={loading}
                             >
                                 Deactivate

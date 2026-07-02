@@ -54,6 +54,9 @@ export default function AdminErrorLogsClient({
     const [loading, setLoading] = useState(false);
     const [selectedLog, setSelectedLog] = useState<ErrorLog | null>(null);
     const [deleteOldLogsDialog, setDeleteOldLogsDialog] = useState<number | null>(null);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [bulkDeleteDialog, setBulkDeleteDialog] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const updateQuery = (updates: Record<string, string | null>) => {
         const params = new URLSearchParams(queryParams.toString());
@@ -85,6 +88,33 @@ export default function AdminErrorLogsClient({
         } finally {
             setLoading(false);
             setDeleteOldLogsDialog(null);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        setIsDeleting(true);
+        try {
+            const response = await fetch("/api/admin/error-logs/bulk-delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ logIds: selectedIds }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                sonnerToast.success(`${selectedIds.length} logs deleted successfully`);
+                setSelectedIds([]);
+                if (selectedLog && selectedIds.includes(selectedLog._id)) {
+                    setSelectedLog(null);
+                }
+                router.refresh();
+            } else {
+                sonnerToast.error(data.message || "Failed to delete logs");
+            }
+        } catch (error: any) {
+            sonnerToast.error("An error occurred. Please try again.");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -233,11 +263,33 @@ export default function AdminErrorLogsClient({
                         onClearFilters={() => updateQuery({ method: "", status: "", search: "" })}
                     />
 
+                    {/* Bulk Actions */}
+                    {selectedIds.length > 0 && (
+                        <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
+                            <span className="text-sm text-white">
+                                {selectedIds.length} log{selectedIds.length !== 1 ? "s" : ""} selected
+                            </span>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => setBulkDeleteDialog(true)}
+                                    disabled={isDeleting}
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete ({selectedIds.length})
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                     <DataTable
                         columns={columns}
                         data={initialData}
                         keyExtractor={(log) => log._id}
                         loading={loading}
+                        selectable
+                        onSelectionChange={(ids) => setSelectedIds(ids as string[])}
                         emptyState={
                             <EmptyState
                                 icon={Terminal}
@@ -393,6 +445,16 @@ export default function AdminErrorLogsClient({
                 onConfirm={executeDeleteOldLogs}
                 title="Clear Old Logs"
                 description={`Are you sure you want to delete logs older than ${deleteOldLogsDialog} days? This action cannot be undone.`}
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
+            <ConfirmDialog
+                open={bulkDeleteDialog}
+                onOpenChange={setBulkDeleteDialog}
+                onConfirm={handleBulkDelete}
+                title="Delete Logs"
+                description={`Are you sure you want to delete ${selectedIds.length} logs? This action cannot be undone.`}
                 confirmText="Delete"
                 cancelText="Cancel"
                 variant="destructive"

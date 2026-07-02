@@ -80,10 +80,14 @@ export default function AdminAnalyticsClient({
   }));
 
   return (
-    <div className="p-6 space-y-6 animate-in fade-in duration-500">
+    <div className="p-6 space-y-8 animate-in fade-in duration-500">
       <PageHeader
         title="Visitor Analytics"
         description="Monitor website traffic and user engagement."
+        breadcrumbs={[
+            { label: "Dashboard", href: "/admin" },
+            { label: "Analytics" },
+        ]}
       />
 
       {/* Stats Grid */}

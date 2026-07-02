@@ -5,7 +5,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
 import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
-import ActionDropdown from "@/components/Dashboard/shared/ActionDropdown";
+import ActionDropdown, { createDefaultActions } from "@/components/Dashboard/shared/ActionDropdown";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import { Headset } from "@/components/ui/svgs/icons/Headset";
@@ -225,10 +225,13 @@ export default function AdminSupportClient({
             render: (ticket) => (
                 <ActionDropdown
                     actions={[
-                        {
-                            label: "View Chat",
-                            onClick: () => router.push(`/admin/support/${ticket._id}`),
-                        },
+                        ...createDefaultActions({
+                            onView: () => router.push(`/admin/support/${ticket._id}`),
+                            onDelete: () => {
+                                setSelectedIds([ticket._id]);
+                                setBulkDeleteDialog(true);
+                            }
+                        })
                     ]}
                 />
             ),
@@ -301,19 +304,17 @@ export default function AdminSupportClient({
                         </span>
                         <div className="flex items-center gap-2">
                             <Button
-                                variant="outline"
+                                variant="glass"
                                 size="sm"
                                 onClick={() => handleBulkStatusChange("closed")}
-                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                                 disabled={loading}
                             >
                                 Mark Closed
                             </Button>
                             <Button
-                                variant="outline"
+                                variant="glass"
                                 size="sm"
                                 onClick={() => handleBulkStatusChange("open")}
-                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                                 disabled={loading}
                             >
                                 Mark Open

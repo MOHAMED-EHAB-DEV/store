@@ -4,9 +4,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
-import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
-import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface TemplateFormProps {
     initialData?: any;
@@ -30,61 +40,38 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         isPaid: initialData?.isPaid ?? true,
         isActive: initialData?.isActive ?? true,
     });
-    const [thumbnail, setThumbnail] = useState<string | undefined>(initialData?.thumbnail);
-    const [fileKey, setFileKey] = useState<string | undefined>(initialData?.fileKey);
+    const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(initialData?.thumbnail);
+    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
-    const { startUpload: uploadThumbnail, isUploading: uploadingThumbnail } = useCloudinaryUpload("imageUploader", {
-        onClientUploadComplete: (res) => {
-            if (res?.[0]?.ufsUrl) {
-                setThumbnail(res[0].ufsUrl);
-            }
-        },
-        onUploadError: (error) => {
-            sonnerToast.error(error.message || "Failed to upload thumbnail");
-        },
-    });
+    const [fileKeyStr, setFileKeyStr] = useState<string | undefined>(initialData?.fileKey);
+    const [templateFile, setTemplateFile] = useState<File | null>(null);
 
-    const { startUpload: uploadFile, isUploading: uploadingFile } = useCloudinaryUpload("imageUploader", {
-        onClientUploadComplete: (res) => {
-            if (res?.[0]?.key) {
-                setFileKey(res[0].key);
-            }
-        },
-        onUploadError: (error) => {
-            sonnerToast.error(error.message || "Failed to upload file");
-        },
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked :
-                type === "number" ? parseFloat(value) || 0 : value
+            [name]: type === "number" ? parseFloat(value) || 0 : value
         }));
     };
 
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selected = Array.from(e.target.selectedOptions, option => option.value);
-        setFormData(prev => ({ ...prev, categories: selected }));
-    };
-
-    const handleThumbnail = async (files: File[]) => {
+    const handleThumbnail = (files: File[]) => {
         if (files.length > 0) {
-            await uploadThumbnail(files);
+            setThumbnailFile(files[0]);
+            setThumbnailUrl(URL.createObjectURL(files[0]));
         }
     };
 
-    const handleFile = async (files: File[]) => {
+    const handleFile = (files: File[]) => {
         if (files.length > 0) {
-            await uploadFile(files);
+            setTemplateFile(files[0]);
+            setFileKeyStr(files[0].name);
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.title.trim() || !formData.description.trim() || !thumbnail) {
+        if (!formData.title.trim() || !formData.description.trim() || (!thumbnailUrl && !thumbnailFile)) {
             sonnerToast.error("Title, description, and thumbnail are required");
             return;
         }
@@ -92,12 +79,35 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         setLoading(true);
 
         try {
-            const payload = {
-                ...formData,
-                tags: formData.tags.split(",").map((t: string) => t.trim()).filter(Boolean),
-                thumbnail,
-                fileKey,
-            };
+            const submitData = new FormData();
+            
+            Object.entries(formData).forEach(([key, value]) => {
+                if (key === 'categories' || key === 'tags') return;
+                submitData.append(key, value.toString());
+            });
+
+            formData.categories.forEach((cat: string) => {
+                submitData.append('categories', cat);
+            });
+
+            const tagsList = formData.tags.split(",").map((t: string) => t.trim()).filter(Boolean);
+            tagsList.forEach((tag: string) => {
+                submitData.append('tags', tag);
+            });
+
+            if (thumbnailUrl && !thumbnailFile) {
+                submitData.append('thumbnailUrl', thumbnailUrl);
+            }
+            if (fileKeyStr && !templateFile) {
+                submitData.append('fileKeyStr', fileKeyStr);
+            }
+
+            if (thumbnailFile) {
+                submitData.append('thumbnailFile', thumbnailFile);
+            }
+            if (templateFile) {
+                submitData.append('templateFile', templateFile);
+            }
 
             const url = isEdit
                 ? `/api/template/${initialData._id}`
@@ -105,8 +115,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
             const response = await fetch(url, {
                 method: isEdit ? "PATCH" : "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
+                body: submitData,
             });
 
             const data = await response.json();
@@ -133,13 +142,12 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 {/* Title */}
                 <div>
                     <label className="block text-sm text-muted-foreground mb-1">Title *</label>
-                    <input
+                    <Input
                         type="text"
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
                         placeholder="Enter template title..."
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                         required
                     />
                 </div>
@@ -147,13 +155,12 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 {/* Description */}
                 <div>
                     <label className="block text-sm text-muted-foreground mb-1">Description *</label>
-                    <textarea
+                    <Textarea
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                         placeholder="Enter template description..."
                         rows={4}
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-y"
                         required
                     />
                 </div>
@@ -162,25 +169,23 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Demo Link</label>
-                        <input
+                        <Input
                             type="url"
                             name="demoLink"
                             value={formData.demoLink}
                             onChange={handleChange}
                             placeholder="https://..."
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Price (USD)</label>
-                        <input
+                        <Input
                             type="number"
                             name="price"
                             value={formData.price}
                             onChange={handleChange}
                             min={0}
                             step={0.01}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                     </div>
                 </div>
@@ -188,44 +193,53 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 {/* Content */}
                 <div>
                     <label className="block text-sm text-muted-foreground mb-1">Content/Features</label>
-                    <textarea
+                    <Textarea
                         name="content"
                         value={formData.content}
                         onChange={handleChange}
                         placeholder="Detailed content or features list..."
                         rows={6}
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-y"
                     />
                 </div>
 
                 {/* Categories & Tags */}
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Categories</label>
-                        <select
-                            multiple
-                            value={formData.categories}
-                            onChange={handleCategoryChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                            size={4}
-                        >
-                            {categories.map((cat: any) => (
-                                <option key={cat._id} value={cat._id}>
-                                    {cat.name}
-                                </option>
-                            ))}
-                        </select>
-                        <p className="text-xs text-muted-foreground mt-1">Hold Ctrl/Cmd to select multiple</p>
+                        <label className="block text-sm text-muted-foreground mb-2">Categories</label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                            {categories.map((cat: any) => {
+                                const isSelected = formData.categories.includes(cat._id);
+                                return (
+                                    <Badge
+                                        key={cat._id}
+                                        variant="outline"
+                                        className={cn(
+                                            "cursor-pointer transition-all",
+                                            isSelected
+                                                ? "bg-primary/20 text-primary border-primary"
+                                                : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white"
+                                        )}
+                                        onClick={() => {
+                                            const newCategories = isSelected
+                                                ? formData.categories.filter((id: string) => id !== cat._id)
+                                                : [...formData.categories, cat._id];
+                                            setFormData(prev => ({ ...prev, categories: newCategories }));
+                                        }}
+                                    >
+                                        {cat.name}
+                                    </Badge>
+                                );
+                            })}
+                        </div>
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Tags (comma-separated)</label>
-                        <input
+                        <Input
                             type="text"
                             name="tags"
                             value={formData.tags}
                             onChange={handleChange}
                             placeholder="react, nextjs, modern"
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                     </div>
                 </div>
@@ -234,58 +248,58 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Built With</label>
-                        <select
-                            name="builtWith"
+                        <Select
                             value={formData.builtWith}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            onValueChange={(val) => setFormData(prev => ({ ...prev, builtWith: val }))}
                         >
-                            <option value="framer">Framer</option>
-                            <option value="figma">Figma</option>
-                            <option value="vite">Vite</option>
-                            <option value="next.js">Next.js</option>
-                        </select>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Built With" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-[#15161b] border-white/10 text-white">
+                                <SelectItem value="framer">Framer</SelectItem>
+                                <SelectItem value="figma">Figma</SelectItem>
+                                <SelectItem value="vite">Vite</SelectItem>
+                                <SelectItem value="next.js">Next.js</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Type</label>
-                        <select
-                            name="type"
+                        <Select
                             value={formData.type}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            onValueChange={(val) => setFormData(prev => ({ ...prev, type: val }))}
                         >
-                            <option value="framer">Framer</option>
-                            <option value="coded">Coded</option>
-                            <option value="figma">Figma</option>
-                        </select>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Type" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-[#15161b] border-white/10 text-white">
+                                <SelectItem value="framer">Framer</SelectItem>
+                                <SelectItem value="coded">Coded</SelectItem>
+                                <SelectItem value="figma">Figma</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
 
                 {/* Checkboxes */}
                 <div className="flex gap-6">
                     <div className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            name="isPaid"
+                        <Checkbox
                             id="isPaid"
                             checked={formData.isPaid}
-                            onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.checked }))}
-                            className="w-4 h-4"
+                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isPaid: !!checked }))}
                         />
-                        <label htmlFor="isPaid" className="text-sm text-muted-foreground">
+                        <label htmlFor="isPaid" className="text-sm text-muted-foreground cursor-pointer">
                             Paid Template
                         </label>
                     </div>
                     <div className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            name="isActive"
+                        <Checkbox
                             id="isActive"
                             checked={formData.isActive}
-                            onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-                            className="w-4 h-4"
+                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: !!checked }))}
                         />
-                        <label htmlFor="isActive" className="text-sm text-muted-foreground">
+                        <label htmlFor="isActive" className="text-sm text-muted-foreground cursor-pointer">
                             Active (visible to users)
                         </label>
                     </div>
@@ -296,23 +310,25 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
             <div className="glass rounded-xl p-6 space-y-4">
                 <h3 className="text-lg font-semibold text-white">Thumbnail *</h3>
 
-                {thumbnail ? (
+                {thumbnailUrl ? (
                     <div className="relative">
-                        <Image
-                            src={anyImgUrl(thumbnail, { width: 800, quality: 80 })}
+                        <img
+                            src={thumbnailUrl}
                             alt="Thumbnail"
-                            width={600}
-                            height={400}
-                            unoptimized
-                            className="rounded-lg object-cover w-full max-h-64"
+                            className="rounded-lg object-contain w-full max-h-64"
                         />
-                        <button
+                        <Button
                             type="button"
-                            onClick={() => setThumbnail(undefined)}
-                            className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => {
+                                setThumbnailUrl(undefined);
+                                setThumbnailFile(null);
+                            }}
+                            className="absolute top-2 right-2 rounded-full size-8"
                         >
                             ✕
-                        </button>
+                        </Button>
                     </div>
                 ) : (
                     <Dropzone
@@ -320,7 +336,6 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                         maxSize={8 * 1024 * 1024}
                         maxFiles={1}
                         onDrop={handleThumbnail}
-                        disabled={uploadingThumbnail}
                     >
                         <DropzoneEmptyState />
                         <DropzoneContent />
@@ -333,16 +348,20 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 <h3 className="text-lg font-semibold text-white">Template File (Optional)</h3>
                 <p className="text-sm text-muted-foreground">Upload template files (zip, etc.)</p>
 
-                {fileKey ? (
+                {fileKeyStr ? (
                     <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                        <p className="text-green-400 text-sm">File uploaded: {fileKey}</p>
-                        <button
+                        <p className="text-green-400 text-sm">File uploaded: {fileKeyStr}</p>
+                        <Button
                             type="button"
-                            onClick={() => setFileKey(undefined)}
-                            className="mt-2 text-xs text-red-400 hover:underline"
+                            variant="link"
+                            onClick={() => {
+                                setFileKeyStr(undefined);
+                                setTemplateFile(null);
+                            }}
+                            className="mt-2 h-auto p-0 text-xs text-red-400 hover:underline hover:text-red-300"
                         >
                             Remove file
-                        </button>
+                        </Button>
                     </div>
                 ) : (
                     <Dropzone
@@ -350,7 +369,6 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                         maxSize={50 * 1024 * 1024}
                         maxFiles={1}
                         onDrop={handleFile}
-                        disabled={uploadingFile}
                     >
                         <DropzoneEmptyState />
                         <DropzoneContent />
@@ -360,20 +378,20 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
             {/* Actions */}
             <div className="flex gap-4">
-                <button
+                <Button
                     type="submit"
-                    disabled={loading || uploadingThumbnail || uploadingFile}
-                    className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                    disabled={loading}
                 >
                     {loading ? "Saving..." : isEdit ? "Update Template" : "Create Template"}
-                </button>
-                <button
+                </Button>
+                <Button
                     type="button"
+                    variant="outline"
                     onClick={() => router.back()}
-                    className="px-6 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
+                    className="bg-white/5 border-white/10 text-white"
                 >
                     Cancel
-                </button>
+                </Button>
             </div>
         </form>
     );

@@ -26,7 +26,6 @@ export function useCloudinaryUpload(
       const uploadResults: CloudinaryUploadResponse[] = [];
 
       for (const file of files) {
-        // Determine folder and type based on endpoint and file type
         let folder = options?.folder || "uploads";
         let type = options?.type || "upload";
         let resourceType = options?.resourceType || "image";
@@ -35,57 +34,38 @@ export function useCloudinaryUpload(
           folder = "profile_pictures";
         }
 
-        // For templates / raw file uploads, check file extension
         const isZip = file.name.endsWith(".zip") || file.name.endsWith(".rar");
         if (isZip) {
           folder = "templates";
-          type = "private"; // Keep templates private / authenticated
+          type = "private";
           resourceType = "raw";
         } else if (file.type && !file.type.startsWith("image/")) {
-          // Fallback for non-image files if any
           resourceType = "raw";
         }
 
-        // 1. Get signed signature from server
-        const signRes = await fetch("/api/cloudinary/sign", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ folder, type }),
-        });
-
-        if (!signRes.ok) {
-          const signErr = await signRes.json();
-          throw new Error(signErr.error || "Failed to generate upload signature");
-        }
-
-        const signData = await signRes.json();
-
-        // 2. Upload file to Cloudinary
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("api_key", signData.api_key);
-        formData.append("timestamp", signData.timestamp.toString());
-        formData.append("signature", signData.signature);
-        if (signData.folder) formData.append("folder", signData.folder);
-        if (signData.type) formData.append("type", signData.type);
+        formData.append("folder", folder);
+        formData.append("type", type);
+        formData.append("resourceType", resourceType);
 
-        const uploadUrl = `https://api.cloudinary.com/v1_1/${signData.cloud_name}/${resourceType}/upload`;
-        const uploadRes = await fetch(uploadUrl, {
+        const uploadRes = await fetch("/api/cloudinary/upload", {
           method: "POST",
           body: formData,
         });
 
         if (!uploadRes.ok) {
           const uploadErr = await uploadRes.json();
-          throw new Error(uploadErr.error?.message || "Failed to upload file to Cloudinary");
+          throw new Error(uploadErr.message || uploadErr.error || "Failed to upload file");
         }
 
         const uploadData = await uploadRes.json();
+        const data = uploadData.data;
         
         uploadResults.push({
-          url: uploadData.secure_url,
-          ufsUrl: uploadData.secure_url,
-          key: uploadData.public_id,
+          url: data.secure_url,
+          ufsUrl: data.secure_url,
+          key: data.public_id,
         });
       }
 

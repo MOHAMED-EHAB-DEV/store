@@ -6,6 +6,17 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
 import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 interface FAQFormProps {
     initialData?: any;
@@ -36,12 +47,11 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
         },
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked :
-                type === "number" ? parseInt(value) || 0 : value
+            [name]: type === "number" ? parseInt(value) || 0 : value
         }));
     };
 
@@ -102,13 +112,12 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                 {/* Question */}
                 <div>
                     <label className="block text-sm text-muted-foreground mb-1">Question *</label>
-                    <input
+                    <Input
                         type="text"
                         name="question"
                         value={formData.question}
                         onChange={handleChange}
                         placeholder="Enter the question..."
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                         required
                     />
                 </div>
@@ -116,13 +125,12 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                 {/* Answer */}
                 <div>
                     <label className="block text-sm text-muted-foreground mb-1">Answer *</label>
-                    <textarea
+                    <Textarea
                         name="answer"
                         value={formData.answer}
                         onChange={handleChange}
                         placeholder="Enter the answer..."
                         rows={6}
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-y"
                         required
                     />
                 </div>
@@ -131,44 +139,43 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Category</label>
-                        <select
-                            name="category"
+                        <Select
                             value={formData.category}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            onValueChange={(val) => setFormData(prev => ({ ...prev, category: val }))}
                         >
-                            <option value="general">General</option>
-                            <option value="billing">Billing</option>
-                            <option value="technical">Technical</option>
-                            <option value="account">Account</option>
-                            <option value="templates">Templates</option>
-                            <option value="other">Other</option>
-                        </select>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Category" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-[#15161b] border-white/10 text-white">
+                                <SelectItem value="general">General</SelectItem>
+                                <SelectItem value="billing">Billing</SelectItem>
+                                <SelectItem value="technical">Technical</SelectItem>
+                                <SelectItem value="account">Account</SelectItem>
+                                <SelectItem value="templates">Templates</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Display Order</label>
-                        <input
+                        <Input
                             type="number"
                             name="order"
                             value={formData.order}
                             onChange={handleChange}
                             min={0}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                     </div>
                 </div>
 
                 {/* Published Toggle */}
                 <div className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        name="isPublished"
+                    <Checkbox
                         id="isPublished"
                         checked={formData.isPublished}
-                        onChange={(e) => setFormData(prev => ({ ...prev, isPublished: e.target.checked }))}
-                        className="w-4 h-4"
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isPublished: !!checked }))}
                     />
-                    <label htmlFor="isPublished" className="text-sm text-muted-foreground">
+                    <label htmlFor="isPublished" className="text-sm text-muted-foreground cursor-pointer">
                         Published (visible to users)
                     </label>
                 </div>
@@ -187,13 +194,15 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                             height={200}
                             className="rounded-lg object-cover w-full max-h-48"
                         />
-                        <button
+                        <Button
                             type="button"
+                            variant="destructive"
+                            size="icon"
                             onClick={() => setCoverImage(undefined)}
-                            className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                            className="absolute top-2 right-2 rounded-full size-8"
                         >
                             ✕
-                        </button>
+                        </Button>
                     </div>
                 ) : (
                     <Dropzone
@@ -211,20 +220,20 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
 
             {/* Actions */}
             <div className="flex gap-4">
-                <button
+                <Button
                     type="submit"
                     disabled={loading || isUploading}
-                    className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
                 >
                     {loading ? "Saving..." : isEdit ? "Update FAQ" : "Create FAQ"}
-                </button>
-                <button
+                </Button>
+                <Button
                     type="button"
+                    variant="outline"
                     onClick={() => router.back()}
-                    className="px-6 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
+                    className="bg-white/5 border-white/10 text-white"
                 >
                     Cancel
-                </button>
+                </Button>
             </div>
         </form>
     );

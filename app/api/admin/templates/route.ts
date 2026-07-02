@@ -9,6 +9,7 @@ import {
   validatePagination,
 } from "@/lib/utils/api-helpers";
 import { revalidateTag } from "next/cache";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 async function getAdminTemplates(request: NextRequest) {
   try {
@@ -53,7 +54,7 @@ async function getAdminTemplates(request: NextRequest) {
           $group: {
             _id: null,
             total: { $sum: 1 },
-            active: { $sum: { $cond: ["$isActive", 1, 0] } },
+            active: { $sum: { $cond: [{ $eq: ["$isActive", true] }, 1, 0] } },
             premium: { $sum: { $cond: [{ $gt: ["$price", 0] }, 1, 0] } },
             totalDownloads: { $sum: "$downloads" },
           },
@@ -108,7 +109,45 @@ async function createAdminTemplate(req: NextRequest) {
     }
 
     await connectToDatabase();
-    const body = await req.json();
+    
+    const formData = await req.formData();
+    const body: any = {};
+    
+    for (const [key, value] of formData.entries()) {
+      if (key === 'categories' || key === 'tags') {
+        if (!body[key]) body[key] = [];
+        body[key].push(value as string);
+      } else if (key !== 'thumbnailFile' && key !== 'templateFile' && key !== 'thumbnailUrl' && key !== 'fileKeyStr') {
+        if (value === 'true') body[key] = true;
+        else if (value === 'false') body[key] = false;
+        else if (key === 'price') body[key] = parseFloat(value as string) || 0;
+        else body[key] = value;
+      }
+    }
+
+    const thumbnailFile = formData.get("thumbnailFile") as File | null;
+    const templateFile = formData.get("templateFile") as File | null;
+    const thumbnailUrl = formData.get("thumbnailUrl") as string | null;
+    const fileKeyStr = formData.get("fileKeyStr") as string | null;
+
+    if (thumbnailFile) {
+        const uploadResult = await uploadToCloudinary(thumbnailFile, "templates_thumbnails", "image");
+        body.thumbnail = uploadResult.secure_url;
+    } else if (thumbnailUrl) {
+        body.thumbnail = thumbnailUrl;
+    }
+
+    if (templateFile) {
+        const isZip = templateFile.name.endsWith(".zip") || templateFile.name.endsWith(".rar");
+        const uploadResult = await uploadToCloudinary(
+            templateFile, 
+            isZip ? "templates" : "uploads", 
+            isZip ? "raw" : "auto"
+        );
+        body.fileKey = uploadResult.public_id;
+    } else if (fileKeyStr) {
+        body.fileKey = fileKeyStr;
+    }
 
     const template = await Template.create({
       ...body,

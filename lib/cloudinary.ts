@@ -9,6 +9,33 @@ cloudinary.config({
 export { cloudinary };
 
 /**
+ * Uploads a file buffer to Cloudinary
+ */
+export async function uploadToCloudinary(
+  file: File | Blob | Buffer,
+  folder: string = "uploads",
+  resourceType: "auto" | "image" | "video" | "raw" = "auto"
+): Promise<any> {
+  const buffer = Buffer.isBuffer(file) 
+    ? file 
+    : Buffer.from(await file.arrayBuffer());
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: folder,
+        resource_type: resourceType,
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    uploadStream.end(buffer);
+  });
+}
+
+/**
  * Generates a signed, expiring download URL for a private Cloudinary raw resource.
  *
  * @param fileKey The public ID (e.g. "templates/template-name.zip")

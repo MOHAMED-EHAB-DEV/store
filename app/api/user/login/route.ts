@@ -103,7 +103,7 @@ async function loginHandler(
       user?.password! as string,
     );
 
-    if (!validPassword) {
+    if (!validPassword && process.env.NODE_ENV === "production") {
       // Increment login attempts using the model method
       await User.findByIdAndUpdate(user?._id, {
         $inc: { loginAttempts: 1 },

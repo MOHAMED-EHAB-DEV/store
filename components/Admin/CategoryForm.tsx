@@ -148,11 +148,9 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
                             className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                             <option value="">None (Top Level)</option>
-                            {parentCategories
-                                .filter(c => c._id !== initialData?._id)
-                                .map(cat => (
-                                    <option key={cat._id} value={cat._id}>{cat.name}</option>
-                                ))}
+                            {parentCategories?.filter(c => c._id !== initialData?._id).map(cat => (
+                                <option key={cat._id} value={cat._id}>{cat.name}</option>
+                            ))}
                         </select>
                     </div>
                     <div>

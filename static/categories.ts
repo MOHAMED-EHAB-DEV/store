@@ -5,6 +5,7 @@ export const getCategories = async () => {
       {
         next: {
           revalidate: 60 * 60 * 24 * 7, // 1 week
+          tags: ["categories"],
         },
       },
     ).then((res) => res.json());

@@ -7,6 +7,7 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
+import { revalidateWithTag } from "@/actions/revalidateTag";
 
 // GET /api/admin/categories - List all categories
 async function getAdminCategories(request: NextRequest) {
@@ -126,6 +127,8 @@ async function createCategory(request: NextRequest) {
       parentCategory: parentCategory || null,
       isActive: isActive ?? true,
     });
+
+    await revalidateWithTag("categories")
 
     return createAPIResponse(category, {
       message: "Category created successfully",

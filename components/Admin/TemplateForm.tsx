@@ -216,7 +216,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                                         className={cn(
                                             "cursor-pointer transition-all",
                                             isSelected
-                                                ? "bg-primary/20 text-primary border-primary"
+                                                ? "bg-primary/20 text-white border-white"
                                                 : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white"
                                         )}
                                         onClick={() => {

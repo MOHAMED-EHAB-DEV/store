@@ -210,8 +210,8 @@ const Page = async ({ params }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <MarkdownCopyHandler />
-      <main className="min-h-screen py-24 md:py-36 text-gray-200">
-        <div className="max-w-7xl px-4 pt-36">
+      <main className="min-h-screen py-24 md:py-28 text-gray-200">
+        <div className="max-w-7xl px-4">
           <Template
             template={template}
             similarTemplates={similarTemplates || []}

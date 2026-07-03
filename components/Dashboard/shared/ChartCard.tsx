@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { AreaClosed, LinePath, Bar } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import { GridRows, GridColumns } from "@visx/grid";
@@ -41,7 +40,7 @@ export default function ChartCard({
 
     // Scales
     const xScale = scaleTime({
-        domain: [Math.min(...data.map((d) => d.date.getTime())), Math.max(...data.map((d) => d.date.getTime()))],
+        domain: [Math.min(...data.map((d) => new Date(d.date)?.getTime() ?? 0)), Math.max(...data.map((d) => new Date(d.date)?.getTime() ?? 0))],
         range: [0, innerWidth],
     });
 

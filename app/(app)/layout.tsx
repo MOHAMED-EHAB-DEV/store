@@ -93,8 +93,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <head>
-      </head>
+      <head></head>
       <body
         className={cn(
           "antialiased scroll-smooth bg-primary text-white",
@@ -144,7 +143,6 @@ export default async function RootLayout({
 
           <Providers>{children}</Providers>
         </div>
-
 
         <BackToTop />
         <OrganizationSchema />

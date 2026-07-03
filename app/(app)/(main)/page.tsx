@@ -4,6 +4,7 @@ import { HeroItems } from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import dynamic from "next/dynamic";
+import GSAPInitializer from "@/components/home/GSAPInitializer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,7 +22,6 @@ const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
 const Pricing = dynamic(() => import("@/components/home/Pricing"));
 const Cta = dynamic(() => import("@/components/home/CTA"));
 const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
-const GSAPInitializer = dynamic(() => import("@/components/home/GSAPInitializer"));
 
 export default async function Home() {
   return (

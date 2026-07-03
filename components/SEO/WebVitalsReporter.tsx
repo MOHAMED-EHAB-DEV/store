@@ -17,6 +17,7 @@ export default function WebVitalsReporter() {
   const pathname = usePathname();
   const queue = useRef<Metric[]>([]);
   const isSending = useRef(false);
+  const visitorId = localStorage.getItem("_vid");
 
   // Send queued metrics to the server
   const flushQueue = () => {
@@ -29,6 +30,7 @@ export default function WebVitalsReporter() {
     const payload = JSON.stringify({
       path: pathname,
       metrics: metricsToSend,
+      visitorId
     });
 
     // Use sendBeacon for best performance (doesn't block navigation)

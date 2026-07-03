@@ -191,7 +191,7 @@ const FramerFeatures = () => {
               style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
               <Image
-                src={anyImgUrl("/assets/Icons/cover.jpg", { width: 1200, quality: 85 })}
+                src={anyImgUrl("/assets/Icons/cover.jpg", { width: 1200, original: true })}
                 alt="cover"
                 fill
                 unoptimized
@@ -218,7 +218,7 @@ const FramerFeatures = () => {
           >
             <div className="w-full flex items-center justify-center relative">
               <Image
-                src={anyImgUrl("/assets/Icons/publish.webp", { width: 300, quality: 85 })}
+                src={anyImgUrl("/assets/Icons/publish.webp", { width: 300, original: true })}
                 alt="publish"
                 width={150}
                 height={150}
@@ -226,7 +226,7 @@ const FramerFeatures = () => {
                 className="w-auto h-auto"
               />
               <Image
-                src={anyImgUrl("/assets/Icons/smCursor.avif", { width: 50, quality: 85 })}
+                src={anyImgUrl("/assets/Icons/smCursor.avif", { width: 50, original: true })}
                 alt="cursor"
                 width={25}
                 height={25}

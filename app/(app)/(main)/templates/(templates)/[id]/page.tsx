@@ -211,12 +211,12 @@ const Page = async ({ params }: PageProps) => {
       />
       <MarkdownCopyHandler />
       <main className="min-h-screen py-24 md:py-36 text-gray-200">
-      <div className="max-w-7xl px-4 pt-36">
-        <Template
-          template={template}
-          similarTemplates={similarTemplates || []}
-        />
-      </div>
+        <div className="max-w-7xl px-4 pt-36">
+          <Template
+            template={template}
+            similarTemplates={similarTemplates || []}
+          />
+        </div>
       </main>
     </>
   );

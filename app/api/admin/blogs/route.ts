@@ -9,6 +9,8 @@ import {
 } from "@/lib/utils/api-helpers";
 import { revalidateWithTag } from "@/actions/revalidateTag";
 import User from "@/lib/models/User";
+import { isBase64Image } from "@/lib/utils";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 async function getAdminBlogs(req: NextRequest) {
   try {
@@ -111,6 +113,14 @@ async function createBlog(req: NextRequest) {
 
     // Add author
     body.author = user._id;
+
+    // Handle cover image upload if it is base64
+    if (body.coverImage && isBase64Image(body.coverImage)) {
+      const base64Data = body.coverImage.replace(/^data:image\/\w+;base64,/, "");
+      const buffer = Buffer.from(base64Data, "base64");
+      const uploadResult = await uploadToCloudinary(buffer, "blogs");
+      body.coverImage = uploadResult.secure_url;
+    }
 
     const newBlog = await Blog.create(body);
 

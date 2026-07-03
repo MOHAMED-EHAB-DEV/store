@@ -7,6 +7,8 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
+import { isBase64Image } from "@/lib/utils";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 async function deleteAdminBlog(
   req: NextRequest,
@@ -50,6 +52,14 @@ async function updateAdminBlog(
 
     const { id } = await params;
     const body = await req.json();
+
+    // Handle cover image upload if it is base64
+    if (body.coverImage && isBase64Image(body.coverImage)) {
+      const base64Data = body.coverImage.replace(/^data:image\/\w+;base64,/, "");
+      const buffer = Buffer.from(base64Data, "base64");
+      const uploadResult = await uploadToCloudinary(buffer, "blogs");
+      body.coverImage = uploadResult.secure_url;
+    }
 
     const blog = await Blog.findByIdAndUpdate(
       id,

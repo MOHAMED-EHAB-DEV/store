@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import AdminDashboardHome from "@/components/Admin/AdminDashboardHome";
+import { getBaseUrl } from "@/lib/utils/server";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Analytics",
@@ -17,9 +18,11 @@ interface AnalyticsStatsData {
   dailyVisits: { date: string; count: number }[];
 }
 
+
 async function getAdminDashboardData() {
   try {
     const cookie = (await headers()).get("cookie") || "";
+    const baseUrl = await getBaseUrl();
 
     const fetchAndParse = async (url: string) => {
       const res = await fetch(url, { headers: { cookie } });
@@ -28,11 +31,11 @@ async function getAdminDashboardData() {
 
     const [users, templates, downloads, tickets, analytics] =
       await Promise.all([
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/templates?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/tickets?limit=1000`),
-        fetchAndParse(`${process.env.NEXT_PUBLIC_APP_URL}/api/analytics/stats`)
+        fetchAndParse(`${baseUrl}/api/admin/users?limit=1000`),
+        fetchAndParse(`${baseUrl}/api/admin/templates?limit=1000`),
+        fetchAndParse(`${baseUrl}/api/admin/download-logs?limit=1000`),
+        fetchAndParse(`${baseUrl}/api/admin/tickets?limit=1000`),
+        fetchAndParse(`${baseUrl}/api/analytics/stats`)
       ]);
 
     return {

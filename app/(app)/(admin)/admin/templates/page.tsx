@@ -3,6 +3,7 @@ import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 import { getCategories } from "@/static/categories";
 import { headers } from "next/headers";
+import { getBaseUrl } from "@/lib/utils/server";
 
 export const metadata: Metadata = {
     title: "Templates Management | Admin Dashboard",
@@ -10,8 +11,9 @@ export const metadata: Metadata = {
     robots: "noindex, nofollow",
 };
 
+
 async function getTemplatesData(searchParams: { [key: string]: string | undefined }) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const baseUrl = await getBaseUrl();
 
     const params = new URLSearchParams();
     if (searchParams.page) params.set("page", searchParams.page);

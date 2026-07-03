@@ -1,7 +1,10 @@
+import { getBaseUrl } from "@/lib/utils/server";
+
 export const getCategories = async () => {
   try {
+    const baseUrl = await getBaseUrl();
     const categories = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/categories`,
+      `${baseUrl}/api/categories`,
       {
         next: {
           revalidate: 60 * 60 * 24 * 7, // 1 week

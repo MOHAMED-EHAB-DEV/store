@@ -19,7 +19,7 @@ import rehypeRaw from "rehype-raw";
  */
 
 /* ----------------------------- Shiki Highlighter ---------------------------- */
-let cachedHighlighter: any = null;
+let cachedHighlighter: any = (globalThis as any).shikiHighlighter || null;
 
 export async function createHighlighterSafe() {
   // guard: don't run in browser
@@ -34,6 +34,11 @@ export async function createHighlighterSafe() {
       "[shiki] skipping: detected Edge runtime (NEXT_RUNTIME=edge).",
     );
     return null;
+  }
+
+  if ((globalThis as any).shikiHighlighter) {
+    cachedHighlighter = (globalThis as any).shikiHighlighter;
+    return cachedHighlighter;
   }
 
   if (cachedHighlighter) return cachedHighlighter;
@@ -74,6 +79,7 @@ export async function createHighlighterSafe() {
       ],
     });
 
+    (globalThis as any).shikiHighlighter = cachedHighlighter;
     return cachedHighlighter;
   } catch (err) {
     // log full error so you can diagnose missing theme or other issues
@@ -279,7 +285,6 @@ function rehypeShiki() {
                 },
               ],
             },
-            // Language badge — all visual styles defined in .lang-badge CSS rule
             lang !== "text"
               ? {
                   type: "element",

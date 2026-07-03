@@ -2,12 +2,14 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import AdminUsersClient from "@/components/Admin/AdminUsersClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
+import { getBaseUrl } from "@/lib/utils/server";
 
 export const metadata: Metadata = {
   title: "User Management | Admin Dashboard",
   description: "Manage all users, roles, and permissions",
   robots: "noindex, nofollow",
 };
+
 
 async function getUsers(searchParams: { [key: string]: string | undefined }) {
   const params = new URLSearchParams();
@@ -19,9 +21,11 @@ async function getUsers(searchParams: { [key: string]: string | undefined }) {
   params.set("limit", "20");
 
   try {
+    const baseUrl = await getBaseUrl();
+    const headersList = await headers();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/users?${params.toString()}`,
-      { headers: { cookie: (await headers()).get("cookie") || "" } }
+      `${baseUrl}/api/admin/users?${params.toString()}`,
+      { headers: { cookie: headersList.get("cookie") || "" } }
     );
 
     if (!response.ok) return null;

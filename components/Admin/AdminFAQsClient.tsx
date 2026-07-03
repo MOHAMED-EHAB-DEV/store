@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import PageHeader from "@/components/Dashboard/shared/PageHeader";
+import StatCard from "@/components/Dashboard/shared/StatCard";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
 import SearchFilterBar, { FilterOption } from "@/components/Dashboard/shared/SearchFilterBar";
 import ActionDropdown from "@/components/Dashboard/shared/ActionDropdown";
@@ -9,6 +11,10 @@ import { Edit } from "@/components/ui/svgs/icons/Edit";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 import { Plus } from "@/components/ui/svgs/icons/Plus";
 import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
+import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
+import { Check } from "@/components/ui/svgs/icons/Check";
+import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
+import { Grid } from "@/components/ui/svgs/icons/Grid";
 import { sonnerToast } from "@/components/ui/sonner";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { Badge } from "@/components/ui/badge";
@@ -18,12 +24,19 @@ import Link from "next/link";
 
 interface AdminFAQsClientProps {
     initialData: any[];
+    stats: {
+        total: number;
+        published: number;
+        draft: number;
+        categories: number;
+    };
     pagination: any;
     searchParams: any;
 }
 
 export default function AdminFAQsClient({
     initialData,
+    stats,
     pagination,
     searchParams,
 }: AdminFAQsClientProps) {
@@ -221,9 +234,64 @@ export default function AdminFAQsClient({
         },
     ];
 
+    const statCardsData = [
+        {
+            label: "Total FAQs",
+            value: stats.total,
+            icon: HelpCircle,
+            gradient: "from-blue-500 to-cyan-500",
+        },
+        {
+            label: "Published",
+            value: stats.published,
+            icon: Check,
+            gradient: "from-green-500 to-emerald-500",
+        },
+        {
+            label: "Drafts",
+            value: stats.draft,
+            icon: AlertCircle,
+            gradient: "from-amber-500 to-orange-500",
+        },
+        {
+            label: "Categories",
+            value: stats.categories,
+            icon: Grid,
+            gradient: "from-purple-500 to-pink-500",
+        },
+    ];
+
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-6 space-y-8 animate-in fade-in duration-500">
+            <PageHeader
+                title="FAQs Management"
+                description="Create and manage helpful frequently asked questions for your users"
+                breadcrumbs={[
+                    { label: "Dashboard", href: "/admin" },
+                    { label: "FAQs" },
+                ]}
+                actions={
+                    <Button
+                        variant="default"
+                        className="bg-primary hover:bg-primary/90"
+                        asChild
+                    >
+                        <Link href="/admin/faqs/new">
+                            <Plus className="w-4 h-4 mr-2" />
+                            New FAQ
+                        </Link>
+                    </Button>
+                }
+            />
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {statCardsData.map((stat, index) => (
+                    <StatCard key={index} {...stat} />
+                ))}
+            </div>
+
+            <div className="space-y-6">
                 <SearchFilterBar
                     searchPlaceholder="Search questions or answers..."
                     onSearchChange={(val) => updateQuery({ search: val })}
@@ -235,107 +303,101 @@ export default function AdminFAQsClient({
                     }}
                     onClearFilters={() => updateQuery({ category: "", published: "", search: "" })}
                 />
-                <Button asChild className="bg-primary hover:bg-primary/90">
-                    <Link href="/admin/faqs/new">
-                        <Plus className="w-4 h-4 mr-2" />
-                        New FAQ
-                    </Link>
-                </Button>
-            </div>
 
-            {/* Bulk Actions */}
-            {selectedIds.length > 0 && (
-                <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
-                    <span className="text-sm text-white">
-                        {selectedIds.length} FAQ{selectedIds.length !== 1 ? "s" : ""} selected
-                    </span>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleBulkStatusChange(true)}
-                            className="bg-white/5 border-white/10 text-white hover:bg-white/10"
-                            disabled={loading}
-                        >
-                            Publish
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleBulkStatusChange(false)}
-                            className="bg-white/5 border-white/10 text-white hover:bg-white/10"
-                            disabled={loading}
-                        >
-                            Unpublish
-                        </Button>
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => setBulkDeleteDialog(true)}
-                            disabled={isDeleting}
-                        >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete ({selectedIds.length})
-                        </Button>
-                    </div>
-                </div>
-            )}
-
-            <DataTable
-                columns={columns}
-                data={initialData}
-                keyExtractor={(faq) => faq._id}
-                loading={loading}
-                selectable
-                onSelectionChange={(ids) => setSelectedIds(ids as string[])}
-                emptyState={
-                    <EmptyState
-                        title="No FAQs found"
-                        description="Try adjusting your filters or search terms"
-                        action={{
-                            label: "Add New FAQ",
-                            onClick: () => router.push("/admin/faqs/new"),
-                            icon: Plus,
-                        }}
-                    />
-                }
-                actions={
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground mr-2">
-                            Showing {initialData.length} of {pagination?.total || 0} entries
+                {/* Bulk Actions */}
+                {selectedIds.length > 0 && (
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex items-center justify-between animate-in slide-in-from-top-2">
+                        <span className="text-sm text-white">
+                            {selectedIds.length} FAQ{selectedIds.length !== 1 ? "s" : ""} selected
                         </span>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange(true)}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Publish
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleBulkStatusChange(false)}
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                disabled={loading}
+                            >
+                                Unpublish
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => setBulkDeleteDialog(true)}
+                                disabled={isDeleting}
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete ({selectedIds.length})
+                            </Button>
+                        </div>
                     </div>
-                }
-            />
+                )}
 
-            {/* Pagination */}
-            {pagination && pagination.pages > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                    <p className="text-sm text-muted-foreground">
-                        Page {pagination.page} of {pagination.pages}
-                    </p>
-                    <div className="flex gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={pagination.page <= 1}
-                            onClick={() => updateQuery({ page: (pagination.page - 1).toString() })}
-                            className="bg-white/5 border-white/10 text-white"
-                        >
-                            Previous
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={pagination.page >= pagination.pages}
-                            onClick={() => updateQuery({ page: (pagination.page + 1).toString() })}
-                            className="bg-white/5 border-white/10 text-white"
-                        >
-                            Next
-                        </Button>
+                <DataTable
+                    columns={columns}
+                    data={initialData}
+                    keyExtractor={(faq) => faq._id}
+                    loading={loading}
+                    selectable
+                    onSelectionChange={(ids) => setSelectedIds(ids as string[])}
+                    emptyState={
+                        <EmptyState
+                            title="No FAQs found"
+                            description="Try adjusting your filters or search terms"
+                            action={{
+                                label: "Add New FAQ",
+                                onClick: () => router.push("/admin/faqs/new"),
+                                icon: Plus,
+                            }}
+                        />
+                    }
+                    actions={
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground mr-2">
+                                Showing {initialData.length} of {pagination?.total || 0} entries
+                            </span>
+                        </div>
+                    }
+                />
+
+                {/* Pagination */}
+                {pagination && pagination.pages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <p className="text-sm text-muted-foreground">
+                            Page {pagination.page} of {pagination.pages}
+                        </p>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page <= 1}
+                                onClick={() => updateQuery({ page: (pagination.page - 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Previous
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={pagination.page >= pagination.pages}
+                                onClick={() => updateQuery({ page: (pagination.page + 1).toString() })}
+                                className="bg-white/5 border-white/10 text-white"
+                            >
+                                Next
+                            </Button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <ConfirmDialog
                 open={deleteDialog.open}

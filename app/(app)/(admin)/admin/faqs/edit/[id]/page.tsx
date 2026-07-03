@@ -35,7 +35,7 @@ export default async function EditFAQPage({ params }: PageProps) {
     }
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8 animate-in fade-in duration-500">
             <PageHeader
                 title="Edit FAQ"
                 description="Update the FAQ entry"

@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   description:
     "Discover premium, responsive web templates built with React, Next.js, and Tailwind CSS. Perfect for SaaS, e-commerce, portfolios, and agencies. Created by Mohammed Ehab.",
   keywords:
-    "web templates, React templates, Next.js templates, Tailwind CSS, premium templates, responsive design, SaaS templates, e-commerce templates, portfolio templates, agency templates, mhd store",
+    "web templates, React templates, Next.js templates, Tailwind CSS, premium templates, responsive design, SaaS templates, e-commerce templates, portfolio templates, agency templates, mhd store, mhd templates store",
   authors: [{ name: "Mohammed Ehab" }],
   creator: "Mohammed Ehab",
   publisher: "Mohammed Ehab Templates",

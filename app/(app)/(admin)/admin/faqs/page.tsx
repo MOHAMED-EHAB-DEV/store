@@ -1,12 +1,6 @@
 import { Metadata } from "next";
 import { headers } from "next/headers";
-import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import AdminFAQsClient from "@/components/Admin/AdminFAQsClient";
-import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
-import { Check } from "@/components/ui/svgs/icons/Check";
-import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
-import { Grid } from "@/components/ui/svgs/icons/Grid";
-import StatCard from "@/components/Dashboard/shared/StatCard";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
 export const metadata: Metadata = {
@@ -62,49 +56,11 @@ export default async function AdminFAQsPage({ searchParams }: PageProps) {
     };
 
     return (
-        <div className="p-6 space-y-8 animate-in fade-in duration-500">
-            <PageHeader
-                title="FAQs Management"
-                description="Create and manage helpful frequently asked questions for your users"
-                breadcrumbs={[
-                    { label: "Dashboard", href: "/admin" },
-                    { label: "FAQs" },
-                ]}
-            />
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard
-                    label="Total FAQs"
-                    value={faqStats.total}
-                    icon={HelpCircle}
-                    gradient="from-blue-500 to-cyan-500"
-                />
-                <StatCard
-                    label="Published"
-                    value={faqStats.published}
-                    icon={Check}
-                    gradient="from-green-500 to-emerald-500"
-                />
-                <StatCard
-                    label="Drafts"
-                    value={faqStats.draft}
-                    icon={AlertCircle}
-                    gradient="from-amber-500 to-orange-500"
-                />
-                <StatCard
-                    label="Categories"
-                    value={faqStats.categories}
-                    icon={Grid}
-                    gradient="from-purple-500 to-pink-500"
-                />
-            </div>
-
-            <AdminFAQsClient
-                initialData={data2.items}
-                pagination={pagination}
-                searchParams={params}
-            />
-        </div>
+        <AdminFAQsClient
+            initialData={data2.items}
+            stats={faqStats}
+            pagination={pagination}
+            searchParams={params}
+        />
     );
 }

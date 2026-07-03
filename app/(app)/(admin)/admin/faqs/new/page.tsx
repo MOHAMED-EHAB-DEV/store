@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function NewFAQPage() {
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8 animate-in fade-in duration-500">
             <PageHeader
                 title="Create New FAQ"
                 description="Add a new frequently asked question"

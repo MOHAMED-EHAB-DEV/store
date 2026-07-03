@@ -8,7 +8,7 @@ async function getTemplates() {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/template/featured`,
-      { next: { revalidate: 60 * 60 * 24 * 2, tags: ["templates", "home-templates"] } },
+      { next: { revalidate: 60 * 60 * 24 * 2, tags: ["home-templates"] } },
     );
     const data = await response.json();
     return data.data;

@@ -51,7 +51,7 @@ const getData = async () => {
   try {
     const response = await fetch(`${APP_URL}/api/blogs`,{
       method: 'GET',
-      next: { revalidate: 60 * 60 * 24 }
+      next: { revalidate: 60 * 60 * 24 * 7, tags: ["blogs"] }
     })
 
     if (!response.ok) return [];

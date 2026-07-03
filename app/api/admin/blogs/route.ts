@@ -7,6 +7,8 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
+import { revalidateWithTag } from "@/actions/revalidateTag";
+import User from "@/lib/models/User";
 
 async function getAdminBlogs(req: NextRequest) {
   try {
@@ -22,7 +24,6 @@ async function getAdminBlogs(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const search = searchParams.get("search");
     const status = searchParams.get("status");
-    const category = searchParams.get("category");
 
     const skip = (page - 1) * limit;
 
@@ -30,7 +31,6 @@ async function getAdminBlogs(req: NextRequest) {
     const query: any = {};
     if (status === "published") query.isPublished = true;
     if (status === "draft") query.isPublished = false;
-    if (category) query.category = category;
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },
@@ -88,4 +88,40 @@ async function getAdminBlogs(req: NextRequest) {
   }
 }
 
+async function createBlog(req: NextRequest) {
+  try {
+    const body = await req.json();
+    await connectToDatabase();
+
+    const user = await authenticateUser(false, true);
+    if (!user) return createErrorResponse("Unauthorized", 401, { req });
+
+    const dbUser = await User.findById(user._id);
+    if (dbUser?.role !== 'admin') {
+      return createErrorResponse("Forbidden: Admin access only", 403, { req });
+    }
+
+    // Auto-generate slug if missing
+    if (!body.slug && body.title) {
+      body.slug = body.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+    }
+
+    // Add author
+    body.author = user._id;
+
+    const newBlog = await Blog.create(body);
+
+    await revalidateWithTag("blogs");
+
+    return createAPIResponse(newBlog, { message: "Blog post created successfully" });
+  } catch (error: any) {
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "createBlog" });
+  }
+}
+
 export const GET = withAPIMiddleware(getAdminBlogs);
+export const POST = withAPIMiddleware(createBlog);

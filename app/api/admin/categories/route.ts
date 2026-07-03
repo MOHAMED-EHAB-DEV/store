@@ -128,7 +128,7 @@ async function createCategory(request: NextRequest) {
       isActive: isActive ?? true,
     });
 
-    await revalidateWithTag("categories")
+    await revalidateWithTag("categories");
 
     return createAPIResponse(category, {
       message: "Category created successfully",

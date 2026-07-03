@@ -1,10 +1,7 @@
 import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
-import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
-import User from "@/lib/models/User";
-import { revalidateWithTag } from "@/actions/revalidateTag";
 
 async function getBlogPost(
     req: NextRequest,
@@ -44,72 +41,5 @@ async function getBlogPost(
     }
 }
 
-async function updateBlogPost(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
-        const body = await req.json();
-
-        await connectToDatabase();
-        const user = await authenticateUser(false, true);
-
-        if (!user) return createErrorResponse("Unauthorized", 401, { req });
-
-        const dbUser = await User.findById(user._id);
-        if (dbUser?.role !== 'admin') {
-            return createErrorResponse("Forbidden", 403, { req });
-        }
-
-        const updatedBlog = await Blog.findByIdAndUpdate(id, body, { new: true });
-
-        if (!updatedBlog) {
-            return createErrorResponse("Blog post not found", 404, { req });
-        }
-
-        revalidateWithTag("blogs");
-        revalidateWithTag(`blog-${updatedBlog.slug}`);
-        revalidateWithTag(`blog-${updatedBlog._id}`);
-
-        return createAPIResponse(updatedBlog, { message: "Blog post updated successfully" });
-    } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "updateBlogPost" });
-    }
-}
-
-async function deleteBlogPost(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
-
-        await connectToDatabase();
-        const user = await authenticateUser(false, true);
-
-        if (!user) return createErrorResponse("Unauthorized", 401, { req });
-
-        const dbUser = await User.findById(user._id);
-        if (dbUser?.role !== 'admin') {
-            return createErrorResponse("Forbidden", 403, { req });
-        }
-
-        const deletedBlog = await Blog.findByIdAndDelete(id);
-
-        if (!deletedBlog) {
-            return createErrorResponse("Blog post not found", 404, { req });
-        }
-
-        return createAPIResponse(null, { message: "Blog post deleted successfully" });
-    } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-        return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "deleteBlogPost" });
-    }
-}
-
 export const GET = withAPIMiddleware(getBlogPost);
-export const PUT = withAPIMiddleware(updateBlogPost);
-export const DELETE = withAPIMiddleware(deleteBlogPost);
 

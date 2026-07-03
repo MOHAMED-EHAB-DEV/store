@@ -8,7 +8,7 @@ import {
   createAPIResponse,
   validatePagination,
 } from "@/lib/utils/api-helpers";
-import { revalidateWithTag } from "@/actions/revalidateTag";
+import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 
 async function deleteAdminTemplate(
   req: NextRequest,
@@ -28,6 +28,8 @@ async function deleteAdminTemplate(
     if (!template) {
       return createErrorResponse("Template not found", 404, { req });
     }
+
+    await revalidate("/");
 
     return createAPIResponse(null, {
       message: "Template deleted successfully",
@@ -67,7 +69,8 @@ async function updateAdminTemplate(
       return createErrorResponse("Template not found", 404, { req });
     }
 
-    revalidateWithTag(`template-${id}`);
+    await revalidateWithTag(`template-${id}`);
+    await revalidate("/");
 
     return createAPIResponse(template, {
       message: "Template updated successfully",

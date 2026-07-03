@@ -147,7 +147,7 @@ const TemplateSchema = new Schema<ITemplate>(
   }
 );
 
-TemplateSchema.index({ isActive: 1, isFeatured: -1, averageRating: -1 }); // Featured templates
+TemplateSchema.index({ isActive: 1, averageRating: -1 }); // Featured templates
 TemplateSchema.index({ isActive: 1, price: 1, downloads: -1 }); // Free/paid popular templates
 TemplateSchema.index({ isActive: 1, downloads: -1, averageRating: -1 }); // Most popular
 TemplateSchema.index({ isActive: 1, createdAt: -1 }); // Recent templates
@@ -213,7 +213,6 @@ TemplateSchema.statics.findPopularTemplates = function (
             { $multiply: ["$downloads", 2] },
             { $multiply: ["$averageRating", 20] },
             { $multiply: ["$views", 0.5] },
-            { $cond: ["$isFeatured", 100, 0] },
           ],
         },
       },
@@ -255,7 +254,6 @@ TemplateSchema.statics.findPopularTemplates = function (
         categories: 1,
         tags: 1,
         builtWith: 1,
-        isFeatured: 1,
         createdAt: 1,
         popularityScore: 1,
       },

@@ -24,7 +24,6 @@ interface Blog {
     slug: string;
     excerpt?: string;
     author: { _id: string; name: string };
-    category?: string;
     tags?: string[];
     isPublished: boolean;
     views?: number;
@@ -195,13 +194,6 @@ export default function AdminBlogsClient({
             label: "Author",
             render: (blog) => (
                 <span className="text-sm text-muted-foreground">{blog.author?.name || "Unknown"}</span>
-            ),
-        },
-        {
-            key: "category",
-            label: "Category",
-            render: (blog) => (
-                <span className="text-sm text-muted-foreground">{blog.category || "Uncategorized"}</span>
             ),
         },
         {

@@ -36,7 +36,7 @@ const getData = async (idOrSlug: string) => {
     try {
         const res = await fetch(`${APP_URL}/api/blogs/${idOrSlug}?countViews=true`, {
             method: 'GET',
-            next: { revalidate: 60 * 60 * 24, tags: [`blog-${idOrSlug}`] }
+            next: { revalidate: 60 * 60 * 24 * 7, tags: [`blog-${idOrSlug}`] }
         });
         if (!res.ok) return null;
 
@@ -52,7 +52,7 @@ const getData = async (idOrSlug: string) => {
 const getRecentPosts = async (): Promise<BlogPost[]> => {
   try {
         const response = await fetch(`${APP_URL}/api/blogs?limit=5`, {
-            next: { revalidate: 60 * 60 * 24 },
+            next: { revalidate: 60 * 60 * 24 * 7 },
         });
 
         if (!response.ok) return [];

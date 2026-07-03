@@ -7,6 +7,7 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
+import { revalidateWithTag } from "@/actions/revalidateTag";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -70,6 +71,8 @@ async function updateCategory(request: NextRequest, { params }: RouteParams) {
       return createErrorResponse("Category not found", 404, { req: request });
     }
 
+    await revalidateWithTag("categories");
+    
     return createAPIResponse(category, {
       message: "Category updated successfully",
     });
@@ -110,6 +113,8 @@ async function deleteCategory(request: NextRequest, { params }: RouteParams) {
       return createErrorResponse("Category not found", 404, { req: request });
     }
 
+    await revalidateWithTag("categories");
+    
     return createAPIResponse(null, {
       message: "Category deleted successfully",
     });

@@ -110,8 +110,8 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
                 coverImage: image,
             };
 
-            const url = isEdit ? `/api/blogs/${initialData._id}` : '/api/blogs';
-            const method = isEdit ? 'PUT' : 'POST';
+            const url = isEdit ? `/api/admin/blogs/${initialData._id}` : '/api/admin/blogs';
+            const method = isEdit ? 'PATCH' : 'POST';
 
             const res = await fetch(url, {
                 method,

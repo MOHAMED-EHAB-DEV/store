@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Blog from "@/lib/models/Blog";
 import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse, validatePagination, withAPIMiddleware } from "@/lib/utils/api-helpers";
 import User from "@/lib/models/User";
-import { revalidateTag } from "next/cache";
 
 async function getBlogs(req: NextRequest) {
   try {
@@ -66,39 +65,4 @@ async function getBlogs(req: NextRequest) {
   }
 }
 
-async function createBlog(req: NextRequest) {
-  try {
-    const body = await req.json();
-    await connectToDatabase();
-
-    const user = await authenticateUser(false, true);
-    if (!user) return createErrorResponse("Unauthorized", 401, { req });
-
-    const dbUser = await User.findById(user._id);
-    if (dbUser?.role !== 'admin') {
-      return createErrorResponse("Forbidden: Admin access only", 403, { req });
-    }
-
-    // Auto-generate slug if missing
-    if (!body.slug && body.title) {
-      body.slug = body.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)+/g, '');
-    }
-
-    // Add author
-    body.author = user._id;
-
-    const newBlog = await Blog.create(body);
-    revalidateTag("blogs", "max");
-    return createAPIResponse(newBlog, { message: "Blog post created successfully" });
-
-  } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    return createErrorResponse("Something went wrong", 500, { req: req, error: error, operation: "createBlog" });
-  }
-}
-
 export const GET = withAPIMiddleware(getBlogs);
-export const POST = withAPIMiddleware(createBlog);

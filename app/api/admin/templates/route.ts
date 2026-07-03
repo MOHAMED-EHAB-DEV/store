@@ -8,9 +8,9 @@ import {
   createAPIResponse,
   validatePagination,
 } from "@/lib/utils/api-helpers";
-import { revalidateTag } from "next/cache";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { uploadToGoogleDrive } from "@/lib/google-drive";
+import revalidate from "@/actions/revalidateTag";
 
 async function getAdminTemplates(request: NextRequest) {
   try {
@@ -103,7 +103,7 @@ async function getAdminTemplates(request: NextRequest) {
 
 async function createAdminTemplate(req: NextRequest) {
   try {
-    const user = await authenticateUser();
+    const user = await authenticateUser(true);
 
     if (!user || user.role !== "admin") {
       return createErrorResponse("Unauthorized", 401, { req });
@@ -163,7 +163,7 @@ async function createAdminTemplate(req: NextRequest) {
       views: 0,
     });
 
-    revalidateTag("templates", "max");
+    await revalidate("/");
 
     return createAPIResponse(template, {
       message: "Template created successfully",

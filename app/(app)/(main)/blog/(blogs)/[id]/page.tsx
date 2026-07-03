@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { anyImgUrl } from '@/lib/utils/image';
+import ViewTracker from '@/components/Blog/ViewTracker';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -34,7 +35,7 @@ interface PageProps {
 
 const getData = async (idOrSlug: string) => {
     try {
-        const res = await fetch(`${APP_URL}/api/blogs/${idOrSlug}?countViews=true`, {
+        const res = await fetch(`${APP_URL}/api/blogs/${idOrSlug}`, {
             method: 'GET',
             next: { revalidate: 60 * 60 * 24 * 7, tags: [`blog-${idOrSlug}`] }
         });
@@ -78,9 +79,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const url = `${APP_URL}/blog/${blog.slug || id}`;
 
+    // Strip markdown characters for a cleaner meta description
+    const stripMarkdown = (md: string) => md.replace(/[#*`_\[\]()>]/g, '').replace(/\n+/g, ' ').trim().substring(0, 160);
+    const cleanDesc = blog.excerpt || stripMarkdown(blog.content || "");
+
     return {
         title: `${blog.title} | Blog`,
-        description: blog.excerpt || blog.content?.substring(0, 160),
+        description: cleanDesc,
         authors: blog.author ? [{ name: blog.author.name }] : undefined,
         keywords: blog.tags || [],
         alternates: {
@@ -88,7 +93,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
         openGraph: {
             title: `${blog.title} | Blog`,
-            description: blog.excerpt || blog.content?.substring(0, 160),
+            description: cleanDesc,
             url: url,
             type: 'article',
             publishedTime: blog.createdAt,
@@ -104,7 +109,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         twitter: {
             card: 'summary_large_image',
             title: `${blog.title} | Blog`,
-            description: blog.excerpt || blog.content.substring(0, 160),
+            description: cleanDesc,
             images: blog.coverImage ? [blog.coverImage] : [],
         },
     };
@@ -124,8 +129,28 @@ const Page = async ({ params }: PageProps) => {
     const { html } = await mdToHtmlAndHeadings(blog.content || "");
     const otherPosts = recentPosts.filter((p) => p._id !== blog._id).slice(0, 3);
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: blog.title,
+        image: blog.coverImage ? [anyImgUrl(blog.coverImage, { width: 1200, quality: 85 })] : [],
+        datePublished: blog.createdAt,
+        dateModified: (blog as any).updatedAt || blog.createdAt,
+        author: [{
+            "@type": "Person",
+            name: blog.author?.name || "Mohammed Ehab",
+            url: "https://mhd-store.vercel.app/"
+        }]
+    };
+
     return (
+        <>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <main className="min-h-screen min-w-7xl py-36 text-gray-200">
+            <ViewTracker blogId={id} />
             <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-gray-950">
                     {blog.coverImage && (
@@ -158,7 +183,7 @@ const Page = async ({ params }: PageProps) => {
                         </div>
                         <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4 text-purple-400" />
-                            <span>5 min read</span>
+                            <span>{Math.max(1, Math.ceil((blog.content || "").split(/\s+/).length / 200))} min read</span>
                         </div>
                     </div>
                 </div>
@@ -237,6 +262,7 @@ const Page = async ({ params }: PageProps) => {
                 </aside>
             </div>
         </main>
+        </>
     );
 };
 

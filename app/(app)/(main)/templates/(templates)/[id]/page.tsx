@@ -95,7 +95,7 @@ export async function generateMetadata({
   const url = `${APP_URL}/templates/${id}`;
 
   return {
-    title: `${template.title} | Premium Templates`,
+    title: `${template.title} | MHD Store Premium Templates`,
     description:
       template.description?.substring(0, 160) ||
       `Premium ${template.builtWith} template - ${template.title}`,
@@ -112,7 +112,7 @@ export async function generateMetadata({
       title: `${template.title} | Premium Templates`,
       description: template.description?.substring(0, 160),
       url: url,
-      type: "website",
+      type: "product" as any,
       images: template.thumbnail
         ? [
             {
@@ -152,8 +152,9 @@ const Page = async ({ params }: PageProps) => {
   // JSON-LD structured data for SEO
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": ["Product", "SoftwareApplication"],
     name: template.title,
+    applicationCategory: "WebApplication",
     description: template.description,
     image: template.thumbnail,
     url: `${APP_URL}/templates/${id}`,
@@ -179,19 +180,44 @@ const Page = async ({ params }: PageProps) => {
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Templates",
+        item: `${APP_URL}/templates`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: template.title,
+        item: `${APP_URL}/templates/${id}`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <MarkdownCopyHandler />
+      <main className="min-h-screen py-24 md:py-36 text-gray-200">
       <div className="max-w-7xl px-4 pt-36">
         <Template
           template={template}
           similarTemplates={similarTemplates || []}
         />
       </div>
+      </main>
     </>
   );
 };

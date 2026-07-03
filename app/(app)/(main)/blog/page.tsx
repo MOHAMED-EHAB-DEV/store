@@ -22,7 +22,7 @@ interface BlogPost {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "Blog | Insights & Updates";
+  const title = "Web Design & Development Blog | MHD Store";
   const description =
     "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
   const url = `${APP_URL}/blog`;

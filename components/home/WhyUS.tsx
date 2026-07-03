@@ -7,9 +7,9 @@ const WhyUs = () => {
     return (
         <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28">
             <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2">
-                <h1 className="md:text-4xl font-bold text-2xl font-paras">
+                <h2 className="md:text-4xl font-bold text-2xl font-paras">
                     Stop stressing over your business website.
-                </h1>
+                </h2>
                 <p className="text-secondary text-base md:text-lg">
                     Freelancers take weeks and cost a lot. DIY builders eat up your time. Generic templates don&apos;t
                     convert. Let&apos;s fix that.

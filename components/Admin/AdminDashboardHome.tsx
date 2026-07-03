@@ -18,109 +18,44 @@ interface AdminDashboardHomeProps {
     templates: any[];
     downloads: any[];
     tickets: any[];
+    adminStats?: {
+      stats: {
+        totalUsers: number;
+        newUsersThisMonth: number;
+        userGrowth: number;
+        totalTemplates: number;
+        newTemplatesThisMonth: number;
+        templateGrowth: number;
+        totalDownloads: number;
+        downloadsThisMonth: number;
+        activeTickets: number;
+        totalTickets: number;
+      };
+      userGrowthData: ChartDataPoint[];
+      downloadsData: ChartDataPoint[];
+    };
   };
 }
 
 export default function AdminDashboardHome({ data }: AdminDashboardHomeProps) {
-  const { users, templates, downloads, tickets } = data;
+  const { users, templates, downloads, tickets, adminStats } = data;
 
-  // Calculate stats
-  const stats = useMemo(() => {
-    const now = new Date();
-    const lastMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      now.getDate(),
-    );
+  // Use server calculated stats or fallbacks if not available
+  const stats = adminStats?.stats || {
+    totalUsers: users.length,
+    newUsersThisMonth: 0,
+    userGrowth: 0,
+    totalTemplates: templates.length,
+    newTemplatesThisMonth: 0,
+    templateGrowth: 0,
+    totalDownloads: downloads.length,
+    downloadsThisMonth: 0,
+    activeTickets: tickets.length,
+    totalTickets: tickets.length,
+  };
 
-    const newUsersThisMonth = users.filter(
-      (u: any) => new Date(u.createdAt) >= lastMonth,
-    ).length;
-    const newTemplatesThisMonth = templates.filter(
-      (t: any) => new Date(t.createdAt) >= lastMonth,
-    ).length;
-    const downloadsThisMonth = downloads.filter(
-      (d: any) => new Date(d.createdAt) >= lastMonth,
-    ).length;
-    const activeTickets = tickets.filter(
-      (t: any) => t.status !== "resolved" && t.status !== "closed",
-    ).length;
-
-    const userGrowth =
-      users.length > 0 ? (newUsersThisMonth / users.length) * 100 : 0;
-    const templateGrowth =
-      templates.length > 0
-        ? (newTemplatesThisMonth / templates.length) * 100
-        : 0;
-
-    return {
-      totalUsers: users.length,
-      newUsersThisMonth,
-      userGrowth,
-      totalTemplates: templates.length,
-      newTemplatesThisMonth,
-      templateGrowth,
-      totalDownloads: downloads.length,
-      downloadsThisMonth,
-      activeTickets,
-      totalTickets: tickets.length,
-    };
-  }, [users, templates, downloads, tickets]);
-
-  // Prepare chart data
-  const userGrowthData: ChartDataPoint[] = useMemo(() => {
-    const last6Months = Array.from({ length: 6 }, (_, i) => {
-      const date = new Date();
-      date.setMonth(date.getMonth() - (5 - i));
-      return date;
-    });
-
-    return last6Months.map((date) => {
-      const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
-      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-      const count = users.filter((u: any) => {
-        const createdAt = new Date(u.createdAt);
-        return createdAt >= monthStart && createdAt <= monthEnd;
-      }).length;
-
-      return {
-        date: new Date(date.getFullYear(), date.getMonth(), 15), // Mid-month
-        value: count,
-      };
-    });
-  }, [users]);
-
-  const downloadsData: ChartDataPoint[] = useMemo(() => {
-    const last30Days = Array.from({ length: 30 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (29 - i));
-      return date;
-    });
-
-    return last30Days.map((date) => {
-      const dayStart = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-      );
-      const dayEnd = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate() + 1,
-      );
-
-      const count = downloads.filter((d: any) => {
-        const createdAt = new Date(d.createdAt);
-        return createdAt >= dayStart && createdAt < dayEnd;
-      }).length;
-
-      return {
-        date: dayStart,
-        value: count,
-      };
-    });
-  }, [downloads]);
+  const userGrowthData: ChartDataPoint[] = adminStats?.userGrowthData || [];
+  const downloadsData: ChartDataPoint[] = adminStats?.downloadsData || [];
 
   const statCards = [
     {

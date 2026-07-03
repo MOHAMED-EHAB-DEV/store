@@ -6,15 +6,9 @@ import { io, Socket } from "socket.io-client";
 import { useUserStore } from "@/store/useUserStore";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useSocketStore } from "@/store/useSocketStore";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { TextPlugin } from "gsap/TextPlugin";
-import { SplitText } from "gsap/SplitText";
+import dynamic from "next/dynamic";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, TextPlugin, SplitText);
-}
-
+const WebVitalsReporter = dynamic(() => import("@/components/SEO/WebVitalsReporter"), { ssr: false });
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 function generateVisitorId(): string {
@@ -164,5 +158,5 @@ export function GlobalStoreInitializer() {
     };
   }, [visitorId, user?._id, user?.role, setIsConnected, setOnlineCount, setTypingUsers, setSocket]);
 
-  return null;
+  return <WebVitalsReporter />;
 }

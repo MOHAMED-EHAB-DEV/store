@@ -380,9 +380,22 @@ function rehypeAddClasses() {
         case "a":
           node.properties.target = "_blank";
           node.properties.rel = "noopener noreferrer";
+          
+          // Extract text content for better accessibility tags
+          const textNode = (node.children || []).find((c: any) => c.type === "text");
+          const linkText = textNode ? textNode.value : (node.properties.href || "link");
+          
+          if (!node.properties.title) node.properties.title = `Visit ${linkText}`;
+          if (!node.properties["aria-label"]) node.properties["aria-label"] = `Link to ${linkText}`;
+
           addClass(
             "text-purple-400 hover:text-purple-300 hover:underline transition-colors duration-200",
           );
+          break;
+        case "img":
+          if (!node.properties.loading) node.properties.loading = "lazy";
+          if (!node.properties.alt) node.properties.alt = "Blog Image";
+          addClass("rounded-lg shadow-lg my-6 mx-auto max-w-full border border-gray-800");
           break;
         case "ul":
           addClass("list-disc pl-6 mb-4 space-y-2");

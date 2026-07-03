@@ -4,34 +4,22 @@ import { Metadata } from "next";
 import { getCategories } from "@/static/categories";
 
 type MetadataProps = {
+  params: Promise<{ category: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({
+  params,
   searchParams,
 }: MetadataProps): Promise<Metadata> {
-  const params = await searchParams;
-  const builtWith = params?.builtWith;
-  const categories = params?.categories;
+  const { category } = await params;
 
-  let title = "Browse Templates | Mohammed Ehab Store";
-  let description =
-    "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.";
-
-  if (categories && typeof categories === "string") {
-    // Capitalize first letter
-    const categoryName =
-      categories.charAt(0).toUpperCase() + categories.slice(1);
-    title = `${categoryName} Templates | Premium Web Templates`;
-    description = `Browse our premium collection of ${categoryName} templates. High-quality, modern, and optimized for your next project.`;
-  } else if (builtWith && typeof builtWith === "string") {
-    title = `${builtWith} Templates | Premium Web Templates`;
-    description = `Explore top-tier templates built with ${builtWith}. Perfect for SaaS, e-commerce, and portfolios.`;
-  }
+  const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+  const title = `${categoryName} Templates | Premium Web Templates`;
+  const description = `Browse our premium collection of ${categoryName} templates. High-quality, modern, and optimized for your next project.`;
 
   const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const searchParamsString = new URLSearchParams(params as any).toString();
-  const url = `${domain}/templates${searchParamsString ? `?${searchParamsString}` : ""}`;
+  const url = `${domain}/templates/category/${category}`;
 
   return {
     title,
@@ -62,13 +50,17 @@ export async function generateMetadata({
   };
 }
 
-const getInitialData = async (params: {
-  [key: string]: string | string[] | undefined;
-}) => {
+const getInitialData = async (
+  categoryParam: string,
+  searchParamsObj: { [key: string]: string | string[] | undefined },
+) => {
   try {
     const urlParams = new URLSearchParams();
 
-    Object.entries(params).forEach(([key, value]) => {
+    // Always append the category from the static route
+    urlParams.append("categories", categoryParam);
+
+    Object.entries(searchParamsObj).forEach(([key, value]) => {
       if (value !== undefined) {
         if (Array.isArray(value)) {
           value.forEach((v) => urlParams.append(key, v));
@@ -82,7 +74,8 @@ const getInitialData = async (params: {
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${urlParams.toString()}`,
       {
         next: {
-          revalidate: 60 * 60 * 5,
+          revalidate: 60 * 60 * 5, // 5 hours
+          tags: [`category-${categoryParam}`],
         },
       },
     );
@@ -100,12 +93,15 @@ const getInitialData = async (params: {
 };
 
 interface PageProps {
+  params: Promise<{ category: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const Page = async ({ searchParams }: PageProps) => {
-  const params = await searchParams;
-  const templates = await getInitialData(params);
+const Page = async ({ params, searchParams }: PageProps) => {
+  const { category } = await params;
+  const currentSearchParams = await searchParams;
+
+  const templates = await getInitialData(category, currentSearchParams);
   const categories = (await getCategories()) as ICategory[];
 
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -113,28 +109,30 @@ const Page = async ({ searchParams }: PageProps) => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Premium Web Templates",
-    "description": "Browse our collection of premium web templates for SaaS, e-commerce, and portfolios.",
-    "url": `${APP_URL}/templates`,
-    "numberOfItems": templates.length,
-    "itemListElement": templates.map((template: any, index: number) => ({
+    name: `${category.charAt(0).toUpperCase() + category.slice(1)} Web Templates`,
+    description: `Browse our collection of premium ${category} web templates for SaaS, e-commerce, and portfolios.`,
+    url: `${APP_URL}/templates/category/${category}`,
+    numberOfItems: templates.length,
+    itemListElement: templates.map((template: any, index: number) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "url": `${APP_URL}/templates/${template.slug || template._id}`,
-      "item": {
+      position: index + 1,
+      url: `${APP_URL}/templates/${template.slug || template._id}`,
+      item: {
         "@type": "Product",
-        "name": template.title,
-        "image": template.thumbnail,
-        "description": template.description,
-        "url": `${APP_URL}/templates/${template.slug || template._id}`,
-        "offers": {
+        name: template.title,
+        image: template.thumbnail,
+        description: template.description,
+        url: `${APP_URL}/templates/${template.slug || template._id}`,
+        offers: {
           "@type": "Offer",
-          "price": template.price || 0,
-          "priceCurrency": "USD",
-          "availability": template.isActive ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-        }
-      }
-    }))
+          price: template.price || 0,
+          priceCurrency: "USD",
+          availability: template.isActive
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+        },
+      },
+    })),
   };
 
   return (
@@ -149,13 +147,13 @@ const Page = async ({ searchParams }: PageProps) => {
         id="main-content"
       >
         <h1 className="text-white font-paras text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold">
-          Templates
+          {category.charAt(0).toUpperCase() + category.slice(1)} Templates
         </h1>
 
         <Templates
           initialData={templates}
           categories={categories}
-          searchParams={params}
+          searchParams={currentSearchParams}
         />
       </main>
     </>

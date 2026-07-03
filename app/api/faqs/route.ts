@@ -33,5 +33,7 @@ async function getFAQs(req: NextRequest) {
   }
 }
 
-export const GET = withAPIMiddleware(getFAQs);
+export const GET = withAPIMiddleware(getFAQs, {
+  cache: { ttl: 120 * 1000 },
+});
 

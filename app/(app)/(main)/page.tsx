@@ -4,6 +4,13 @@ import { HeroItems } from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import dynamic from "next/dynamic";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "MHD Store | Premium Web Templates",
+  description:
+    "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
+};
 
 const FramerFeatures = dynamic(
   () => import("@/components/home/FramerFeatures"),
@@ -14,6 +21,7 @@ const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
 const Pricing = dynamic(() => import("@/components/home/Pricing"));
 const Cta = dynamic(() => import("@/components/home/CTA"));
 const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
+const GSAPInitializer = dynamic(() => import("@/components/home/GSAPInitializer"));
 
 export default async function Home() {
   return (
@@ -23,6 +31,7 @@ export default async function Home() {
       id="main-content"
     >
       {/*<StickyCTA/>*/}
+      <GSAPInitializer />
       <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
         <Hero />
         <section

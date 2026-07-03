@@ -3,7 +3,7 @@ import "./Category";
 import "./User";
 
 export interface ITemplate extends Document {
-
+  slug: string;
   title: string;
   description: string;
   thumbnail: string;
@@ -29,6 +29,12 @@ export interface ITemplate extends Document {
 
 const TemplateSchema = new Schema<ITemplate>(
   {
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
     title: {
       type: String,
       required: true,

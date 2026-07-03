@@ -1,3 +1,13 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | MHD Store",
+  description: "Read the terms of service for MHD Store.",
+  alternates: {
+    canonical: "https://mhd-store.vercel.app/terms-of-service",
+  },
+};
+
 const TermsOfService = () => {
   return (
     <main className="flex-1 flex flex-col items-center justify-start py-36 px-4 sm:px-6 lg:px-8">

@@ -26,4 +26,5 @@ export const TemplateSchema = v.object({
   updatedAt: v.union([v.date(), v.string()]),
   lastViewedAt: v.union([v.date(), v.string()]),
   fileKey: v.string(),
+  slug: v.string(),
 });

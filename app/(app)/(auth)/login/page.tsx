@@ -3,6 +3,13 @@ import SigninForm from "@/components/Forms/SigninForm";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login | MHD Store Premium Templates",
+  description: "Sign in to your MHD Store account to access your premium templates.",
+};
+
 const Page = async ({
   searchParams,
 }: {

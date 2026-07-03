@@ -11,7 +11,6 @@ import {
   WebSiteSchema,
 } from "@/components/SEO/StructuredData";
 import { GoogleTagManager } from "@next/third-parties/google";
-import Script from "next/script";
 
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
 
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
     siteName: "Mohammed Ehab Templates",
     images: [
       {
-        url: "/assets/Icons/Logo.svg",
+        url: "/assets/Icons/cover.jpg",
         width: 1200,
         height: 630,
         alt: "Mohammed Ehab Premium Templates",
@@ -60,7 +59,7 @@ export const metadata: Metadata = {
     title: "Mohammed Ehab - Premium Templates Store",
     description:
       "Premium, responsive web templates for modern businesses and creators",
-    images: ["/assets/Icons/Logo.svg"],
+    images: ["/assets/Icons/cover.jpg"],
     creator: "@__M__O__H__",
   },
   icons: {

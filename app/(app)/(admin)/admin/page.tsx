@@ -31,10 +31,10 @@ async function getAdminDashboardData() {
 
     const [users, templates, downloads, tickets, analytics] =
       await Promise.all([
-        fetchAndParse(`${baseUrl}/api/admin/users?limit=1000`),
-        fetchAndParse(`${baseUrl}/api/admin/templates?limit=1000`),
-        fetchAndParse(`${baseUrl}/api/admin/download-logs?limit=1000`),
-        fetchAndParse(`${baseUrl}/api/admin/tickets?limit=1000`),
+        fetchAndParse(`${baseUrl}/api/admin/users?limit=10`),
+        fetchAndParse(`${baseUrl}/api/admin/templates?limit=10`),
+        fetchAndParse(`${baseUrl}/api/admin/download-logs?limit=10`),
+        fetchAndParse(`${baseUrl}/api/admin/tickets?limit=10`),
         fetchAndParse(`${baseUrl}/api/analytics/stats`)
       ]);
 
@@ -46,6 +46,7 @@ async function getAdminDashboardData() {
       analytics: (analytics.success
         ? analytics.data
         : null) as AnalyticsStatsData | null,
+      adminStats: analytics.success && analytics.data ? analytics.data.adminStats : null,
     };
   } catch (error: any) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
@@ -59,6 +60,7 @@ async function getAdminDashboardData() {
       downloads: [],
       tickets: [],
       analytics: null,
+      adminStats: null,
     };
   }
 }

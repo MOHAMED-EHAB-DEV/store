@@ -1,3 +1,13 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | MHD Store",
+  description: "Read the privacy policy for MHD Store.",
+  alternates: {
+    canonical: "https://mhd-store.vercel.app/privacy-policy",
+  },
+};
+
 const PrivacyPolicy = () => {
   return (
     <main className="flex-1 flex flex-col items-center justify-start py-36 px-4 sm:px-6 lg:px-8">

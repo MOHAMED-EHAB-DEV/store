@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { isValidObjectId } from "mongoose";
 import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
@@ -20,13 +21,19 @@ async function getTemplate(req: NextRequest, context: RouteContext) {
   try {
     await connectToDatabase();
 
-    const [template, totalReviews] = await Promise.all([
-      Template.findOne({ _id: id, isActive })
-        .select("+content")
-        .populate("categories", "_id name slug")
-        .lean(),
-      Review.countDocuments({ template: id }),
-    ]);
+    const query = isValidObjectId(id)
+      ? { $or: [{ _id: id }, { slug: id }], isActive }
+      : { slug: id, isActive };
+
+    const template = await Template.findOne(query)
+      .select("+content")
+      .populate("categories", "_id name slug")
+      .lean();
+
+    let totalReviews = 0;
+    if (template) {
+      totalReviews = await Review.countDocuments({ template: template._id });
+    }
 
     return createAPIResponse(template ? { ...template, reviews: totalReviews } : null);
   } catch (err) {

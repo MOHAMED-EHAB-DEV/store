@@ -11,6 +11,7 @@ import {
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { uploadToGoogleDrive } from "@/lib/google-drive";
 import revalidate from "@/actions/revalidateTag";
+import { slugify } from "@/lib/utils"
 
 async function getAdminTemplates(request: NextRequest) {
   try {
@@ -154,8 +155,17 @@ async function createAdminTemplate(req: NextRequest) {
       body.fileKey = fileKeyStr;
     }
 
+    let baseSlug = slugify(body.title || "template");
+    let slug = baseSlug;
+    let counter = 1;
+    while (await Template.findOne({ slug })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
     const template = await Template.create({
       ...body,
+      slug,
       author: user._id,
       downloads: 0,
       averageRating: 0,

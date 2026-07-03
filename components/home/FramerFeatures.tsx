@@ -152,9 +152,9 @@ const FramerFeatures = () => {
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <h1 className="text-white text-2xl md:text-4xl font-paras font-bold">
+              <h2 className="text-white text-2xl md:text-4xl font-paras font-bold">
                 Premium Templates at Affordable Prices
-              </h1>
+              </h2>
               <p className="text-secondary text-base md:text-lg font-medium">
                 Save thousands compared to hiring a designer—snap up fully
                 designed, top-quality templates for a fraction of the price.
@@ -176,9 +176,9 @@ const FramerFeatures = () => {
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10"></div>
               <div className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
-                <h1 className="text-white font-medium text-base md:text-2xl">
+                <h2 className="text-white font-medium text-base md:text-2xl">
                   Drag-and-Drop Simplicity
-                </h1>
+                </h2>
                 <p className="text-secondary font-normal text-sm md:text-lg">
                   Forget complex code. Framer’s intuitive drag-and-drop editor
                   empowers you to design and launch with ease.
@@ -199,9 +199,9 @@ const FramerFeatures = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
               <div className="relative z-10">
-                <h1 className="text-white font-paras font-bold text-xl md:text-3xl">
+                <h2 className="text-white font-paras font-bold text-xl md:text-3xl">
                   Built for Scale
-                </h1>
+                </h2>
                 <p className="text-secondary font-medium text-base md:text-lg">
                   Clean architecture, responsive layouts, and real-world
                   usability.
@@ -235,9 +235,9 @@ const FramerFeatures = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <h1 className="text-white font-paras font-bold text-2xl md:text-4xl">
+              <h2 className="text-white font-paras font-bold text-2xl md:text-4xl">
                 Launch in days, not Months
-              </h1>
+              </h2>
               <p className="text-secondary font-medium text-base">
                 Skip the grueling wait and get your website up and running
                 quickly.
@@ -250,9 +250,9 @@ const FramerFeatures = () => {
             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
           >
             <div className="flex flex-col gap-1">
-              <h1 className="text-white text-2xl md:text-4xl font-paras font-bold">
+              <h2 className="text-white text-2xl md:text-4xl font-paras font-bold">
                 Business-Driven Design
-              </h1>
+              </h2>
               <p className="text-secondary text-base font-medium">
                 Every template is optimized for <b>conversions</b>, helping you
                 turn visitors into paying customers.

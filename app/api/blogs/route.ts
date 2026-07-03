@@ -65,4 +65,6 @@ async function getBlogs(req: NextRequest) {
   }
 }
 
-export const GET = withAPIMiddleware(getBlogs);
+export const GET = withAPIMiddleware(getBlogs, {
+  cache: { ttl: 120 * 1000 },
+});

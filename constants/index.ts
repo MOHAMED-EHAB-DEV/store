@@ -394,6 +394,11 @@ const AdminSidebarLinks = [
         text: "Support",
         link: "/admin/support",
     },
+    {
+        Icon: Zap,
+        text: "Performance",
+        link: "/admin/performance",
+    },
 ];
 
 const passwordRequirements = (password: string) => [

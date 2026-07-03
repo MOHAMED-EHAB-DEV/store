@@ -1,15 +1,33 @@
 import { Metadata } from "next";
 import FAQsClient from "@/components/faqs/FAQsClient";
 
+const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Frequently Asked Questions | Premium Templates",
   description: "Find answers to common questions about our premium templates, pricing, licensing, and support. Get help with your template purchases and downloads.",
   keywords: ["FAQ", "help", "support", "templates", "questions", "answers"],
+  alternates: {
+    canonical: `${domain}/faqs`
+  },
   openGraph: {
     title: "Frequently Asked Questions",
     description: "Find answers to common questions about our premium templates",
     type: "website",
+    url: `${domain}/faqs`,
+    images: [{
+        url: `${domain}/assets/Icons/cover.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "FAQs"
+    }]
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Frequently Asked Questions",
+    description: "Find answers to common questions about our premium templates",
+    images: [`${domain}/assets/Icons/cover.jpg`]
+  }
 };
 
 async function getFAQs() {

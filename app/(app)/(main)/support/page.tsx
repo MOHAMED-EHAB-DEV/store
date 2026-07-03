@@ -5,9 +5,32 @@ import { ThumbsUp } from "@/components/ui/svgs/icons/ThumbsUp";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Chat } from "@/components/ui/svgs/icons/Chat";
 
+const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
-    title: "Contact Support | My Store",
-    description: "Get help with your orders, account, or any questions. Our support team is here to assist you."
+    title: "Contact Support | Premium Templates",
+    description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
+    alternates: {
+        canonical: `${domain}/support`
+    },
+    openGraph: {
+        title: "Contact Support | Premium Templates",
+        description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
+        url: `${domain}/support`,
+        type: "website",
+        images: [{
+            url: `${domain}/assets/Icons/cover.jpg`,
+            width: 1200,
+            height: 630,
+            alt: "Contact Support"
+        }]
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Contact Support | Premium Templates",
+        description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
+        images: [`${domain}/assets/Icons/cover.jpg`]
+    }
 };
 
 const supportFeatures = [

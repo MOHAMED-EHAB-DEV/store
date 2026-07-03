@@ -48,7 +48,7 @@ function addSecurityHeaders(response: NextResponse) {
   return response;
 }
 
-const protectedRoutes = ["/dashboard", "/favourites"];
+const protectedRoutes = ["/dashboard", "/favorites"];
 const adminRoutes = ["/admin"];
 
 function isProtectedRoute(pathname: string) {

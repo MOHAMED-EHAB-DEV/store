@@ -6,14 +6,19 @@ export async function generateStaticParams() {
   try {
     await connectToDatabase();
     // Only generate pages for active templates
-    const templates = await Template.find({ isActive: true }).select('_id').lean();
+    const templates = await Template.find({ isActive: true })
+      .select("slug")
+      .lean();
 
     return templates.map((template: any) => ({
-      id: template._id.toString(),
+      id: template.slug.toString(),
     }));
   } catch (error) {
     if (error && typeof error === "object" && "digest" in error) throw error;
-    console.error("Error generating template static params (DB query failed):", error);
+    console.error(
+      "Error generating template static params (DB query failed):",
+      error,
+    );
     return [];
   }
 }

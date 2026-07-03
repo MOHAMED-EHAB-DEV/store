@@ -3,6 +3,13 @@ import RegisterForm from "@/components/Forms/RegisterForm";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Register | MHD Store Premium Templates",
+  description: "Create an account to purchase and download premium Next.js templates.",
+};
+
 const Page = () => {
   return (
     <div className="min-h-screen h-full min-w-screen flex gap-4 flex-col items-center justify-center">

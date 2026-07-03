@@ -26,6 +26,7 @@ export default function robots(): MetadataRoute.Robots {
           "/private/",
           "/*.json$",
           "/user/",
+          "/favorites/",
         ],
       },
       {
@@ -38,7 +39,7 @@ export default function robots(): MetadataRoute.Robots {
           "/blog/*",
           "/support",
         ],
-        disallow: ["/api/", "/admin/", "/dashboard/", "/user/"],
+        disallow: ["/api/", "/admin/", "/dashboard/", "/user/", "/favorites/"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

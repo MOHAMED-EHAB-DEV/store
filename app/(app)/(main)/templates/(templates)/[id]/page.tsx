@@ -112,7 +112,7 @@ export async function generateMetadata({
       title: `${template.title} | Premium Templates`,
       description: template.description?.substring(0, 160),
       url: url,
-      type: "product" as any,
+      type: "website",
       images: template.thumbnail
         ? [
             {

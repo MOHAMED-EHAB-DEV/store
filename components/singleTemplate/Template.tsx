@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
 import Link from "next/link";
 import { Download } from "@/components/ui/svgs/icons/Download";
 import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
@@ -11,6 +9,7 @@ import SimilarTemplate from "../shared/Template";
 import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
 import DownloadBtn from "./DownloadBtn";
 import { ITemplate } from "@/types";
+import TemplateThumbnail from "./TemplateThumbnail";
 
 const Template = async ({ template, similarTemplates }: { template: ITemplate, similarTemplates: ITemplate[] }) => {
     return (
@@ -28,23 +27,12 @@ const Template = async ({ template, similarTemplates }: { template: ITemplate, s
                 averageRating={template.averageRating}
                 reviewCount={template.reviews}
             />
-            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-8 py-10 w-full max-w-screen-2xl mx-auto text-white">
+            <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-8 py-10 w-full max-w-screen mx-auto text-white">
                 {/* Top Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-8 items-start">
                     {/* Thumbnail */}
                     <div className="flex justify-center lg:justify-start">
-                        <Image
-                            src={anyImgUrl(template?.thumbnail, { width: 1200, quality: 80 })}
-                            unoptimized
-                            alt={template.title}
-                            width={600}
-                            height={600}
-                            sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
-                            className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl shadow-lg object-cover"
-                            priority
-                            placeholder="blur"
-                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
-                        />
+                        <TemplateThumbnail thumbnail={template.thumbnail} title={template.title} />
                     </div>
 
                     {/* Template Info */}

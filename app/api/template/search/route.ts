@@ -7,7 +7,7 @@ import {
   createAPIResponse,
   createErrorResponse,
 } from "@/lib/utils/api-helpers";
-import Review from "@/lib/models/Review";
+import Category from "@/lib/models/Category";
 
 function validateSearchParams(req: NextRequest): {
   isValid: boolean;
@@ -183,11 +183,12 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
 
     // Connect to database
     await connectToDatabase();
+    const categoryIds = (await Category.find({ name: { $in: params.categories } }).select("_id")).map((category) => category._id?.toString());
 
     // Execute search with optimized aggregation
     const searchOptions = {
       search: params.search,
-      categories: params.categories,
+      categories: categoryIds as string[],
       tags: params.tags,
       builtWith: params.builtWith,
       priceRange: params.priceRange,
@@ -203,8 +204,8 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
       Template.countDocuments({
         isActive: true,
         ...(params.search && { $text: { $search: params.search } }),
-        ...(params.categories.length > 0 && {
-          categories: { $in: params.categories },
+        ...(categoryIds.length > 0 && {
+          categories: { $in: categoryIds },
         }),
         ...(params.tags.length > 0 && {
           tags: { $in: params.tags },

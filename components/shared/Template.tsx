@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { Star } from "@/components/ui/svgs/icons/Star";
@@ -22,9 +23,37 @@ const Template = ({
     showPrice?: Boolean;
     showActionButtons?: Boolean;
 }) => {
+    const lowResUrl = anyImgUrl(template.thumbnail, { width: 400, quality: 100 });
+    const highResUrl = anyImgUrl(template.thumbnail, { width: 400, original: true });
+    const [imageUrl, setImageUrl] = useState(lowResUrl);
     const { favoriteTemplates, toggleFavorite } = useUser();
     const isFavorite = favoriteTemplates?.some((favTemplate: ITemplate) => favTemplate._id === template._id);
 
+    useEffect(() => {
+        setImageUrl(lowResUrl);
+
+        const loadHighRes = () => {
+            const run = () => {
+                const img = new window.Image();
+                img.src = highResUrl;
+                img.onload = () => {
+                    setImageUrl(highResUrl);
+                };
+            };
+            if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+                window.requestIdleCallback(run);
+            } else {
+                setTimeout(run, 200);
+            }
+        };
+
+        if (document.readyState === "complete") {
+            loadHighRes();
+        } else {
+            window.addEventListener("load", loadHighRes);
+            return () => window.removeEventListener("load", loadHighRes);
+        }
+    }, [lowResUrl, highResUrl]);
     return (
         <Link
             href={`/templates/${template._id}`}
@@ -77,7 +106,7 @@ const Template = ({
 
             {/* Thumbnail */}
             <Image
-                src={anyImgUrl(template.thumbnail, { width: 400, quality: 95 })}
+                src={imageUrl}
                 alt={template.title}
                 width={400}
                 height={288}

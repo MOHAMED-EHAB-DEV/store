@@ -29,6 +29,7 @@ async function deleteAdminTemplate(
       return createErrorResponse("Template not found", 404, { req });
     }
 
+    await revalidateWithTag("categories");
     await revalidate("/");
 
     return createAPIResponse(null, {
@@ -70,6 +71,7 @@ async function updateAdminTemplate(
     }
 
     await revalidateWithTag(`template-${id}`);
+    await revalidateWithTag("categories");
     await revalidate("/");
 
     return createAPIResponse(template, {

@@ -10,7 +10,7 @@ import {
 } from "@/lib/utils/api-helpers";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { uploadToGoogleDrive } from "@/lib/google-drive";
-import revalidate from "@/actions/revalidateTag";
+import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 import { slugify } from "@/lib/utils"
 
 async function getAdminTemplates(request: NextRequest) {
@@ -173,6 +173,7 @@ async function createAdminTemplate(req: NextRequest) {
       views: 0,
     });
 
+    await revalidateWithTag("categories");
     await revalidate("/");
 
     return createAPIResponse(template, {

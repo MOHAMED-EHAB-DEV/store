@@ -8,6 +8,7 @@ import {
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 import { revalidateWithTag } from "@/actions/revalidateTag";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 // GET /api/admin/categories - List all categories
 async function getAdminCategories(request: NextRequest) {
@@ -101,9 +102,32 @@ async function createCategory(request: NextRequest) {
 
     await connectToDatabase();
 
-    const body = await request.json();
-    const { name, description, slug, sortOrder, parentCategory, isActive } =
-      body;
+    let body: any = {};
+    const contentType = request.headers.get("content-type") || "";
+    
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      for (const [key, value] of formData.entries()) {
+        if (key !== "iconFile" && key !== "iconUrl") {
+          if (value === "true") body[key] = true;
+          else if (value === "false") body[key] = false;
+          else body[key] = value;
+        }
+      }
+      const iconFile = formData.get("iconFile") as File | null;
+      const iconUrl = formData.get("iconUrl") as string | null;
+
+      if (iconFile) {
+        const uploadResult = await uploadToCloudinary(iconFile, "categories_icons", "image");
+        body.icon = uploadResult.secure_url;
+      } else if (iconUrl) {
+        body.icon = iconUrl;
+      }
+    } else {
+      body = await request.json();
+    }
+
+    const { name, description, slug, sortOrder, parentCategory, isActive, icon } = body;
 
     if (!name) {
       return createErrorResponse("Category name is required", 400, {
@@ -126,6 +150,7 @@ async function createCategory(request: NextRequest) {
       sortOrder: sortOrder || 0,
       parentCategory: parentCategory || null,
       isActive: isActive ?? true,
+      icon: icon || undefined,
     });
 
     await revalidateWithTag("categories");

@@ -8,6 +8,7 @@ export const CategorySchema = v.object({
   isActive: v.boolean(),
   templateCount: v.number(),
   sortOrder: v.number(),
+  icon: v.optional(v.string()),
   parentCategory: v.optional(v.nullable(v.string())),
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),

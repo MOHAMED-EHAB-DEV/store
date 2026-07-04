@@ -24,6 +24,7 @@ interface Category {
     description?: string;
     templateCount?: number;
     isActive: boolean;
+    icon?: string;
     createdAt: string;
 }
 
@@ -180,9 +181,18 @@ export default function AdminCategoriesClient({
             label: "Name",
             sortable: true,
             render: (category) => (
-                <div>
-                    <p className="text-sm font-medium text-white">{category.name}</p>
-                    <p className="text-xs text-muted-foreground">{category.slug}</p>
+                <div className="flex items-center gap-3">
+                    {category.icon ? (
+                        <img src={category.icon} alt="" className="w-8 h-8 rounded bg-white/5 object-contain p-1" />
+                    ) : (
+                        <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center">
+                            <Grid className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                    )}
+                    <div>
+                        <p className="text-sm font-medium text-white">{category.name}</p>
+                        <p className="text-xs text-muted-foreground">{category.slug}</p>
+                    </div>
                 </div>
             ),
         },

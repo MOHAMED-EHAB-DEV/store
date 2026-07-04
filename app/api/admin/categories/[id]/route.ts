@@ -8,6 +8,7 @@ import {
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 import { revalidateWithTag } from "@/actions/revalidateTag";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -49,8 +50,32 @@ async function updateCategory(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     await connectToDatabase();
 
-    const body = await request.json();
-    const { name, description, slug, sortOrder, parentCategory, isActive } =
+    let body: any = {};
+    const contentType = request.headers.get("content-type") || "";
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      for (const [key, value] of formData.entries()) {
+        if (key !== "iconFile" && key !== "iconUrl") {
+          if (value === "true") body[key] = true;
+          else if (value === "false") body[key] = false;
+          else body[key] = value;
+        }
+      }
+      const iconFile = formData.get("iconFile") as File | null;
+      const iconUrl = formData.get("iconUrl") as string | null;
+
+      if (iconFile) {
+        const uploadResult = await uploadToCloudinary(iconFile, "categories_icons", "image");
+        body.icon = uploadResult.secure_url;
+      } else if (iconUrl) {
+        body.icon = iconUrl;
+      }
+    } else {
+      body = await request.json();
+    }
+
+    const { name, description, slug, sortOrder, parentCategory, isActive, icon } =
       body;
 
     const updateData: any = {};
@@ -61,6 +86,7 @@ async function updateCategory(request: NextRequest, { params }: RouteParams) {
     if (parentCategory !== undefined)
       updateData.parentCategory = parentCategory || null;
     if (isActive !== undefined) updateData.isActive = isActive;
+    if (icon !== undefined) updateData.icon = icon;
 
     const category = await Category.findByIdAndUpdate(id, updateData, {
       new: true,

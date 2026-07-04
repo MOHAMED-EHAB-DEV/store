@@ -29,11 +29,12 @@ async function getPerformanceStats(req: NextRequest) {
       // 1. Global average for each metric
       Analytics.aggregate([
         { $match: { createdAt: { $gte: last30d } } },
-        { $unwind: "$metrics" },
+        { $unwind: "$pages" },
+        { $unwind: "$pages.metrics" },
         {
           $group: {
-            _id: "$metrics.name",
-            average: { $avg: "$metrics.value" },
+            _id: "$pages.metrics.name",
+            average: { $avg: "$pages.metrics.value" },
             count: { $sum: 1 }
           }
         }
@@ -42,12 +43,13 @@ async function getPerformanceStats(req: NextRequest) {
       // 2. Rating distributions (good vs poor)
       Analytics.aggregate([
         { $match: { createdAt: { $gte: last30d } } },
-        { $unwind: "$metrics" },
+        { $unwind: "$pages" },
+        { $unwind: "$pages.metrics" },
         {
           $group: {
             _id: {
-              name: "$metrics.name",
-              rating: "$metrics.rating"
+              name: "$pages.metrics.name",
+              rating: "$pages.metrics.rating"
             },
             count: { $sum: 1 }
           }
@@ -69,14 +71,15 @@ async function getPerformanceStats(req: NextRequest) {
       // 3. Daily trends (for charts)
       Analytics.aggregate([
         { $match: { createdAt: { $gte: last30d } } },
-        { $unwind: "$metrics" },
+        { $unwind: "$pages" },
+        { $unwind: "$pages.metrics" },
         {
           $group: {
             _id: {
-              date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-              name: "$metrics.name"
+              date: "$date",
+              name: "$pages.metrics.name"
             },
-            average: { $avg: "$metrics.value" }
+            average: { $avg: "$pages.metrics.value" }
           }
         },
         { $sort: { "_id.date": 1 } }
@@ -85,12 +88,13 @@ async function getPerformanceStats(req: NextRequest) {
       // 4. Slowest pages (Top 10 paths by highest LCP)
       Analytics.aggregate([
         { $match: { createdAt: { $gte: last30d } } },
-        { $unwind: "$metrics" },
-        { $match: { "metrics.name": "LCP" } },
+        { $unwind: "$pages" },
+        { $unwind: "$pages.metrics" },
+        { $match: { "pages.metrics.name": "LCP" } },
         {
           $group: {
-            _id: "$path",
-            averageLCP: { $avg: "$metrics.value" },
+            _id: "$pages.path",
+            averageLCP: { $avg: "$pages.metrics.value" },
             count: { $sum: 1 }
           }
         },

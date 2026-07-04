@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Analytics from "@/lib/models/Analytics";
 import { createErrorResponse, createAPIResponse } from "@/lib/utils/api-helpers";
@@ -13,19 +13,36 @@ export async function POST(req: NextRequest) {
     }
 
     if (!visitorId) {
-      // If no visitorId, we could skip saving or assign a generic one
       return createErrorResponse("No visitor ID found", 401);
     }
 
+    // Strip id from metrics if it was sent, to save space
+    const cleanMetrics = metrics.map((m: any) => ({
+      name: m.name,
+      value: m.value,
+      rating: m.rating,
+      delta: m.delta
+    }));
+
     await connectToDatabase();
 
-    const analyticsRecord = new Analytics({
-      visitorId,
-      path,
-      metrics,
-    });
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-    await analyticsRecord.save();
+    // 1. Try to push metrics to an existing path for this visitor/date
+    const doc = await Analytics.findOneAndUpdate(
+      { visitorId, date, "pages.path": path },
+      { $push: { "pages.$.metrics": { $each: cleanMetrics } } },
+      { new: true }
+    );
+
+    // 2. If no document was found (either new visitor/date, or new path), upsert the path
+    if (!doc) {
+      await Analytics.findOneAndUpdate(
+        { visitorId, date },
+        { $push: { pages: { path, metrics: cleanMetrics } } },
+        { upsert: true, new: true }
+      );
+    }
 
     return createAPIResponse({ success: true }, { message: "Metrics recorded" });
   } catch (error) {

@@ -10,14 +10,13 @@ interface Metric {
   value: number;
   rating: string;
   delta: number;
-  id: string;
 }
 
 export default function WebVitalsReporter() {
   const pathname = usePathname();
   const queue = useRef<Metric[]>([]);
   const isSending = useRef(false);
-  const visitorId = localStorage.getItem("_vid");
+  const visitorId = typeof window !== 'undefined' ? localStorage.getItem("_vid") : null;
 
   // Send queued metrics to the server
   const flushQueue = () => {
@@ -33,10 +32,10 @@ export default function WebVitalsReporter() {
       visitorId
     });
 
-    // Use sendBeacon for best performance (doesn't block navigation)
-    // Fallback to fetch if sendBeacon is unsupported
+    // Use sendBeacon with Blob for application/json for best performance and reliability
     if (navigator.sendBeacon) {
-      navigator.sendBeacon("/api/analytics/vitals", payload);
+      const blob = new Blob([payload], { type: 'application/json' });
+      navigator.sendBeacon("/api/analytics/vitals", blob);
       isSending.current = false;
     } else {
       fetch("/api/analytics/vitals", {
@@ -61,7 +60,6 @@ export default function WebVitalsReporter() {
       value: metric.value,
       rating,
       delta: metric.delta,
-      id: metric.id,
     });
 
     // Schedule sending metrics when the browser is idle

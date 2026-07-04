@@ -20,7 +20,8 @@ async function getFAQsData(searchParams: { [key: string]: string | undefined }) 
         const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/faqs?${params.toString()}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
 
         if (!response.ok) return null;
-        return await response.json();
+        const data = await response.json()
+        return data;
     } catch (error) {
     if (error && typeof error === 'object' && 'digest' in error) throw error;
         return null;
@@ -33,7 +34,7 @@ interface PageProps {
 
 export default async function AdminFAQsPage({ searchParams }: PageProps) {
     const params = await searchParams;
-    const data = await getFAQsData(params);
+    const { data, pagination } = await getFAQsData(params);
 
     if (!data) {
         return (
@@ -45,19 +46,17 @@ export default async function AdminFAQsPage({ searchParams }: PageProps) {
         );
     }
 
-    const { data2, pagination } = data;
-
     // Default stats if not provided by backend
-    const faqStats = data2.stats || {
+    const faqStats = data.stats || {
         total: pagination?.total || 0,
-        published: data2.items.filter((f: any) => f.isPublished).length,
-        draft: data2.items.filter((f: any) => !f.isPublished).length,
-        categories: [...new Set(data2.items.map((f: any) => f.category))].length
+        published: data.items.filter((f: any) => f.isPublished).length,
+        draft: data.items.filter((f: any) => !f.isPublished).length,
+        categories: [...new Set(data.items.map((f: any) => f.category))].length
     };
 
     return (
         <AdminFAQsClient
-            initialData={data2.items}
+            initialData={data.items}
             stats={faqStats}
             pagination={pagination}
             searchParams={params}

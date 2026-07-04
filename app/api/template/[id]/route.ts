@@ -35,7 +35,9 @@ async function getTemplate(req: NextRequest, context: RouteContext) {
       totalReviews = await Review.countDocuments({ template: template._id });
     }
 
-    return createAPIResponse(template ? { ...template, reviews: totalReviews } : null);
+    return createAPIResponse(
+      template ? { ...template, reviews: totalReviews } : null,
+    );
   } catch (err) {
     return createErrorResponse("Something went wrong", 500, {
       req: req,
@@ -45,24 +47,29 @@ async function getTemplate(req: NextRequest, context: RouteContext) {
   }
 }
 
-
 async function updateTemplate(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
   try {
     const contentType = req.headers.get("content-type") || "";
     let body: any = {};
-    
+
     if (contentType.includes("multipart/form-data")) {
       const formData = await req.formData();
-      
+
       for (const [key, value] of formData.entries()) {
-        if (key === 'categories' || key === 'tags') {
+        if (key === "categories" || key === "tags") {
           if (!body[key]) body[key] = [];
           body[key].push(value as string);
-        } else if (key !== 'thumbnailFile' && key !== 'templateFile' && key !== 'thumbnailUrl' && key !== 'fileKeyStr') {
-          if (value === 'true') body[key] = true;
-          else if (value === 'false') body[key] = false;
-          else if (key === 'price') body[key] = parseFloat(value as string) || 0;
+        } else if (
+          key !== "thumbnailFile" &&
+          key !== "templateFile" &&
+          key !== "thumbnailUrl" &&
+          key !== "fileKeyStr"
+        ) {
+          if (value === "true") body[key] = true;
+          else if (value === "false") body[key] = false;
+          else if (key === "price")
+            body[key] = parseFloat(value as string) || 0;
           else body[key] = value;
         }
       }
@@ -73,17 +80,21 @@ async function updateTemplate(req: NextRequest, context: RouteContext) {
       const fileKeyStr = formData.get("fileKeyStr") as string | null;
 
       if (thumbnailFile) {
-          const uploadResult = await uploadToCloudinary(thumbnailFile, "templates_thumbnails", "image");
-          body.thumbnail = uploadResult.secure_url;
+        const uploadResult = await uploadToCloudinary(
+          thumbnailFile,
+          "templates_thumbnails",
+          "image",
+        );
+        body.thumbnail = uploadResult.secure_url;
       } else if (thumbnailUrl) {
-          body.thumbnail = thumbnailUrl;
+        body.thumbnail = thumbnailUrl;
       }
 
       if (templateFile) {
-          const driveFileId = await uploadToGoogleDrive(templateFile);
-          body.fileKey = driveFileId;
+        const driveFileId = await uploadToGoogleDrive(templateFile);
+        body.fileKey = driveFileId;
       } else if (fileKeyStr) {
-          body.fileKey = fileKeyStr;
+        body.fileKey = fileKeyStr;
       }
     } else {
       body = await req.json();
@@ -93,12 +104,9 @@ async function updateTemplate(req: NextRequest, context: RouteContext) {
 
     revalidate(`template-${id}`);
 
-    return createAPIResponse(
-      updated,
-      {
-        message: "Template Updated Successfully",
-      },
-    );
+    return createAPIResponse(updated, {
+      message: "Template Updated Successfully",
+    });
   } catch (err) {
     return createErrorResponse("Something went wrong", 500, {
       req: req,

@@ -21,7 +21,7 @@ const CategoriesSection = async () => {
           <Badge className="mb-6 bg-linear-to-r from-blue-500 to-teal-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
             Browse Categories
           </Badge>
-          <h2 id="categories-heading" className="header text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-paras leading-none tracking-tight">
+          <h2 id="categories-heading" className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-paras leading-none tracking-tight">
             Find the Perfect{" "}
             <span className="relative">
               Fit
@@ -31,7 +31,7 @@ const CategoriesSection = async () => {
               />
             </span>
           </h2>
-          <p className="text-medium-contrast header text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
+          <p className="text-medium-contrast text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
             Explore our templates by category to quickly find exactly what you need for your next project.
           </p>
         </div>

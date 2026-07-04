@@ -52,7 +52,7 @@ const ReviewsContainer = ({
       );
       const data = await res.json();
 
-      if (data.reviews.length < 6) {
+      if (data.reviews?.length < 6) {
         setHasMore(false);
       }
 

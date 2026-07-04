@@ -86,9 +86,13 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 submitData.append(key, value.toString());
             });
 
+            console.log(formData.categories);
+
             formData.categories.forEach((cat: string) => {
                 submitData.append('categories', cat);
             });
+
+            console.log(submitData.get('categories'));
 
             const tagsList = formData.tags.split(",").map((t: string) => t.trim()).filter(Boolean);
             tagsList.forEach((tag: string) => {
@@ -110,7 +114,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
             }
 
             const url = isEdit
-                ? `/api/template/${initialData._id}`
+                ? `/api/admin/template/${initialData._id}`
                 : "/api/admin/templates";
 
             const response = await fetch(url, {

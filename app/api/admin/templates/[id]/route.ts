@@ -9,6 +9,7 @@ import {
   validatePagination,
 } from "@/lib/utils/api-helpers";
 import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
+import Category from "@/lib/models/Category";
 
 async function deleteAdminTemplate(
   req: NextRequest,
@@ -27,6 +28,13 @@ async function deleteAdminTemplate(
 
     if (!template) {
       return createErrorResponse("Template not found", 404, { req });
+    }
+
+    if (template.categories) {
+      await Category.updateMany(
+        { _id: { $in: template.categories } },
+        { $inc: { templateCount: -1 } },
+      );
     }
 
     await revalidateWithTag("categories");
@@ -63,11 +71,36 @@ async function updateAdminTemplate(
     const template = await Template.findByIdAndUpdate(
       id,
       { $set: body },
-      { new: true, runValidators: true },
+      { runValidators: true },
     );
 
     if (!template) {
       return createErrorResponse("Template not found", 404, { req });
+    }
+
+    // If categories are changed, exactly calculate additions and removals
+    if (body.categories) {
+      const oldCats = (template.categories || []).map((c: any) => c.toString());
+      const newCats = body.categories.map((c: any) => c.toString());
+
+      const added = newCats.filter((c: string) => !oldCats.includes(c));
+      const removed = oldCats.filter((c: string) => !newCats.includes(c));
+
+      console.log(added, removed);
+
+      if (removed.length > 0) {
+        await Category.updateMany(
+          { _id: { $in: removed } },
+          { $inc: { templateCount: -1 } },
+        );
+      }
+      
+      if (added.length > 0) {
+        await Category.updateMany(
+          { _id: { $in: added } },
+          { $inc: { templateCount: 1 } },
+        );
+      }
     }
 
     await revalidateWithTag(`template-${id}`);
@@ -100,7 +133,11 @@ async function getAdminTemplate(
     const { id } = await params;
     await connectToDatabase();
 
-    const template = await Template.findById(id).select("title description content categories tags demoLink price thumbnail builtWith type isPaid").lean();
+    const template = await Template.findById(id)
+      .select(
+        "title description content categories tags demoLink price thumbnail builtWith type isPaid",
+      )
+      .lean();
 
     if (!template) {
       return createErrorResponse("Template not found", 404, { req });

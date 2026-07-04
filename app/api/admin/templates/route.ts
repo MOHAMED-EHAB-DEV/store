@@ -11,7 +11,8 @@ import {
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { uploadToGoogleDrive } from "@/lib/google-drive";
 import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
-import { slugify } from "@/lib/utils"
+import { slugify } from "@/lib/utils";
+import Category from "@/lib/models/Category";
 
 async function getAdminTemplates(request: NextRequest) {
   try {
@@ -154,6 +155,11 @@ async function createAdminTemplate(req: NextRequest) {
     } else if (fileKeyStr) {
       body.fileKey = fileKeyStr;
     }
+
+    await Category.updateMany(
+      { _id: { $in: body.categories } },
+      { $inc: { templateCount: 1 } },
+    );
 
     let baseSlug = slugify(body.title || "template");
     let slug = baseSlug;

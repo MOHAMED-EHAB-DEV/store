@@ -338,13 +338,13 @@ TemplateSchema.statics.searchTemplates = function (
 
   // Build match stage
   const matchStage: any = { isActive: true };
+  
+  const searchTerms = search ? search.trim().split(/\s+/) : [];
 
   if (search) {
-    const regex = { $regex: search?.trim(), $options: "i" };
     matchStage.$or = [
-      {
-        title: regex,
-      },
+      { title: { $regex: search.trim(), $options: "i" } },
+      ...searchTerms.map(term => ({ title: { $regex: term, $options: "i" } }))
     ];
   }
 
@@ -394,13 +394,65 @@ TemplateSchema.statics.searchTemplates = function (
       sortStage = { downloads: -1, averageRating: -1 };
       break;
     default: // popular
-      sortStage = search
-        ? { averageRating: -1, downloads: -1 }
+      sortStage = (search || tags.length > 0 || builtWith.length > 0)
+        ? { searchScore: -1, averageRating: -1, downloads: -1 }
         : { downloads: -1, averageRating: -1 };
   }
 
+  const scoreStage = {
+    $addFields: {
+      searchScore: {
+        $add: [
+          0,
+          ...(search ? [{
+            $cond: [
+              { $regexMatch: { input: { $ifNull: ["$title", ""] }, regex: search.trim(), options: "i" } },
+              10,
+              0,
+            ]
+          }] : []),
+          ...(searchTerms.length > 0 ? searchTerms.map(term => ({
+            $cond: [
+              { $regexMatch: { input: { $ifNull: ["$title", ""] }, regex: term, options: "i" } },
+              5,
+              0
+            ]
+          })) : []),
+          ...(builtWith.length > 0 ? [{
+            $multiply: [
+              {
+                $size: {
+                  $setIntersection: [
+                    { $ifNull: ["$builtWith", []] },
+                    builtWith,
+                  ],
+                },
+              },
+              3,
+            ]
+          }] : []),
+          ...(tags.length > 0 ? [{
+            $size: {
+              $setIntersection: [
+                {
+                  $map: {
+                    input: { $ifNull: ["$tags", []] },
+                    as: "t",
+                    in: { $toLower: "$$t" },
+                  },
+                },
+                tags.map((t) => t.toLowerCase()),
+              ],
+            },
+          }] : [])
+        ]
+      }
+    }
+  };
+
   const pipeline = [
     { $match: matchStage },
+    scoreStage,
     { $sort: sortStage },
     { $skip: skip },
     { $limit: limit },

@@ -91,13 +91,13 @@ export default function CategoriesCarousel({
               >
                 <Link
                   href={`/templates/category/${category.slug}`}
-                  className="group relative flex flex-col h-[320px] p-6 rounded-3xl bg-card/40 backdrop-blur-md border border-border/50 overflow-hidden transition-all duration-500 hover:bg-card/60 hover:border-accent/40 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:hover:shadow-none"
+                  className="group relative flex flex-col h-[280px] p-6 rounded-3xl bg-card/40 backdrop-blur-md border border-border/50 overflow-hidden transition-all duration-500 hover:bg-card/60 hover:border-accent/40 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:hover:shadow-none"
                 >
                   {/* Bottom gradient bar that appears on hover */}
                   {/* <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" /> */}
 
                   {/* Large Background Icon */}
-                  <div className="absolute -rotate-12 top-4/7 -right-16 w-44 h-44 opacity-[0.15] group-hover:opacity-30 group-hover:scale-110 transition-all duration-700 pointer-events-none select-none text-white">
+                  <div className="absolute -rotate-12 top-4/7 -right-14 w-44 h-44 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none select-none text-white">
                     <Icon className="w-full h-full drop-shadow-2xl" />
                   </div>
 

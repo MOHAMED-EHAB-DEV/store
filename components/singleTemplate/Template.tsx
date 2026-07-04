@@ -77,15 +77,7 @@ const Template = async ({
             </div>
           </div>
 
-          {/* Built With */}
-          <div>
-            <h2 className="text-white/60 text-sm font-semibold mb-2">
-              Built With
-            </h2>
-            <span className="py-1 px-3 bg-purple-500/20 text-purple-300 rounded-lg text-sm">
-              {capitalizeFirstChar(template.builtWith as string)}
-            </span>
-          </div>
+
         </div>
 
         {/* Right Panel */}

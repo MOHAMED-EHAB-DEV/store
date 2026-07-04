@@ -14,7 +14,6 @@ import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { Search } from "@/components/ui/svgs/icons/Search";
 import { ICategory, ITemplate } from "@/types";
-import { builtWithOptions } from "@/constants";
 
 const Templates = ({
   initialData,
@@ -120,15 +119,7 @@ const Templates = ({
     }));
   }, [allTags, searchParams.tags]);
 
-  const selectedBuiltWithOptions = useMemo(() => {
-    const selected = Array.isArray(searchParams.builtWith)
-      ? searchParams.builtWith
-      : ([searchParams.builtWith].filter(Boolean) as string[]);
-    return builtWithOptions.map((opt) => ({
-      ...opt,
-      selected: selected.includes(opt.text.toLowerCase()),
-    }));
-  }, [searchParams.builtWith]);
+
 
   return (
     <div className="flex flex-col gap-5">
@@ -163,13 +154,6 @@ const Templates = ({
               .filter((t) => t.selected)
               .map((t) => t.tag);
             updateFilters({ tags: selected });
-          }}
-          builtWithOptions={selectedBuiltWithOptions}
-          setBuiltWithOptions={(updated) => {
-            const selected = (updated as any[])
-              .filter((b) => b.selected)
-              .map((b) => b.text.toLowerCase());
-            updateFilters({ builtWith: selected });
           }}
           minPrice={Number(searchParams.minPrice) || 0}
           maxPrice={Number(searchParams.maxPrice) || 0}

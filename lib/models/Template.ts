@@ -16,7 +16,6 @@ export interface ITemplate extends Document {
   downloads: number;
   averageRating: number;
   isActive: boolean; // Add for soft delete
-  builtWith: "framer" | "figma" | "vite" | "next.js";
   views: number;
   reviewCount: number;
   type: "framer" | "coded" | "figma";
@@ -120,12 +119,6 @@ const TemplateSchema = new Schema<ITemplate>(
       required: true,
       trim: true,
     },
-    builtWith: {
-      type: String,
-      enum: ["vite", "figma", "framer", "next.js"],
-      required: true,
-      index: true,
-    },
     type: {
       type: String,
       enum: ["coded", "framer", "figma"],
@@ -161,7 +154,6 @@ TemplateSchema.index({ isActive: 1, lastViewedAt: -1 }); // Trending templates
 TemplateSchema.index({ author: 1, isActive: 1, createdAt: -1 }); // Author's templates
 TemplateSchema.index({ categories: 1, isActive: 1, averageRating: -1 }); // Category templates
 TemplateSchema.index({ tags: 1, isActive: 1, downloads: -1 }); // Tag-based search
-TemplateSchema.index({ builtWith: 1, isActive: 1, averageRating: -1 }); // Built-with filter
 TemplateSchema.index({ price: 1, isActive: 1, averageRating: -1 }); // Price filtering
 TemplateSchema.index({ views: -1, isActive: 1 }); // Most viewed
 TemplateSchema.index({ reviewCount: -1, isActive: 1 }); // Most reviewed
@@ -259,7 +251,6 @@ TemplateSchema.statics.findPopularTemplates = function (
         author: 1,
         categories: 1,
         tags: 1,
-        builtWith: 1,
         createdAt: 1,
         popularityScore: 1,
       },
@@ -302,7 +293,6 @@ TemplateSchema.statics.findByCategory = function (
         averageRating: 1,
         reviewCount: 1,
         author: 1,
-        builtWith: 1,
         createdAt: 1,
       },
     },
@@ -314,7 +304,6 @@ TemplateSchema.statics.searchTemplates = function (
     search?: string;
     categories?: string[];
     tags?: string[];
-    builtWith?: string[];
     priceRange?: { min?: number; max?: number };
     minRating?: number;
     sortBy?: "popular" | "recent" | "rating" | "price" | "downloads";
@@ -328,7 +317,6 @@ TemplateSchema.statics.searchTemplates = function (
     search,
     categories = [],
     tags = [],
-    builtWith = [],
     priceRange,
     minRating,
     sortBy = "popular",
@@ -362,10 +350,6 @@ TemplateSchema.statics.searchTemplates = function (
     };
   }
 
-  if (builtWith.length > 0) {
-    matchStage.builtWith = { $in: builtWith };
-  }
-
   if (type) matchStage.type = type;
 
   if (priceRange) {
@@ -394,7 +378,7 @@ TemplateSchema.statics.searchTemplates = function (
       sortStage = { downloads: -1, averageRating: -1 };
       break;
     default: // popular
-      sortStage = (search || tags.length > 0 || builtWith.length > 0)
+      sortStage = (search || tags.length > 0)
         ? { searchScore: -1, averageRating: -1, downloads: -1 }
         : { downloads: -1, averageRating: -1 };
   }
@@ -418,19 +402,6 @@ TemplateSchema.statics.searchTemplates = function (
               0
             ]
           })) : []),
-          ...(builtWith.length > 0 ? [{
-            $multiply: [
-              {
-                $size: {
-                  $setIntersection: [
-                    { $ifNull: ["$builtWith", []] },
-                    builtWith,
-                  ],
-                },
-              },
-              3,
-            ]
-          }] : []),
           ...(tags.length > 0 ? [{
             $size: {
               $setIntersection: [
@@ -502,7 +473,6 @@ TemplateSchema.statics.searchTemplates = function (
         author: 1,
         categories: 1,
         tags: 1,
-        builtWith: 1,
         createdAt: 1,
         ...(includedFields?.length && includedFields.reduce((acc, field) => {
           acc[field] = 1;
@@ -550,7 +520,6 @@ TemplateSchema.statics.findFreeTemplates = function (limit = 20, skip = 0) {
         reviewCount: 1,
         author: 1,
         categories: 1,
-        builtWith: 1,
         createdAt: 1,
       },
     },
@@ -577,17 +546,6 @@ TemplateSchema.statics.getTemplateStats = function () {
               paidTemplates: {
                 $sum: { $cond: [{ $gt: ["$price", 0] }, 1, 0] },
               },
-            },
-          },
-        ],
-        byBuiltWith: [
-          { $match: { isActive: true } },
-          {
-            $group: {
-              _id: "$builtWith",
-              count: { $sum: 1 },
-              totalDownloads: { $sum: "$downloads" },
-              averageRating: { $avg: "$averageRating" },
             },
           },
         ],
@@ -667,7 +625,6 @@ TemplateSchema.statics.getTrendingTemplates = function (days = 7, limit = 20) {
         views: 1,
         averageRating: 1,
         author: 1,
-        builtWith: 1,
         trendingScore: 1,
       },
     },
@@ -714,7 +671,6 @@ export interface ITemplateModel extends Model<ITemplate> {
       search?: string;
       categories?: string[];
       tags?: string[];
-      builtWith?: string[];
       priceRange?: { min?: number; max?: number };
       minRating?: number;
       sortBy?: "popular" | "recent" | "rating" | "price" | "downloads";

@@ -19,7 +19,7 @@ async function handleGET(req: NextRequest) {
       .select("favorites")
       .populate(
         "favorites",
-        "_id title description thumbnail price averageRating downloads categories tags demoLink builtWith createdAt",
+        "_id title description thumbnail price averageRating downloads categories tags demoLink createdAt",
       );
 
     if (!userData) return createErrorResponse("User not found", 404, { req });

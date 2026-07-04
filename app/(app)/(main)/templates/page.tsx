@@ -11,7 +11,7 @@ export async function generateMetadata({
   searchParams,
 }: MetadataProps): Promise<Metadata> {
   const params = await searchParams;
-  const builtWith = params?.builtWith;
+
   const categories = params?.categories;
 
   let title = "Browse Templates | Mohammed Ehab Store";
@@ -24,9 +24,6 @@ export async function generateMetadata({
       categories.charAt(0).toUpperCase() + categories.slice(1);
     title = `${categoryName} Templates | Premium Web Templates`;
     description = `Browse our premium collection of ${categoryName} templates. High-quality, modern, and optimized for your next project.`;
-  } else if (builtWith && typeof builtWith === "string") {
-    title = `${builtWith} Templates | Premium Web Templates`;
-    description = `Explore top-tier templates built with ${builtWith}. Perfect for SaaS, e-commerce, and portfolios.`;
   }
 
   const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";

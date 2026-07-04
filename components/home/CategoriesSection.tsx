@@ -5,9 +5,9 @@ import CategoriesCarousel from "./CategoriesCarousel";
 
 const CategoriesSection = async () => {
   const categories: ICategory[] = await getCategories();
-  
+
   // Filter out categories with 0 templates
-  const activeCategories = categories;
+  const activeCategories = categories.filter(c => c.templateCount > 0);
 
   if (!activeCategories || activeCategories.length === 0) {
     return null;

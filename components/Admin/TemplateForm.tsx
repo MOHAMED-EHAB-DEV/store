@@ -35,7 +35,6 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         content: initialData?.content || "",
         categories: initialData?.categories?.map((c: any) => c._id || c) || [],
         tags: initialData?.tags?.join(", ") || "",
-        builtWith: initialData?.builtWith || "next.js",
         type: initialData?.type || "coded",
         isPaid: initialData?.isPaid ?? true,
         isActive: initialData?.isActive ?? true,
@@ -86,13 +85,9 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 submitData.append(key, value.toString());
             });
 
-            console.log(formData.categories);
-
             formData.categories.forEach((cat: string) => {
                 submitData.append('categories', cat);
             });
-
-            console.log(submitData.get('categories'));
 
             const tagsList = formData.tags.split(",").map((t: string) => t.trim()).filter(Boolean);
             tagsList.forEach((tag: string) => {
@@ -114,7 +109,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
             }
 
             const url = isEdit
-                ? `/api/admin/template/${initialData._id}`
+                ? `/api/admin/templates/${initialData._id}`
                 : "/api/admin/templates";
 
             const response = await fetch(url, {
@@ -248,25 +243,8 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                     </div>
                 </div>
 
-                {/* Built With & Type */}
+                {/* Type */}
                 <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Built With</label>
-                        <Select
-                            value={formData.builtWith}
-                            onValueChange={(val) => setFormData(prev => ({ ...prev, builtWith: val }))}
-                        >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Built With" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                                <SelectItem value="framer">Framer</SelectItem>
-                                <SelectItem value="figma">Figma</SelectItem>
-                                <SelectItem value="vite">Vite</SelectItem>
-                                <SelectItem value="next.js">Next.js</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Type</label>
                         <Select

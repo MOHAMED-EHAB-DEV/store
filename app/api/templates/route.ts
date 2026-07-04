@@ -33,7 +33,6 @@ function validateSimilarParams(req: NextRequest): {
                 ?.split(",")
                 .map((tag) => tag.trim().toLowerCase())
                 .filter(Boolean) || [];
-        const builtWith = searchParams.get("builtWith");
         const limit = Number(searchParams.get("limit")) || 3;
 
         return {
@@ -42,7 +41,6 @@ function validateSimilarParams(req: NextRequest): {
                 excludeId,
                 categories,
                 tags,
-                builtWith,
                 limit,
             },
         };
@@ -60,7 +58,6 @@ function generateSimilarCacheKey(req: NextRequest): string {
         searchParams.get("excludeId") || "",
         searchParams.get("categories") || "",
         searchParams.get("tags") || "",
-        searchParams.get("builtWith") || "",
         searchParams.get("limit") || "3",
     ].join("|");
 
@@ -77,7 +74,7 @@ async function getSimilarTemplatesHandler(
             return createErrorResponse(validation.error!, 400);
         }
 
-        const { excludeId, categories, tags, builtWith, limit } = validation.params;
+        const { excludeId, categories, tags, limit } = validation.params;
 
         await connectToDatabase();
 
@@ -100,15 +97,11 @@ async function getSimilarTemplatesHandler(
         if (tags.length > 0) {
             matchConditions.$or.push({ tags: { $in: tags } });
         }
-        if (builtWith && builtWith.length > 0) {
-            // if builtWith is comma separated you can split it earlier; keeping original behavior
-            matchConditions.$or.push({ builtWith: { $in: [builtWith] } });
-        }
 
         // If no similarity criteria provided → return error
         if (matchConditions.$or.length === 0) {
             return createErrorResponse(
-                "At least one of categories, tags, or builtWith must be provided",
+                "At least one of categories or tags must be provided",
                 400
             );
         }
@@ -157,7 +150,6 @@ async function getSimilarTemplatesHandler(
                     author: 1,
                     categories: 1,
                     tags: 1,
-                    builtWith: 1,
                     createdAt: 1,
                 },
             },

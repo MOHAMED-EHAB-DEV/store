@@ -260,7 +260,7 @@ export default function TemplatesTable({ templates, pagination, searchParams }: 
                         <div className="flex gap-2">
                             {pagination.page > 1 && (
                                 <Link
-                                    href={`/admin/templates?page=${pagination.page - 1}&type=${searchParams.type || ""}&builtWith=${searchParams.builtWith || ""}&isActive=${searchParams.isActive || ""}`}
+                                    href={`/admin/templates?page=${pagination.page - 1}&type=${searchParams.type || ""}&isActive=${searchParams.isActive || ""}`}
                                     className="px-3 py-1 bg-white/5 rounded text-sm text-white hover:bg-white/10"
                                 >
                                     Previous
@@ -268,7 +268,7 @@ export default function TemplatesTable({ templates, pagination, searchParams }: 
                             )}
                             {pagination.page < pagination.pages && (
                                 <Link
-                                    href={`/admin/templates?page=${pagination.page + 1}&type=${searchParams.type || ""}&builtWith=${searchParams.builtWith || ""}&isActive=${searchParams.isActive || ""}`}
+                                    href={`/admin/templates?page=${pagination.page + 1}&type=${searchParams.type || ""}&isActive=${searchParams.isActive || ""}`}
                                     className="px-3 py-1 bg-white/5 rounded text-sm text-white hover:bg-white/10"
                                 >
                                     Next

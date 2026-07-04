@@ -10,6 +10,8 @@ import {
 } from "@/lib/utils/api-helpers";
 import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 import Category from "@/lib/models/Category";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToGoogleDrive } from "@/lib/google-drive";
 
 async function deleteAdminTemplate(
   req: NextRequest,
@@ -66,7 +68,48 @@ async function updateAdminTemplate(
     const { id } = await params;
     await connectToDatabase();
 
-    const body = await req.json();
+    const formData = await req.formData();
+    const body: any = {};
+
+    for (const [key, value] of formData.entries()) {
+      if (key === "categories" || key === "tags") {
+        if (!body[key]) body[key] = [];
+        body[key].push(value as string);
+      } else if (
+        key !== "thumbnailFile" &&
+        key !== "templateFile" &&
+        key !== "thumbnailUrl" &&
+        key !== "fileKeyStr"
+      ) {
+        if (value === "true") body[key] = true;
+        else if (value === "false") body[key] = false;
+        else if (key === "price") body[key] = parseFloat(value as string) || 0;
+        else body[key] = value;
+      }
+    }
+
+    const thumbnailFile = formData.get("thumbnailFile") as File | null;
+    const templateFile = formData.get("templateFile") as File | null;
+    const thumbnailUrl = formData.get("thumbnailUrl") as string | null;
+    const fileKeyStr = formData.get("fileKeyStr") as string | null;
+
+    if (thumbnailFile) {
+      const uploadResult = await uploadToCloudinary(
+        thumbnailFile,
+        "templates_thumbnails",
+        "image",
+      );
+      body.thumbnail = uploadResult.secure_url;
+    } else if (thumbnailUrl) {
+      body.thumbnail = thumbnailUrl;
+    }
+
+    if (templateFile) {
+      const driveFileId = await uploadToGoogleDrive(templateFile);
+      body.fileKey = driveFileId;
+    } else if (fileKeyStr) {
+      body.fileKey = fileKeyStr;
+    }
 
     const template = await Template.findByIdAndUpdate(
       id,
@@ -135,7 +178,7 @@ async function getAdminTemplate(
 
     const template = await Template.findById(id)
       .select(
-        "title description content categories tags demoLink price thumbnail builtWith type isPaid",
+        "title description content categories tags demoLink price thumbnail type isPaid",
       )
       .lean();
 
@@ -153,6 +196,36 @@ async function getAdminTemplate(
   }
 }
 
+async function disableTemplate(req: NextRequest, { params }: { params: Promise<{ id: string }> },) {
+  try {
+    const { id } = await params;
+    const user = await authenticateUser(true);
+    if (!user || user.role !== "admin") {
+      return createErrorResponse("Unauthorized", 401, { req });
+    }
+
+    await Template.findByIdAndUpdate(id, {
+      isActive: false,
+    }); // soft delete
+
+    revalidate(`template-${id}`);
+
+    return createAPIResponse(
+      {},
+      {
+        message: "Template disabled successfully",
+      },
+    );
+  } catch (err) {
+    return createErrorResponse("Something went wrong", 500, {
+      req: req,
+      error: err,
+      operation: "disablePublicTemplate",
+    });
+  }
+}
+
 export const DELETE = withAPIMiddleware(deleteAdminTemplate);
 export const PATCH = withAPIMiddleware(updateAdminTemplate);
 export const GET = withAPIMiddleware(getAdminTemplate);
+export const POST = withAPIMiddleware(disableTemplate);

@@ -17,7 +17,6 @@ export const TemplateSchema = v.object({
   gradient: v.optional(v.string()),
   reviews: v.optional(v.number()),
   isActive: v.boolean(),
-  builtWith: v.union([v.literal("framer"), v.literal("figma"), v.literal("vite"), v.literal("next.js")]),
   views: v.number(),
   reviewCount: v.number(),
   type: v.union([v.literal("coded"), v.literal("framer"), v.literal("figma")]),

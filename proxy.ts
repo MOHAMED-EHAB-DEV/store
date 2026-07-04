@@ -74,6 +74,12 @@ function isAuthRoute(pathname: string) {
   );
 }
 
+function isAdminApiRoute(pathname: string) {
+  return (
+    pathname.startsWith("/api/admin")
+  );
+}
+
 export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const token = req.cookies.get("token")?.value;
@@ -94,6 +100,8 @@ export async function proxy(req: NextRequest) {
   // 2. Rate Limiting for API routes
   if (isApiRoute(pathname)) {
     const isAuth = isAuthRoute(pathname);
+    const isAdmin = isAdminApiRoute(pathname);
+    if (isAdmin) return;
     const limitResult = RateLimiter.check(
       clientIP + (isAuth ? ":auth" : ":api"),
       isAuth ? 5 : 60, // 5 per 15min for auth, 60 per 15min for rest

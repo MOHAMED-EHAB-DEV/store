@@ -41,7 +41,6 @@ const getTemplate = async (id: string) => {
 
 const getSimilarTemplates = async (
   categoryIds: (string | ICategory)[],
-  builtWith: string,
   tags: string[],
   excludeId: string,
 ) => {
@@ -49,7 +48,6 @@ const getSimilarTemplates = async (
     const queryParams = new URLSearchParams({
       categories: categoryIds.join(","),
       tags: tags.join(","),
-      builtWith,
       excludeId,
       limit: "3",
     });
@@ -97,11 +95,9 @@ export async function generateMetadata({
   return {
     title: `${template.title} | MHD Store Premium Templates`,
     description:
-      template.description?.substring(0, 160) ||
-      `Premium ${template.builtWith} template - ${template.title}`,
+      `Premium template - ${template.title}`,
     keywords: [
       ...(template.tags || []),
-      template.builtWith || "",
       "template",
       "web template",
     ].filter(Boolean),
@@ -144,7 +140,6 @@ const Page = async ({ params }: PageProps) => {
 
   const { data: similarTemplates } = await getSimilarTemplates(
     template.categories || [],
-    template.builtWith,
     template.tags || [],
     id,
   );
@@ -173,7 +168,6 @@ const Page = async ({ params }: PageProps) => {
         reviewCount: template.reviewCount || 1,
       },
     }),
-    category: template.builtWith,
     brand: {
       "@type": "Brand",
       name: "Premium Templates",

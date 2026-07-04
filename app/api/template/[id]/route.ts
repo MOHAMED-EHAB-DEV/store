@@ -116,54 +116,5 @@ async function updateTemplate(req: NextRequest, context: RouteContext) {
   }
 }
 
-async function disableTemplate(req: NextRequest, context: RouteContext) {
-  const { id } = await context.params;
-  try {
-    await Template.findByIdAndUpdate(id, {
-      isActive: false,
-    }); // soft delete
-
-    revalidate(`template-${id}`);
-
-    return createAPIResponse(
-      {},
-      {
-        message: "Template disabled successfully",
-      },
-    );
-  } catch (err) {
-    return createErrorResponse("Something went wrong", 500, {
-      req: req,
-      error: err,
-      operation: "disablePublicTemplate",
-    });
-  }
-}
-
-async function deleteTemplate(req: NextRequest, context: RouteContext) {
-  const { id } = await context.params;
-  try {
-    await Template.findByIdAndDelete(id); // Delete from database
-
-    revalidate(`template-${id}`);
-
-    return createAPIResponse(
-      {},
-      {
-        message: "Template deleted successfully",
-      },
-    );
-  } catch (err) {
-    if (err && typeof err === "object" && "digest" in err) throw err;
-    return createErrorResponse("Something went wrong", 500, {
-      req: req,
-      error: err,
-      operation: "deletePublicTemplate",
-    });
-  }
-}
-
 export const GET = withAPIMiddleware(getTemplate);
 export const PATCH = withAPIMiddleware(updateTemplate);
-export const POST = withAPIMiddleware(disableTemplate);
-export const DELETE = withAPIMiddleware(deleteTemplate);

@@ -1,7 +1,4 @@
-import React, { useState } from "react";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
-import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
-import { Search } from "@/components/ui/svgs/icons/Search";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import {
   Popover,
@@ -9,7 +6,6 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Input } from "@/components/ui/input";
@@ -33,8 +29,6 @@ const FilterOptions = ({
   setCategories,
   tags,
   setTags,
-  builtWithOptions,
-  setBuiltWithOptions,
   minPrice,
   maxPrice,
   setMinPrice,
@@ -48,18 +42,7 @@ const FilterOptions = ({
   setCategories: (updated: ({ selected: boolean } & ICategory)[]) => void;
   tags: { tag: string; selected: boolean }[];
   setTags: (updated: { tag: string; selected: boolean }[]) => void;
-  builtWithOptions: {
-    Icon: ({ className }: { className?: string }) => React.JSX.Element;
-    text: string;
-    selected: boolean;
-  }[];
-  setBuiltWithOptions: (
-    updated: {
-      Icon: ({ className }: { className?: string }) => React.JSX.Element;
-      text: string;
-      selected: boolean;
-    }[],
-  ) => void;
+
   minPrice: number;
   maxPrice: number;
   setMinPrice: (val: number) => void;
@@ -160,54 +143,7 @@ const FilterOptions = ({
           </div>
         </fieldset>
       )}
-      {builtWithOptions.length > 0 && (
-        <fieldset className="border-none p-0 m-0">
-          <legend className="text-white/60 text-xl font-semibold mb-5">
-            Built With
-          </legend>
-          <div
-            className="flex flex-wrap gap-2"
-            role="group"
-            aria-label="Filter by Technologies"
-          >
-            {builtWithOptions?.map(
-              (
-                obj: {
-                  Icon: ({
-                    className,
-                  }: {
-                    className: string;
-                  }) => React.JSX.Element;
-                  text: string;
-                  selected: boolean;
-                },
-                idx,
-              ) => (
-                <button
-                  key={idx}
-                  type="button"
-                  aria-pressed={obj.selected}
-                  className={`py-2 px-3 cursor-pointer ${obj.selected ? "bg-[#1E293B] text-[#3B82F6]" : "bg-white/20 text-white/80"} hover:bg-primary transition-colors rounded-md text-sm flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
-                  onClick={() => {
-                    const updated = [...builtWithOptions];
-                    updated[idx].selected = !updated[idx].selected;
-                    setBuiltWithOptions(updated);
-                    sendGTMEvent({
-                      event: "filter_change",
-                      filter_type: "built_with",
-                      filter_value: obj.text,
-                      is_selected: updated[idx].selected,
-                    });
-                  }}
-                >
-                  <obj.Icon className="w-4 h-4" aria-hidden="true" />
-                  {obj.text}
-                </button>
-              ),
-            )}
-          </div>
-        </fieldset>
-      )}
+
       <div className="flex flex-col gap-2">
         <label
           id="sort-by-label"

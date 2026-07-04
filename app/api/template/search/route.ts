@@ -31,12 +31,6 @@ function validateSearchParams(req: NextRequest): {
         ?.split(",")
         .map((tag) => tag.trim().toLowerCase())
         .filter(Boolean) || [];
-    const builtWith =
-      searchParams
-        .get("builtWith")
-        ?.split(",")
-        .map((tech) => tech.trim())
-        .filter(Boolean) || [];
     const type = searchParams.get("type") || "";
     const sortBy = searchParams.get("sortBy") || "popular";
 
@@ -92,16 +86,7 @@ function validateSearchParams(req: NextRequest): {
       };
     }
 
-    // BuiltWith validation
-    const allowedBuiltWith = ["vite", "figma", "framer", "next.js"];
-    for (const tech of builtWith) {
-      if (!allowedBuiltWith.includes(tech)) {
-        return {
-          isValid: false,
-          error: `builtWith must contain only: ${allowedBuiltWith.join(", ")}`,
-        };
-      }
-    }
+
 
     // type validation
     const allowedTypes = ["framer", "coded", "figma"];
@@ -131,7 +116,6 @@ function validateSearchParams(req: NextRequest): {
         search,
         categories,
         tags,
-        builtWith,
         priceRange: Object.keys(priceRange).length > 0 ? priceRange : undefined,
         minRating: minRatingValue,
         sortBy,
@@ -154,7 +138,6 @@ function generateCacheKey(req: NextRequest): string {
     searchParams.get("search") || "",
     searchParams.get("categories") || "",
     searchParams.get("tags") || "",
-    searchParams.get("builtWith") || "",
     searchParams.get("type") || "",
     searchParams.get("minPrice") || "",
     searchParams.get("maxPrice") || "",
@@ -190,7 +173,6 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
       search: params.search,
       categories: categoryIds as string[],
       tags: params.tags,
-      builtWith: params.builtWith,
       priceRange: params.priceRange,
       minRating: params.minRating,
       sortBy: params.sortBy,
@@ -210,9 +192,7 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
         ...(params.tags.length > 0 && {
           tags: { $in: params.tags },
         }),
-        ...(params.builtWith.length > 0 && {
-          builtWith: { $in: params.builtWith },
-        }),
+
         ...(params.priceRange && {
           price: {
             ...(params.priceRange.min !== undefined && {

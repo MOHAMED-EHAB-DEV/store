@@ -53,9 +53,8 @@ export default function DownloadLogsClient({
             key: "status",
             label: "Status",
             options: [
-                { value: "completed", label: "Completed" },
+                { value: "success", label: "Success" },
                 { value: "failed", label: "Failed" },
-                { value: "pending", label: "Pending" },
             ],
         },
     ];

@@ -3,7 +3,6 @@ import { connectToDatabase } from "@/lib/database";
 import Analytics from "@/lib/models/Analytics";
 import { createErrorResponse, createAPIResponse } from "@/lib/utils/api-helpers";
 
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

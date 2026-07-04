@@ -24,12 +24,14 @@ async function getDownloadLogs(searchParams: {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?${params.toString()}`, { headers: { cookie: (await headers()).get("cookie") || "" } });
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/admin/download-logs?${params.toString()}`,
+      { headers: { cookie: (await headers()).get("cookie") || "" } },
+    );
 
     if (!response.ok) return null;
     return await response.json();
   } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("Error fetching download logs:", error);
     return null;
   }

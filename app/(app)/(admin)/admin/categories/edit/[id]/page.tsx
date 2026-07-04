@@ -76,7 +76,7 @@ export default async function EditCategoryPage({ params }: PageProps) {
       <CategoryForm
         initialData={category}
         isEdit
-        parentCategories={parentCategories}
+        parentCategories={parentCategories.data}
       />
     </div>
   );

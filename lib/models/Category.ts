@@ -8,7 +8,6 @@ export interface ICategory extends Document {
   isActive: boolean;
   templateCount: number;
   sortOrder: number;
-  icon?: string;
   parentCategory?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -52,7 +51,6 @@ const CategorySchema = new Schema<ICategory>(
     isActive: { type: Boolean, default: true, index: true },
     templateCount: { type: Number, default: 0, min: 0 },
     sortOrder: { type: Number, default: 0, index: true },
-    icon: { type: String, trim: true },
     parentCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

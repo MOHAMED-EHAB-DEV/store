@@ -1,6 +1,7 @@
+import { getCategoryIcon } from "@/components/ui/svgs/CategoriesIcons";
 import { getBaseUrl } from "@/lib/utils/server";
 
-export const getCategories = async (includeIcon?: boolean) => {
+export const getCategories = async () => {
   try {
     const baseUrl = await getBaseUrl();
     const categories = await fetch(
@@ -12,13 +13,6 @@ export const getCategories = async (includeIcon?: boolean) => {
         },
       },
     ).then((res) => res.json());
-
-    if (!includeIcon && categories.data) {
-      return categories.data.map((c: any) => {
-        const { icon, ...rest } = c;
-        return rest;
-      });
-    }
 
     return categories.data;
   } catch (err) {

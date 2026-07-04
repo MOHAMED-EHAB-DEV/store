@@ -16,6 +16,7 @@ import { sonnerToast } from "@/components/ui/sonner";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Link from "next/link";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import { getCategoryIcon } from "@/components/ui/svgs/CategoriesIcons";
 
 interface Category {
     _id: string;
@@ -180,21 +181,20 @@ export default function AdminCategoriesClient({
             key: "name",
             label: "Name",
             sortable: true,
-            render: (category) => (
-                <div className="flex items-center gap-3">
-                    {category.icon ? (
-                        <img src={category.icon} alt="" className="w-8 h-8 rounded bg-white/5 object-contain p-1" />
-                    ) : (
-                        <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center">
-                            <Grid className="w-4 h-4 text-muted-foreground" />
+            render: (category) => {
+                const Icon = getCategoryIcon(category.icon);
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center rounded bg-white/5 p-1.5">
+                            <Icon className="w-full h-full text-white/70" />
                         </div>
-                    )}
-                    <div>
-                        <p className="text-sm font-medium text-white">{category.name}</p>
-                        <p className="text-xs text-muted-foreground">{category.slug}</p>
+                        <div>
+                            <p className="text-sm font-medium text-white">{category.name}</p>
+                            <p className="text-xs text-muted-foreground">{category.slug}</p>
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             key: "description",

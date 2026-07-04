@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
+import { CATEGORY_ICONS } from "@/components/ui/svgs/CategoriesIcons";
 
 interface CategoryFormProps {
     initialData?: any;
@@ -13,7 +14,6 @@ interface CategoryFormProps {
 export default function CategoryForm({ initialData, isEdit = false, parentCategories = [] }: CategoryFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const [iconFile, setIconFile] = useState<File | null>(null);
     const [formData, setFormData] = useState({
         name: initialData?.name || "",
         description: initialData?.description || "",
@@ -21,6 +21,7 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
         sortOrder: initialData?.sortOrder || 0,
         parentCategory: initialData?.parentCategory || "",
         isActive: initialData?.isActive ?? true,
+        icon: initialData?.icon || "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -52,22 +53,10 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
         setLoading(true);
 
         try {
-            const payload = new FormData();
-            Object.entries(formData).forEach(([key, value]) => {
-                if (value !== null && value !== undefined) {
-                    payload.append(key, value.toString());
-                }
-            });
-            
-            if (iconFile) {
-                payload.append("iconFile", iconFile);
-            } else if (initialData?.icon) {
-                payload.append("iconUrl", initialData.icon);
-            }
-            
-            if (!formData.parentCategory) {
-                payload.set("parentCategory", "");
-            }
+            const payload = {
+                ...formData,
+                parentCategory: formData.parentCategory || null,
+            };
 
             const url = isEdit
                 ? `/api/admin/categories/${initialData._id}`
@@ -75,7 +64,8 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
 
             const response = await fetch(url, {
                 method: isEdit ? "PUT" : "POST",
-                body: payload,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json();
@@ -147,22 +137,6 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
                         rows={3}
                         className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-y"
                     />
-                </div>
-
-                {/* Icon Upload */}
-                <div>
-                    <label className="block text-sm text-muted-foreground mb-1">Icon (SVG or Image)</label>
-                    <input
-                        type="file"
-                        accept="image/*,.svg"
-                        onChange={(e) => setIconFile(e.target.files?.[0] || null)}
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                    {initialData?.icon && !iconFile && (
-                        <p className="mt-2 text-sm text-muted-foreground">
-                            Current icon: <img src={initialData.icon} alt="Category icon" className="inline-block h-6 w-6 ml-2 object-contain" />
-                        </p>
-                    )}
                 </div>
 
                 {/* Parent Category & Sort Order */}

@@ -1,3 +1,4 @@
+import React from "react";
 import * as v from "valibot";
 
 export const CategorySchema = v.object({
@@ -8,7 +9,12 @@ export const CategorySchema = v.object({
   isActive: v.boolean(),
   templateCount: v.number(),
   sortOrder: v.number(),
-  icon: v.optional(v.string()),
+  Icon: v.optional(v.custom<React.FC<{ className?: string }>>((input) => {
+    if (typeof input !== "function") {
+      throw new Error("Invalid icon");
+    }
+    return true;
+  })),
   parentCategory: v.optional(v.nullable(v.string())),
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),

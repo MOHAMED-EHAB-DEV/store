@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import Blog from "@/lib/models/Blog";
+import Category from "@/lib/models/Category";
 
 export const revalidate = 172800; // 48 hours
 
@@ -27,6 +28,19 @@ const getBlogs = async () => {
     return blogs;
   } catch (error) {
     console.error("Error fetching blogs for sitemap:", error);
+    return [];
+  }
+};
+
+const getCategories = async () => {
+  try {
+    await connectToDatabase();
+    const categories = await Category.find({ isActive: true })
+      .select("slug updatedAt")
+      .lean();
+    return categories;
+  } catch (error) {
+    console.error("Error fetching categories for sitemap:", error);
     return [];
   }
 };
@@ -101,5 +115,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...templatePages, ...blogPages];
+  const categories = await getCategories();
+  const categoryPages = categories.map((category: any) => ({
+    url: `${baseUrl}/templates/category/${category.slug}`,
+    lastModified: category.updatedAt ? new Date(category.updatedAt) : new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...templatePages, ...blogPages, ...categoryPages];
 }

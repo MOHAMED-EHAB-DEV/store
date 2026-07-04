@@ -3,6 +3,7 @@ import Hero from "@/components/home/Hero";
 import { HeroItems } from "@/constants";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
+import CategoriesSection from "@/components/home/CategoriesSection";
 import dynamic from "next/dynamic";
 import GSAPInitializer from "@/components/home/GSAPInitializer";
 import { Metadata } from "next";
@@ -145,6 +146,7 @@ export default async function Home() {
       </div>
 
       <FeaturedTemplates />
+      <CategoriesSection />
       <WhyUs />
       <FramerFeatures />
       <CodedFeatures />

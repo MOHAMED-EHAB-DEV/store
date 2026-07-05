@@ -141,7 +141,7 @@ const Page = async ({ params }: PageProps) => {
   const { data: similarTemplates } = await getSimilarTemplates(
     template.categories || [],
     template.tags || [],
-    id,
+    template?._id,
   );
 
   // JSON-LD structured data for SEO

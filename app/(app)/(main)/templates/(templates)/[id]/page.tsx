@@ -13,7 +13,7 @@ interface PageProps {
 const getTemplate = async (id: string) => {
   try {
     const response = await fetch(
-      `${APP_URL}/api/template/${id}?isActive=true`,
+      `${APP_URL}/api/template/${id}`,
       {
         next: {
           revalidate: 60 * 60 * 24 * 7, // 1 week

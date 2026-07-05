@@ -3,27 +3,22 @@ import { isValidObjectId } from "mongoose";
 import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
-import { uploadToCloudinary } from "@/lib/cloudinary";
-import { uploadToGoogleDrive } from "@/lib/google-drive";
 import {
   withAPIMiddleware,
   createErrorResponse,
   createAPIResponse,
 } from "@/lib/utils/api-helpers";
-import revalidate from "@/actions/revalidateTag";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 async function getTemplate(req: NextRequest, context: RouteContext) {
   const { id } = await context.params;
-  const { searchParams } = new URL(req.url);
-  const isActive = searchParams.get("isActive") === "true";
   try {
     await connectToDatabase();
 
     const query = isValidObjectId(id)
-      ? { $or: [{ _id: id }, { slug: id }], isActive }
-      : { slug: id, isActive };
+      ? { $or: [{ _id: id }, { slug: id }], isActive: true }
+      : { slug: id, isActive: true };
 
     const template = await Template.findOne(query)
       .select("+content")
@@ -47,74 +42,4 @@ async function getTemplate(req: NextRequest, context: RouteContext) {
   }
 }
 
-async function updateTemplate(req: NextRequest, context: RouteContext) {
-  const { id } = await context.params;
-  try {
-    const contentType = req.headers.get("content-type") || "";
-    let body: any = {};
-
-    if (contentType.includes("multipart/form-data")) {
-      const formData = await req.formData();
-
-      for (const [key, value] of formData.entries()) {
-        if (key === "categories" || key === "tags") {
-          if (!body[key]) body[key] = [];
-          body[key].push(value as string);
-        } else if (
-          key !== "thumbnailFile" &&
-          key !== "templateFile" &&
-          key !== "thumbnailUrl" &&
-          key !== "fileKeyStr"
-        ) {
-          if (value === "true") body[key] = true;
-          else if (value === "false") body[key] = false;
-          else if (key === "price")
-            body[key] = parseFloat(value as string) || 0;
-          else body[key] = value;
-        }
-      }
-
-      const thumbnailFile = formData.get("thumbnailFile") as File | null;
-      const templateFile = formData.get("templateFile") as File | null;
-      const thumbnailUrl = formData.get("thumbnailUrl") as string | null;
-      const fileKeyStr = formData.get("fileKeyStr") as string | null;
-
-      if (thumbnailFile) {
-        const uploadResult = await uploadToCloudinary(
-          thumbnailFile,
-          "templates_thumbnails",
-          "image",
-        );
-        body.thumbnail = uploadResult.secure_url;
-      } else if (thumbnailUrl) {
-        body.thumbnail = thumbnailUrl;
-      }
-
-      if (templateFile) {
-        const driveFileId = await uploadToGoogleDrive(templateFile);
-        body.fileKey = driveFileId;
-      } else if (fileKeyStr) {
-        body.fileKey = fileKeyStr;
-      }
-    } else {
-      body = await req.json();
-    }
-
-    const updated = await Template.findByIdAndUpdate(id, body, { new: true });
-
-    revalidate(`template-${id}`);
-
-    return createAPIResponse(updated, {
-      message: "Template Updated Successfully",
-    });
-  } catch (err) {
-    return createErrorResponse("Something went wrong", 500, {
-      req: req,
-      error: err,
-      operation: "updatePublicTemplate",
-    });
-  }
-}
-
 export const GET = withAPIMiddleware(getTemplate);
-export const PATCH = withAPIMiddleware(updateTemplate);

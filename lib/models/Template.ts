@@ -361,6 +361,7 @@ TemplateSchema.statics.searchTemplates = function (
     {
       $project: {
         title: 1,
+        slug: 1,
         description: 1,
         thumbnail: 1,
         demoLink: 1,

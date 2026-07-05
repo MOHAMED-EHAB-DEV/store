@@ -17,7 +17,7 @@ async function getFeaturedTemplates(req: NextRequest) {
       isActive: true,
     })
       .select(
-        "_id title description thumbnail price tags categories averageRating",
+        "_id slug title description thumbnail price tags categories averageRating",
       )
       .populate("categories", "name slug")
       .limit(4)

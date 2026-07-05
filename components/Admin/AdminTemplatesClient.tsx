@@ -194,8 +194,9 @@ export default function AdminTemplatesClient({
                             <Templates className="w-6 h-6 text-muted-foreground" />
                         </div>
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex flex-col gap-1">
                         <p className="text-sm font-medium text-white truncate">{template.title}</p>
+                        <p className="text-xs pr-1 font-medium text-gray-500 truncate">{template.slug}</p>
                     </div>
                 </div>
             ),

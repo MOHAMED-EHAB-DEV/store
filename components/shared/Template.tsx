@@ -25,19 +25,19 @@ const Template = ({
 }) => {
     const lowResUrl = anyImgUrl(template.thumbnail, { width: 400, quality: 100 });
     const highResUrl = anyImgUrl(template.thumbnail, { width: 400, original: true });
-    const [imageUrl, setImageUrl] = useState(lowResUrl);
+    const [highResLoaded, setHighResLoaded] = useState(false);
     const { favoriteTemplates, toggleFavorite } = useUser();
     const isFavorite = favoriteTemplates?.some((favTemplate: ITemplate) => favTemplate._id === template._id);
 
     useEffect(() => {
-        setImageUrl(lowResUrl);
+        setHighResLoaded(false);
 
         const loadHighRes = () => {
             const run = () => {
                 const img = new window.Image();
                 img.src = highResUrl;
                 img.onload = () => {
-                    setImageUrl(highResUrl);
+                    setHighResLoaded(true);
                 };
             };
             if (typeof window !== "undefined" && "requestIdleCallback" in window) {
@@ -53,7 +53,7 @@ const Template = ({
             window.addEventListener("load", loadHighRes);
             return () => window.removeEventListener("load", loadHighRes);
         }
-    }, [lowResUrl, highResUrl]);
+    }, [highResUrl]);
     return (
         <Link
             href={`/templates/${template.slug}`}
@@ -105,15 +105,28 @@ const Template = ({
             </Button>
 
             {/* Thumbnail */}
-            <Image
-                src={imageUrl}
-                alt={template.title}
-                width={400}
-                height={288}
-                unoptimized
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="w-full h-56 object-contain"
-            />
+            <div className="relative w-full h-56 overflow-hidden">
+                <Image
+                    src={lowResUrl}
+                    alt={template.title}
+                    width={400}
+                    height={288}
+                    unoptimized
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="w-full h-full object-contain block"
+                />
+                <Image
+                    src={highResUrl}
+                    alt={template.title}
+                    width={400}
+                    height={288}
+                    unoptimized
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out ${
+                        highResLoaded ? "opacity-100" : "opacity-0"
+                    }`}
+                />
+            </div>
 
             {/* Template Info */}
             <div className="p-6 relative z-10">

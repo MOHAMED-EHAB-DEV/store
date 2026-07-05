@@ -56,7 +56,7 @@ const Template = ({
     }, [lowResUrl, highResUrl]);
     return (
         <Link
-            href={`/templates/${template.slug || template._id}`}
+            href={`/templates/${template.slug}`}
             onClick={() => sendGTMEvent({ 
                 event: "template_card_click", 
                 template_id: template._id, 

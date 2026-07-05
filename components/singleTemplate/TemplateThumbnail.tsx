@@ -49,7 +49,7 @@ export default function TemplateThumbnail({
       width={600}
       height={600}
       sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
-      className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl shadow-lg object-cover"
+      className="w-full aspect-square max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl shadow-lg object-cover"
       priority
       placeholder="blur"
       blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="

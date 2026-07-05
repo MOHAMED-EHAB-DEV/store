@@ -197,107 +197,6 @@ TemplateSchema.virtual("popularityScore").get(function () {
   ); // Age penalty
 });
 
-TemplateSchema.statics.findPopularTemplates = function (
-  limit = 20,
-  skip = 0,
-  useCache = true
-) {
-  return this.aggregate([
-    { $match: { isActive: true } },
-    {
-      $addFields: {
-        popularityScore: {
-          $add: [
-            { $multiply: ["$downloads", 2] },
-            { $multiply: ["$averageRating", 20] },
-            { $multiply: ["$views", 0.5] },
-          ],
-        },
-      },
-    },
-    { $sort: { popularityScore: -1, createdAt: -1 } },
-    { $skip: skip },
-    { $limit: limit },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author",
-        pipeline: [{ $project: { name: 1, avatar: 1 } }],
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "categories",
-        foreignField: "_id",
-        as: "categories",
-        pipeline: [{ $project: { name: 1, slug: 1 } }],
-      },
-    },
-    { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
-    {
-      $project: {
-        title: 1,
-        description: 1,
-        thumbnail: 1,
-        demoLink: 1,
-        price: 1,
-        downloads: 1,
-        views: 1,
-        averageRating: 1,
-        reviewCount: 1,
-        author: 1,
-        categories: 1,
-        tags: 1,
-        createdAt: 1,
-        popularityScore: 1,
-      },
-    },
-  ]).allowDiskUse(true); // Allow disk usage for large datasets
-};
-
-TemplateSchema.statics.findByCategory = function (
-  categoryId: string,
-  limit = 20,
-  skip = 0
-) {
-  return this.aggregate([
-    {
-      $match: {
-        categories: new mongoose.Types.ObjectId(categoryId),
-        isActive: true,
-      },
-    },
-    { $sort: { averageRating: -1, downloads: -1 } },
-    { $skip: skip },
-    { $limit: limit },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author",
-        pipeline: [{ $project: { name: 1, avatar: 1 } }],
-      },
-    },
-    { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
-    {
-      $project: {
-        title: 1,
-        description: 1,
-        thumbnail: 1,
-        price: 1,
-        downloads: 1,
-        averageRating: 1,
-        reviewCount: 1,
-        author: 1,
-        createdAt: 1,
-      },
-    },
-  ]);
-};
 
 TemplateSchema.statics.searchTemplates = function (
   searchOptions: {
@@ -485,46 +384,6 @@ TemplateSchema.statics.searchTemplates = function (
   return this.aggregate(pipeline).allowDiskUse(true);
 };
 
-TemplateSchema.statics.findFreeTemplates = function (limit = 20, skip = 0) {
-  return this.aggregate([
-    { $match: { price: 0, isActive: true } },
-    { $sort: { downloads: -1, averageRating: -1 } },
-    { $skip: skip },
-    { $limit: limit },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author",
-        pipeline: [{ $project: { name: 1, avatar: 1 } }],
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "categories",
-        foreignField: "_id",
-        as: "categories",
-        pipeline: [{ $project: { name: 1, slug: 1 } }],
-      },
-    },
-    { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
-    {
-      $project: {
-        title: 1,
-        description: 1,
-        thumbnail: 1,
-        downloads: 1,
-        averageRating: 1,
-        reviewCount: 1,
-        author: 1,
-        categories: 1,
-        createdAt: 1,
-      },
-    },
-  ]);
-};
 
 TemplateSchema.statics.getTemplateStats = function () {
   return this.aggregate([
@@ -583,54 +442,6 @@ TemplateSchema.statics.getTemplateStats = function () {
   ]);
 };
 
-TemplateSchema.statics.getTrendingTemplates = function (days = 7, limit = 20) {
-  const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-
-  return this.aggregate([
-    { $match: { isActive: true, lastViewedAt: { $gte: cutoffDate } } },
-    {
-      $addFields: {
-        trendingScore: {
-          $multiply: [
-            "$views",
-            {
-              $divide: [
-                { $subtract: [Date.now(), "$lastViewedAt"] },
-                days * 24 * 60 * 60 * 1000,
-              ],
-            },
-          ],
-        },
-      },
-    },
-    { $sort: { trendingScore: -1, views: -1 } },
-    { $limit: limit },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "author",
-        pipeline: [{ $project: { name: 1, avatar: 1 } }],
-      },
-    },
-    { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
-    {
-      $project: {
-        title: 1,
-        description: 1,
-        thumbnail: 1,
-        price: 1,
-        downloads: 1,
-        views: 1,
-        averageRating: 1,
-        author: 1,
-        trendingScore: 1,
-      },
-    },
-  ]);
-};
-
 TemplateSchema.methods.incrementViews = function (amount = 1) {
   return this.findByIdAndUpdate(
     this._id,
@@ -660,12 +471,6 @@ TemplateSchema.pre("save", function (next) {
 });
 
 export interface ITemplateModel extends Model<ITemplate> {
-  findPopularTemplates(limit?: number, skip?: number): Promise<ITemplate[]>;
-  findByCategory(
-    categoryId: string,
-    limit?: number,
-    skip?: number
-  ): Promise<ITemplate[]>;
   searchTemplates(
     searchOptions: {
       search?: string;
@@ -680,9 +485,7 @@ export interface ITemplateModel extends Model<ITemplate> {
     limit?: number,
     skip?: number
   ): Promise<ITemplate[]>;
-  findFreeTemplates(limit?: number, skip?: number): Promise<ITemplate[]>;
   getTemplateStats(): Promise<any>;
-  getTrendingTemplates(days?: number, limit?: number): Promise<ITemplate[]>;
 }
 
 const Template =

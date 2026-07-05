@@ -19,18 +19,14 @@ function validateSearchParams(req: NextRequest): {
 
     const includedFields = searchParams.get("includedFields")?.split(",");
     const search = searchParams.get("search")?.trim() || "";
-    const categories =
-      searchParams
-        .get("categories")
-        ?.split(",")
-        .map((id) => id.trim())
-        .filter(Boolean) || [];
-    const tags =
-      searchParams
-        .get("tags")
-        ?.split(",")
-        .map((tag) => tag.trim().toLowerCase())
-        .filter(Boolean) || [];
+    const categories = searchParams.getAll("categories")
+      .flatMap((c) => c.split(","))
+      .map((id) => id.trim())
+      .filter(Boolean);
+    const tags = searchParams.getAll("tags")
+      .flatMap((t) => t.split(","))
+      .map((tag) => tag.trim().toLowerCase())
+      .filter(Boolean);
     const type = searchParams.get("type") || "";
     const sortBy = searchParams.get("sortBy") || "popular";
 
@@ -133,11 +129,25 @@ function validateSearchParams(req: NextRequest): {
 function generateCacheKey(req: NextRequest): string {
   const { searchParams } = new URL(req.url);
 
-  // Create a consistent key from search parameters
+  // Normalize array parameters by sorting them
+  const categories = searchParams.getAll("categories")
+    .flatMap((c) => c.split(","))
+    .map((c) => c.trim())
+    .filter(Boolean)
+    .sort()
+    .join(",");
+
+  const tags = searchParams.getAll("tags")
+    .flatMap((t) => t.split(","))
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean)
+    .sort()
+    .join(",");
+
   const params = [
     searchParams.get("search") || "",
-    searchParams.get("categories") || "",
-    searchParams.get("tags") || "",
+    categories,
+    tags,
     searchParams.get("type") || "",
     searchParams.get("minPrice") || "",
     searchParams.get("maxPrice") || "",

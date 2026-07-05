@@ -57,15 +57,15 @@ const getInitialData = async (
   try {
     const urlParams = new URLSearchParams();
 
-    // Always append the category from the static route
-    urlParams.append("categories", categoryParam);
+    // Always set the category from the static route
+    urlParams.set("categories", categoryParam);
 
     Object.entries(searchParamsObj).forEach(([key, value]) => {
       if (value !== undefined) {
         if (Array.isArray(value)) {
-          value.forEach((v) => urlParams.append(key, v));
+          urlParams.set(key, value.join(","));
         } else {
-          urlParams.append(key, value);
+          urlParams.set(key, value);
         }
       }
     });
@@ -142,7 +142,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main
-        className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw max-w-6xl"
+        className="flex flex-col justify-center py-36 gap-8 w-dvw max-w-6xl"
         role="main"
         id="main-content"
       >
@@ -154,6 +154,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
           initialData={templates}
           categories={categories}
           searchParams={currentSearchParams}
+          hideCategoryFilter={true}
         />
       </main>
     </>

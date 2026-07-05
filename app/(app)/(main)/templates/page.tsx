@@ -68,9 +68,9 @@ const getInitialData = async (params: {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) {
         if (Array.isArray(value)) {
-          value.forEach((v) => urlParams.append(key, v));
+          urlParams.set(key, value.join(","));
         } else {
-          urlParams.append(key, value);
+          urlParams.set(key, value);
         }
       }
     });
@@ -141,7 +141,7 @@ const Page = async ({ searchParams }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main
-        className="flex flex-col justify-center py-36 gap-8 overflow-x-hidden w-dvw max-w-6xl"
+        className="flex flex-col justify-center py-36 gap-8 w-dvw max-w-6xl"
         role="main"
         id="main-content"
       >

@@ -9,7 +9,7 @@ import {
   useTransition,
 } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import FilterOptions from "@/components/shared/FilterOptions";
+import FilterBar from "@/components/shared/FilterBar";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { Search } from "@/components/ui/svgs/icons/Search";
@@ -19,10 +19,12 @@ const Templates = ({
   initialData,
   categories,
   searchParams,
+  hideCategoryFilter = false,
 }: {
   initialData: ITemplate[];
   categories: ICategory[];
   searchParams: { [key: string]: string | string[] | undefined };
+  hideCategoryFilter?: boolean;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -51,8 +53,7 @@ const Templates = ({
         ) {
           params.delete(key);
         } else if (Array.isArray(value)) {
-          params.delete(key);
-          value.forEach((v) => params.append(key, v));
+          params.set(key, value.join(","));
         } else {
           params.set(key, value);
         }
@@ -96,9 +97,12 @@ const Templates = ({
   }, [searchParams]);
 
   const selectedCategories = useMemo(() => {
-    const selected = Array.isArray(searchParams.categories)
-      ? searchParams.categories
-      : ([searchParams.categories].filter(Boolean) as string[]);
+    const raw = searchParams.categories;
+    const selected = Array.isArray(raw)
+      ? raw.flatMap((r) => r.split(","))
+      : typeof raw === "string"
+        ? raw.split(",")
+        : [];
     return categories.map((cat) => ({
       ...cat,
       selected: selected.includes(cat.name),
@@ -110,9 +114,12 @@ const Templates = ({
     [initialData],
   );
   const selectedTags = useMemo(() => {
-    const selected = Array.isArray(searchParams.tags)
-      ? searchParams.tags
-      : ([searchParams.tags].filter(Boolean) as string[]);
+    const raw = searchParams.tags;
+    const selected = Array.isArray(raw)
+      ? raw.flatMap((r) => r.split(","))
+      : typeof raw === "string"
+        ? raw.split(",")
+        : [];
     return allTags.map((tag) => ({
       tag,
       selected: selected.includes(tag),
@@ -139,8 +146,8 @@ const Templates = ({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[30%_1fr] gap-4">
-        <FilterOptions
+      <div className="flex flex-col gap-6">
+        <FilterBar
           categories={selectedCategories}
           setCategories={(updated) => {
             const selected = (updated as any[])
@@ -163,17 +170,19 @@ const Templates = ({
           setMinRating={(val) => updateFilters({ minRating: String(val) })}
           sortedBy={(searchParams.sortBy as any) || "popular"}
           setSortedBy={(val) => updateFilters({ sortBy: val })}
+          hideCategoryFilter={hideCategoryFilter}
+          clearFilters={clearFilters}
         />
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 w-full">
           {isPending ? (
-            <div className="flex items-center justify-center flex-wrap gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, idx) => (
                 <TemplateSkeleton key={idx} />
               ))}
             </div>
           ) : initialData.length > 0 ? (
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-5`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {initialData.map((template) => (
                 <Template
                   showActionButtons={true}

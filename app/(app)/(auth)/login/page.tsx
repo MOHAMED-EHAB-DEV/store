@@ -3,12 +3,16 @@ import SigninForm from "@/components/Forms/SigninForm";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 
-import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+// TODO: upload screenshots for this page
+export const metadata = buildMetadata({
   title: "Login | MHD Store Premium Templates",
   description: "Sign in to your MHD Store account to access your premium templates.",
-};
+  path: "/login",
+  noIndex: true,
+  screenshotName: "login",
+});
 
 const Page = async ({
   searchParams,
@@ -28,7 +32,7 @@ const Page = async ({
       <div className="flex flex-col items-center p-6 justify-center bg-dark/70 border border-dark backdrop-blur-lg rounded-lg gap-4">
         <div className="flex flex-col items-center justify-center gap-1">
           <Logo />
-          <h1 className="text-white text-4xl font-bold">Signin</h1>
+          <h1 className="text-white text-4xl font-bold">Login</h1>
         </div>
 
         <SigninForm queryMessage={message} queryURL={url} />

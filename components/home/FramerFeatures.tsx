@@ -126,7 +126,7 @@ const FramerFeatures = () => {
                   <div
                     className={`${
                       isVisible ? "w-full md:w-[80%]" : "w-0"
-                    } h-6 bg-[#262626] absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}
+                    } h-6 bg-[#262626] absolute start-0 bottom-0 rounded-e-lg transition-all duration-900 ease-linear`}
                   />
                 </div>
               </div>
@@ -146,7 +146,7 @@ const FramerFeatures = () => {
                   <div
                     className={`${
                       isVisible ? "w-[75%]" : "w-0"
-                    } h-6 bg-blue-700 absolute left-0 bottom-0 rounded-r-lg transition-all duration-900 ease-linear`}
+                    } h-6 bg-blue-700 absolute start-0 bottom-0 rounded-e-lg transition-all duration-900 ease-linear`}
                   />
                 </div>
               </div>
@@ -172,7 +172,7 @@ const FramerFeatures = () => {
                 muted
                 loop
                 autoPlay
-                className="absolute top-0 left-0 w-full h-full object-cover"
+                className="absolute top-0 start-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10"></div>
               <div className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
@@ -231,7 +231,7 @@ const FramerFeatures = () => {
                 width={25}
                 height={25}
                 unoptimized
-                className="absolute bottom-0 right-24 w-auto h-auto"
+                className="absolute bottom-0 end-24 w-auto h-auto"
               />
             </div>
             <div className="flex flex-col gap-1">

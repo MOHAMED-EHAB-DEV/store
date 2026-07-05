@@ -88,7 +88,6 @@ const nextConfig: NextConfig = {
       "sonner",
       "gsap",
       "@gsap/react",
-      "motion",
       "@visx/axis",
       "@visx/event",
       "@visx/group",

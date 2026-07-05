@@ -1,12 +1,12 @@
-import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+// TODO: upload screenshots for this page
+export const metadata = buildMetadata({
   title: "Privacy Policy | MHD Store",
   description: "Read the privacy policy for MHD Store.",
-  alternates: {
-    canonical: "https://mhd-store.vercel.app/privacy-policy",
-  },
-};
+  path: "/privacy-policy",
+  screenshotName: "privacy-policy",
+});
 
 const PrivacyPolicy = () => {
   return (

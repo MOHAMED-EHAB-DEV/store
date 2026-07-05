@@ -14,7 +14,7 @@ export default function FAQHero({ searchQuery, onSearchChange }: FAQHeroProps) {
                 Hello, How can we help you?
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                Find answers to common questions about our products, shipping, returns, and more.
+                Find answers to common questions about our templates, licensing, downloads, pricing, and support.
             </p>
 
             {/* Search Bar */}

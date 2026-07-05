@@ -3,12 +3,16 @@ import RegisterForm from "@/components/Forms/RegisterForm";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 
-import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+// TODO: upload screenshots for this page
+export const metadata = buildMetadata({
   title: "Register | MHD Store Premium Templates",
   description: "Create an account to purchase and download premium Next.js templates.",
-};
+  path: "/register",
+  noIndex: true,
+  screenshotName: "register",
+});
 
 const Page = () => {
   return (
@@ -28,7 +32,7 @@ const Page = () => {
 
         <RegisterForm />
         <div>
-          Have an account?{" "}
+          Already have an account?{" "}
           <Link href="/login" className="text-gradient-purple">
             Login Here
           </Link>

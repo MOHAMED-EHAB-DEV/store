@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useRef } from "react";
-import { useInView, useMotionValue, useSpring } from "motion/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 interface CountUpProps {
   to: number;
@@ -27,17 +30,6 @@ export default function CountUp({
   onEnd,
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(direction === "down" ? to : from);
-
-  const damping = 20 + 40 * (1 / duration);
-  const stiffness = 100 * (1 / duration);
-
-  const springValue = useSpring(motionValue, {
-    damping,
-    stiffness,
-  });
-
-  const isInView = useInView(ref, { once: true, margin: "0px" });
 
   // Get number of decimal places in a number
   const getDecimalPlaces = (num: number): number => {
@@ -52,73 +44,66 @@ export default function CountUp({
   };
 
   const maxDecimals = Math.max(getDecimalPlaces(from), getDecimalPlaces(to));
+  const startVal = direction === "down" ? to : from;
+  const endVal = direction === "down" ? from : to;
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.textContent = String(direction === "down" ? to : from);
+      ref.current.textContent = String(startVal);
     }
-  }, [from, to, direction]);
+  }, [startVal]);
 
   useEffect(() => {
-    if (isInView && startWhen) {
-      if (typeof onStart === "function") {
-        onStart();
-      }
+    if (!startWhen || !ref.current) return;
 
-      const timeoutId = setTimeout(() => {
-        motionValue.set(direction === "down" ? from : to);
-      }, delay * 1000);
+    const target = ref.current;
+    const obj = { val: startVal };
 
-      const durationTimeoutId = setTimeout(
-        () => {
-          if (typeof onEnd === "function") {
-            onEnd();
-          }
-        },
-        delay * 1000 + duration * 1000
-      );
-
-      return () => {
-        clearTimeout(timeoutId);
-        clearTimeout(durationTimeoutId);
+    const updateText = (value: number) => {
+      const hasDecimals = maxDecimals > 0;
+      const options: Intl.NumberFormatOptions = {
+        useGrouping: !!separator,
+        minimumFractionDigits: hasDecimals ? maxDecimals : 0,
+        maximumFractionDigits: hasDecimals ? maxDecimals : 0,
       };
-    }
-  }, [
-    isInView,
-    startWhen,
-    motionValue,
-    direction,
-    from,
-    to,
-    delay,
-    onStart,
-    onEnd,
-    duration,
-  ]);
 
-  useEffect(() => {
-    const unsubscribe = springValue.on("change", (latest) => {
-      if (ref.current) {
-        const hasDecimals = maxDecimals > 0;
+      const formattedNumber = Intl.NumberFormat("en-US", options).format(value);
+      target.textContent = separator
+        ? formattedNumber.replace(/,/g, separator)
+        : formattedNumber;
+    };
 
-        const options: Intl.NumberFormatOptions = {
-          useGrouping: !!separator,
-          minimumFractionDigits: hasDecimals ? maxDecimals : 0,
-          maximumFractionDigits: hasDecimals ? maxDecimals : 0,
-        };
+    const trigger = ScrollTrigger.create({
+      trigger: target,
+      start: "top 95%",
+      once: true,
+      onEnter: () => {
+        if (typeof onStart === "function") {
+          onStart();
+        }
 
-        const formattedNumber = Intl.NumberFormat("en-US", options).format(
-          latest
-        );
-
-        ref.current.textContent = separator
-          ? formattedNumber.replace(/,/g, separator)
-          : formattedNumber;
-      }
+        gsap.to(obj, {
+          val: endVal,
+          duration: duration,
+          delay: delay,
+          ease: "power2.out", // Smooth power ease resembling a spring
+          onUpdate: () => {
+            updateText(obj.val);
+          },
+          onComplete: () => {
+            if (typeof onEnd === "function") {
+              onEnd();
+            }
+          },
+        });
+      },
     });
 
-    return () => unsubscribe();
-  }, [springValue, separator, maxDecimals]);
+    return () => {
+      trigger.kill();
+      gsap.killTweensOf(obj);
+    };
+  }, [to, from, direction, delay, duration, startWhen, separator, onStart, onEnd, maxDecimals, startVal, endVal]);
 
   return <span className={className} ref={ref} />;
 }

@@ -55,7 +55,7 @@ export default function CategoriesCarousel({
       <button
         onClick={scrollPrev}
         disabled={prevBtnDisabled}
-        className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-card/80 backdrop-blur-md border border-border/50 text-white shadow-xl transition-all duration-300 hover:bg-card hover:border-accent hover:scale-110 disabled:opacity-0 disabled:pointer-events-none`}
+        className={`absolute start-4 sm:start-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-card/80 backdrop-blur-md border border-border/50 text-white shadow-xl transition-all duration-300 hover:bg-card hover:border-accent hover:scale-110 disabled:opacity-0 disabled:pointer-events-none`}
         aria-label="Previous categories"
       >
         <ChevronRight className="w-6 h-6 rotate-180" />
@@ -64,7 +64,7 @@ export default function CategoriesCarousel({
       <button
         onClick={scrollNext}
         disabled={nextBtnDisabled}
-        className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-card/80 backdrop-blur-md border border-border/50 text-white shadow-xl transition-all duration-300 hover:bg-card hover:border-accent hover:scale-110 disabled:opacity-0 disabled:pointer-events-none`}
+        className={`absolute end-4 sm:end-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-card/80 backdrop-blur-md border border-border/50 text-white shadow-xl transition-all duration-300 hover:bg-card hover:border-accent hover:scale-110 disabled:opacity-0 disabled:pointer-events-none`}
         aria-label="Next categories"
       >
         <ChevronRight className="w-6 h-6" />
@@ -97,7 +97,7 @@ export default function CategoriesCarousel({
                   {/* <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" /> */}
 
                   {/* Large Background Icon */}
-                  <div className="absolute -rotate-12 top-4/7 -right-14 w-44 h-44 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none select-none text-white">
+                  <div className="absolute -rotate-12 top-4/7 -end-14 w-44 h-44 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none select-none text-white">
                     <Icon className="w-full h-full drop-shadow-2xl" />
                   </div>
 

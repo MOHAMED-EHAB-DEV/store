@@ -1,12 +1,12 @@
-import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+// TODO: upload screenshots for this page
+export const metadata = buildMetadata({
   title: "Terms of Service | MHD Store",
   description: "Read the terms of service for MHD Store.",
-  alternates: {
-    canonical: "https://mhd-store.vercel.app/terms-of-service",
-  },
-};
+  path: "/terms-of-service",
+  screenshotName: "terms-of-service",
+});
 
 const TermsOfService = () => {
   return (

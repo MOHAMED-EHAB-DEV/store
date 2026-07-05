@@ -5,6 +5,7 @@ import FAQHero from "@/components/faqs/FAQHero";
 import CategoryCarousel from "@/components/faqs/CategoryCarousel";
 import FAQSection from "@/components/faqs/FAQSection";
 import FAQContactCTA from "@/components/faqs/FAQContactCTA";
+import { FAQ_CATEGORIES } from "@/constants/faqs";
 
 interface FAQ {
     _id: string;
@@ -82,11 +83,14 @@ export default function FAQsClient({ faqs, categories }: FAQsClientProps) {
 
     // Map database categories to component format
     const categoryItems = useMemo(() => {
-        return categories?.map(cat => ({
-            id: cat._id,
-            name: cat.name,
-            icon: "❓", // Default icon
-        }));
+        return categories?.map(cat => {
+            const staticCat = FAQ_CATEGORIES.find(c => c.id === cat._id);
+            return {
+                id: cat._id,
+                name: cat.name,
+                icon: staticCat ? staticCat.icon : "❓",
+            };
+        });
     }, [categories]);
 
     // Determine which categories to show
@@ -123,6 +127,18 @@ export default function FAQsClient({ faqs, categories }: FAQsClientProps) {
                 <div className="space-y-12">
                     {categoriesToShow?.map((category) => {
                         const categoryFAQs = groupedFAQs[category.id];
+                        const totalCategoryFAQs = faqs.filter(f => f.category === category.id).length;
+
+                        if (totalCategoryFAQs === 0) {
+                            return (
+                                <div key={category.id} className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-purple-100 dark:border-purple-900/50">
+                                    <div className="text-4xl mb-3">{category.icon}</div>
+                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{category.name}</h3>
+                                    <p className="text-muted-foreground">More questions coming soon.</p>
+                                </div>
+                            );
+                        }
+
                         if (!categoryFAQs || categoryFAQs.length === 0) return null;
 
                         // Determine default open item

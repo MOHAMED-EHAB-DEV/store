@@ -63,6 +63,16 @@ const Navbar = () => {
           {!user && (
             <div className="hidden sm:flex gap-2 items-center justify-end">
               <Link
+                className="text-secondary hover:text-white font-bold text-base px-4 py-3 transition-colors cursor-pointer"
+                aria-label="Login button"
+                href="/login"
+                onClick={() =>
+                  sendGTMEvent({ event: "auth_nav_click", auth_type: "login" })
+                }
+              >
+                Login
+              </Link>
+              <Link
                 className="outline-none cursor-pointer hover:scale-105 transition-all duration-300 border-none bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-400 hover:via-pink-400 hover:to-cyan-400 px-8 py-3 rounded-full text-white font-bold text-base shadow-xl hover:shadow-purple-500/25"
                 aria-label="Get Started button"
                 href="/register"

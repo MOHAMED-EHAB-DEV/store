@@ -21,30 +21,20 @@ interface BlogPost {
   isPublished: boolean;
 }
 
+import { buildMetadata } from "@/lib/seo";
+
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Web Design & Development Blog | MHD Store";
   const description =
     "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
-  const url = `${APP_URL}/blog`;
 
-  return {
+  // TODO: upload screenshots for this page
+  return buildMetadata({
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title,
-      description,
-      url,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
+    path: "/blog",
+    screenshotName: "blog",
+  });
 }
 
 const getData = async () => {

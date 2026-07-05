@@ -1,11 +1,12 @@
 'use client';
 
-import {motion, useAnimationControls} from 'motion/react';
 import Image from 'next/image';
-import {useEffect, useMemo} from 'react';
+import { useMemo, useRef } from 'react';
 import { Star } from "@/components/ui/svgs/icons/Star";
-import {anyImgUrl} from "@/lib/utils/image";
-import {cn} from "@/lib/utils";
+import { anyImgUrl } from "@/lib/utils/image";
+import { cn } from "@/lib/utils";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 interface VerticalMarqueeProps {
     items: { iconPath: string; text: string }[];
@@ -18,47 +19,67 @@ interface VerticalMarqueeProps {
 export function VerticalMarquee(
     {
         items,
-        speed = 0.5,
+        speed = 10,
         height = 'h-32 md:h-40',
         className = '',
         direction = 'up',
     }: VerticalMarqueeProps) {
     const marqueeItems = useMemo(() => [...items, ...items], [items]);
-    const controls = useAnimationControls();
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    const tweenRef = useRef<gsap.core.Tween | null>(null);
 
-    const startAnimation = () => {
-        controls.start({
-            y: direction === 'up' ? ['0%', '-50%'] : ['-50%', '0%'],
-            transition: {
-                repeat: Infinity,
-                repeatType: 'loop',
-                duration: speed,
-                ease: 'linear',
-            },
+    useGSAP(() => {
+        if (!scrollerRef.current) return;
+
+        const yStart = direction === 'up' ? '0%' : '-50%';
+        const yEnd = direction === 'up' ? '-50%' : '0%';
+
+        gsap.set(scrollerRef.current, { y: yStart });
+
+        tweenRef.current = gsap.to(scrollerRef.current, {
+            y: yEnd,
+            duration: speed,
+            ease: 'none',
+            repeat: -1,
+            overwrite: "auto",
         });
+
+        return () => {
+            if (tweenRef.current) {
+                tweenRef.current.kill();
+            }
+        };
+    }, [direction, speed]);
+
+    const handleMouseEnter = () => {
+        if (tweenRef.current) {
+            tweenRef.current.pause();
+        }
     };
 
-    useEffect(() => {
-        startAnimation();
-    }, [direction, speed]);
+    const handleMouseLeave = () => {
+        if (tweenRef.current) {
+            tweenRef.current.play();
+        }
+    };
 
     return (
         <div
             className={`relative w-full overflow-hidden ${height} ${className}`}
-            onMouseEnter={() => controls.stop()}
-            onMouseLeave={() => startAnimation()}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             style={{
                 WebkitMaskImage: "linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 25%, rgb(0, 0, 0) 75%, rgba(0, 0, 0, 0) 100%)"
             }}
         >
             <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-linear-to-b from-dark to-transparent"/>
+                className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-linear-to-b from-dark to-transparent z-10"/>
             <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-dark to-transparent"/>
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-dark to-transparent z-10"/>
 
-            <motion.div
+            <div
+                ref={scrollerRef}
                 className="flex flex-col gap-4 py-2 will-change-transform"
-                animate={controls}
             >
                 {marqueeItems.map(({iconPath, text}, i) => (
                     <span key={i} className="flex items-center w-full shrink-0">
@@ -76,7 +97,7 @@ export function VerticalMarquee(
                         </span>
                     </span>
                 ))}
-            </motion.div>
+            </div>
         </div>
     );
 }
@@ -110,7 +131,7 @@ export default function HorizontialMarquee(
                         <div className="flex gap-4 justify-center items-center">
                             <div className="flex gap-2 justify-center items-center">
                                 <div
-                                    className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold mr-4"
+                                    className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold me-4"
                                 >
                                     <Image
                                         src={anyImgUrl(testimonial.avatar, { width: 60, quality: 80 })}
@@ -125,11 +146,8 @@ export default function HorizontialMarquee(
                                 </div>
                             </div>
                             <div>
-                                {/*<div className="text-gray-400 text-sm">*/}
-                                {/*    {testimonial.role}*/}
-                                {/*</div>*/}
                             </div>
-                            <div className="ml-auto flex text-gold">
+                            <div className="ms-auto flex text-gold">
                                 {[...Array(testimonial.rating)].map((_, i) => (
                                     <Star key={i} className="w-4 h-4 fill-current"/>
                                 ))}
@@ -140,5 +158,5 @@ export default function HorizontialMarquee(
                 ))}
             </div>
         </div>
-    )
+    );
 }

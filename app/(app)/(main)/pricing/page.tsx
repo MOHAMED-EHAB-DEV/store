@@ -1,13 +1,13 @@
 import Pricing from "@/components/home/Pricing";
-import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+// TODO: upload screenshots for this page
+export const metadata = buildMetadata({
   title: "Pricing | MHD Store",
   description: "View pricing plans for premium web templates at MHD Store.",
-  alternates: {
-    canonical: "https://mhd-store.vercel.app/pricing",
-  },
-};
+  path: "/pricing",
+  screenshotName: "pricing",
+});
 
 const Page = () => {
   return (

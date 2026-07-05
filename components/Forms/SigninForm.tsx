@@ -160,10 +160,10 @@ const SigninForm = ({ queryMessage, queryURL }: { queryMessage: String, queryURL
                     <div className="flex items-center justify-center">
                         <div
                             className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin mr-2"></div>
-                        Signing in...
+                        Logging in...
                     </div>
                 ) : (
-                    "Signin"
+                    "Login"
                 )}
             </button>
         </form>

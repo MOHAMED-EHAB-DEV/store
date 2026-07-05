@@ -41,7 +41,7 @@ const TicketSchema = new Schema<ITicket>({
     },
     category: {
         type: String,
-        enum: ["general", "billing", "technical", "account", "other"],
+        enum: ["general", "billing", "technical", "account", "other", "template customization"],
         default: "general",
         index: true
     },

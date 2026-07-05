@@ -8,6 +8,7 @@ import { Share2 } from "@/components/ui/svgs/icons/Share2";
 import { Tag } from "@/components/ui/svgs/icons/Tag";
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { truncateDescription } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import { anyImgUrl } from '@/lib/utils/image';
 import ViewTracker from '@/components/Blog/ViewTracker';
@@ -78,15 +79,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const url = `${APP_URL}/blog/${blog.slug || id}`;
+    const authorName = (blog.author?.name === "MEDO" || !blog.author?.name) ? "Mohammed Ehab" : blog.author.name;
 
     // Strip markdown characters for a cleaner meta description
-    const stripMarkdown = (md: string) => md.replace(/[#*`_\[\]()>]/g, '').replace(/\n+/g, ' ').trim().substring(0, 160);
-    const cleanDesc = blog.excerpt || stripMarkdown(blog.content || "");
+    const stripMarkdown = (md: string) => md.replace(/[#*`_\[\]()>]/g, '').replace(/\n+/g, ' ').trim();
+    const cleanDesc = blog.excerpt 
+        ? truncateDescription(blog.excerpt, 160)
+        : truncateDescription(stripMarkdown(blog.content || ""), 160);
 
+    const imageUrl = blog.coverImage || `${APP_URL}/screenshots/1.png`;
+
+    // TODO: upload screenshots for this page if coverImage is not present
     return {
         title: `${blog.title} | Blog`,
         description: cleanDesc,
-        authors: blog.author ? [{ name: blog.author.name }] : undefined,
+        authors: [{ name: authorName }],
         keywords: blog.tags || [],
         alternates: {
             canonical: url,
@@ -97,20 +104,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             url: url,
             type: 'article',
             publishedTime: blog.createdAt,
-            images: blog.coverImage ? [
+            images: [
                 {
-                    url: blog.coverImage,
+                    url: imageUrl,
                     width: 1200,
                     height: 630,
                     alt: blog.title,
                 }
-            ] : [],
+            ],
         },
         twitter: {
             card: 'summary_large_image',
             title: `${blog.title} | Blog`,
             description: cleanDesc,
-            images: blog.coverImage ? [blog.coverImage] : [],
+            images: [imageUrl],
         },
     };
 }
@@ -129,6 +136,8 @@ const Page = async ({ params }: PageProps) => {
     const { html } = await mdToHtmlAndHeadings(blog.content || "");
     const otherPosts = recentPosts.filter((p) => p._id !== blog._id).slice(0, 3);
 
+    const authorName = (blog.author?.name === "MEDO" || !blog.author?.name) ? "Mohammed Ehab" : blog.author.name;
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -138,7 +147,7 @@ const Page = async ({ params }: PageProps) => {
         dateModified: (blog as any).updatedAt || blog.createdAt,
         author: [{
             "@type": "Person",
-            name: blog.author?.name || "Mohammed Ehab",
+            name: authorName,
             url: "https://mhd-store.vercel.app/"
         }]
     };

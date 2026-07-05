@@ -4,19 +4,11 @@ import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { SUPPORT_CATEGORIES } from "@/constants/support";
 
 interface TicketFormProps {
   onSuccess?: () => void;
 }
-
-const categories = [
-  { value: "general", label: "General Inquiry" },
-  { value: "billing", label: "Billing & Payments" },
-  { value: "technical", label: "Technical Issue" },
-  { value: "account", label: "Account Related" },
-  { value: "template customization", label: "Template Customization" },
-  { value: "other", label: "Other" },
-];
 
 const priorities = [
   { value: "low", label: "Low" },
@@ -113,7 +105,7 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
             }
             className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
           >
-            {categories.map((cat) => (
+            {SUPPORT_CATEGORIES.map((cat) => (
               <option
                 key={cat.value}
                 value={cat.value}

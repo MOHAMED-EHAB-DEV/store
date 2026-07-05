@@ -79,7 +79,8 @@ const getSimilarTemplates = async (
   }
 };
 
-// Dynamic metadata for SEO
+import { truncateDescription } from "@/lib/seo";
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -91,11 +92,13 @@ export async function generateMetadata({
   }
 
   const url = `${APP_URL}/templates/${id}`;
+  const truncatedDesc = truncateDescription(template.description || `Premium template - ${template.title}`, 160);
+  const imageUrl = template.thumbnail || `${APP_URL}/screenshots/1.png`;
 
+  // TODO: upload screenshots for this page if no template thumbnail is present
   return {
     title: `${template.title} | MHD Store Premium Templates`,
-    description:
-      `Premium template - ${template.title}`,
+    description: `Premium template - ${template.title}`,
     keywords: [
       ...(template.tags || []),
       "template",
@@ -106,25 +109,23 @@ export async function generateMetadata({
     },
     openGraph: {
       title: `${template.title} | Premium Templates`,
-      description: template.description?.substring(0, 160),
+      description: truncatedDesc,
       url: url,
       type: "website",
-      images: template.thumbnail
-        ? [
-            {
-              url: template.thumbnail,
-              width: 1200,
-              height: 630,
-              alt: template.title,
-            },
-          ]
-        : [],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: template.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${template.title} | Premium Templates`,
-      description: template.description?.substring(0, 160),
-      images: template.thumbnail ? [template.thumbnail] : [],
+      description: truncatedDesc,
+      images: [imageUrl],
     },
   };
 }

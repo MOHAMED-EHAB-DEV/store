@@ -101,7 +101,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const templates = await getTemplates();
   const templatePages = templates.map((template: any) => ({
-    url: `${baseUrl}/templates/${template.slug || template._id}`,
+    url: `${baseUrl}/templates/${template.slug}`,
     lastModified: template.updatedAt || new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
@@ -109,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogs = await getBlogs();
   const blogPages = blogs.map((blog: any) => ({
-    url: `${baseUrl}/blog/${blog.slug || blog._id}`,
+    url: `${baseUrl}/blog/${blog.slug}`,
     lastModified: blog.updatedAt ? new Date(blog.updatedAt) : new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.7,

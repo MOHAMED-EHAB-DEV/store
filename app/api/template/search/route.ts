@@ -176,7 +176,7 @@ async function searchTemplatesHandler(req: NextRequest): Promise<NextResponse> {
 
     // Connect to database
     await connectToDatabase();
-    const categoryIds = (await Category.find({ name: { $in: params.categories } }).select("_id")).map((category) => category._id?.toString());
+    const categoryIds = (await Category.find({ $or: [{ name: { $in: params.categories } }, { slug: { $in: params.categories } }] }).select("_id")).map((category) => category._id?.toString());
 
     // Execute search with optimized aggregation
     const searchOptions = {

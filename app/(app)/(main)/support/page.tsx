@@ -1,37 +1,18 @@
-import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import TicketForm from "@/components/Support/TicketForm";
 import Link from "next/link";
 import { ThumbsUp } from "@/components/ui/svgs/icons/ThumbsUp";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Chat } from "@/components/ui/svgs/icons/Chat";
+import { SUPPORT_CATEGORIES } from "@/constants/support";
 
-const domain = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
-export const metadata: Metadata = {
+// TODO: upload screenshots for this page
+export const metadata = buildMetadata({
     title: "Contact Support | Premium Templates",
     description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
-    alternates: {
-        canonical: `${domain}/support`
-    },
-    openGraph: {
-        title: "Contact Support | Premium Templates",
-        description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
-        url: `${domain}/support`,
-        type: "website",
-        images: [{
-            url: `${domain}/assets/Icons/cover.jpg`,
-            width: 1200,
-            height: 630,
-            alt: "Contact Support"
-        }]
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Contact Support | Premium Templates",
-        description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
-        images: [`${domain}/assets/Icons/cover.jpg`]
-    }
-};
+    path: "/support",
+    screenshotName: "support",
+});
 
 const supportFeatures = [
     {
@@ -49,14 +30,6 @@ const supportFeatures = [
         title: "Track Progress",
         description: "View your tickets in your dashboard"
     }
-];
-
-const categories = [
-    { name: "General Inquiry", description: "Questions about our services" },
-    { name: "Billing & Payments", description: "Payment issues and refunds" },
-    { name: "Template Customization", description: "Request for template customization" },
-    { name: "Technical Issue", description: "Help with technical problems" },
-    { name: "Account", description: "Login, password, and profile" }
 ];
 
 export default function SupportPage() {
@@ -122,11 +95,11 @@ export default function SupportPage() {
 
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-white">Categories We Cover</h3>
-                                {categories.map((cat, index) => (
+                                {SUPPORT_CATEGORIES.map((cat, index) => (
                                     <div key={index} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
                                         <div className="w-2 h-2 rounded-full bg-purple-500" />
                                         <div>
-                                            <p className="font-medium text-white text-sm">{cat.name}</p>
+                                            <p className="font-medium text-white text-sm">{cat.label}</p>
                                             <p className="text-xs text-muted-foreground">{cat.description}</p>
                                         </div>
                                     </div>

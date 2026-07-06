@@ -1,12 +1,19 @@
 'use client';
 
 import { Upload } from "@/components/ui/svgs/icons/Upload";
-import type { ReactNode } from 'react';
-import { createContext, useContext } from 'react';
-import type { DropEvent, DropzoneOptions, FileRejection } from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
+import React, { ReactNode, createContext, useContext, useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+
+export type FileRejection = { file: File; errors: { code: string; message: string }[] };
+export type DropEvent = React.DragEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
+
+export type DropzoneOptions = {
+  accept?: Record<string, string[]>;
+  maxSize?: number;
+  minSize?: number;
+  maxFiles?: number;
+};
 
 type DropzoneContextType = {
   src?: File[];
@@ -29,18 +36,14 @@ const renderBytes = (bytes: number) => {
   return `${size.toFixed(2)}${units[unitIndex]}`;
 };
 
-const DropzoneContext = createContext<DropzoneContextType | undefined>(
-  undefined
-);
+const DropzoneContext = createContext<DropzoneContextType | undefined>(undefined);
 
-export type DropzoneProps = Omit<DropzoneOptions, 'onDrop'> & {
+export type DropzoneProps = Omit<React.HTMLAttributes<HTMLButtonElement>, 'onDrop' | 'onError'> & DropzoneOptions & {
   src?: File[];
   className?: string;
-  onDrop?: (
-    acceptedFiles: File[],
-    fileRejections: FileRejection[],
-    event: DropEvent
-  ) => void;
+  disabled?: boolean;
+  onDrop?: (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => void;
+  onError?: (err: Error) => void;
   children?: ReactNode;
 };
 
@@ -57,30 +60,104 @@ export const Dropzone = ({
   children,
   ...props
 }: DropzoneProps) => {
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept,
-    maxFiles,
-    maxSize,
-    minSize,
-    onError,
-    disabled,
-    onDrop: (acceptedFiles, fileRejections, event) => {
-      if (fileRejections.length > 0) {
-        const message = fileRejections.at(0)?.errors.at(0)?.message;
-        onError?.(new Error(message));
-        return;
+  const [isDragActive, setIsDragActive] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFiles = useCallback((files: File[], event: DropEvent) => {
+    const acceptedFiles: File[] = [];
+    const fileRejections: FileRejection[] = [];
+
+    files.forEach(file => {
+      const errors: { code: string; message: string }[] = [];
+      if (maxSize && file.size > maxSize) {
+        errors.push({ code: 'file-too-large', message: `File is larger than ${maxSize} bytes` });
+      }
+      if (minSize && file.size < minSize) {
+        errors.push({ code: 'file-too-small', message: `File is smaller than ${minSize} bytes` });
+      }
+      if (accept) {
+        const acceptKeys = Object.keys(accept);
+        const fileType = file.type;
+        const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+        
+        const isAccepted = acceptKeys.some(key => {
+          if (key === fileType) return true;
+          if (key.endsWith('/*') && fileType.startsWith(key.replace('/*', ''))) return true;
+          if (accept[key].includes(fileExtension)) return true;
+          return false;
+        });
+
+        if (!isAccepted) {
+          errors.push({ code: 'file-invalid-type', message: 'File type is not accepted' });
+        }
       }
 
+      if (errors.length > 0) {
+        fileRejections.push({ file, errors });
+      } else {
+        acceptedFiles.push(file);
+      }
+    });
+
+    if (maxFiles > 0 && acceptedFiles.length > maxFiles) {
+      const extraFiles = acceptedFiles.splice(maxFiles);
+      extraFiles.forEach(f => fileRejections.push({ file: f, errors: [{ code: 'too-many-files', message: `Too many files` }] }));
+    }
+
+    if (fileRejections.length > 0) {
+      const message = fileRejections.at(0)?.errors.at(0)?.message;
+      if (message) onError?.(new Error(message));
+    } else {
       onDrop?.(acceptedFiles, fileRejections, event);
-    },
-    ...props,
-  });
+    }
+  }, [accept, maxFiles, maxSize, minSize, onDrop, onError]);
+
+  const onDragEnter = useCallback((e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!disabled) setIsDragActive(true);
+  }, [disabled]);
+
+  const onDragLeave = useCallback((e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+  }, []);
+
+  const onDragOver = useCallback((e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const onDropEvent = useCallback((e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+    if (disabled) return;
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(Array.from(e.dataTransfer.files), e);
+    }
+  }, [disabled, handleFiles]);
+
+  const onChangeEvent = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
+    if (e.target.files && e.target.files.length > 0) {
+      handleFiles(Array.from(e.target.files), e);
+    }
+    // reset input so the same file can be selected again
+    e.target.value = '';
+  }, [disabled, handleFiles]);
+
+  const onClick = () => {
+    if (!disabled) {
+      inputRef.current?.click();
+    }
+  };
+
+  const acceptString = accept ? Object.entries(accept).flatMap(([mime, exts]) => [mime, ...exts]).join(',') : undefined;
 
   return (
-    <DropzoneContext.Provider
-      key={JSON.stringify(src)}
-      value={{ src, accept, maxSize, minSize, maxFiles }}
-    >
+    <DropzoneContext.Provider value={{ src, accept, maxSize, minSize, maxFiles }}>
       <Button
         className={cn(
           'relative h-auto w-full flex-col overflow-hidden p-8',
@@ -90,9 +167,22 @@ export const Dropzone = ({
         disabled={disabled}
         type="button"
         variant="outline"
-        {...getRootProps()}
+        onClick={onClick}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDragOver={onDragOver}
+        onDrop={onDropEvent}
+        {...props}
       >
-        <input {...getInputProps()} disabled={disabled} />
+        <input 
+          ref={inputRef}
+          type="file" 
+          accept={acceptString}
+          multiple={maxFiles !== 1}
+          disabled={disabled}
+          onChange={onChangeEvent} 
+          className="hidden" 
+        />
         {children}
       </Button>
     </DropzoneContext.Provider>
@@ -101,11 +191,9 @@ export const Dropzone = ({
 
 const useDropzoneContext = () => {
   const context = useContext(DropzoneContext);
-
   if (!context) {
     throw new Error('useDropzoneContext must be used within a Dropzone');
   }
-
   return context;
 };
 
@@ -122,13 +210,9 @@ export const DropzoneContent = ({
 }: DropzoneContentProps) => {
   const { src } = useDropzoneContext();
 
-  if (!src) {
+  if (!src || src.length === 0) {
     return null;
   }
-
-  // if (children) {
-  //   return children;
-  // }
 
   return (
     <div className={cn('flex flex-col items-center justify-center', className)}>
@@ -160,7 +244,7 @@ export const DropzoneEmptyState = ({
 }: DropzoneEmptyStateProps) => {
   const { src, accept, maxSize, minSize, maxFiles } = useDropzoneContext();
 
-  if (src) {
+  if (src && src.length > 0) {
     return null;
   }
 

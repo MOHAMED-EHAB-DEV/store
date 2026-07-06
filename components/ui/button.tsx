@@ -1,6 +1,6 @@
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "@/components/ui/slot"
+import { cva } from "@/lib/variants"
 
 import { cn } from "@/lib/utils"
 
@@ -47,7 +47,17 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
+type ButtonVariants = {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "gold" | "glass" | "success" | "warning" | "info" | "dark" | "accent" | "gradient-primary" | "gradient-secondary" | "gradient-success" | "gradient-warning" | "gradient-danger" | "gradient-info";
+  size?: "default" | "sm" | "lg" | "icon";
+};
+
+const buttonVariantsFunction = buttonVariants as unknown as (props?: ButtonVariants & { className?: string }) => string;
+
+const Button = React.forwardRef<HTMLButtonElement, React.ComponentProps<"button"> & ButtonVariants & {
+  asChild?: boolean;
+  loading?: boolean;
+}>(({
   className,
   variant,
   size,
@@ -55,21 +65,19 @@ function Button({
   loading = false,
   disabled,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-    loading?: boolean;
-  }) {
+}, ref) => {
   const Comp = asChild ? Slot : "button"
   const isDisabled = disabled || loading;
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariantsFunction({ variant, size, className }))}
       disabled={isDisabled}
+      ref={ref}
       {...props}
     />
   )
-}
+})
+Button.displayName = "Button"
 
-export { Button, buttonVariants }
+export { Button, buttonVariantsFunction as buttonVariants }

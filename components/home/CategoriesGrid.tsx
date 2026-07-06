@@ -19,6 +19,11 @@ function CategoryCard({ category, isHero, index }: { category: ICategory; isHero
     let mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      // Hardware acceleration hints for animated elements
+      gsap.set([iconWrapRef.current, spotlightRef.current, arrowRef.current], { 
+        willChange: "transform" 
+      });
+
       // Idle float for icon wrapper
       gsap.to(iconWrapRef.current, {
         y: -3,
@@ -49,21 +54,33 @@ function CategoryCard({ category, isHero, index }: { category: ICategory; isHero
         arrowY(0);
       };
 
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        xTo(x);
-        yTo(y);
+      let rafId: number | null = null;
+      let lastEvent: MouseEvent | null = null;
 
-        // Magnetic arrow logic (active near bottom-right)
-        if (e.clientX > rect.right - 100 && e.clientY > rect.bottom - 100) {
-            arrowX((e.clientX - (rect.right - 40)) * 0.2);
-            arrowY((e.clientY - (rect.bottom - 40)) * 0.2);
-        } else {
-            arrowX(0);
-            arrowY(0);
+      const handleMouseMove = (e: MouseEvent) => {
+        lastEvent = e;
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            if (!cardRef.current || !lastEvent) {
+              rafId = null;
+              return;
+            }
+            const rect = cardRef.current.getBoundingClientRect();
+            const x = lastEvent.clientX - rect.left;
+            const y = lastEvent.clientY - rect.top;
+            xTo(x);
+            yTo(y);
+
+            // Magnetic arrow logic (active near bottom-right)
+            if (lastEvent.clientX > rect.right - 100 && lastEvent.clientY > rect.bottom - 100) {
+                arrowX((lastEvent.clientX - (rect.right - 40)) * 0.2);
+                arrowY((lastEvent.clientY - (rect.bottom - 40)) * 0.2);
+            } else {
+                arrowX(0);
+                arrowY(0);
+            }
+            rafId = null;
+          });
         }
       };
 
@@ -75,6 +92,7 @@ function CategoryCard({ category, isHero, index }: { category: ICategory; isHero
         cardRef.current?.removeEventListener("mouseenter", handleMouseEnter);
         cardRef.current?.removeEventListener("mouseleave", handleMouseLeave);
         cardRef.current?.removeEventListener("mousemove", handleMouseMove);
+        if (rafId) cancelAnimationFrame(rafId);
       };
     });
   }, { scope: cardRef });
@@ -154,7 +172,7 @@ export default function CategoriesGrid({ categories }: { categories: ICategory[]
           gsap.fromTo(
             ".category-card",
             { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+            { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out", clearProps: "transform" }
           );
         }
       });

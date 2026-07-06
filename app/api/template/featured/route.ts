@@ -13,8 +13,11 @@ async function getFeaturedTemplates(req: NextRequest) {
   try {
     await connectToDatabase();
 
-    const DBTemplates = await Template.find({
+    const templates = await Template.find({
       isActive: true,
+      tags: {
+        $in: ["featured"]
+      }
     })
       .select(
         "_id slug title description thumbnail price tags categories averageRating",
@@ -22,7 +25,7 @@ async function getFeaturedTemplates(req: NextRequest) {
       .populate("categories", "name slug")
       .limit(4)
       .lean();
-    const templates = DBTemplates.filter(t => t.categories?.some((c: any) => c.slug === "featured"))
+
 
     const templateIds = templates.map((t) => t._id);
 
@@ -41,7 +44,7 @@ async function getFeaturedTemplates(req: NextRequest) {
       reviews: reviewCountMap.get(template._id.toString()) ?? 0,
     }));
 
-    return createAPIResponse(templatesWithReviews.filter(t => t.categories?.some((c: any) => c.slug === "featured")));
+    return createAPIResponse(templatesWithReviews);
   } catch (err) {
     return createErrorResponse("Something went wrong", 500, {
       req: req,

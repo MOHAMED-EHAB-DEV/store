@@ -1,15 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { getCategories } from "@/static/categories";
 import { ICategory } from "@/types";
-import CategoriesCarousel from "./CategoriesCarousel";
+import CategoriesGrid from "./CategoriesGrid";
 
 const CategoriesSection = async () => {
   const categories: ICategory[] = await getCategories();
 
-  // Filter out categories with 0 templates
-  const activeCategories = categories.filter(c => c.templateCount > 0);
-
-  if (!activeCategories || activeCategories.length === 0) {
+  if (!categories || categories.length === 0) {
     return null;
   }
 
@@ -31,13 +28,13 @@ const CategoriesSection = async () => {
               />
             </span>
           </h2>
-          <p className="text-medium-contrast text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
+          <p className="text-muted-foreground text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
             Explore our templates by category to quickly find exactly what you need for your next project.
           </p>
         </div>
 
-        {/* Carousel */}
-        <CategoriesCarousel categories={activeCategories} />
+        {/* Grid */}
+        <CategoriesGrid categories={categories} />
       </div>
     </section>
   );

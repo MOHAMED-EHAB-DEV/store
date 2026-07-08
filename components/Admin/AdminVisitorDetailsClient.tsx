@@ -4,9 +4,9 @@ import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Globe } from "@/components/ui/svgs/icons/Globe";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
-import { Navigation } from "@/components/ui/svgs/icons/Navigation";
 import { History } from "@/components/ui/svgs/icons/History";
 import { MousePointer2 } from "@/components/ui/svgs/icons/MousePointer2";
+import { useMemo } from "react";
 
 interface Visitor {
     _id: string;
@@ -24,11 +24,57 @@ interface Visitor {
 
 interface AdminVisitorDetailsClientProps {
     visitor: Visitor;
+    analytics?: any[];
 }
 
 export default function AdminVisitorDetailsClient({
     visitor,
+    analytics,
 }: AdminVisitorDetailsClientProps) {
+    const aggregatedMetrics = useMemo(() => {
+        if (!analytics) return {};
+        
+        const pageStats: Record<string, Record<string, { total: number, count: number, ratings: Record<string, number> }>> = {};
+        
+        analytics.forEach((record: any) => {
+            record.pages?.forEach((page: any) => {
+                if (!pageStats[page.path]) {
+                    pageStats[page.path] = {};
+                }
+                page.metrics?.forEach((metric: any) => {
+                    if (!pageStats[page.path][metric.name]) {
+                        pageStats[page.path][metric.name] = { total: 0, count: 0, ratings: { good: 0, 'needs-improvement': 0, poor: 0 } };
+                    }
+                    pageStats[page.path][metric.name].total += metric.value;
+                    pageStats[page.path][metric.name].count += 1;
+                    pageStats[page.path][metric.name].ratings[metric.rating] = (pageStats[page.path][metric.name].ratings[metric.rating] || 0) + 1;
+                });
+            });
+        });
+
+        const result: Record<string, any[]> = {};
+        Object.keys(pageStats).forEach(path => {
+            result[path] = Object.keys(pageStats[path]).map(metricName => {
+                const stat = pageStats[path][metricName];
+                let bestRating = 'good';
+                let maxCount = 0;
+                Object.entries(stat.ratings).forEach(([rating, count]) => {
+                    if ((count as number) > maxCount) {
+                        maxCount = count as number;
+                        bestRating = rating;
+                    }
+                });
+                return {
+                    name: metricName,
+                    value: stat.total / stat.count,
+                    rating: bestRating
+                };
+            });
+        });
+
+        return result;
+    }, [analytics]);
+
     return (
         <div className="p-6 space-y-8 animate-in fade-in duration-500">
             <PageHeader
@@ -91,7 +137,9 @@ export default function AdminVisitorDetailsClient({
                         </div>
 
                         <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-purple-500/50 before:via-blue-500/20 before:to-transparent">
-                            {visitor.pathHistory.slice().reverse().map((item, index) => (
+                            {visitor.pathHistory.slice().reverse().map((item, index) => {
+                                const pageMetrics = aggregatedMetrics[item.path] || [];
+                                return (
                                 <div key={index} className="relative flex items-center justify-between gap-6 pl-12 group">
                                     <div className="absolute left-0 grid place-content-center w-10 h-10 rounded-full border-4 border-[#0a0a0a] bg-gray-900 group-hover:scale-110 transition-transform duration-300">
                                         {index === 0 ? (
@@ -110,10 +158,25 @@ export default function AdminVisitorDetailsClient({
                                                 {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                             </span>
                                         </div>
-                                        <p className="text-[10px] text-muted-foreground tracking-tighter font-mono">{item.path}</p>
+                                        <p className="text-[10px] text-muted-foreground tracking-tighter font-mono mb-2">{item.path}</p>
+                                        
+                                        {pageMetrics.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-white/5">
+                                                {pageMetrics.map((metric: any) => (
+                                                    <div key={metric.name} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/40 border ${
+                                                        metric.rating === 'good' ? 'border-green-500/20 text-green-400' : 
+                                                        metric.rating === 'needs-improvement' ? 'border-yellow-500/20 text-yellow-400' : 
+                                                        'border-red-500/20 text-red-400'
+                                                    }`}>
+                                                        <span className="text-[9px] font-bold uppercase tracking-wider">{metric.name}</span>
+                                                        <span className="text-[10px] font-mono">{metric.value.toFixed(1)}{metric.name === 'CLS' ? '' : 'ms'}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            ))}
+                            )})}
                         </div>
                     </div>
                 </div>

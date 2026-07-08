@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import { authenticateUser } from "@/middleware/auth";
 import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import Analytics from "@/lib/models/Analytics";
 
 async function getAdminVisitorDetails(
     req: NextRequest,
@@ -24,7 +25,9 @@ async function getAdminVisitorDetails(
       return createErrorResponse("Visitor not found", 404, { req });
     }
 
-    return createAPIResponse(visitor, {
+    const analytics = await Analytics.find({ visitorId: id }).lean();
+
+    return createAPIResponse({ visitor, analytics }, {
       message: "Visitor details fetched successfully",
     });
   } catch (error: any) {

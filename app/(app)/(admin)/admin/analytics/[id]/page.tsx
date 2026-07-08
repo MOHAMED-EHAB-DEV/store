@@ -19,11 +19,11 @@ export default async function AdminVisitorDetailsPage({
   params: { id: string };
 }) {
   const { id } = await params;
-  const visitor = await getVisitorDetails(id);
+  const data = await getVisitorDetails(id);
 
-  if (!visitor) {
+  if (!data || !data.visitor) {
     notFound();
   }
 
-  return <AdminVisitorDetailsClient visitor={visitor} />;
+  return <AdminVisitorDetailsClient visitor={data.visitor} analytics={data.analytics} />;
 }

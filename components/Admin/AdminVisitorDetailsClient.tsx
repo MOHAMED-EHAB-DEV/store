@@ -20,6 +20,7 @@ interface Visitor {
         timestamp: string;
     }[];
     visitCount: number;
+    userId?: any;
 }
 
 interface AdminVisitorDetailsClientProps {
@@ -122,6 +123,31 @@ export default function AdminVisitorDetailsClient({
                                 {visitor.userAgent || 'Unknown User Agent'}
                              </div>
                         </div>
+
+                        {visitor.userId && (
+                            <div className="pt-4 mt-4 border-t border-white/5">
+                                 <p className="text-[10px] text-gray-500 uppercase mb-3 font-bold tracking-widest">Authenticated As</p>
+                                 <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10">
+                                    {visitor.userId.avatar ? (
+                                        <img src={visitor.userId.avatar} alt={visitor.userId.name} className="w-10 h-10 rounded-full object-cover border border-blue-500/20" />
+                                    ) : (
+                                        <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/20">
+                                            <span className="text-blue-400 font-bold uppercase">{visitor.userId.name?.charAt(0) || '?'}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-bold text-white">{visitor.userId.name}</span>
+                                        <span className="text-xs text-blue-400">{visitor.userId.email}</span>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <Badge variant="outline" className="text-[9px] uppercase tracking-wider py-0 px-1 border-white/10 bg-white/5">
+                                                {visitor.userId.role}
+                                            </Badge>
+                                            <span className="text-[9px] text-gray-500">Joined {new Date(visitor.userId.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                 </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 

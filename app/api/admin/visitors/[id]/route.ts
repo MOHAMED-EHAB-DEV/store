@@ -19,7 +19,7 @@ async function getAdminVisitorDetails(
 
     await connectToDatabase();
 
-    const visitor = await Visitor.findOne({ visitorId: id }).lean();
+    const visitor = await Visitor.findOne({ visitorId: id }).populate("userId", "name email avatar role createdAt").lean();
 
     if (!visitor) {
       return createErrorResponse("Visitor not found", 404, { req });

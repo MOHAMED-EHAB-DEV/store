@@ -180,15 +180,30 @@ export default function AdminAnalyticsClient({
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
-                          <Users className="w-4 h-4 text-blue-400" />
+                        {visitor.user?.avatar ? (
+                          <img src={visitor.user.avatar} alt={visitor.user.name} className="w-8 h-8 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                            <Users className="w-4 h-4 text-blue-400" />
+                          </div>
+                        )}
+                        <div className="flex flex-col">
+                          {visitor.user ? (
+                            <span className="text-sm font-medium text-white">
+                              {visitor.user.name}
+                            </span>
+                          ) : (
+                            <span
+                              className="text-sm font-medium text-white font-mono"
+                              title={visitor.visitorId}
+                            >
+                              {visitor.visitorId.substring(0, 8)}...
+                            </span>
+                          )}
+                          {visitor.user?.email && (
+                            <span className="text-[10px] text-muted-foreground">{visitor.user.email}</span>
+                          )}
                         </div>
-                        <span
-                          className="text-sm font-medium text-white font-mono"
-                          title={visitor.visitorId}
-                        >
-                          {visitor.visitorId.substring(0, 8)}...
-                        </span>
                       </div>
                     </td>
                     <td className="p-4 text-sm text-gray-300">

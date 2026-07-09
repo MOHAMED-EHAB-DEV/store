@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import crypto from "crypto";
 import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import { authenticateUser } from "@/middleware/auth";
 
 async function track(req: NextRequest) {
   try {
@@ -19,25 +20,32 @@ async function track(req: NextRequest) {
     // Fire-and-forget DB update – keeps response ultra fast
     const dbWork = (async () => {
       await connectToDatabase();
+      const user = await authenticateUser(true, true, false, true).catch(() => null);
 
       const userAgent = req.headers.get("user-agent") || "unknown";
       const ip =
         req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
       const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
 
+      const updateData: any = {
+        $set: { lastVisit: new Date(), userAgent, ipHash },
+        $inc: { visitCount: 1 },
+        $push: {
+          pathHistory: {
+            $each: [{ path: path ?? "/", timestamp: new Date() }],
+            $slice: -20, // Keep last 20 page views per visitor
+          },
+        },
+      };
+
+      if (user && user._id) {
+        updateData.$set.userId = user._id;
+      }
+
       // Upsert: creates or updates in a single atomic DB call
       await Visitor.findOneAndUpdate(
         { visitorId },
-        {
-          $set: { lastVisit: new Date(), userAgent, ipHash },
-          $inc: { visitCount: 1 },
-          $push: {
-            pathHistory: {
-              $each: [{ path: path ?? "/", timestamp: new Date() }],
-              $slice: -20, // Keep last 20 page views per visitor
-            },
-          },
-        },
+        updateData,
         { upsert: true },
       );
     })();

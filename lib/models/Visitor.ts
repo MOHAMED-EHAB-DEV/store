@@ -11,6 +11,7 @@ export interface IVisitor extends Document {
     timestamp: Date;
   }[];
   visitCount: number;
+  userId?: mongoose.Types.ObjectId | string;
 }
 
 const VisitorSchema: Schema = new Schema(
@@ -27,6 +28,7 @@ const VisitorSchema: Schema = new Schema(
       },
     ],
     visitCount: { type: Number, default: 1 },
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true },
 );

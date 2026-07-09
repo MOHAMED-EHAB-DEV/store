@@ -40,6 +40,7 @@ async function getAnalytics(req: NextRequest) {
       Visitor.find({})
         .sort({ lastVisit: -1 })
         .limit(10)
+        .populate("userId", "name email avatar")
         .lean()
         .exec()
     ]);
@@ -51,6 +52,7 @@ async function getAnalytics(req: NextRequest) {
       lastVisit: v.lastVisit.toISOString(),
       userAgent: v.userAgent,
       visitCount: v.visitCount,
+      user: v.userId || null,
     }));
 
     return createAPIResponse({

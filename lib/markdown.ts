@@ -229,7 +229,7 @@ function rehypeShiki() {
           // 1. Inject shiki-pre into the existing class attribute on <pre>
           .replace(
             /<pre([^>]*?)class="([^"]*?)"([^>]*)>/i,
-            `<pre$1class="$2 shiki-pre"$3>`,
+            `<pre$1class="$2 shiki-pre overflow-x-auto text-sm md:text-base"$3>`,
           )
           // 2. Strip inline style from <pre> so CSS vars (--code-bg/fg) take over
           .replace(/<pre([^>]*?)\sstyle="[^"]*"([^>]*)>/i, `<pre$1$2>`);
@@ -366,16 +366,21 @@ function rehypeAddClasses() {
 
       switch (node.tagName) {
         case "h1":
-          addClass("text-2xl md:text-4xl font-bold my-6 leading-tight");
+          addClass("text-2xl md:text-4xl font-bold my-6 leading-tight break-words");
           break;
         case "h2":
-          addClass("text-xl md:text-3xl font-semibold my-5 leading-snug");
+          addClass("text-xl md:text-3xl font-semibold my-5 leading-snug break-words");
           break;
         case "h3":
-          addClass("text-lg md:text-2xl font-semibold my-4 leading-snug");
+          addClass("text-lg md:text-2xl font-semibold my-4 leading-snug break-words");
+          break;
+        case "h4":
+        case "h5":
+        case "h6":
+          addClass("text-base md:text-xl font-semibold my-3 leading-snug break-words");
           break;
         case "p":
-          addClass("leading-relaxed mb-6 text-base md:text-lg");
+          addClass("leading-relaxed mb-6 text-base md:text-lg break-words");
           break;
         case "a":
           node.properties.target = "_blank";
@@ -389,26 +394,30 @@ function rehypeAddClasses() {
           if (!node.properties["aria-label"]) node.properties["aria-label"] = `Link to ${linkText}`;
 
           addClass(
-            "text-purple-400 hover:text-purple-300 hover:underline transition-colors duration-200",
+            "text-purple-400 hover:text-purple-300 hover:underline transition-colors duration-200 break-words",
           );
           break;
         case "img":
           if (!node.properties.loading) node.properties.loading = "lazy";
           if (!node.properties.alt) node.properties.alt = "Blog Image";
-          addClass("rounded-lg shadow-lg my-6 mx-auto max-w-full border border-gray-800");
+          addClass("rounded-lg shadow-lg my-6 mx-auto max-w-full h-auto border border-gray-800 object-cover");
+          break;
+        case "iframe":
+        case "video":
+          addClass("w-full aspect-video rounded-lg my-6 max-w-full");
           break;
         case "ul":
-          addClass("list-disc pl-6 mb-4 space-y-2");
+          addClass("list-disc pl-6 mb-4 space-y-2 break-words");
           break;
         case "ol":
-          addClass("list-decimal pl-6 mb-4 space-y-2");
+          addClass("list-decimal pl-6 mb-4 space-y-2 break-words");
           break;
         case "li":
-          addClass("leading-relaxed");
+          addClass("leading-relaxed break-words");
           break;
         case "blockquote":
           addClass(
-            "border-l-4 border-purple-500 pl-4 italic my-4 bg-purple-900/20 rounded-r-lg py-2",
+            "border-l-4 border-purple-500 pl-4 italic my-4 bg-purple-900/20 rounded-r-lg py-2 break-words",
           );
           break;
         case "code":
@@ -416,13 +425,13 @@ function rehypeAddClasses() {
           const codeContent = node.children?.[0]?.value || "";
           if (!codeContent.includes("\n") && codeContent.length < 100) {
             addClass(
-              "bg-gray-800 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono",
+              "bg-gray-800 text-pink-400 px-1.5 py-0.5 rounded text-sm md:text-base font-mono break-words",
             );
           }
           break;
         case "table":
           addClass(
-            "w-full border-collapse border border-gray-700 rounded-lg overflow-hidden my-6",
+            "block w-full overflow-x-auto whitespace-nowrap border-collapse border border-gray-700 rounded-lg my-6 text-sm md:text-base",
           );
           break;
         case "th":

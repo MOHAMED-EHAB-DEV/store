@@ -7,6 +7,7 @@ import {
   withAPIMiddleware,
   createAPIResponse,
 } from "@/lib/utils/api-helpers";
+import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 
 async function bulkUpdateBlogs(req: NextRequest) {
   try {
@@ -28,12 +29,20 @@ async function bulkUpdateBlogs(req: NextRequest) {
       return createErrorResponse("Updates object is required", 400, { req });
     }
 
+    const blogsToUpdate = await Blog.find({ _id: { $in: blogIds } }).select("slug _id");
+
     const result = await Blog.updateMany(
       {
         _id: { $in: blogIds },
       },
       { $set: updates },
     );
+
+    await revalidate("/blog");
+    for (const blog of blogsToUpdate) {
+      if (blog.slug) await revalidateWithTag(`blog-${blog.slug}`);
+      await revalidateWithTag(`blog-${blog._id}`);
+    }
 
     return createAPIResponse(
       { modifiedCount: result.modifiedCount },

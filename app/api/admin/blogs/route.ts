@@ -7,7 +7,7 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
-import { revalidateWithTag } from "@/actions/revalidateTag";
+import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 import User from "@/lib/models/User";
 import { isBase64Image } from "@/lib/utils";
 import { uploadToCloudinary } from "@/lib/cloudinary";
@@ -124,7 +124,7 @@ async function createBlog(req: NextRequest) {
 
     const newBlog = await Blog.create(body);
 
-    await revalidateWithTag("blogs");
+    await revalidate("/blog");
 
     return createAPIResponse(newBlog, { message: "Blog post created successfully" });
   } catch (error: any) {

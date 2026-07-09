@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
-import { mdToHtmlAndHeadings } from '@/lib/markdown';
+import Markdown from '@/components/singleTemplate/Markdown';
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
@@ -133,7 +133,6 @@ const Page = async ({ params }: PageProps) => {
         notFound();
     }
 
-    const { html } = await mdToHtmlAndHeadings(blog.content || "");
     const otherPosts = recentPosts.filter((p) => p._id !== blog._id).slice(0, 3);
 
     const authorName = (blog.author?.name === "MEDO" || !blog.author?.name) ? "Mohammed Ehab" : blog.author.name;
@@ -201,7 +200,7 @@ const Page = async ({ params }: PageProps) => {
             <div className="container mx-auto px-4 py-12 lg:flex gap-12 max-w-7xl">
                 <article className="lg:w-2/3">
                     <div className="prose prose-lg prose-invert max-w-none md:prose-xl prose-headings:text-white prose-p:text-gray-300 prose-a:text-purple-400 prose-strong:text-white prose-code:text-pink-400 hover:prose-a:text-purple-300 transition-colors">
-                        <div dangerouslySetInnerHTML={{ __html: html }} />
+                        <Markdown content={blog.content || ""} disableSidebar />
                     </div>
 
                     {blog.tags && blog.tags.length > 0 && (

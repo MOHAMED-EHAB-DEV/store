@@ -9,6 +9,7 @@ import {
 } from "@/lib/utils/api-helpers";
 import { isBase64Image } from "@/lib/utils";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 
 async function deleteAdminBlog(
   req: NextRequest,
@@ -28,6 +29,9 @@ async function deleteAdminBlog(
     if (!blog) {
       return createErrorResponse("Blog not found", 404, { req });
     }
+
+    await revalidate("/blog");
+    await revalidateWithTag(`blog-${id}`);
 
     return createAPIResponse(blog,
       {
@@ -70,6 +74,9 @@ async function updateAdminBlog(
     if (!blog) {
       return createErrorResponse("Blog not found", 404, { req });
     }
+
+    await revalidate("/blog");
+    await revalidateWithTag(`blog-${blog?.slug}`);
 
     return createAPIResponse(
       {

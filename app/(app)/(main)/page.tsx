@@ -1,5 +1,4 @@
 import Hero from "@/components/home/Hero";
-import HeroFeatures from "@/components/home/HeroFeatures";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import CategoriesSection from "@/components/home/CategoriesSection";
@@ -22,6 +21,7 @@ const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
 const Pricing = dynamic(() => import("@/components/home/Pricing"));
 const Cta = dynamic(() => import("@/components/home/CTA"));
 const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
+const HeroFeatures = dynamic(() => import("@/components/home/HeroFeatures"));
 
 export default async function Home() {
   return (

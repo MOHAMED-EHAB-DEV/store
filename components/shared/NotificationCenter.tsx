@@ -179,7 +179,7 @@ export default function NotificationCenter() {
                     )}
                 </div>
                 <div
-                    className="max-h-[400px] overflow-y-auto scrollbar-hide relative"
+                    className="max-h-[400px] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {notifications.length === 0 ? (

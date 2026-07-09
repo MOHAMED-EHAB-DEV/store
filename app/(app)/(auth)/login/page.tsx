@@ -38,7 +38,7 @@ const Page = async ({
         <SigninForm queryMessage={message} queryURL={url} />
         <div>
           Don't have an account?{" "}
-          <Link href="/register" className="text-gradient-purple">
+          <Link href="/register" className="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent">
             Register Here
           </Link>
         </div>

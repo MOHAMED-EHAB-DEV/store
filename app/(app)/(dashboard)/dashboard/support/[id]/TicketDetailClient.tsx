@@ -216,7 +216,7 @@ export default function TicketDetailClient({ ticketId }: TicketDetailClientProps
                     {ticket.status !== "closed" && (
                         <button
                             onClick={handleCloseTicket}
-                            className="btn btn-secondary text-sm"
+                            className="btn border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 backdrop-blur-sm text-sm"
                         >
                             Close Ticket
                         </button>

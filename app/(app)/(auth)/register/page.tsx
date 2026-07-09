@@ -33,7 +33,7 @@ const Page = () => {
         <RegisterForm />
         <div>
           Already have an account?{" "}
-          <Link href="/login" className="text-gradient-purple">
+          <Link href="/login" className="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent">
             Login Here
           </Link>
         </div>

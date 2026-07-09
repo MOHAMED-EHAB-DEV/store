@@ -1,3 +1,4 @@
+import '@/app/markdown.css';
 import { mdToHtmlAndHeadings } from '@/lib/markdown';
 import TocHighlightClient from '@/components/singleTemplate/TOCHighlight';
 

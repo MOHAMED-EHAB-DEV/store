@@ -12,7 +12,7 @@ const Page = () => {
         Refresh Home Page
       </Button>
       <Button
-        className="btn btn-secondary"
+        className="btn border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 backdrop-blur-sm"
         onClick={async () => revalidate("/blogs")}
       >
         Refresh Blog Page

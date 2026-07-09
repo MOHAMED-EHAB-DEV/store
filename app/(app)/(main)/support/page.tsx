@@ -111,7 +111,7 @@ export default function SupportPage() {
                                 <p className="text-sm text-muted-foreground mb-4">
                                     View and manage your support tickets in your dashboard.
                                 </p>
-                                <Link href="/dashboard/support" className="btn btn-secondary text-sm">
+                                <Link href="/dashboard/support" className="btn border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 backdrop-blur-sm text-sm">
                                     View My Tickets
                                 </Link>
                             </div>

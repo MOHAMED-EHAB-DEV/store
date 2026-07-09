@@ -35,7 +35,7 @@ const Template = async ({
             <h1 className="text-3xl sm:text-4xl font-bold font-paras text-center sm:text-left break-words">
               {template.title}
             </h1>
-            <span className="text-xl sm:text-2xl font-bold text-gradient-primary text-center sm:text-right break-words">
+            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent text-center sm:text-right break-words">
               {template.price === 0 ? "Free" : `$${template.price}`}
             </span>
           </div>

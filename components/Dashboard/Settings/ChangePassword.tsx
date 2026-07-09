@@ -256,7 +256,7 @@ const ChangePassword = () => {
                 <button
                     type="button"
                     onClick={() => setIsDialogOpen(true)}
-                    className="bg-gradient-danger rounded-md w-fit cursor-pointer px-4 py-2 font-bold text-white border-none outline-none focus:outline-none"
+                    className="bg-[linear-gradient(135deg,#ff4e50_0%,#f44336_50%,#d32f2f_100%)] rounded-md w-fit cursor-pointer px-4 py-2 font-bold text-white border-none outline-none focus:outline-none"
                 >
                     Delete your account
                 </button>

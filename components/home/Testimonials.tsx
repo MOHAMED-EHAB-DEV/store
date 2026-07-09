@@ -10,7 +10,7 @@ export default function Testimonials() {
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-heading">
-                        Loved by <span className="text-gradient">Creators Worldwide</span>
+                        Loved by <span className="bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">Creators Worldwide</span>
                     </h2>
                 </div>
 

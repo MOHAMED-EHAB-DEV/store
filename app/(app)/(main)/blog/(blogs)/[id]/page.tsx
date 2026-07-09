@@ -174,7 +174,7 @@ const Page = async ({ params }: PageProps) => {
       />
       <main className="min-h-screen w-full py-36 text-gray-200">
         <ViewTracker blogId={id} />
-        <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div className="relative w-full max-w-7xl mx-auto h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden lg:rounded-3xl">
           <div className="absolute inset-0 bg-gray-950">
             {blog.coverImage && (
               <Image
@@ -295,7 +295,7 @@ const Page = async ({ params }: PageProps) => {
               </div>
             </div>
 
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-900/20 to-pink-900/10 border border-purple-500/20 text-center relative overflow-hidden">
+            {/* <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-900/20 to-pink-900/10 border border-purple-500/20 text-center relative overflow-hidden">
               <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl" />
               <h3 className="text-xl font-bold text-white mb-2 relative z-10">
                 Stay Updated
@@ -306,7 +306,7 @@ const Page = async ({ params }: PageProps) => {
               <button className="w-full py-2.5 rounded-lg bg-gray-100 text-gray-900 font-bold text-sm hover:bg-white transition-colors relative z-10">
                 Subscribe to Newsletter
               </button>
-            </div>
+            </div> */}
           </aside>
         </div>
       </main>

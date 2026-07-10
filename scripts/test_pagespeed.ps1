@@ -39,7 +39,7 @@ foreach ($url in $urls) {
     
     # Open 2 tabs for each URL
     Start-Process $bravePath -ArgumentList "--incognito", $psiUrl
-    Start-Process $bravePath -ArgumentList "--incognito", $psiUrl
+    # Start-Process $bravePath -ArgumentList "--incognito", $psiUrl
     
     # Small delay to prevent issues with multiple process starts
     Start-Sleep -Milliseconds 500

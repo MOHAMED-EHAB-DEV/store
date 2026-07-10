@@ -1,3 +1,4 @@
+import "@/app/markdown.css";
 import Template from "@/components/singleTemplate/Template";
 import { ICategory, ITemplate } from "@/types";
 import type { Metadata } from "next";

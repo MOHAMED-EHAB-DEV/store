@@ -1,3 +1,4 @@
+import "@/app/markdown.css";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import Markdown from "@/components/singleTemplate/Markdown";

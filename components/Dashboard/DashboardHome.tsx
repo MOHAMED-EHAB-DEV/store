@@ -56,7 +56,7 @@ export default function DashboardHome({ data }: DashboardHomeProps) {
     return (
         <div className="p-6 space-y-6">
             <PageHeader
-                title={`Welcome back, ${user?.name.split(" ")[0]}!`}
+                title={`Welcome back, ${user ? user?.name.split(" ")[0] : "User"}!`}
                 description="Here's what's happening with your account"
             />
 

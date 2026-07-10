@@ -7,12 +7,17 @@ async function getAnalytics(req: NextRequest) {
   try {
     await connectToDatabase();
 
+    const url = new URL(req.url);
+    const page = parseInt(url.searchParams.get("page") || "1", 10);
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
     const now = new Date();
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const last7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const last30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [totalVisitors, uniqueLast24h, uniqueLast7d, uniqueLast30d, topPages, dailyVisits, recentVisitorsData] = await Promise.all([
+    const [totalVisitors, uniqueLast24h, uniqueLast7d, uniqueLast30d, topPages, dailyVisits, recentVisitorsData, totalVisitorsCount] = await Promise.all([
       Visitor.countDocuments(),
       Visitor.countDocuments({ lastVisit: { $gte: last24h } }),
       Visitor.countDocuments({ lastVisit: { $gte: last7d } }),
@@ -39,10 +44,12 @@ async function getAnalytics(req: NextRequest) {
       ]),
       Visitor.find({})
         .sort({ lastVisit: -1 })
-        .limit(10)
+        .skip(skip)
+        .limit(limit)
         .populate("userId", "name email avatar")
         .lean()
-        .exec()
+        .exec(),
+      Visitor.countDocuments({})
     ]);
 
     const recentVisitors = recentVisitorsData.map((v) => ({
@@ -65,6 +72,8 @@ async function getAnalytics(req: NextRequest) {
           dailyVisits,
         },
         recentVisitors,
+        totalPages: Math.ceil(totalVisitorsCount / limit),
+        currentPage: page,
       });
   } catch (error) {
     console.error("Error fetching admin analytics:", error);

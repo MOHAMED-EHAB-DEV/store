@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import ChartCard, {
@@ -10,6 +11,7 @@ import { Target } from "@/components/ui/svgs/icons/Target";
 import { Globe } from "@/components/ui/svgs/icons/Globe";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { History } from "@/components/ui/svgs/icons/History";
+import { Pagination } from "@/components/ui/pagination";
 
 interface AdminAnalyticsClientProps {
   data: {
@@ -22,13 +24,18 @@ interface AdminAnalyticsClientProps {
       dailyVisits: { date: string; count: number }[];
     } | null;
     recentVisitors: any[];
+    currentPage?: number;
+    totalPages?: number;
   };
 }
 
 export default function AdminAnalyticsClient({
   data,
 }: AdminAnalyticsClientProps) {
-  const { stats, recentVisitors } = data;
+  const { stats, recentVisitors, currentPage = 1, totalPages = 1 } = data;
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   if (!stats) {
     return (
@@ -40,6 +47,12 @@ export default function AdminAnalyticsClient({
       </div>
     );
   }
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   // Calculate percentage changes or trends if needed. For now, we can just show static trends since we don't have historical comparison data.
   const statCards = [
@@ -241,6 +254,13 @@ export default function AdminAnalyticsClient({
               </tbody>
             </table>
           </div>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </section>
     </div>

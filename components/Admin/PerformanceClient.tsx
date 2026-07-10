@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import ChartCard, { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
@@ -8,6 +9,8 @@ import { Zap } from "@/components/ui/svgs/icons/Zap";
 import { MousePointer } from "@/components/ui/svgs/icons/MousePointer";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Activity } from "@/components/ui/svgs/icons/Activity";
+import { History } from "@/components/ui/svgs/icons/History";
+import { Pagination } from "@/components/ui/pagination";
 
 interface PerformanceClientProps {
   data: {
@@ -19,10 +22,17 @@ interface PerformanceClientProps {
     }[];
     dailyTrends: Record<string, { date: string; value: number }[]>;
     slowestPages: { _id: string; averageLCP: number; count: number }[];
+    recentSessions: any[];
+    currentPage?: number;
+    totalPages?: number;
   } | null;
 }
 
 export default function PerformanceClient({ data }: PerformanceClientProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   if (!data) {
     return (
       <div className="p-6">
@@ -34,7 +44,13 @@ export default function PerformanceClient({ data }: PerformanceClientProps) {
     );
   }
 
-  const { globalAverages, ratingDistributions, dailyTrends, slowestPages } = data;
+  const { globalAverages, ratingDistributions, dailyTrends, slowestPages, recentSessions = [], currentPage = 1, totalPages = 1 } = data;
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   // Helper to extract a specific metric's average
   const getAverage = (metricName: string) => {
@@ -87,7 +103,7 @@ export default function PerformanceClient({ data }: PerformanceClientProps) {
   const inpData = useMemo(() => formatChartData("INP"), [dailyTrends]);
 
   return (
-    <div className="p-4 md:p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500">
       <PageHeader
         title="Performance Analytics"
         description="Monitor real-world Web Vitals from your users over the last 30 days."
@@ -195,6 +211,82 @@ export default function PerformanceClient({ data }: PerformanceClientProps) {
         </div>
 
       </div>
+
+      {/* Recent Sessions */}
+      <section aria-label="Recent Sessions">
+        <div className="glass rounded-xl overflow-hidden border-white/5 border">
+          <div className="p-4 border-b border-white/10 flex items-center gap-2">
+            <History className="w-5 h-5 text-purple-400" />
+            <h2 className="font-semibold text-white">Recent Performance Sessions</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/5 bg-white/5">
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Visitor ID
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Pages Evaluated
+                  </th>
+                  <th className="p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {recentSessions.map((session) => (
+                  <tr
+                    key={session._id}
+                    className="hover:bg-white/5 transition-colors group"
+                  >
+                    <td className="p-4">
+                      <span className="text-sm font-medium text-white font-mono" title={session.visitorId}>
+                        {session.visitorId.substring(0, 12)}...
+                      </span>
+                    </td>
+                    <td className="p-4 text-sm text-gray-300">
+                      {new Date(session.createdAt).toLocaleString()}
+                    </td>
+                    <td className="p-4 text-sm text-gray-300">
+                      {session.pages.length} pages
+                    </td>
+                    <td className="p-4 text-right">
+                      <a
+                        href={`/admin/performance/${session.visitorId}`}
+                        className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                      >
+                        View Metrics
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+                {recentSessions.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="p-8 text-center text-muted-foreground"
+                    >
+                      No recent performance sessions found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </div>
+      </section>
+
     </div>
   );
 }

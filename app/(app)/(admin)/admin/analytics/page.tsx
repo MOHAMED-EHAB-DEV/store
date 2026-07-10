@@ -8,19 +8,19 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 };
 
-async function getAnalyticsData() {
+async function getAnalyticsData(page: number) {
   try {
     const baseUrl =
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-    const res = await fetch(`${baseUrl}/api/admin/analytics`, {
+    const res = await fetch(`${baseUrl}/api/admin/analytics?page=${page}`, {
       cache: "no-store",
       headers: { cookie: (await headers()).get("cookie") || "" },
     });
 
     if (!res.ok) {
       console.error("Analytics fetch failed:", res.status, await res.text());
-      return { stats: null, recentVisitors: [] };
+      return { stats: null, recentVisitors: [], totalPages: 1, currentPage: 1 };
     }
 
     const data = await res.json();
@@ -30,13 +30,21 @@ async function getAnalyticsData() {
     return {
       stats: null,
       recentVisitors: [],
+      totalPages: 1,
+      currentPage: 1
     };
   }
 }
 
-
-export default async function AnalyticsPage() {
-  const data = await getAnalyticsData();
+export default async function AnalyticsPage(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const page = parseInt(searchParams.page as string || "1", 10);
+  const data = await getAnalyticsData(page);
 
   return <AdminAnalyticsClient data={data} />;
 }
+

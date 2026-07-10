@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 };
 
-async function getPerformanceData() {
+async function getPerformanceData(page: number) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-    const res = await fetch(`${baseUrl}/api/admin/performance`, {
+    const res = await fetch(`${baseUrl}/api/admin/performance?page=${page}`, {
       cache: "no-store",
       headers: { cookie: (await headers()).get("cookie") || "" },
     });
@@ -30,8 +30,14 @@ async function getPerformanceData() {
   }
 }
 
-export default async function PerformancePage() {
-  const data = await getPerformanceData();
+export default async function PerformancePage(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const page = parseInt(searchParams.page as string || "1", 10);
+  const data = await getPerformanceData(page);
 
   return <PerformanceClient data={data} />;
 }

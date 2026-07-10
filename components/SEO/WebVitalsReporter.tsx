@@ -63,23 +63,18 @@ export default function WebVitalsReporter() {
     });
 
     // Schedule sending metrics when the browser is idle
-    // if (typeof requestIdleCallback !== "undefined") {
-    //   requestIdleCallback(() => flushQueue(), { timeout: 2000 });
-    // } else {
-    //   setTimeout(flushQueue, 2000);
-    // }
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(() => flushQueue(), { timeout: 2000 });
+    } else {
+      setTimeout(flushQueue, 2000);
+    }
   });
 
   // Flush remaining metrics on unmount (navigation)
   useEffect(() => {
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") flushQueue();
-    });
-    window.addEventListener("pagehide", flushQueue);
     return () => {
-      document.removeEventListener("visibilitychange", flushQueue);
-      window.removeEventListener("pagehide", flushQueue);
-    };
+      flushQueue();
+    }
   }, [pathname]);
 
   return null;

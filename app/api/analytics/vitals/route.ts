@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, after } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Analytics from "@/lib/models/Analytics";
 import { createErrorResponse, createAPIResponse } from "@/lib/utils/api-helpers";
@@ -24,29 +24,35 @@ export async function POST(req: NextRequest) {
       delta: m.delta
     }));
 
-    await connectToDatabase();
+    after(async () => {
+      try {
+        await connectToDatabase();
 
-    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-    // 1. Try to push metrics to an existing path for this visitor/date
-    const doc = await Analytics.findOneAndUpdate(
-      { visitorId, date, "pages.path": path },
-      { $push: { "pages.$.metrics": { $each: cleanMetrics } } },
-      { new: true }
-    );
+        // 1. Try to push metrics to an existing path for this visitor/date
+        const doc = await Analytics.findOneAndUpdate(
+          { visitorId, date, "pages.path": path },
+          { $push: { "pages.$.metrics": { $each: cleanMetrics } } },
+          { new: true }
+        );
 
-    // 2. If no document was found (either new visitor/date, or new path), upsert the path
-    if (!doc) {
-      await Analytics.findOneAndUpdate(
-        { visitorId, date },
-        { $push: { pages: { path, metrics: cleanMetrics } } },
-        { upsert: true, new: true }
-      );
-    }
+        // 2. If no document was found (either new visitor/date, or new path), upsert the path
+        if (!doc) {
+          await Analytics.findOneAndUpdate(
+            { visitorId, date },
+            { $push: { pages: { path, metrics: cleanMetrics } } },
+            { upsert: true, new: true }
+          );
+        }
+      } catch (error) {
+        console.error("Error saving vitals in background:", error);
+      }
+    });
 
-    return createAPIResponse({ success: true }, { message: "Metrics recorded" });
+    return createAPIResponse({ success: true }, { message: "Metrics enqueued" });
   } catch (error) {
-    console.error("Error saving vitals:", error);
+    console.error("Error parsing vitals request:", error);
     return createErrorResponse("Internal server error", 500);
   }
 }

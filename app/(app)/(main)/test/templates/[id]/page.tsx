@@ -39,45 +39,45 @@ const getTemplate = async (id: string) => {
   }
 };
 
-const getSimilarTemplates = async (
-  categoryIds: (string | ICategory)[],
-  tags: string[],
-  excludeId: string,
-) => {
-  try {
-    const queryParams = new URLSearchParams({
-      categories: categoryIds.join(","),
-      tags: tags.join(","),
-      excludeId,
-      limit: "3",
-    });
+// const getSimilarTemplates = async (
+//   categoryIds: (string | ICategory)[],
+//   tags: string[],
+//   excludeId: string,
+// ) => {
+//   try {
+//     const queryParams = new URLSearchParams({
+//       categories: categoryIds.join(","),
+//       tags: tags.join(","),
+//       excludeId,
+//       limit: "3",
+//     });
 
-    const response = await fetch(
-      `${APP_URL}/api/templates?${queryParams.toString()}`,
-      {
-        next: {
-          revalidate: 60 * 60 * 24 * 7, // 1 week
-        },
-      },
-    );
+//     const response = await fetch(
+//       `${APP_URL}/api/templates?${queryParams.toString()}`,
+//       {
+//         next: {
+//           revalidate: 60 * 60 * 24 * 7, // 1 week
+//         },
+//       },
+//     );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch similar templates: ${response.status}`);
-    }
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch similar templates: ${response.status}`);
+//     }
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    return data.success
-      ? { data: data.data as ITemplate[], error: null }
-      : { error: data.message || "No similar templates found", data: null };
-  } catch (err: any) {
-    if (err && typeof err === "object" && "digest" in err) throw err;
-    return {
-      error: `Error fetching similar templates: ${err.message || err}`,
-      data: null,
-    };
-  }
-};
+//     return data.success
+//       ? { data: data.data as ITemplate[], error: null }
+//       : { error: data.message || "No similar templates found", data: null };
+//   } catch (err: any) {
+//     if (err && typeof err === "object" && "digest" in err) throw err;
+//     return {
+//       error: `Error fetching similar templates: ${err.message || err}`,
+//       data: null,
+//     };
+//   }
+// };
 
 import { truncateDescription } from "@/lib/seo";
 
@@ -139,11 +139,11 @@ const Page = async ({ params }: PageProps) => {
     notFound();
   }
 
-  const { data: similarTemplates } = await getSimilarTemplates(
-    template.categories || [],
-    template.tags || [],
-    template?._id,
-  );
+  // const { data: similarTemplates } = await getSimilarTemplates(
+  //   template.categories || [],
+  //   template.tags || [],
+  //   template?._id,
+  // );
 
   // JSON-LD structured data for SEO
   const jsonLd = {
@@ -210,7 +210,8 @@ const Page = async ({ params }: PageProps) => {
           {/* Comment out sections within Template component to test performance */}
           <Template
             template={template}
-            similarTemplates={similarTemplates || []}
+            similarTemplates={[]}
+            // similarTemplates={similarTemplates || []}
           />
         </div>
       </main>

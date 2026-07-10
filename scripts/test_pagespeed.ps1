@@ -1,9 +1,13 @@
 # Script to open PageSpeed Insights for multiple URLs in Brave Private Tabs
 
 $urls = @(
+    # "https://mhd-store.vercel.app/",
+    # "https://mhd-store.vercel.app/templates",
+    # "https://mhd-store.vercel.app/templates/category/vite",
+    # "https://mhd-store.vercel.app/templates/obsidian-portfolio"
     "https://mhd-store.vercel.app/",
-    "https://mhd-store.vercel.app/templates",
-    "https://mhd-store.vercel.app/templates/category/vite",
+    "https://mhd-store-test.vercel.app/test",
+    "https://mhd-store-test.vercel.app/test/templates/obsidian-portfolio",
     "https://mhd-store.vercel.app/templates/obsidian-portfolio"
 )
 

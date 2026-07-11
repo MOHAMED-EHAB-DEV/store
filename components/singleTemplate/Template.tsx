@@ -26,6 +26,8 @@ const Template = async ({
           <TemplateThumbnail
             thumbnail={template.thumbnail}
             title={template.title}
+            demoVideo={template.demoVideo}
+            description={template.description}
           />
         </div>
 

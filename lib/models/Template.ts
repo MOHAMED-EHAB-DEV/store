@@ -5,6 +5,7 @@ import "./User";
 export interface ITemplate extends Document {
   slug: string;
   title: string;
+  demoVideo?: string;
   description: string;
   thumbnail: string;
   demoLink: string;
@@ -133,6 +134,10 @@ const TemplateSchema = new Schema<ITemplate>(
     fileKey: {
       type: String,
       required: true,
+      trim: true,
+    },
+    demoVideo: {
+      type: String,
       trim: true,
     },
   },
@@ -365,6 +370,7 @@ TemplateSchema.statics.searchTemplates = function (
         description: 1,
         thumbnail: 1,
         demoLink: 1,
+        demoVideo: 1,
         price: 1,
         downloads: 1,
         views: 1,

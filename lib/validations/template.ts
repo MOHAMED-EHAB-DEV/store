@@ -8,6 +8,7 @@ export const TemplateSchema = v.object({
   thumbnail: v.string(),
   demoLink: v.string(),
   price: v.number(),
+  demoVideo: v.optional(v.string()),
   content: v.union([v.string(), v.undefined()]),
   categories: v.array(v.union([v.string(), CategorySchema])),
   tags: v.array(v.string()),

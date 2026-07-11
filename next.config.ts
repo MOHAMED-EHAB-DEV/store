@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
       "form-action 'self'",
       "frame-ancestors 'none'",
       "frame-src 'self' https:",
-      "media-src 'self' blob:",
+      "media-src 'self' blob: https://res.cloudinary.com",
       "manifest-src 'self'",
       "worker-src 'self' blob:",
       "child-src 'self' blob:",
@@ -100,6 +100,7 @@ const nextConfig: NextConfig = {
     ],
     optimizeCss: true,
     esmExternals: true,
+    proxyClientMaxBodySize: "100mb",
   },
   serverExternalPackages: ["shiki", "mongoose", "mongodb", "bcryptjs", "cloudinary", "googleapis", "jose", "sharp"],
   logging: {

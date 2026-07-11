@@ -17,7 +17,7 @@ function addSecurityHeaders(response: NextResponse) {
     "form-action 'self'",
     "frame-ancestors 'none'",
     "frame-src 'self' https:",
-    "media-src 'self' blob:",
+    "media-src 'self' blob: https://res.cloudinary.com",
     "manifest-src 'self'",
     "worker-src 'self' blob:",
     "child-src 'self' blob:",

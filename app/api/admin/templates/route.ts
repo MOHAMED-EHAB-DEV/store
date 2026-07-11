@@ -123,7 +123,9 @@ async function createAdminTemplate(req: NextRequest) {
       } else if (
         key !== "thumbnailFile" &&
         key !== "templateFile" &&
+        key !== "demoVideoFile" &&
         key !== "thumbnailUrl" &&
+        key !== "demoVideoUrl" &&
         key !== "fileKeyStr"
       ) {
         if (value === "true") body[key] = true;
@@ -135,7 +137,9 @@ async function createAdminTemplate(req: NextRequest) {
 
     const thumbnailFile = formData.get("thumbnailFile") as File | null;
     const templateFile = formData.get("templateFile") as File | null;
+    const demoVideoFile = formData.get("demoVideoFile") as File | null;
     const thumbnailUrl = formData.get("thumbnailUrl") as string | null;
+    const demoVideoUrl = formData.get("demoVideoUrl") as string | null;
     const fileKeyStr = formData.get("fileKeyStr") as string | null;
 
     if (thumbnailFile) {
@@ -147,6 +151,17 @@ async function createAdminTemplate(req: NextRequest) {
       body.thumbnail = uploadResult.secure_url;
     } else if (thumbnailUrl) {
       body.thumbnail = thumbnailUrl;
+    }
+
+    if (demoVideoFile) {
+      const uploadResult = await uploadToCloudinary(
+        demoVideoFile,
+        "templates_demo_videos",
+        "video",
+      );
+      body.demoVideo = uploadResult.secure_url;
+    } else if (demoVideoUrl) {
+      body.demoVideo = demoVideoUrl;
     }
 
     if (templateFile) {

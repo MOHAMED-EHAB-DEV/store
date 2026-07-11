@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { Star } from "@/components/ui/svgs/icons/Star";
@@ -33,6 +33,10 @@ const Template = ({
   const isFavorite = favoriteTemplates?.some(
     (favTemplate: ITemplate) => favTemplate._id === template._id,
   );
+
+  const [isHovering, setIsHovering] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     setHighResLoaded(false);
@@ -114,7 +118,28 @@ const Template = ({
       </Button>
 
       {/* Thumbnail */}
-      <div className="relative w-full h-56 overflow-hidden">
+      <div 
+        className="relative w-full h-56 overflow-hidden"
+        onMouseEnter={() => {
+          if (template.demoVideo) {
+            setIsHovering(true);
+            if (videoRef.current) {
+              videoRef.current.currentTime = 0;
+              videoRef.current.play().catch(e => console.log('Video play error:', e));
+            }
+          }
+        }}
+        onMouseLeave={() => {
+          if (template.demoVideo) {
+            setIsHovering(false);
+            setVideoReady(false);
+            if (videoRef.current) {
+              videoRef.current.pause();
+              videoRef.current.currentTime = 0;
+            }
+          }
+        }}
+      >
         <Image
           src={lowResUrl}
           alt={template.title}
@@ -135,6 +160,37 @@ const Template = ({
             highResLoaded ? "opacity-100" : "opacity-0"
           }`}
         />
+
+        {/* Loading shimmer */}
+        {template.demoVideo && isHovering && !videoReady && (
+          <div className="absolute inset-0 z-10 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
+        )}
+
+        {/* Video Player */}
+        {template.demoVideo && (
+          <video
+            ref={videoRef}
+            src={template.demoVideo}
+            muted
+            loop
+            playsInline
+            preload="none"
+            className={`absolute inset-0 w-full h-full object-contain bg-black transition-opacity duration-300 z-10 ${
+              videoReady && isHovering ? "opacity-100" : "opacity-0"
+            }`}
+            onCanPlayThrough={() => setVideoReady(true)}
+            itemProp="video"
+            itemScope
+            itemType="https://schema.org/VideoObject"
+            title={`${template.title} demo video`}
+            aria-label={`Demo video for ${template.title}`}
+          >
+            <meta itemProp="name" content={`${template.title} demo video`} />
+            <meta itemProp="description" content={template.description} />
+            <meta itemProp="thumbnailUrl" content={highResUrl} />
+            <meta itemProp="uploadDate" content={template.createdAt ? new Date(template.createdAt).toISOString() : new Date().toISOString()} suppressHydrationWarning />
+          </video>
+        )}
       </div>
 
       {/* Template Info */}

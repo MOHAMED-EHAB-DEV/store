@@ -42,6 +42,9 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
     const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(initialData?.thumbnail);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
+    const [demoVideoUrl, setDemoVideoUrl] = useState<string | undefined>(initialData?.demoVideo);
+    const [demoVideoFile, setDemoVideoFile] = useState<File | null>(null);
+
     const [fileKeyStr, setFileKeyStr] = useState<string | undefined>(initialData?.fileKey);
     const [templateFile, setTemplateFile] = useState<File | null>(null);
 
@@ -57,6 +60,13 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         if (files.length > 0) {
             setThumbnailFile(files[0]);
             setThumbnailUrl(URL.createObjectURL(files[0]));
+        }
+    };
+
+    const handleDemoVideo = (files: File[]) => {
+        if (files.length > 0) {
+            setDemoVideoFile(files[0]);
+            setDemoVideoUrl(URL.createObjectURL(files[0]));
         }
     };
 
@@ -97,12 +107,18 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
             if (thumbnailUrl && !thumbnailFile) {
                 submitData.append('thumbnailUrl', thumbnailUrl);
             }
+            if (demoVideoUrl && !demoVideoFile) {
+                submitData.append('demoVideoUrl', demoVideoUrl);
+            }
             if (fileKeyStr && !templateFile) {
                 submitData.append('fileKeyStr', fileKeyStr);
             }
 
             if (thumbnailFile) {
                 submitData.append('thumbnailFile', thumbnailFile);
+            }
+            if (demoVideoFile) {
+                submitData.append('demoVideoFile', demoVideoFile);
             }
             if (templateFile) {
                 submitData.append('templateFile', templateFile);
@@ -318,6 +334,45 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                         maxSize={8 * 1024 * 1024}
                         maxFiles={1}
                         onDrop={handleThumbnail}
+                    >
+                        <DropzoneEmptyState />
+                        <DropzoneContent />
+                    </Dropzone>
+                )}
+            </div>
+
+            {/* Demo Video */}
+            <div className="glass rounded-xl p-6 space-y-4">
+                <h3 className="text-lg font-semibold text-white">Demo Video (Optional)</h3>
+                <p className="text-sm text-muted-foreground">Upload a hover preview video for this template.</p>
+                {demoVideoUrl ? (
+                    <div className="relative group">
+                        <video
+                            src={demoVideoUrl}
+                            controls
+                            muted
+                            playsInline
+                            className="rounded-lg w-full max-h-64 object-contain bg-black relative z-10 pointer-events-auto"
+                        />
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => {
+                                setDemoVideoUrl(undefined);
+                                setDemoVideoFile(null);
+                            }}
+                            className="absolute top-2 right-2 rounded-full size-8 z-20 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        >
+                            ✕
+                        </Button>
+                    </div>
+                ) : (
+                    <Dropzone
+                        accept={{ "video/mp4": [".mp4"], "video/webm": [".webm"] }}
+                        maxSize={100 * 1024 * 1024}
+                        maxFiles={1}
+                        onDrop={handleDemoVideo}
                     >
                         <DropzoneEmptyState />
                         <DropzoneContent />

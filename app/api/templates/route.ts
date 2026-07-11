@@ -143,6 +143,7 @@ async function getSimilarTemplatesHandler(
                     description: 1,
                     thumbnail: 1,
                     demoLink: 1,
+                    demoVideo: 1,
                     price: 1,
                     downloads: 1,
                     views: 1,

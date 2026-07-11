@@ -20,7 +20,7 @@ async function getFeaturedTemplates(req: NextRequest) {
       }
     })
       .select(
-        "_id slug title description thumbnail price tags categories averageRating",
+        "_id slug title description thumbnail price demoVideo tags categories averageRating",
       )
       .populate("categories", "name slug")
       .limit(4)

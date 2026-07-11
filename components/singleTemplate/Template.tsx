@@ -164,7 +164,7 @@ const Template = async ({
         reviewCount={template.reviews ?? 0}
       />
 
-      {/* {similarTemplates && similarTemplates.length > 0 && (
+      {similarTemplates && similarTemplates.length > 0 && (
         <div className="flex w-full flex-col items-center justify-center gap-8">
           <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center">
             You might also like
@@ -180,7 +180,7 @@ const Template = async ({
             ))}
           </div>
         </div>
-      )} */}
+      )}
     </div>
   );
 };

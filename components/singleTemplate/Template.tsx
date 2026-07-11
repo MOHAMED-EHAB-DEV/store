@@ -4,7 +4,7 @@ import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import Markdown from "./Markdown";
 // import { capitalizeFirstChar } from "@/lib/utils";
-// import SimilarTemplate from "../shared/Template";
+import SimilarTemplate from "../shared/Template";
 import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
 import DownloadBtn from "./DownloadBtn";
 import { ITemplate } from "@/types";

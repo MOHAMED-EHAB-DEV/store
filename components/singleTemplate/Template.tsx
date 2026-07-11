@@ -128,12 +128,12 @@ const Template = async ({
               <ExternalLink className="w-4 h-4" />
               Live Demo
             </Link>
-            <Link
+            {/* <Link
               href={`/support?subject=Template%20Customization&message=I%20would%20like%20to%20customize%20the%20${encodeURIComponent(template.title)}%20template.&category=template-customization`}
               className="px-5 py-2.5 sm:py-3 w-full border rounded-xl flex items-center justify-center gap-2 transition text-sm sm:text-base text-center mt-2 text-purple-300 border-purple-500/30 hover:bg-purple-500/10"
             >
               Want this customized for your brand?
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

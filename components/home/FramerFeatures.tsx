@@ -93,7 +93,15 @@ const FramerFeatures = () => {
         </Badge>
 
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-white font-paras font-bold w-full md:w-4/5 text-center">
-          Ship Websites Faster with Framer
+          Ship Websites{" "}
+          <span className="relative">
+            Faster
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+            />
+          </span>{" "}
+          with Framer
         </h2>
       </div>
 

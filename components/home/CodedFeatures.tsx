@@ -64,7 +64,14 @@ const CodedFeatures = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="code-title text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-8 font-paras">
-                        {SplitText("Production-Ready Code")}
+                        <span className="relative">
+                            {SplitText("Production-Ready")}
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+                            />
+                        </span>
+                        {SplitText(" Code")}
                     </h2>
                     <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                         Skip the boilerplate and start building. Our code templates are

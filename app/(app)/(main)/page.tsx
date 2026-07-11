@@ -28,10 +28,16 @@ const HeroFeatures = dynamic(() => import("@/components/home/HeroFeatures"));
 export default async function Home() {
   return (
     <main
-      className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-dvw md:px-0"
+      className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-dvw md:px-0 relative"
       role="main"
       id="main-content"
     >
+      {/* Global Hero Background */}
+      <div className="fixed inset-0 -z-10 bg-linear-to-br from-primary via-primary/95 to-primary/90 pointer-events-none" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10 pointer-events-none" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_bottom_left,var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent pointer-events-none" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
+
       {/*<StickyCTA/>*/}
       <GSAPInitializer />
       <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">

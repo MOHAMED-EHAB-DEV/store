@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { STEPS } from "@/constants";
 import { StepKey } from "@/types";
+import { Badge } from "../ui/badge";
 
 // Fixed geometry for the straight track.
 const NODE_POS: Record<StepKey, { cx: number; cy: number }> = {
@@ -88,7 +89,7 @@ const HowItWorks = () => {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: containerRef.current,
-              start: "top 0%",
+              start: "top 3%",
               end: isMobile
                 ? `+=${STEPS.length * 80}%`
                 : `+=${STEPS.length * 100}%`,
@@ -187,14 +188,39 @@ const HowItWorks = () => {
   return (
     <div className="w-full block">
       <section
-        className="w-full h-[100dvh] relative z-10 bg-background overflow-hidden"
+        className="w-full h-[100dvh] relative z-10 overflow-hidden"
         ref={containerRef}
       >
         {/* Header */}
         <div className="absolute top-16 left-0 w-full text-center z-20 pointer-events-none">
-          <h2 className="text-3xl md:text-5xl font-bold font-paras text-white">
-            How it works
-          </h2>
+          <div className="flex flex-col items-center justify-center gap-4 mb-10">
+            <Badge
+              variant="outline"
+              className="bg-transparent relative hover:shadow-[0_0_25px_#746D91]"
+            >
+              How it works
+              <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
+            </Badge>
+            <h2 className="text-3xl md:text-5xl font-bold font-paras text-white">
+              From{" "}
+              <span className="relative">
+                Purchase
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+                />
+              </span>{" "}
+              to{" "}
+              <span className="relative">
+                Production
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+                />
+              </span>{" "}
+              in 4 simple steps
+            </h2>
+          </div>
         </div>
 
         {/* Track */}

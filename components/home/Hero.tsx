@@ -36,21 +36,6 @@ const Hero = () => {
       aria-labelledby="hero-title"
       role="banner"
     >
-      {/* Enhanced Background Layer */}
-      <div className="absolute inset-0 bg-linear-to-br from-primary via-primary/95 to-primary/90" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-cyan-500/10" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
-      {/* <div
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                    backgroundImage: `linear-gradient(oklch(0.92 0.01 260) 1px, transparent 1px), linear-gradient(90deg, oklch(0.92 0.01 260) 1px, transparent 1px)`,
-                    backgroundSize: "50px 50px",
-                }}
-            />
-            <div
-                className="absolute top-20 md:-left-[400px] w-full h-full pointer-events-none before:content-[''] before:absolute before:-left-[350px] before:-top-[500px] md:before:-top-72 md:before:-left-44 before:w-[800px] before:h-[800px] before:rounded-full before:bg-gradient-to-br before:from-white/90 before:to-white/40 before:blur-3xl before:opacity-50 before:rotate-[60deg]" /> */}
-
       <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
         <Badge
           variant="secondary"
@@ -84,7 +69,9 @@ const Hero = () => {
             {/* <span className="block mt-3 text-base md:text-lg text-secondary font-normal">
               Join 10,000+ developers who trust our templates
             </span> */}
-            <span className="block mt-2 text-purple-300 text-base md:text-lg">Need it further customized? I build that too.</span>
+            <span className="block mt-2 text-purple-300 text-base md:text-lg">
+              Need it further customized? I build that too.
+            </span>
           </p>
         </div>
 
@@ -103,13 +90,13 @@ const Hero = () => {
           </Link>
 
           <Link
-              className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
-              aria-label="Work with me"
-              href="/support?subject=Custom%20Build%20Request&category=template-customization"
+            className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
+            aria-label="Work with me"
+            href="/support?subject=Custom%20Build%20Request&category=template-customization"
           >
-              <span className="relative z-10 flex items-center gap-2">
-                  Work with me
-              </span>
+            <span className="relative z-10 flex items-center gap-2">
+              Work with me
+            </span>
           </Link>
         </div>
 

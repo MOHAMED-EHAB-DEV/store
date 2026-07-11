@@ -46,23 +46,12 @@ const Pricing = () => {
     {
       name: 'Starter',
       price: '0$',
-      isPerMonth: true,
+      isPerMonth: false,
       description: 'Perfect for side projects and hobbyists.',
       features: ['Up to 3 Free Templates', "Community Support", 'Personal Use license'],
       cta: 'Get Started',
       ctaLink: "/register",
       highlight: false,
-    },
-    {
-      name: 'Pro',
-      price: '$29',
-      isPerMonth: true,
-      description: 'For growing teams and businesses.',
-      features: ['Unlimited Templates', 'Priority Support', 'Commercial Use license'],
-      promo: '50% OFF on Customization',
-      cta: 'Try Pro',
-      ctaLink: "/register",
-      highlight: true,
     },
     {
       name: "Lifetime",
@@ -72,7 +61,7 @@ const Pricing = () => {
       features: ["Unlimited access for lifetime", 'Access to all Templates', 'Priority Support', 'Commercial Use license'],
       cta: 'Pay once, Build Forever',
       ctaLink: "/register",
-      highlight: false,
+      highlight: true,
     },
     {
       name: "Custom Build",
@@ -95,7 +84,7 @@ const Pricing = () => {
             Choose the plan that fits your needs. No hidden fees.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 max-w-7xl mx-auto">
           {tiers.map((tier) => (
             <SpotlightCard
               key={tier.name}
@@ -113,11 +102,11 @@ const Pricing = () => {
                   </div>
                   <p className="mt-4 text-sm text-neutral-400">{tier.description}</p>
                 </div>
-                {tier.promo && (
+                {/* {tier.promo && (
                   <Badge className="bg-linear-to-r flex items-center justify-center gap-2 from-yellow-400 to-orange-500 text-black border-none mt-2 text-xs py-1">
                     {tier.promo}
                   </Badge>
-                )}
+                )} */}
                 <ul className="flex-1 space-y-3 mt-4">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2 text-sm text-neutral-300">

@@ -1,6 +1,14 @@
 import * as v from "valibot";
 import { UserSchema, TemplateSchema, CategorySchema, ReviewSchema, OrderSchema, TicketSchema, TicketMessageSchema, NotificationSchema, DownloadLogSchema, VisitorSchema, BlogSchema, ChatSchema, ErrorLogSchema, FAQSchema, MessageSchema } from "@/lib/validations";
+export type StepKey = "buy" | "download" | "setup" | "customize" | "launch";
 
+export interface Step {
+  key: StepKey;
+  title: string;
+  description: string;
+  color: string; // hex, drives node/glow fill — keep in sync with your existing gradient accents
+  optional?: boolean;
+}
 export type IUser = v.InferOutput<typeof UserSchema>;
 export type ITemplate = v.InferOutput<typeof TemplateSchema>;
 export type ICategory = v.InferOutput<typeof CategorySchema>;

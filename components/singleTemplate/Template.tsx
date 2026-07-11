@@ -3,8 +3,8 @@ import { Download } from "@/components/ui/svgs/icons/Download";
 import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import Markdown from "./Markdown";
-import { capitalizeFirstChar } from "@/lib/utils";
-import SimilarTemplate from "../shared/Template";
+// import { capitalizeFirstChar } from "@/lib/utils";
+// import SimilarTemplate from "../shared/Template";
 import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
 import DownloadBtn from "./DownloadBtn";
 import { ITemplate } from "@/types";
@@ -83,26 +83,28 @@ const Template = async ({
         {/* Right Panel */}
         <div className="flex flex-row flex-wrap lg:flex-col justify-center gap-16 lg:justify-start lg:gap-6 items-center lg:items-center">
           {/* Rating */}
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-1 sm:gap-2">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                    i < Math.floor(template.averageRating)
-                      ? "text-yellow-400 fill-current"
-                      : "text-gray-600"
-                  }`}
-                />
-              ))}
+          {(template.reviews ?? 0) > 0 && (
+            <div className="flex flex-col items-center">
+              <div className="flex items-center gap-1 sm:gap-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      i < Math.floor(template.averageRating)
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-600"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-base sm:text-lg font-semibold">
+                {template.averageRating?.toFixed(1)}
+              </span>
+              <span className="text-gray-400 text-xs sm:text-sm">
+                {template.reviews ?? 0} reviews
+              </span>
             </div>
-            <span className="text-base sm:text-lg font-semibold">
-              {template.averageRating?.toFixed(1)}
-            </span>
-            <span className="text-gray-400 text-xs sm:text-sm">
-              {template.reviews ?? 0} reviews
-            </span>
-          </div>
+          )}
 
           {/* Downloads */}
           <div className="flex flex-col items-center">
@@ -113,7 +115,7 @@ const Template = async ({
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-col gap-3 w-full max-w-[250px]">
+          <div className="flex flex-col gap-3 w-full max-w-[190px]">
             <DownloadBtn
               templateId={template._id}
               isFree={template.price === 0}
@@ -125,6 +127,12 @@ const Template = async ({
             >
               <ExternalLink className="w-4 h-4" />
               Live Demo
+            </Link>
+            <Link
+              href={`/support?subject=Template%20Customization&message=I%20would%20like%20to%20customize%20the%20${encodeURIComponent(template.title)}%20template.&category=template-customization`}
+              className="px-5 py-2.5 sm:py-3 w-full border rounded-xl flex items-center justify-center gap-2 transition text-sm sm:text-base text-center mt-2 text-purple-300 border-purple-500/30 hover:bg-purple-500/10"
+            >
+              Want this customized for your brand?
             </Link>
           </div>
         </div>

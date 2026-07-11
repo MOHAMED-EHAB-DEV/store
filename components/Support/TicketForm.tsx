@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/context/UserContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { SUPPORT_CATEGORIES } from "@/constants/support";
@@ -23,12 +23,13 @@ const priorities = [
 
 export default function TicketForm({ onSuccess }: TicketFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    subject: "",
-    description: "",
-    category: "general",
+    subject: searchParams?.get("subject") || "",
+    description: searchParams?.get("message") || "",
+    category: searchParams?.get("category") || "general",
     priority: "medium",
   });
 

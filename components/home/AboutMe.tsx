@@ -44,17 +44,16 @@ const AboutMe = () => {
       <div className="text-center mb-16 about-header">
         <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-linear-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
           <Sparkles className="w-4 h-4 mr-2" />
-          About the Creator
+          Proof of Skill
         </Badge>
         <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-6 font-paras">
-          Meet{" "}
+          Your{" "}
           <span className="bg-linear-to-r from-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
-            Mohammed Ehab
+            Technical Partner
           </span>
         </h2>
         <p className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto">
-          Passionate Full Stack Web Developer creating Premium Templates that
-          help businesses and creators build stunning digital experiences.
+          I don&apos;t just build templates—I build high-performance web applications that convert. When you hire me for a custom build, you get engineering excellence.
         </p>
       </div>
 
@@ -63,13 +62,13 @@ const AboutMe = () => {
           <div className="relative overflow-hidden rounded-3xl glass-strong p-8 about-card">
             <div className="absolute inset-0 bg-linear-to-br from-green-500/20 via-teal-500/20 to-cyan-500/20"></div>
             <div className="relative z-10 flex items-center gap-6 mb-6">
-              <div className="w-20 h-20 rounded-full bg-linear-to-br from-green-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold">
+              <div className="w-20 h-20 rounded-full bg-linear-to-br from-green-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold shrink-0">
                 ME
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-white">Mohammed Ehab</h3>
                 <p className="text-teal-400 font-medium">
-                  Full-Stack Developer • Design & Code Enthusiast
+                  Full-Stack Developer • Performance Obsessed
                 </p>
                 <div className="flex items-center gap-2 mt-2">
                   <Coffee className="w-4 h-4 text-yellow-400" />
@@ -80,13 +79,25 @@ const AboutMe = () => {
               </div>
             </div>
 
-            <p className="text-gray-300 leading-relaxed relative z-10">
-              With over 5 years of experience in web development and design, I
-              specialize in creating modern, responsive templates that not only
-              look amazing but also perform exceptionally. My passion lies in
-              bridging the gap between beautiful design and clean, efficient
-              code.
-            </p>
+            <div className="text-gray-300 leading-relaxed relative z-10 space-y-4">
+              <p>
+                Instead of guessing what works, let my results speak for themselves. I specialize in turning slow, bloated websites into lightning-fast, high-converting platforms.
+              </p>
+              <ul className="space-y-3 mt-4 text-white font-medium">
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-400">🚀</span> 
+                  <span>{/* TODO: real metric, e.g. LCP 4.1s → 1.3s */} LCP 4.1s → 1.3s for SaaS client</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-400">📈</span> 
+                  <span>{/* TODO: real metric, e.g. Increased conversion by 42% for e-commerce client */} Increased conversion by 42% for e-commerce client</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-400">⚡</span> 
+                  <span>{/* TODO: real metric, e.g. Perfect 100/100 Lighthouse score on complex dashboard */} Perfect 100/100 Lighthouse score on complex dashboard</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -119,24 +130,17 @@ const AboutMe = () => {
             <div className="absolute inset-0 bg-linear-to-br from-green-500/20 to-teal-500/20"></div>
             <div className="relative z-10 text-center">
               <h4 className="text-xl font-bold text-white mb-3">
-                Let's Build Something Amazing
+                Need a Custom Build?
               </h4>
               <p className="text-gray-300 mb-4">
-                Ready to elevate your project with premium templates?
+                Let&apos;s discuss your project requirements and how I can help.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  href="/templates"
+                  href="/support?subject=Consultation&category=general"
                   className="flex-1 bg-linear-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
                 >
-                  Browse Templates
-                </Link>
-                <Link
-                  href="https://mohammedehab.vercel.app/"
-                  target="_blank"
-                  className="flex-1 border border-white/20 text-white py-3 px-6 rounded-xl hover:bg-white/10 transition-colors duration-200"
-                >
-                  Portfolio
+                  Book a Consultation
                 </Link>
               </div>
             </div>

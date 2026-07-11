@@ -32,7 +32,7 @@ const Navbar = () => {
 
   return (
     <header
-      className={`z-50 fixed top-2 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full ${
+      className={`navbar z-50 fixed top-2 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full ${
         scrolled
           ? "bg-primary/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 py-3 mt-0"
           : "bg-primary/40 backdrop-blur-md shadow-lg border border-white/5 py-4 mt-2"

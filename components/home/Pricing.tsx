@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { Badge } from "@/components/ui/badge";
 
 const SpotlightCard = dynamic(() => import('../ui/SpotlightCard'));
 
@@ -57,7 +58,8 @@ const Pricing = () => {
       price: '$29',
       isPerMonth: true,
       description: 'For growing teams and businesses.',
-      features: ['Unlimited Templates', "50% OFF on Templates Customization", 'Priority Support', 'Commercial Use license'],
+      features: ['Unlimited Templates', 'Priority Support', 'Commercial Use license'],
+      promo: '50% OFF on Customization',
       cta: 'Try Pro',
       ctaLink: "/register",
       highlight: true,
@@ -72,15 +74,16 @@ const Pricing = () => {
       ctaLink: "/register",
       highlight: false,
     },
-    // TODO: Add enterprise tier when Contact is implemented
-    // {
-    //   name: 'Enterprise',
-    //   price: 'Custom',
-    //   description: 'Advanced features for large organizations.',
-    //   features: ['Unlimited Templates', '24/7 Dedicated support','Template Customization Requests', "Access to beta templates", "1-on-1 onboarding", 'Priority Support', 'Commercial Use license'],
-    //   cta: 'Contact US',
-    //   highlight: false,
-    // },
+    {
+      name: "Custom Build",
+      price: "Custom Price",
+      isPerMonth: false,
+      description: "Tailored to your brand, backend, or business logic.",
+      features: ["Full Customization", "Backend Integration", "Dedicated Support", "Source Code Delivered"],
+      cta: 'Request Custom Build',
+      ctaLink: "/support",
+      highlight: false,
+    },
   ];
 
   return (
@@ -92,7 +95,7 @@ const Pricing = () => {
             Choose the plan that fits your needs. No hidden fees.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8 max-w-7xl mx-auto">
           {tiers.map((tier) => (
             <SpotlightCard
               key={tier.name}
@@ -110,6 +113,11 @@ const Pricing = () => {
                   </div>
                   <p className="mt-4 text-sm text-neutral-400">{tier.description}</p>
                 </div>
+                {tier.promo && (
+                  <Badge className="bg-linear-to-r flex items-center justify-center gap-2 from-yellow-400 to-orange-500 text-black border-none mt-2 text-xs py-1">
+                    {tier.promo}
+                  </Badge>
+                )}
                 <ul className="flex-1 space-y-3 mt-4">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2 text-sm text-neutral-300">
@@ -130,7 +138,7 @@ const Pricing = () => {
                   ))}
                 </ul>
                 <Link
-                  className={`mt-8 w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${tier.highlight
+                  className={`mt-8 w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors text-center ${tier.highlight
                     ? 'bg-white text-black hover:bg-neutral-200'
                     : 'bg-neutral-800 text-white hover:bg-neutral-700'
                     }`}

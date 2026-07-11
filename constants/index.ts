@@ -21,15 +21,16 @@ import { Users } from "@/components/ui/svgs/icons/Users";
 import { Download } from "@/components/ui/svgs/icons/Download";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { Target } from "@/components/ui/svgs/icons/Target";
-import { Framer } from "@/components/ui/svgs/icons/Framer";
-import { Figma } from "@/components/ui/svgs/icons/Figma";
-import { Vite } from "@/components/ui/svgs/icons/Vite";
-import { NextJS } from "@/components/ui/svgs/icons/NextJS";
+// import { Framer } from "@/components/ui/svgs/icons/Framer";
+// import { Figma } from "@/components/ui/svgs/icons/Figma";
+// import { Vite } from "@/components/ui/svgs/icons/Vite";
+// import { NextJS } from "@/components/ui/svgs/icons/NextJS";
 import { Headset } from "@/components/ui/svgs/icons/Headset";
 import { FolderOpen } from "@/components/ui/svgs/icons/FolderOpen";
 import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
 import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { Analytics } from "@/components/ui/svgs/icons/Analytics";
+import { Step } from "@/types"
 
 const NavigationLinks = [
     {
@@ -486,6 +487,45 @@ const badges = [
     { text: "Quality Focused", icon: Target, gradient: "from-indigo-500 to-purple-500" }
 ];
 
+const STEPS: Step[] = [
+  {
+    key: "buy",
+    title: "Buy Template",
+    description:
+      "Get lifetime access to the code. No recurring subscriptions, just a one-time purchase for full ownership.",
+    color: "#34d399",
+  },
+  {
+    key: "download",
+    title: "Instant Download",
+    description:
+      "Receive your files immediately. The zip contains everything you need: source code, assets, and config.",
+    color: "#38bdf8",
+  },
+  {
+    key: "setup",
+    title: "Setup Guide",
+    description:
+      "Follow the comprehensive docs to deploy. I provide step-by-step instructions for Vercel, Netlify, and more.",
+    color: "#a78bfa",
+  },
+  {
+    key: "customize",
+    title: "Need Customization?",
+    description:
+      "If you need a backend built or the design tailored to your specific brand, book a quick call.",
+    color: "#f472b6",
+    optional: true,
+  },
+  {
+    key: "launch",
+    title: "Launch",
+    description:
+      "Go live with your new site in record time. Impress your clients and customers with a premium web experience.",
+    color: "#fbbf24",
+  },
+];
+
 export {
     NavigationLinks,
     HeroItems,
@@ -504,5 +544,6 @@ export {
     stats,
     badges,
     skills,
-    FooterLinks
+    FooterLinks,
+    STEPS
 }

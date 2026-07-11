@@ -11,8 +11,7 @@ const WhyUs = () => {
           Stop stressing over your business website.
         </h2>
         <p className="text-secondary text-base md:text-lg">
-          Freelancers take weeks and cost a lot. DIY builders eat up your time.
-          Generic templates don&apos;t convert. Let&apos;s fix that.
+          Building from scratch takes months. Start with a premium template today — and if you need it tailored to your brand, backend, or business logic, I&apos;ll build that part too, in days not months.
         </p>
         <ul className="text-secondary text-base md:text-lg list-d built to engage and convertisc pl-5 space-y-1">
           <li>

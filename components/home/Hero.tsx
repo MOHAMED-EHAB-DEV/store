@@ -84,12 +84,13 @@ const Hero = () => {
             {/* <span className="block mt-3 text-base md:text-lg text-secondary font-normal">
               Join 10,000+ developers who trust our templates
             </span> */}
+            <span className="block mt-2 text-purple-300 text-base md:text-lg">Need it further customized? I build that too.</span>
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
           <Link
-            className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none  px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
+            className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
             aria-label="Browse"
             href="/templates"
             onClick={() => sendGTMEvent({ event: "hero_cta_click" })}
@@ -101,17 +102,15 @@ const Hero = () => {
             <div className="absolute inset-0 bg-linear-to-r from-purple-400 via-blue-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
           </Link>
 
-          {/*<Link*/}
-          {/*    className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"*/}
-          {/*    aria-label="Demo"*/}
-          {/*    href="/templates"*/}
-          {/*    target="_blank"*/}
-          {/*>*/}
-          {/*    <span className="relative z-10 flex items-center gap-2">*/}
-          {/*        View Demo*/}
-          {/*        <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300"/>*/}
-          {/*    </span>*/}
-          {/*</Link>*/}
+          <Link
+              className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
+              aria-label="Work with me"
+              href="/support?subject=Custom%20Build%20Request&category=template-customization"
+          >
+              <span className="relative z-10 flex items-center gap-2">
+                  Work with me
+              </span>
+          </Link>
         </div>
 
         {/* Trust Signals */}

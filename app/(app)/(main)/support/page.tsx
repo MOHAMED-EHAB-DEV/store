@@ -1,3 +1,4 @@
+import * as React from "react";
 import { buildMetadata } from "@/lib/seo";
 import TicketForm from "@/components/Support/TicketForm";
 import Link from "next/link";
@@ -120,7 +121,9 @@ export default function SupportPage() {
                         {/* Right - Form */}
                         <div className="glass rounded-2xl p-6 md:p-8">
                             <h3 className="text-xl font-bold text-white mb-6">Create New Ticket</h3>
-                            <TicketForm />
+                            <React.Suspense fallback={<div className="text-white">Loading form...</div>}>
+                                <TicketForm />
+                            </React.Suspense>
                         </div>
                     </div>
                 </div>

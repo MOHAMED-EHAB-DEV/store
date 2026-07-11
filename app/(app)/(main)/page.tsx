@@ -2,8 +2,10 @@ import Hero from "@/components/home/Hero";
 import WhyUs from "@/components/home/WhyUS";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 import CategoriesSection from "@/components/home/CategoriesSection";
+import HowItWorks from "@/components/home/HowItWorks";
 import dynamic from "next/dynamic";
 import GSAPInitializer from "@/components/home/GSAPInitializer";
+import CustomBuildBand from "@/components/home/CustomBuildBand";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -35,6 +37,7 @@ export default async function Home() {
       <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
         <Hero />
         <HeroFeatures />
+        {/* <CustomBuildBand /> */}
         {/* <Image
                     src="/assets/images/Preview.webp"
                     alt="demo"
@@ -73,6 +76,7 @@ export default async function Home() {
       <FramerFeatures />
       <CodedFeatures />
       <FigmaFeatures />
+      <HowItWorks />
       <Pricing />
       {/*<Testimonials/>*/}
       {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}

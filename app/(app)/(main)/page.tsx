@@ -1,12 +1,12 @@
 import Hero from "@/components/home/Hero";
-import WhyUs from "@/components/home/WhyUS";
+import WhyME from "@/components/home/WhyME";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
-import CategoriesSection from "@/components/home/CategoriesSection";
-import HowItWorks from "@/components/home/HowItWorks";
+// import CategoriesSection from "@/components/home/CategoriesSection";
+// import HowItWorks from "@/components/home/HowItWorks";
 import dynamic from "next/dynamic";
 import GSAPInitializer from "@/components/home/GSAPInitializer";
-import CustomBuildBand from "@/components/home/CustomBuildBand";
-import BlueprintCustomBuild from "@/components/home/BlueprintCustomBuild";
+// import CustomBuildBand from "@/components/home/CustomBuildBand";
+// import BlueprintCustomBuild from "@/components/home/BlueprintCustomBuild";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -22,9 +22,12 @@ export const metadata: Metadata = {
 const CodedFeatures = dynamic(() => import("@/components/home/CodedFeatures"));
 // const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
 const Pricing = dynamic(() => import("@/components/home/Pricing"));
-const Cta = dynamic(() => import("@/components/home/CTA"));
+// const Cta = dynamic(() => import("@/components/home/CTA"));
 const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
-const HeroFeatures = dynamic(() => import("@/components/home/HeroFeatures"));
+// const HeroFeatures = dynamic(() => import("@/components/home/HeroFeatures"));
+const CategoriesSection = dynamic(() => import("@/components/home/CategoriesSection"));
+const BlueprintCustomBuild = dynamic(() => import("@/components/home/BlueprintCustomBuild"));
+const HowItWorks = dynamic(() => import("@/components/home/HowItWorks"));
 
 export default async function Home() {
   return (
@@ -78,7 +81,7 @@ export default async function Home() {
       </div>
 
       <FeaturedTemplates />
-      <WhyUs />
+      <WhyME />
       <HowItWorks />
       <CategoriesSection />
       {/* <FramerFeatures /> */}

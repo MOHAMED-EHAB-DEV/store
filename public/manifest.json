@@ -8,12 +8,12 @@
   "theme_color": "#0D0F19",
   "icons": [
     {
-      "src": "/favicon.ico",
+      "src": "/assets/Icons/favicon.ico",
       "sizes": "192x192",
       "type": "image/x-icon"
     },
     {
-      "src": "/favicon.ico",
+      "src": "/assets/Icons/favicon.ico",
       "sizes": "512x512",
       "type": "image/x-icon"
     }
@@ -32,6 +32,20 @@
       "type": "image/jpg",
       "form_factor": "narrow",
       "label": "MHD Store Mobile View"
+    },
+    {
+      "src": "/screenshots/login.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHD Store login screen"
+    },
+    {
+      "src": "/screenshots/register.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHD Store register screen"
     }
   ]
 }

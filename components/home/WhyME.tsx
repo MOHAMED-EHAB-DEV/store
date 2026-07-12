@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
 
-const WhyUs = () => {
+const WhyME = () => {
   return (
     <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28">
       <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2">
@@ -27,9 +27,10 @@ const WhyUs = () => {
       </div>
       <div className="flex items-center justify-center w-full md:w-1/4">
         <Image
-          src={anyImgUrl("/assets/Icons/cursor.webp", {
+          src={anyImgUrl("https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp", {
             width: 660,
-            original: true,
+            quality: 100
+            // original: true,
           })}
           alt="Cursor Icon"
           width={330}
@@ -42,4 +43,4 @@ const WhyUs = () => {
   );
 };
 
-export default WhyUs;
+export default WhyME;

@@ -41,8 +41,8 @@ async function getVisitorPerformance(
 
     const allPages: any[] = [];
 
-    analyticsDocs.forEach((doc) => {
-      doc.pages.forEach((page: any) => {
+    analyticsDocs?.forEach((doc) => {
+      doc.pages?.forEach((page: any) => {
         const pageEntry = {
           date: doc.date,
           path: page.path,
@@ -51,7 +51,7 @@ async function getVisitorPerformance(
         };
         allPages.push(pageEntry);
 
-        page.metrics.forEach((m: any) => {
+        page?.metrics?.forEach((m: any) => {
           if (metricsAcc[m.name]) {
             metricsAcc[m.name].sum += m.value;
             metricsAcc[m.name].count += 1;

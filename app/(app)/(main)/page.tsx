@@ -83,11 +83,11 @@ export default async function Home() {
       <CategoriesSection />
       {/* <FramerFeatures /> */}
       <CodedFeatures />
+      <BlueprintCustomBuild />
       {/* <FigmaFeatures /> */}
       <Pricing />
       {/*<Testimonials/>*/}
       {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}
-      {/* <BlueprintCustomBuild /> */}
       <AboutMe />
       {/* <Cta /> */}
     </main>

@@ -472,6 +472,7 @@ const stats = [
 const skills = [
     { name: "React & Next.js", level: 99, color: "from-blue-500 to-cyan-500" },
     { name: "Node JS & Express", level: 96, color: "from-green-500 to-teal-500" },
+    { name: "Databases (MongoDB, PostgreSQL, Supabase)", level: 94, color: "from-indigo-500 to-blue-500" },
     // {name: "UI/UX Design", level: 90, color: "from-purple-500 to-pink-500"},
     { name: "Tailwind CSS", level: 99, color: "from-green-500 to-teal-500" },
     { name: "GSAP", level: 94, color: "from-orange-500 to-red-500" },

@@ -470,12 +470,13 @@ const stats = [
 ];
 
 const skills = [
-    { name: "React & Next.js", level: 95, color: "from-blue-500 to-cyan-500" },
+    { name: "React & Next.js", level: 99, color: "from-blue-500 to-cyan-500" },
+    { name: "Node JS & Express", level: 96, color: "from-green-500 to-teal-500" },
     // {name: "UI/UX Design", level: 90, color: "from-purple-500 to-pink-500"},
-    { name: "Tailwind CSS", level: 98, color: "from-green-500 to-teal-500" },
-    { name: "GSAP", level: 85, color: "from-orange-500 to-red-500" },
-    { name: "Figma Design", level: 92, color: "from-indigo-500 to-purple-500" },
-    { name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500" },
+    { name: "Tailwind CSS", level: 99, color: "from-green-500 to-teal-500" },
+    { name: "GSAP", level: 94, color: "from-orange-500 to-red-500" },
+    // { name: "Figma Design", level: 92, color: "from-indigo-500 to-purple-500" },
+    // { name: "GSAP Animations", level: 88, color: "from-pink-500 to-rose-500" },
 ];
 
 const badges = [

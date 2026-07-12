@@ -6,7 +6,8 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { STEPS } from "@/constants";
 import { StepKey } from "@/types";
-import { Badge } from "../ui/badge";
+// import { Badge } from "../ui/badge";
+import SplitText from "../ui/SplitText";
 
 // Fixed geometry for the straight track.
 const NODE_POS: Record<StepKey, { cx: number; cy: number }> = {
@@ -202,23 +203,23 @@ const HowItWorks = () => {
               <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
             </Badge> */}
             <h2 className="text-3xl md:text-5xl font-bold font-paras text-white">
-              From{" "}
+              {SplitText("From")}{" "}
               <span className="relative">
-                Purchase
+                {SplitText("Purchase")}
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
                 />
               </span>{" "}
-              to{" "}
+              {SplitText("to")}{" "}
               <span className="relative">
-                Production
+                {SplitText("Production")}{" "}
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
                 />
               </span>{" "}
-              in 4 simple steps
+              {SplitText("in 4 simple steps")}
             </h2>
           </div>
         </div>

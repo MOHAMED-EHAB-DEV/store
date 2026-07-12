@@ -6,6 +6,7 @@ import HowItWorks from "@/components/home/HowItWorks";
 import dynamic from "next/dynamic";
 import GSAPInitializer from "@/components/home/GSAPInitializer";
 import CustomBuildBand from "@/components/home/CustomBuildBand";
+import BlueprintCustomBuild from "@/components/home/BlueprintCustomBuild";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,12 +15,12 @@ export const metadata: Metadata = {
     "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
 };
 
-const FramerFeatures = dynamic(
-  () => import("@/components/home/FramerFeatures"),
-  { ssr: true },
-);
+// const FramerFeatures = dynamic(
+//   () => import("@/components/home/FramerFeatures"),
+//   { ssr: true },
+// );
 const CodedFeatures = dynamic(() => import("@/components/home/CodedFeatures"));
-const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
+// const FigmaFeatures = dynamic(() => import("@/components/home/FigmaFeatures"));
 const Pricing = dynamic(() => import("@/components/home/Pricing"));
 const Cta = dynamic(() => import("@/components/home/CTA"));
 const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
@@ -42,7 +43,7 @@ export default async function Home() {
       <GSAPInitializer />
       <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
         <Hero />
-        <HeroFeatures />
+        {/* <HeroFeatures /> */}
         {/* <CustomBuildBand /> */}
         {/* <Image
                     src="/assets/images/Preview.webp"
@@ -79,13 +80,14 @@ export default async function Home() {
       <FeaturedTemplates />
       <CategoriesSection />
       <WhyUs />
-      <FramerFeatures />
+      {/* <FramerFeatures /> */}
       <CodedFeatures />
-      <FigmaFeatures />
+      {/* <FigmaFeatures /> */}
       <HowItWorks />
       <Pricing />
       {/*<Testimonials/>*/}
       {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}
+      {/* <BlueprintCustomBuild /> */}
       <AboutMe />
       <Cta />
     </main>

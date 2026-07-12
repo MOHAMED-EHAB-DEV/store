@@ -194,13 +194,13 @@ const HowItWorks = () => {
         {/* Header */}
         <div className="absolute top-16 left-0 w-full text-center z-20 pointer-events-none">
           <div className="flex flex-col items-center justify-center gap-4 mb-10">
-            <Badge
+            {/* <Badge
               variant="outline"
               className="bg-transparent relative hover:shadow-[0_0_25px_#746D91]"
             >
               How it works
               <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
-            </Badge>
+            </Badge> */}
             <h2 className="text-3xl md:text-5xl font-bold font-paras text-white">
               From{" "}
               <span className="relative">

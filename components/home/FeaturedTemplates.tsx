@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import TemplateComponent from "@/components/shared/Template";
 import { ITemplate } from "@/types";
-
+import SplitText from "@/components/ui/SplitText";
 async function getTemplates() {
   try {
     const response = await fetch(
@@ -28,20 +28,20 @@ const FeaturedTemplates = async () => {
       <div className="relative z-10">
         {/* Section Header */}
         <div className="text-center mb-20">
-          <Badge className="mb-6 bg-linear-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
+          {/* <Badge className="mb-6 bg-linear-to-r from-purple-500 to-pink-500 text-white border-none px-6 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-purple-500/25 transition-all duration-300">
             <Star className="w-5 h-5 mr-2 animate-pulse" />
             Featured Templates
-          </Badge>
+          </Badge> */}
           <h2 className="header opacity-0 text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-8 font-paras leading-none tracking-tight">
-            Handpicked{" "}
+            {SplitText("Handpicked ")}
             <span className="relative">
-              Premium
+              {SplitText("Premium")}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
               />
-            </span>{" "}
-            Templates
+            </span>
+            {SplitText(" Templates")}
           </h2>
           <p className="text-medium-contrast header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
             Discover our most popular and highest-rated templates, crafted with

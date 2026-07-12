@@ -98,7 +98,6 @@ export async function generateMetadata({
 
   const imageUrl = blog.coverImage || `${APP_URL}/screenshots/1.png`;
 
-  // TODO: upload screenshots for this page if coverImage is not present
   return {
     title: `${blog.title} | Blog`,
     description: cleanDesc,

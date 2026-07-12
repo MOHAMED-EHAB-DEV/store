@@ -106,7 +106,7 @@ const Sidebar = ({ open, setOpen, user }: {
                         </div>
                         {isOpen ? <ChevronUp /> : <ChevronDown />}
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-dark">
+                    <DropdownMenuContent className="bg-dark z-50">
                         <DropdownMenuItem onClick={() => router.push("/")}
                             className="flex flex-row gap-4 px-4 py-3 items-center hover:bg-secondary/30 cursor-pointer transition-all w-full">
                             <Home />

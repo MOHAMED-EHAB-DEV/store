@@ -96,7 +96,6 @@ export async function generateMetadata({
   const truncatedDesc = truncateDescription(template.description || `Premium template - ${template.title}`, 160);
   const imageUrl = template.thumbnail || `${APP_URL}/screenshots/1.png`;
 
-  // TODO: upload screenshots for this page if no template thumbnail is present
   return {
     title: `${template.title} | MHD Store Premium Templates`,
     description: `Premium template - ${template.title}`,

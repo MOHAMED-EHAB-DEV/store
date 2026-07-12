@@ -1,11 +1,9 @@
 import { buildMetadata } from "@/lib/seo";
 
-// TODO: upload screenshots for this page
 export const metadata = buildMetadata({
   title: "Privacy Policy | MHD Store",
   description: "Read the privacy policy for MHD Store.",
   path: "/privacy-policy",
-  screenshotName: "privacy-policy",
 });
 
 const PrivacyPolicy = () => {

@@ -16,10 +16,9 @@ export function buildMetadata({
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   const canonicalUrl = `https://mhd-store.vercel.app${cleanPath}`;
 
-  // TODO: upload screenshots for this page (stored in public/screenshots/<screenshotName>.png)
   const ogImage = screenshotName 
     ? `/screenshots/${screenshotName}.png` 
-    : "/screenshots/1.png"; // Fallback to homepage screenshot
+    : "/screenshots/1.png";
 
   const imageUrl = `https://mhd-store.vercel.app${ogImage}`;
 

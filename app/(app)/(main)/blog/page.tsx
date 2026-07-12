@@ -7,6 +7,7 @@ import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
+import { buildMetadata } from "@/lib/seo";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -21,19 +22,15 @@ interface BlogPost {
   isPublished: boolean;
 }
 
-import { buildMetadata } from "@/lib/seo";
-
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Web Design & Development Blog | MHD Store";
   const description =
     "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.";
 
-  // TODO: upload screenshots for this page
   return buildMetadata({
     title,
     description,
     path: "/blog",
-    screenshotName: "blog",
   });
 }
 

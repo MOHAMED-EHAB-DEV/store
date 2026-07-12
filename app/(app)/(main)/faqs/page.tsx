@@ -2,12 +2,10 @@ import { buildMetadata } from "@/lib/seo";
 import FAQsClient from "@/components/faqs/FAQsClient";
 import { FAQS, FAQ_CATEGORIES } from "@/constants/faqs";
 
-// TODO: upload screenshots for this page
 export const metadata = buildMetadata({
   title: "Frequently Asked Questions | Premium Templates",
   description: "Find answers to common questions about our premium templates, pricing, licensing, and support. Get help with your template purchases and downloads.",
   path: "/faqs",
-  screenshotName: "faqs",
 });
 
 export default async function FAQsPage() {

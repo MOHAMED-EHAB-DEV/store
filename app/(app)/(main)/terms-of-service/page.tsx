@@ -1,11 +1,9 @@
 import { buildMetadata } from "@/lib/seo";
 
-// TODO: upload screenshots for this page
 export const metadata = buildMetadata({
   title: "Terms of Service | MHD Store",
   description: "Read the terms of service for MHD Store.",
   path: "/terms-of-service",
-  screenshotName: "terms-of-service",
 });
 
 const TermsOfService = () => {

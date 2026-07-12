@@ -2,10 +2,8 @@ import Logo from "@/components/ui/Logo";
 import SigninForm from "@/components/Forms/SigninForm";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
-
 import { buildMetadata } from "@/lib/seo";
 
-// TODO: upload screenshots for this page
 export const metadata = buildMetadata({
   title: "Login | MHD Store Premium Templates",
   description: "Sign in to your MHD Store account to access your premium templates.",

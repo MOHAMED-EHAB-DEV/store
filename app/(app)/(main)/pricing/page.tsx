@@ -1,12 +1,10 @@
 import Pricing from "@/components/home/Pricing";
 import { buildMetadata } from "@/lib/seo";
 
-// TODO: upload screenshots for this page
 export const metadata = buildMetadata({
   title: "Pricing | MHD Store",
   description: "View pricing plans for premium web templates at MHD Store.",
   path: "/pricing",
-  screenshotName: "pricing",
 });
 
 const Page = () => {

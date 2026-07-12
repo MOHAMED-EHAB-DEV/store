@@ -2,10 +2,8 @@ import Logo from "@/components/ui/Logo";
 import RegisterForm from "@/components/Forms/RegisterForm";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
-
 import { buildMetadata } from "@/lib/seo";
 
-// TODO: upload screenshots for this page
 export const metadata = buildMetadata({
   title: "Register | MHD Store Premium Templates",
   description: "Create an account to purchase and download premium Next.js templates.",

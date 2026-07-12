@@ -7,10 +7,7 @@ import TicketCard from "@/components/Support/TicketCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import {
     Select,
-    SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
@@ -76,35 +73,35 @@ export default function AdminTicketsPage() {
             {/* Filters */}
             <div className="flex flex-wrap gap-3">
                 <Select
-                    value={filters.status}
-                    onValueChange={(val) => setFilters(prev => ({ ...prev, status: val }))}
+                    selectedKeys={filters.status ? [filters.status] : []}
+                    onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                    placeholder="All Status"
+                    classNames={{
+                        trigger: "w-[180px]",
+                        popoverContent: "bg-[#15161b] border-white/10 text-white"
+                    }}
                 >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="All Status" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                        {statusFilters.map(f => (
-                            <SelectItem key={f.value} value={f.value}>
-                                {f.label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
+                    {statusFilters.map(f => (
+                        <SelectItem key={f.value} value={f.value}>
+                            {f.label}
+                        </SelectItem>
+                    ))}
                 </Select>
 
                 <Select
-                    value={filters.priority}
-                    onValueChange={(val) => setFilters(prev => ({ ...prev, priority: val }))}
+                    selectedKeys={filters.priority ? [filters.priority] : []}
+                    onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
+                    placeholder="All Priority"
+                    classNames={{
+                        trigger: "w-[180px]",
+                        popoverContent: "bg-[#15161b] border-white/10 text-white"
+                    }}
                 >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="All Priority" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                        {priorityFilters.map(f => (
-                            <SelectItem key={f.value} value={f.value}>
-                                {f.label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
+                    {priorityFilters.map(f => (
+                        <SelectItem key={f.value} value={f.value}>
+                            {f.label}
+                        </SelectItem>
+                    ))}
                 </Select>
             </div>
 

@@ -8,7 +8,7 @@ import { SUPPORT_CATEGORIES } from "@/constants/support";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectItem } from "@/components/ui/select";
 
 interface TicketFormProps {
   onSuccess?: () => void;
@@ -26,17 +26,19 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
   const searchParams = useSearchParams();
   const { user } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    subject: searchParams?.get("subject") || "",
-    description: searchParams?.get("message") || "",
-    category: searchParams?.get("category") || "general",
-    priority: "medium",
-  });
+  const [subject, setSubject] = useState(searchParams?.get("subject") || "");
+  const [description, setDescription] = useState(searchParams?.get("message") || "");
+  const [category, setCategory] = useState(searchParams?.get("category") || "general");
+  const [priority, setPriority] = useState("medium");
 
   useEffect(() => {
     const ticket = sessionStorage.getItem("ticket");
     if (ticket) {
-      setFormData(JSON.parse(ticket));
+      const parsed = JSON.parse(ticket);
+      if (parsed.subject) setSubject(parsed.subject);
+      if (parsed.description) setDescription(parsed.description);
+      if (parsed.category) setCategory(parsed.category);
+      if (parsed.priority) setPriority(parsed.priority);
       sessionStorage.removeItem("ticket");
     }
   }, []);
@@ -44,13 +46,15 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.subject.trim() || !formData.description.trim()) {
+    if (!subject.trim() || !description.trim()) {
       toast.error("Please fill in all required fields");
       return;
     }
 
+    const payload = { subject, description, category, priority };
+
     if (!user) {
-      sessionStorage.setItem("ticket", JSON.stringify(formData));
+      sessionStorage.setItem("ticket", JSON.stringify(payload));
       router.push("/login?message=unauthorized&url=/support");
     }
 
@@ -59,7 +63,7 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
       const response = await fetch("/api/support/tickets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -87,10 +91,8 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
         </label>
         <Input
           type="text"
-          value={formData.subject}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, subject: e.target.value }))
-          }
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
           placeholder="Brief summary of your issue"
           className="w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:border-transparent"
           maxLength={200}
@@ -100,48 +102,42 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
       {/* Category & Priority */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-white mb-2">
-            Category
-          </label>
           <Select
-            value={formData.category}
-            onValueChange={(value) =>
-              setFormData((prev) => ({ ...prev, category: value }))
-            }
+            label="Category"
+            labelPlacement="outside"
+            selectedKeys={category ? [category] : []}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Select category"
+            classNames={{
+              trigger: "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
+              popoverContent: "bg-[#15161b] border-white/10 text-white"
+            }}
           >
-            <SelectTrigger className="w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent">
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent className="bg-[#15161b] border-white/10 text-white">
-              {SUPPORT_CATEGORIES.map((cat) => (
-                <SelectItem key={cat.value} value={cat.value}>
-                  {cat.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {SUPPORT_CATEGORIES.map((cat) => (
+              <SelectItem key={cat.value} value={cat.value}>
+                {cat.label}
+              </SelectItem>
+            ))}
           </Select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white mb-2">
-            Priority
-          </label>
           <Select
-            value={formData.priority}
-            onValueChange={(value) =>
-              setFormData((prev) => ({ ...prev, priority: value }))
-            }
+            label="Priority"
+            labelPlacement="outside"
+            selectedKeys={priority ? [priority] : []}
+            onChange={(e) => setPriority(e.target.value)}
+            placeholder="Select priority"
+            classNames={{
+              trigger: "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
+              popoverContent: "bg-[#15161b] border-white/10 text-white"
+            }}
           >
-            <SelectTrigger className="w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent">
-              <SelectValue placeholder="Select priority" />
-            </SelectTrigger>
-            <SelectContent className="bg-[#15161b] border-white/10 text-white">
-              {priorities.map((p) => (
-                <SelectItem key={p.value} value={p.value}>
-                  {p.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {priorities.map((p) => (
+              <SelectItem key={p.value} value={p.value}>
+                {p.label}
+              </SelectItem>
+            ))}
           </Select>
         </div>
       </div>
@@ -152,10 +148,8 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
           Description <span className="text-red-400">*</span>
         </label>
         <Textarea
-          value={formData.description}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, description: e.target.value }))
-          }
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder="Please describe your issue in detail..."
           rows={6}
           className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:border-transparent resize-none"

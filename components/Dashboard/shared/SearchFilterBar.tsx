@@ -7,10 +7,7 @@ import { X } from "@/components/ui/svgs/icons/X";
 import { Input } from "@/components/ui/input";
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -108,26 +105,27 @@ function SearchFilterBar({
                 {filter.label}
               </label>
               <Select
-                value={activeFilters[filter.key] || "all"}
-                onValueChange={(value) =>
-                  onFilterChange?.(filter.key, value === "all" ? "" : value)
-                }
+                selectedKeys={activeFilters[filter.key] ? [activeFilters[filter.key]] : ["all"]}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  onFilterChange?.(filter.key, value === "all" ? "" : value);
+                }}
+                placeholder={`Select ${filter.label}`}
+                classNames={{
+                  trigger: "bg-white/5 border-white/10 text-white",
+                  popoverContent: "bg-dark border-white/10"
+                }}
               >
-                <SelectTrigger className="bg-white/5 border-white/10 text-white">
-                  <SelectValue placeholder={`Select ${filter.label}`} />
-                </SelectTrigger>
-                <SelectContent className="bg-dark border-white/10">
-                  <SelectItem value="all">All</SelectItem>
-                  {filter.options.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value}
-                      className="text-white hover:bg-white/10"
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                {filter.options.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value}
+                    className="text-white hover:bg-white/10"
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
               </Select>
             </div>
           ))}

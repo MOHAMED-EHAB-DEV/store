@@ -14,10 +14,7 @@ import { Loader2 } from "@/components/ui/svgs/icons/Loader2";
 import { anyImgUrl } from "@/lib/utils/image";
 import {
     Select,
-    SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select";
 
 interface FAQFormProps {
@@ -124,20 +121,20 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                 <div className="space-y-2">
                     <label className="text-sm font-medium">Category</label>
                     <Select
-                        value={formData.category}
-                        onValueChange={(val) => setFormData(prev => ({ ...prev, category: val }))}
+                        selectedKeys={formData.category ? [formData.category] : []}
+                        onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                        placeholder="Category"
+                        classNames={{
+                            trigger: "w-full",
+                            popoverContent: "bg-[#15161b] border-white/10 text-white"
+                        }}
                     >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Category" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                            <SelectItem value="general">General</SelectItem>
-                            <SelectItem value="billing">Billing</SelectItem>
-                            <SelectItem value="technical">Technical</SelectItem>
-                            <SelectItem value="account">Account</SelectItem>
-                            <SelectItem value="templates">Templates</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
+                        <SelectItem value="general">General</SelectItem>
+                        <SelectItem value="billing">Billing</SelectItem>
+                        <SelectItem value="technical">Technical</SelectItem>
+                        <SelectItem value="account">Account</SelectItem>
+                        <SelectItem value="templates">Templates</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                     </Select>
                 </div>
             </div>

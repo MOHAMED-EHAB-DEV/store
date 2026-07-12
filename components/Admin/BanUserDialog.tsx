@@ -20,10 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
     Select,
-    SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select";
 
 interface BanUserDialogProps {
@@ -129,8 +126,10 @@ export default function BanUserDialog({
                             Ban Reason <span className="text-red-400">*</span>
                         </label>
                         <Select
-                            value={isOtherReason ? "Other" : formData.reason}
-                            onValueChange={(value) => {
+                            labelPlacement="outside"
+                            selectedKeys={[isOtherReason ? "Other" : formData.reason]}
+                            onChange={(e) => {
+                                const value = e.target.value;
                                 if (value === "Other") {
                                     setIsOtherReason(true);
                                     setFormData({ ...formData, reason: "" });
@@ -139,19 +138,19 @@ export default function BanUserDialog({
                                     setFormData({ ...formData, reason: value });
                                 }
                             }}
+                            placeholder="Select a reason..."
+                            classNames={{
+                                trigger: "w-full bg-white/10 border-white/20 text-white",
+                                popoverContent: "bg-dark border-white/20 text-white"
+                            }}
                         >
-                            <SelectTrigger className="w-full bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Select a reason..." />
-                            </SelectTrigger>
-                            <SelectContent className="bg-dark border-white/20 text-white">
-                                <SelectItem value="Violation of Terms of Service">Violation of Terms of Service</SelectItem>
-                                <SelectItem value="Spam or Abusive Behavior">Spam or Abusive Behavior</SelectItem>
-                                <SelectItem value="Fraudulent Activity">Fraudulent Activity</SelectItem>
-                                <SelectItem value="Inappropriate Content">Inappropriate Content</SelectItem>
-                                <SelectItem value="Multiple Account Violations">Multiple Account Violations</SelectItem>
-                                <SelectItem value="Security Threat">Security Threat</SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
-                            </SelectContent>
+                            <SelectItem value="Violation of Terms of Service">Violation of Terms of Service</SelectItem>
+                            <SelectItem value="Spam or Abusive Behavior">Spam or Abusive Behavior</SelectItem>
+                            <SelectItem value="Fraudulent Activity">Fraudulent Activity</SelectItem>
+                            <SelectItem value="Inappropriate Content">Inappropriate Content</SelectItem>
+                            <SelectItem value="Multiple Account Violations">Multiple Account Violations</SelectItem>
+                            <SelectItem value="Security Threat">Security Threat</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
                         </Select>
                     </div>
 

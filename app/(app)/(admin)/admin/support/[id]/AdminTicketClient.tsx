@@ -12,10 +12,7 @@ import { useUser } from "@/context/UserContext";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import {
     Select,
-    SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select";
 
 interface AdminTicketClientProps {
@@ -283,17 +280,16 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
                                 <StatusBadge status={ticket.status} />
                                 {ticket.status !== "closed" && (
                                     <Select
-                                        value={ticket.status}
-                                        onValueChange={handleUpdateStatus}
+                                        selectedKeys={ticket.status ? [ticket.status] : []}
+                                        onChange={(e) => handleUpdateStatus(e.target.value)}
+                                        classNames={{
+                                            trigger: "h-7 text-xs border-white/10 bg-white/5 text-white w-full",
+                                            popoverContent: "bg-[#15161b] border-white/10 text-white"
+                                        }}
                                     >
-                                        <SelectTrigger className="h-7 text-xs border-white/10 bg-white/5 text-white">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                                            <SelectItem value="open">Open</SelectItem>
-                                            <SelectItem value="resolved">Resolved</SelectItem>
-                                            <SelectItem value="closed">Closed</SelectItem>
-                                        </SelectContent>
+                                        <SelectItem value="open">Open</SelectItem>
+                                        <SelectItem value="resolved">Resolved</SelectItem>
+                                        <SelectItem value="closed">Closed</SelectItem>
                                     </Select>
                                 )}
                             </div>
@@ -304,18 +300,17 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
                             <div className="flex items-center gap-2">
                                 <PriorityBadge priority={ticket.priority} />
                                 <Select
-                                    value={ticket.priority}
-                                    onValueChange={handleUpdatePriority}
+                                    selectedKeys={ticket.priority ? [ticket.priority] : []}
+                                    onChange={(e) => handleUpdatePriority(e.target.value)}
+                                    classNames={{
+                                        trigger: "h-7 text-xs border-white/10 bg-white/5 text-white w-full",
+                                        popoverContent: "bg-[#15161b] border-white/10 text-white"
+                                    }}
                                 >
-                                    <SelectTrigger className="h-7 text-xs border-white/10 bg-white/5 text-white">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                                        <SelectItem value="low">Low</SelectItem>
-                                        <SelectItem value="medium">Medium</SelectItem>
-                                        <SelectItem value="high">High</SelectItem>
-                                        <SelectItem value="urgent">Urgent</SelectItem>
-                                    </SelectContent>
+                                    <SelectItem value="low">Low</SelectItem>
+                                    <SelectItem value="medium">Medium</SelectItem>
+                                    <SelectItem value="high">High</SelectItem>
+                                    <SelectItem value="urgent">Urgent</SelectItem>
                                 </Select>
                             </div>
                         </div>

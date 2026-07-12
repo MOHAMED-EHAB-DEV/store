@@ -19,10 +19,7 @@ import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import TemplateSkeleton from "../ui/TemplateSkeleton";
 
@@ -158,32 +155,31 @@ export default function PurchasedTemplatesClient({
           <div className="flex items-center gap-3">
             {/* Sort */}
             <Select
-              value={sortBy}
-              onValueChange={(value) => setSortBy(value as SortOption)}
+              selectedKeys={[sortBy]}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              classNames={{
+                trigger: "w-[150px] bg-white/5 border-white/10 text-white",
+                popoverContent: "bg-dark border-white/10"
+              }}
             >
-              <SelectTrigger className="w-[150px] bg-white/5 border-white/10 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-dark border-white/10">
-                <SelectItem
-                  value="newest"
-                  className="text-white hover:bg-white/10"
-                >
-                  Newest First
-                </SelectItem>
-                <SelectItem
-                  value="oldest"
-                  className="text-white hover:bg-white/10"
-                >
-                  Oldest First
-                </SelectItem>
-                <SelectItem
-                  value="name"
-                  className="text-white hover:bg-white/10"
-                >
-                  Name (A-Z)
-                </SelectItem>
-              </SelectContent>
+              <SelectItem
+                value="newest"
+                className="text-white hover:bg-white/10"
+              >
+                Newest First
+              </SelectItem>
+              <SelectItem
+                value="oldest"
+                className="text-white hover:bg-white/10"
+              >
+                Oldest First
+              </SelectItem>
+              <SelectItem
+                value="name"
+                className="text-white hover:bg-white/10"
+              >
+                Name (A-Z)
+              </SelectItem>
             </Select>
 
             {/* View Toggle */}

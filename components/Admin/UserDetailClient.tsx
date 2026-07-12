@@ -9,10 +9,7 @@ import { capitalizeFirstChar } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import {
     Select,
-    SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -198,32 +195,32 @@ export default function UserDetailClient({ user }: UserDetailClientProps) {
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Role</label>
                         <Select
-                            value={formData.role}
-                            onValueChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
+                            selectedKeys={formData.role ? [formData.role] : []}
+                            onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
+                            placeholder="Select role"
+                            classNames={{
+                                trigger: "w-full bg-white/5 border-white/10 text-white",
+                                popoverContent: "bg-dark border-white/10 text-white"
+                            }}
                         >
-                            <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
-                                <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-dark border-white/10 text-white">
-                                <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
-                            </SelectContent>
+                            <SelectItem value="user">User</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
                         </Select>
                     </div>
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Tier</label>
                         <Select
-                            value={formData.tier}
-                            onValueChange={(value) => setFormData(prev => ({ ...prev, tier: value }))}
+                            selectedKeys={formData.tier ? [formData.tier] : []}
+                            onChange={(e) => setFormData(prev => ({ ...prev, tier: e.target.value }))}
+                            placeholder="Select tier"
+                            classNames={{
+                                trigger: "w-full bg-white/5 border-white/10 text-white",
+                                popoverContent: "bg-dark border-white/10 text-white"
+                            }}
                         >
-                            <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
-                                <SelectValue placeholder="Select tier" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-dark border-white/10 text-white">
-                                <SelectItem value="starter">Starter</SelectItem>
-                                <SelectItem value="pro">Pro</SelectItem>
-                                <SelectItem value="lifetime">Lifetime</SelectItem>
-                            </SelectContent>
+                            <SelectItem value="starter">Starter</SelectItem>
+                            <SelectItem value="pro">Pro</SelectItem>
+                            <SelectItem value="lifetime">Lifetime</SelectItem>
                         </Select>
                     </div>
                     <div className="flex items-center gap-2 pt-6">

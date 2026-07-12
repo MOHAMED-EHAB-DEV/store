@@ -1,174 +1,390 @@
 "use client";
 
-import * as React from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  type HTMLAttributes
+} from "react";
 import { createPortal } from "react-dom";
 import { useFloating } from "@/hooks/use-floating";
-import { Check } from "@/components/ui/svgs/icons/Check";
+import { twMerge } from "tailwind-merge";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
-import { cn } from "@/lib/utils";
+
+const flattenChildren = (children: React.ReactNode): React.ReactElement<any>[] => {
+  const result: React.ReactElement<any>[] = [];
+  const traverse = (child: React.ReactNode) => {
+    if (Array.isArray(child)) {
+      child.forEach(traverse);
+    } else if (React.isValidElement(child)) {
+      if (child.type === React.Fragment) {
+        const childProps = child.props as HTMLAttributes<HTMLDivElement>;
+        const {children} = childProps;
+        traverse(children);
+      } else {
+        result.push(child);
+      }
+    }
+  };
+  traverse(children);
+  return result;
+};
+
+const sanitizeKey = (key: React.Key | null) => {
+  if (typeof key !== "string") return String(key);
+  let sanitized = key;
+  if (sanitized.startsWith(".")) {
+    const dollarIndex = sanitized.indexOf("$");
+    if (dollarIndex !== -1) {
+      sanitized = sanitized.slice(dollarIndex + 1);
+    }
+  }
+  return sanitized.replace(/=2/g, ":").replace(/=0/g, "=");
+};
 
 type SelectContextType = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  value?: string;
+  value: Set<string> | "all";
   onValueChange: (value: string) => void;
-  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  triggerRef: React.RefObject<HTMLDivElement | null>;
   contentRef: React.RefObject<HTMLDivElement | null>;
-  displayValue: React.ReactNode;
-  setDisplayValue: (node: React.ReactNode) => void;
+  focusedIndex: number;
+  selectionMode: "single" | "multiple";
 };
 
-const SelectContext = React.createContext<SelectContextType | undefined>(
-  undefined,
-);
+const SelectContext = createContext<SelectContextType | null>(null);
 
-function Select({
-  children,
-  value: controlledValue,
-  defaultValue,
-  onValueChange,
-  disabled,
-}: {
+export interface SelectProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+  label?: React.ReactNode;
   children?: React.ReactNode;
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
-  disabled?: boolean;
-}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [uncontrolledValue, setUncontrolledValue] =
-    React.useState(defaultValue);
-  const isControlled = controlledValue !== undefined;
-  const value = isControlled ? controlledValue : uncontrolledValue;
-  const [displayValue, setDisplayValue] = React.useState<React.ReactNode>(null);
+  classNames?: {
+    base?: string;
+    label?: string;
+    trigger?: string;
+    innerWrapper?: string;
+    value?: string;
+    selectorIcon?: string;
+    listboxWrapper?: string;
+    list?: string;
+    popover?: string;
+    popoverContent?: string;
+  };
+  size?: "sm" | "md" | "lg";
+  radius?: "none" | "sm" | "md" | "lg" | "full";
+  isRequired?: boolean;
+  selectedKeys?: "all" | Iterable<string>;
+  onChange?: (e: { target: { value: string } }) => void;
+  onSelectionChange?: (keys: Set<string>) => void;
+  placeholder?: string;
+  labelPlacement?: "inside" | "outside";
+  variant?: "flat" | "bordered";
+  disallowEmptySelection?: boolean;
+  selectionMode?: "single" | "multiple";
+  startContent?: React.ReactNode;
+  endContent?: React.ReactNode;
+  isDisabled?: boolean;
+  defaultSelectedKeys?: "all" | Iterable<string>;
+  disabledKeys?: Iterable<string>;
+}
 
-  const handleValueChange = React.useCallback(
-    (newValue: string) => {
-      if (!isControlled) setUncontrolledValue(newValue);
-      onValueChange?.(newValue);
-    },
-    [isControlled, onValueChange],
+export function Select({
+  label,
+  children,
+  classNames = {},
+  size = "md",
+  radius = "md",
+  isRequired,
+  selectedKeys,
+  onChange,
+  onSelectionChange,
+  placeholder,
+  labelPlacement = "inside",
+  variant = "flat",
+  className,
+  disallowEmptySelection,
+  selectionMode = "single",
+  startContent,
+  endContent,
+  isDisabled,
+  defaultSelectedKeys,
+  disabledKeys,
+  ...props
+}: SelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [internalValue, setInternalValue] = useState<Set<string> | "all">(
+    defaultSelectedKeys === "all"
+      ? "all"
+      : defaultSelectedKeys !== undefined
+      ? new Set(defaultSelectedKeys)
+      : new Set()
   );
+  const [focusedIndex, setFocusedIndex] = useState(-1);
 
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const contentRef = React.useRef<HTMLDivElement>(null);
+  const value =
+    selectedKeys === "all"
+      ? "all"
+      : selectedKeys !== undefined
+      ? new Set(selectedKeys)
+      : internalValue;
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const itemsArray = flattenChildren(children);
+
+  const handleValueChange = (newValue: string) => {
+    let newSet: Set<string>;
+    if (selectionMode === "multiple") {
+      newSet = value === "all" ? new Set() : new Set(value);
+      if (newSet.has(newValue)) {
+        if (!disallowEmptySelection || newSet.size > 1) {
+          newSet.delete(newValue);
+        }
+      } else {
+        newSet.add(newValue);
+      }
+    } else {
+      if (value === "all" || (value instanceof Set && value.has(newValue))) {
+        if (disallowEmptySelection) return;
+        newSet = new Set();
+      } else {
+        newSet = new Set([newValue]);
+      }
+    }
+
+    if (selectedKeys === undefined) {
+      setInternalValue(newSet);
+    }
+    if (onSelectionChange) onSelectionChange(newSet);
+    if (onChange) {
+      onChange({ target: { value: Array.from(newSet).join(",") } });
+    }
+    if (selectionMode !== "multiple") {
+      setIsOpen(false);
+    }
+  };
+
+  let displayValue: React.ReactNode[] = [];
+  itemsArray.forEach((child) => {
+    const childValue =
+      child.props.value !== undefined
+        ? child.props.value
+        : sanitizeKey(child.key);
+    const childValueStr = String(childValue);
+
+    if (
+      value === "all" ||
+      (value instanceof Set &&
+        (value.has(childValue) || value.has(childValueStr)))
+    ) {
+      displayValue.push(child.props.children);
+    }
+  });
+
+  const displayString = displayValue.length > 0 ? (
+    <div className="flex gap-1 truncate items-center">
+        {displayValue.map((child, i) => <React.Fragment key={i}>{i > 0 ? ", " : ""}{child}</React.Fragment>)}
+    </div>
+  ) : null;
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!isOpen) {
+        setIsOpen(true);
+        setFocusedIndex(0);
+      } else {
+        setFocusedIndex((prev) => Math.min(prev + 1, itemsArray.length - 1));
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (isOpen) {
+        setFocusedIndex((prev) => Math.max(prev - 1, 0));
+      }
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (!isOpen) {
+        setIsOpen(true);
+        setFocusedIndex(0);
+      } else if (focusedIndex >= 0 && focusedIndex < itemsArray.length) {
+        const item = itemsArray[focusedIndex];
+        const val =
+          item.props.value !== undefined
+            ? item.props.value
+            : sanitizeKey(item.key);
+        handleValueChange(val);
+      }
+    } else if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+  };
+
+  const sizes = {
+    sm: "h-8 min-h-8 px-2 text-sm",
+    md: "h-10 min-h-10 px-3 text-sm",
+    lg: "h-12 min-h-12 px-3 text-base",
+  };
+
+  const radiuses = {
+    none: "rounded-none",
+    sm: "rounded-sm",
+    md: "rounded-md",
+    lg: "rounded-lg",
+    full: "rounded-full",
+  };
+
+  const variants = {
+    flat: "bg-white/5 border-transparent hover:bg-white/10 focus-within:bg-white/10",
+    bordered:
+      "bg-transparent border-white/10 border hover:border-white/20 focus-within:border-white/30",
+  };
 
   return (
     <SelectContext.Provider
       value={{
-        isOpen: disabled ? false : isOpen,
+        isOpen,
         setIsOpen,
         value,
         onValueChange: handleValueChange,
         triggerRef,
         contentRef,
-        displayValue,
-        setDisplayValue,
+        focusedIndex,
+        selectionMode,
       }}
     >
-      {children}
+      <div
+        data-slot="base"
+        data-open={isOpen ? "true" : "false"}
+        data-focus={isOpen ? "true" : "false"}
+        className={twMerge(
+          "flex flex-col gap-1 outline-none group w-full",
+          classNames.base,
+          className,
+        )}
+        {...props}
+      >
+        {label && labelPlacement === "outside" && (
+          <label
+            data-slot="label"
+            className={twMerge(
+              "text-sm font-medium",
+              isRequired
+                ? "after:content-['*'] after:text-red-400 after:ms-0.5"
+                : "",
+              classNames.label,
+            )}
+          >
+            {label}
+          </label>
+        )}
+        <div
+          data-slot="trigger"
+          data-open={isOpen ? "true" : "false"}
+          data-focus={isOpen ? "true" : "false"}
+          ref={triggerRef}
+          tabIndex={isDisabled ? -1 : 0}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-label={props["aria-label"] || (typeof label === "string" ? label : "Select")}
+          onKeyDown={(e) => {
+            if (!isDisabled) handleKeyDown(e);
+          }}
+          onClick={() => {
+            if (!isDisabled) setIsOpen(!isOpen);
+          }}
+          className={twMerge(
+            "relative flex items-center justify-between gap-2 px-3 outline-none transition-colors w-full",
+            isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+            sizes[size] || sizes.md,
+            radiuses[radius] || radiuses.md,
+            variants[variant] || variants.flat,
+            classNames.trigger,
+          )}
+        >
+          {startContent && (
+            <div className="flex-shrink-0" data-slot="start-content">
+              {startContent}
+            </div>
+          )}
+          <div
+            data-slot="inner-wrapper"
+            className={twMerge(
+              "w-full h-full flex flex-col items-start justify-center flex-grow truncate gap-0.5",
+              classNames.innerWrapper,
+            )}
+          >
+            {label && labelPlacement === "inside" && (
+              <span
+                data-slot="label"
+                className={twMerge(
+                  "text-xs text-white/50 origin-top-left transition-all",
+                  displayString || isOpen
+                    ? "scale-100 translateY-0"
+                    : "scale-100",
+                  classNames.label,
+                )}
+              >
+                {label} {isRequired && <span className="text-red-400">*</span>}
+              </span>
+            )}
+            <span
+              data-slot="value"
+              className={twMerge(
+                "truncate flex",
+                !displayString && "text-white/50",
+                label &&
+                  labelPlacement === "inside" &&
+                  !displayString &&
+                  !isOpen
+                  ? "opacity-0"
+                  : "opacity-100",
+                classNames.value,
+              )}
+            >
+              {displayString || placeholder}
+            </span>
+          </div>
+          {endContent && (
+            <div className="flex-shrink-0 z-10" data-slot="end-content">
+              {endContent}
+            </div>
+          )}
+          <ChevronDown
+            data-slot="selector-icon"
+            className={twMerge(
+              "w-4 h-4 text-white/50 transition-transform hover:bg-white/10",
+              classNames.selectorIcon,
+              isOpen && "rotate-180",
+            )}
+          />
+        </div>
+        <SelectMenu classNames={classNames}>{itemsArray}</SelectMenu>
+      </div>
     </SelectContext.Provider>
   );
 }
 
-function SelectGroup({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("p-1 w-full", className)} {...props} />;
-}
+function SelectMenu({ children, classNames }: { children: React.ReactElement<any>[]; classNames: any }) {
+  const context = useContext(SelectContext);
+  const [mounted, setMounted] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-function SelectValue({ placeholder, ...props }: any) {
-  const context = React.useContext(SelectContext);
-  if (!context) throw new Error("SelectValue must be used within Select");
-
-  return (
-    <span data-slot="select-value" {...props}>
-      {context.value ? context.displayValue || context.value : placeholder}
-    </span>
-  );
-}
-
-function SelectTrigger({
-  className,
-  size = "default",
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  size?: "sm" | "default";
-}) {
-  const context = React.useContext(SelectContext);
-  if (!context) throw new Error("SelectTrigger must be used within Select");
-
-  return (
-    <button
-      ref={context.triggerRef as any}
-      type="button"
-      data-slot="select-trigger"
-      data-size={size}
-      data-state={context.isOpen ? "open" : "closed"}
-      onClick={() => context.setIsOpen(!context.isOpen)}
-      className={cn(
-        "border-input data-placeholder:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex w-fit items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <ChevronDown className="size-4 opacity-50" />
-    </button>
-  );
-}
-
-function SelectContent({
-  className,
-  children,
-  position = "popper",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & {
-  position?: "popper" | "item-aligned";
-}) {
-  const context = React.useContext(SelectContext);
-  if (!context) throw new Error("SelectContent must be used within Select");
-
-  const [mounted, setMounted] = React.useState(false);
-  const [shouldRender, setShouldRender] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
-
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
   }, []);
 
-  React.useEffect(() => {
-    if (context.isOpen) {
-      setShouldRender(true);
-      let raf2: number;
-      const raf1 = requestAnimationFrame(() => {
-        raf2 = requestAnimationFrame(() => {
-          setVisible(true);
-        });
-      });
-      return () => {
-        cancelAnimationFrame(raf1);
-        if (raf2) cancelAnimationFrame(raf2);
-      };
-    } else {
-      setVisible(false);
-      const timer = setTimeout(() => setShouldRender(false), 150);
-      return () => clearTimeout(timer);
-    }
-  }, [context.isOpen]);
-
   const { updatePosition } = useFloating({
-    isOpen: context.isOpen,
-    setIsOpen: context.setIsOpen,
-    triggerRef: context.triggerRef,
-    contentRef: context.contentRef,
-    align: "start",
-    sideOffset: 4,
+    isOpen: context?.isOpen || false,
+    setIsOpen: context?.setIsOpen || (() => {}),
+    triggerRef: context?.triggerRef as any,
+    contentRef: context?.contentRef as any,
   });
 
-  if (!shouldRender || !mounted) return null;
+  if (!context) return null;
+  if (!mounted) return null;
 
   return createPortal(
     <div
@@ -182,110 +398,153 @@ function SelectContent({
         position: "absolute",
         top: "-9999px",
         left: "-9999px",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(-4px)",
-        transition: "opacity 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1)",
-        transformOrigin: "top center",
       }}
       data-state={context.isOpen ? "open" : "closed"}
-      data-side="bottom"
-      data-lenis-prevent="true"
-      className={cn(
-        "bg-popover text-popover-foreground relative z-50 max-h-96 min-w-32 overflow-x-hidden overflow-y-auto rounded-md border shadow-md",
-        position === "popper" && "data-[side=bottom]:translate-y-1",
-        className,
+      className={twMerge(
+        "z-50 min-w-32 rounded-xl border border-white/10 bg-[#15161b] text-white p-1 shadow-md transition-opacity duration-200 max-h-96",
+        context.isOpen
+          ? "opacity-100 visible"
+          : "opacity-0 invisible pointer-events-none",
+        classNames?.popoverContent || classNames?.popover,
       )}
-      {...props}
     >
-      <div className={cn("p-1 w-full")}>{children}</div>
+      <div
+        ref={scrollRef}
+        data-slot="listbox-wrapper"
+        className={twMerge(
+          "flex flex-col w-full max-h-72 overflow-x-hidden overflow-y-auto",
+          classNames?.listboxWrapper,
+        )}
+      >
+        <div
+          data-slot="listbox"
+          role="listbox"
+          className={twMerge("flex flex-col w-full gap-0.5", classNames?.list)}
+        >
+          {children.map((child, index) => {
+            const itemKey =
+              child.props.value !== undefined
+                ? child.props.value
+                : sanitizeKey(child.key);
+            return React.cloneElement(child, {
+              index,
+              itemKey,
+              key: itemKey || index,
+            });
+          })}
+        </div>
+      </div>
     </div>,
     document.body,
   );
 }
 
-function SelectLabel({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      data-slot="select-label"
-      className={cn(
-        "text-muted-foreground px-2 py-1.5 text-xs font-semibold",
-        className,
-      )}
-      {...props}
-    />
-  );
+export interface SelectItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onClick"> {
+  value?: string;
+  index?: number;
+  startContent?: React.ReactNode;
+  endContent?: React.ReactNode;
+  description?: React.ReactNode;
+  textValue?: string;
+  itemKey?: string;
+  onPress?: (e: React.MouseEvent | React.KeyboardEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
+  isDisabled?: boolean;
 }
 
-function SelectItem({
-  className,
+export function SelectItem({
   children,
+  className,
   value,
+  index,
+  startContent,
+  endContent,
+  description,
+  textValue,
+  itemKey,
+  onPress,
+  onClick,
+  isDisabled,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { value: string }) {
-  const context = React.useContext(SelectContext);
+}: SelectItemProps) {
+  const context = useContext(SelectContext);
   if (!context) throw new Error("SelectItem must be used within Select");
 
-  const isSelected = context.value === value;
-
-  React.useEffect(() => {
-    if (isSelected) context.setDisplayValue(children);
-  }, [isSelected, children, context]);
+  const itemValue =
+    itemKey !== undefined ? itemKey : value !== undefined ? value : (props as any).key;
+  const isSelected =
+    context.value === "all" ||
+    (context.value instanceof Set &&
+      (context.value.has(itemValue) || context.value.has(String(itemValue))));
+  const isFocused = context.focusedIndex === index;
 
   return (
     <div
-      data-slot="select-item"
+      data-slot="item"
       role="option"
       aria-selected={isSelected}
-      onClick={() => {
-        context.onValueChange(value);
-        context.setIsOpen(false);
-      }}
-      className={cn(
-        "focus:bg-white/10 focus:text-white hover:bg-white/10 hover:text-white dark:hover:bg-white/10 dark:hover:text-white [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+      data-selected={isSelected ? "true" : "false"}
+      data-focus={isFocused ? "true" : "false"}
+      className={twMerge(
+        "flex w-full items-center gap-2 rounded-lg py-1.5 px-2 text-sm outline-none select-none transition-colors",
+        isDisabled
+          ? "opacity-50 cursor-not-allowed pointer-events-none"
+          : "cursor-pointer",
+        isSelected ? "bg-white/10 text-white" : "text-white/80",
+        isFocused && !isSelected && !isDisabled
+          ? "bg-white/10"
+          : !isDisabled && "hover:bg-white/10 hover:text-white",
         className,
       )}
+      onClick={(e) => {
+        if (isDisabled) return;
+        if (itemValue !== undefined) context.onValueChange(itemValue);
+        if (onPress) onPress(e);
+        if (onClick) onClick(e);
+      }}
+      data-disabled={isDisabled ? "true" : "false"}
       {...props}
     >
-      <span className="absolute right-2 flex size-3.5 items-center justify-center">
-        {isSelected && <Check className="size-4" />}
-      </span>
-      <span>{children}</span>
+      {startContent && (
+        <div className="flex-shrink-0" data-slot="start-content">
+          {startContent}
+        </div>
+      )}
+      <div
+        className="flex flex-col flex-grow truncate"
+        data-slot="item-content"
+      >
+        <span className="truncate">{children}</span>
+        {description && (
+          <span
+            className="text-xs text-white/50 truncate"
+            data-slot="description"
+          >
+            {description}
+          </span>
+        )}
+      </div>
+      {endContent && (
+        <div className="flex-shrink-0" data-slot="end-content">
+          {endContent}
+        </div>
+      )}
+      {isSelected && (
+        <svg
+          className="w-4 h-4 text-white shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+      )}
     </div>
   );
 }
 
-function SelectSeparator({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      data-slot="select-separator"
-      className={cn("bg-border pointer-events-none -mx-1 my-1 h-px", className)}
-      {...props}
-    />
-  );
-}
-
-function SelectScrollUpButton() {
-  return null;
-}
-function SelectScrollDownButton() {
-  return null;
-}
-
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-};

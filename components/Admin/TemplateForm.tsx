@@ -11,10 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import {
     Select,
-    SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
@@ -264,17 +261,17 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                     <div>
                         <label className="block text-sm text-muted-foreground mb-1">Type</label>
                         <Select
-                            value={formData.type}
-                            onValueChange={(val) => setFormData(prev => ({ ...prev, type: val }))}
+                            selectedKeys={formData.type ? [formData.type] : []}
+                            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
+                            placeholder="Type"
+                            classNames={{
+                                trigger: "w-full",
+                                popoverContent: "bg-[#15161b] border-white/10 text-white"
+                            }}
                         >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Type" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-[#15161b] border-white/10 text-white">
-                                <SelectItem value="framer">Framer</SelectItem>
-                                <SelectItem value="coded">Coded</SelectItem>
-                                <SelectItem value="figma">Figma</SelectItem>
-                            </SelectContent>
+                            <SelectItem value="framer">Framer</SelectItem>
+                            <SelectItem value="coded">Coded</SelectItem>
+                            <SelectItem value="figma">Figma</SelectItem>
                         </Select>
                     </div>
                 </div>

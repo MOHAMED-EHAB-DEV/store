@@ -143,16 +143,18 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
       </div>
 
       {/* Description */}
-      <div>
-        <label className="block text-sm font-medium text-white mb-2">
-          Description <span className="text-red-400">*</span>
-        </label>
+      <div className="w-full">
         <Textarea
+          label="Description"
+          isRequired
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Please describe your issue in detail..."
           rows={6}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:border-transparent resize-none"
+          classNames={{
+            inputWrapper: "rounded-xl",
+            input: "py-3"
+          }}
         />
       </div>
 

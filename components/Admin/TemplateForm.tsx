@@ -166,14 +166,14 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
                 {/* Description */}
                 <div>
-                    <label className="block text-sm text-muted-foreground mb-1">Description *</label>
                     <Textarea
+                        label="Description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                         placeholder="Enter template description..."
                         rows={4}
-                        required
+                        isRequired
                     />
                 </div>
 

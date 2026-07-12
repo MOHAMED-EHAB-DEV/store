@@ -92,7 +92,7 @@ const Hero = () => {
           <Link
             className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
             aria-label="Work with me"
-            href="/support?subject=Custom%20Build%20Request&category=template-customization"
+            href="/support?category=custom-build"
           >
             <span className="relative z-10 flex items-center gap-2">
               Work with me

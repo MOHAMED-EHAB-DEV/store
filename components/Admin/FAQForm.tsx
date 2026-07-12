@@ -139,15 +139,15 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Answer *</label>
+            <div className="w-full">
                 <Textarea
+                    label="Answer"
                     name="answer"
                     value={formData.answer}
                     onChange={handleChange}
                     placeholder="Enter the answer..."
                     rows={6}
-                    required
+                    isRequired
                 />
             </div>
 

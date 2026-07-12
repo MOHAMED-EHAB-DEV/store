@@ -2,12 +2,11 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import "./User";
 
 export interface ITicket extends Document {
-
     user: mongoose.Types.ObjectId;
     subject: string;
     status: "open" | "resolved" | "closed";
     priority: "low" | "medium" | "high" | "urgent";
-    category: "general" | "billing" | "technical" | "account" | "other" | "template customization";
+    category: "general" | "billing" | "technical" | "account" | "other" | "template-customization" | "custom-build";
     createdAt: Date;
     updatedAt: Date;
     lastMessageAt: Date;
@@ -41,7 +40,7 @@ const TicketSchema = new Schema<ITicket>({
     },
     category: {
         type: String,
-        enum: ["general", "billing", "technical", "account", "other", "template customization"],
+        enum: ["general", "billing", "technical", "account", "other", "template-customization", "custom-build"],
         default: "general",
         index: true
     },

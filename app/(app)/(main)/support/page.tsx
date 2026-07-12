@@ -117,7 +117,7 @@ export default function SupportPage() {
                         </div>
 
                         {/* Right - Form */}
-                        <div className="glass rounded-2xl p-6 md:p-8">
+                        <div className="glass rounded-2xl p-6 md:p-8 h-fit">
                             <h3 className="text-xl font-bold text-white mb-6">Create New Ticket</h3>
                             <React.Suspense fallback={<div className="text-white">Loading form...</div>}>
                                 <TicketForm />

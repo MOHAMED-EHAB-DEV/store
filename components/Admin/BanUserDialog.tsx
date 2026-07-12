@@ -171,16 +171,16 @@ export default function BanUserDialog({
                     )}
 
                     {/* Additional Notes */}
-                    <div>
-                        <label className="block text-white font-medium mb-2">
-                            Additional Notes (Optional)
-                        </label>
+                    <div className="w-full">
                         <Textarea
+                            label="Additional Notes (Optional)"
                             value={formData.notes}
                             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                             placeholder="Add any additional context or warnings given to the user..."
                             rows={3}
-                            className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus-visible:ring-red-500 resize-none"
+                            classNames={{
+                                inputWrapper: "bg-white/10 border-white/20 focus-within:border-red-500 focus-within:ring-red-500/20"
+                            }}
                         />
                     </div>
 

@@ -115,9 +115,9 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Excerpt</label>
+            <div className="w-full">
                 <Textarea
+                    label="Excerpt"
                     name="excerpt"
                     value={formData.excerpt}
                     onChange={handleChange}
@@ -125,21 +125,19 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
                 />
             </div>
 
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Content (Markdown)</label>
-                <div className="relative">
-                    <Textarea
-                        name="content"
-                        value={formData.content}
-                        onChange={handleChange}
-                        rows={15}
-                        required
-                        className="font-mono text-sm"
-                    />
-                    <div className="absolute right-2 top-2 text-xs text-gray-500 pointer-events-none">
-                        Markdown Supported
-                    </div>
-                </div>
+            <div className="w-full">
+                <Textarea
+                    label="Content (Markdown)"
+                    description="Markdown Supported"
+                    name="content"
+                    value={formData.content}
+                    onChange={handleChange}
+                    rows={15}
+                    isRequired
+                    classNames={{
+                        input: "font-mono text-sm"
+                    }}
+                />
             </div>
 
             <div className="flex flex-col justify-center gap-2">

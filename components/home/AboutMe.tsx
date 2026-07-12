@@ -137,7 +137,7 @@ const AboutMe = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  href="/support?subject=Consultation&category=general"
+                  href="/support?category=general"
                   className="flex-1 bg-linear-to-r from-green-500 to-teal-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300"
                 >
                   Book a Consultation

@@ -41,7 +41,7 @@ const CustomBuildBand = () => {
           
           <div className="relative z-10 shrink-0">
             <Link
-              href="/support?subject=Custom%20Build%20Request&category=template-customization"
+              href="/support?category=template-customization"
               className="flex items-center gap-3 px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white text-lg font-semibold rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:-translate-y-1"
             >
               Request a Custom Build

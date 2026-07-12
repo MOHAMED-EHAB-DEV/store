@@ -481,11 +481,11 @@ const skills = [
 ];
 
 const badges = [
-    { text: "Top Seller", icon: Award, gradient: "from-yellow-400 to-orange-500" },
-    { text: "Design Expert", icon: Palette, gradient: "from-purple-500 to-pink-500" },
+    // { text: "Top Seller", icon: Award, gradient: "from-yellow-400 to-orange-500" },
+    // { text: "Design Expert", icon: Palette, gradient: "from-purple-500 to-pink-500" },
     { text: "Code Wizard", icon: Zap, gradient: "from-blue-500 to-cyan-500" },
     { text: "Innovation Leader", icon: Rocket, gradient: "from-green-500 to-teal-500" },
-    { text: "Customer Favorite", icon: Heart, gradient: "from-red-500 to-pink-500" },
+    // { text: "Customer Favorite", icon: Heart, gradient: "from-red-500 to-pink-500" },
     { text: "Quality Focused", icon: Target, gradient: "from-indigo-500 to-purple-500" }
 ];
 

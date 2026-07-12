@@ -83,20 +83,20 @@ const AboutMe = () => {
               <p>
                 Instead of guessing what works, let my results speak for themselves. I specialize in turning slow, bloated websites into lightning-fast, high-converting platforms.
               </p>
-              <ul className="space-y-3 mt-4 text-white font-medium">
+              {/* <ul className="space-y-3 mt-4 text-white font-medium">
                 <li className="flex items-start gap-2">
                   <span className="text-teal-400">🚀</span> 
-                  <span>{/* TODO: real metric, e.g. LCP 4.1s → 1.3s */} LCP 4.1s → 1.3s for SaaS client</span>
+                  <span> LCP 4.1s → 1.3s for SaaS client</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-400">📈</span> 
-                  <span>{/* TODO: real metric, e.g. Increased conversion by 42% for e-commerce client */} Increased conversion by 42% for e-commerce client</span>
+                  <span> Increased conversion by 42% for e-commerce client</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-400">⚡</span> 
-                  <span>{/* TODO: real metric, e.g. Perfect 100/100 Lighthouse score on complex dashboard */} Perfect 100/100 Lighthouse score on complex dashboard</span>
+                  <span> Perfect 100/100 Lighthouse score on complex dashboard</span>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
 

@@ -4,9 +4,9 @@ $urls = @(
     "https://mhd-store.vercel.app/",
     "https://mhd-store.vercel.app/templates",
     "https://mhd-store.vercel.app/templates/category/vite",
-    "https://mhd-store.vercel.app/templates/obsidian-portfolio",
-    "https://mhd-store.vercel.app/test",
-    "https://mhd-store.vercel.app/test/templates/obsidian-portfolio"
+    "https://mhd-store.vercel.app/templates/obsidian-portfolio"
+    # "https://mhd-store.vercel.app/test",
+    # "https://mhd-store.vercel.app/test/templates/obsidian-portfolio"
 )
 
 # Detect Brave path (standard locations)

@@ -68,7 +68,7 @@ const BlueprintCustomBuild = () => {
             </h3>
             <p className="text-gray-400 text-lg max-w-2xl">
               Bought a template but need it tailored to your brand, backend, or
-              business logic? We do everything about websites, handling both
+              business logic? I do everything about websites, handling both
               frontend and backend work.
               <span className="text-purple-300 font-medium ml-1">
                 I build the custom parts too.

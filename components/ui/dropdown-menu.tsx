@@ -68,13 +68,25 @@ function DropdownMenuContent({
 
   const [mounted, setMounted] = React.useState(false);
   const [shouldRender, setShouldRender] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => { setMounted(true); }, []);
 
   React.useEffect(() => {
     if (context.isOpen) {
       setShouldRender(true);
+      let raf2: number;
+      const raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => {
+          setVisible(true);
+        });
+      });
+      return () => {
+        cancelAnimationFrame(raf1);
+        if (raf2) cancelAnimationFrame(raf2);
+      };
     } else {
+      setVisible(false);
       const timer = setTimeout(() => setShouldRender(false), 150);
       return () => clearTimeout(timer);
     }
@@ -103,11 +115,15 @@ function DropdownMenuContent({
         position: "absolute",
         top: "-9999px",
         left: "-9999px",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(-4px)",
+        transition: "opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transformOrigin: "top center",
       }}
       data-state={context.isOpen ? "open" : "closed"}
       data-lenis-prevent="true"
       className={cn(
-        "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 z-50 min-w-32 overflow-x-hidden overflow-y-auto rounded-md border p-1 shadow-md",
+        "bg-popover text-popover-foreground z-40 min-w-32 overflow-x-hidden overflow-y-auto rounded-md border p-1 shadow-md",
         className
       )}
       {...props}

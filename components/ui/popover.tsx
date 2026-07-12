@@ -66,6 +66,7 @@ function PopoverContent({
 
   const [mounted, setMounted] = React.useState(false);
   const [shouldRender, setShouldRender] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
@@ -74,8 +75,19 @@ function PopoverContent({
   React.useEffect(() => {
     if (context.isOpen) {
       setShouldRender(true);
+      let raf2: number;
+      const raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => {
+          setVisible(true);
+        });
+      });
+      return () => {
+        cancelAnimationFrame(raf1);
+        if (raf2) cancelAnimationFrame(raf2);
+      };
     } else {
-      const timer = setTimeout(() => setShouldRender(false), 150); // allow animate-out to play
+      setVisible(false);
+      const timer = setTimeout(() => setShouldRender(false), 150);
       return () => clearTimeout(timer);
     }
   }, [context.isOpen]);
@@ -103,11 +115,15 @@ function PopoverContent({
         position: "absolute",
         top: "-9999px",
         left: "-9999px",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(-4px)",
+        transition: "opacity 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transformOrigin: "top center",
       }}
       data-state={context.isOpen ? "open" : "closed"}
       data-lenis-prevent="true"
       className={cn(
-        "bg-popover text-popover-foreground z-50 w-72 rounded-md border p-4 shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "bg-popover text-popover-foreground z-50 w-72 rounded-md border p-4 shadow-md outline-none",
         className
       )}
       {...props}

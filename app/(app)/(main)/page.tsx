@@ -78,18 +78,18 @@ export default async function Home() {
       </div>
 
       <FeaturedTemplates />
-      <CategoriesSection />
       <WhyUs />
+      <HowItWorks />
+      <CategoriesSection />
       {/* <FramerFeatures /> */}
       <CodedFeatures />
       {/* <FigmaFeatures /> */}
-      <HowItWorks />
       <Pricing />
       {/*<Testimonials/>*/}
       {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}
       {/* <BlueprintCustomBuild /> */}
       <AboutMe />
-      <Cta />
+      {/* <Cta /> */}
     </main>
   );
 }

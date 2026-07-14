@@ -10,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: [
           "/",
+          "/custom-development",
           "/templates",
           "/templates/*",
           "/blog",
@@ -32,6 +33,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "Googlebot",
         allow: [
           "/",
+          "/custom-development",
           "/templates",
           "/templates/*",
           "/blog",

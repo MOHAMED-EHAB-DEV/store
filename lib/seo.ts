@@ -36,9 +36,11 @@ export function buildMetadata({
       images: [
         {
           url: imageUrl,
+          secureUrl: imageUrl,
           width: 1200,
           height: 630,
           alt: title,
+          type: "image/png",
         },
       ],
       locale: "en_US",

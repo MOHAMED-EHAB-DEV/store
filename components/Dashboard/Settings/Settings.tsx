@@ -57,7 +57,7 @@ const Settings = ({ userId }: { userId: string }) => {
         router.push("/");
       } else return sonnerToast.error(response.message);
     } catch (err) {
-      // console.log(err)
+      // // console.log(err)
       return sonnerToast.error((err as Error).message);
     } finally {
       setIsLoading(false);

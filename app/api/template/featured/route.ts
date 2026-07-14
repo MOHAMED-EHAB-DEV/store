@@ -6,8 +6,6 @@ import {
 } from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
-import Review from "@/lib/models/Review";
-
 
 async function getFeaturedTemplates(req: NextRequest) {
   try {
@@ -16,35 +14,23 @@ async function getFeaturedTemplates(req: NextRequest) {
     const templates = await Template.find({
       isActive: true,
       tags: {
-        $in: ["featured"]
-      }
+        $in: ["featured"],
+      },
     })
       .select(
-        "_id slug title description thumbnail price demoVideo tags categories averageRating",
+        "_id slug title description thumbnail price demoVideo tags categories averageRating reviewCount",
       )
       .populate("categories", "name slug")
       .limit(4)
       .lean();
 
-
-    const templateIds = templates.map((t) => t._id);
-
-    const reviewCounts = await Review.aggregate([
-      { $match: { template: { $in: templateIds } } },
-      { $group: { _id: "$template", count: { $sum: 1 } } },
-    ]);
-
-    const reviewCountMap = new Map(
-      reviewCounts.map((r) => [r._id.toString(), r.count]),
-    );
-
-    const templatesWithReviews = templates.map((template) => ({
+    const result = templates.map((template) => ({
       ...template,
       _id: template._id.toString(),
-      reviews: reviewCountMap.get(template._id.toString()) ?? 0,
+      reviews: template.reviewCount ?? 0,
     }));
 
-    return createAPIResponse(templatesWithReviews);
+    return createAPIResponse(result);
   } catch (err) {
     return createErrorResponse("Something went wrong", 500, {
       req: req,

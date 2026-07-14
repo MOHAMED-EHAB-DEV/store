@@ -70,7 +70,7 @@ const Pricing = () => {
       description: "Tailored to your brand, backend, or business logic.",
       features: ["Full Customization", "Backend Integration", "Dedicated Support", "Source Code Delivered"],
       cta: 'Request Custom Build',
-      ctaLink: "/support?category=custom-build",
+      ctaLink: "/custom-development",
       highlight: false,
     },
   ];

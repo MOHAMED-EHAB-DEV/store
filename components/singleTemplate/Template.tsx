@@ -78,14 +78,12 @@ const Template = async ({
               ))}
             </div>
           </div>
-
-
         </div>
 
         {/* Right Panel */}
         <div className="flex flex-row flex-wrap lg:flex-col justify-center gap-16 lg:justify-start lg:gap-6 items-center lg:items-center">
           {/* Rating */}
-          {(template.reviews ?? 0) > 0 && (
+          {(template.reviewCount ?? 0) > 0 && (
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-1 sm:gap-2">
                 {[...Array(5)].map((_, i) => (
@@ -103,7 +101,7 @@ const Template = async ({
                 {template.averageRating?.toFixed(1)}
               </span>
               <span className="text-gray-400 text-xs sm:text-sm">
-                {template.reviews ?? 0} reviews
+                {template.reviewCount ?? 0} reviews
               </span>
             </div>
           )}
@@ -161,7 +159,7 @@ const Template = async ({
       <ReviewsContainer
         templateId={template?._id}
         averageRating={template?.averageRating}
-        reviewCount={template.reviews ?? 0}
+        reviewCount={template.reviewCount ?? 0}
       />
 
       {similarTemplates && similarTemplates.length > 0 && (

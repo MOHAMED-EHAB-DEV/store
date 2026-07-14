@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "@/components/ui/Logo";
 import { socialImgs, FooterLinks } from "@/constants";
 
 const Footer = () => {
+  const pathname = usePathname();
+  const isCustomDev = pathname === "/custom-development";
+
   return (
-    <footer className="w-full bg-dark text-white">
+    <footer className={`w-full text-white ${isCustomDev ? "bg-transparent border-t border-white/5" : "bg-dark"}`}>
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">

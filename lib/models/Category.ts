@@ -58,7 +58,7 @@ const CategorySchema = new Schema<ICategory>(
       index: true,
     },
   },
-  { timestamps: true, versionKey: false }
+  { timestamps: true, versionKey: false },
 );
 
 // 4️⃣ Indexes
@@ -191,7 +191,7 @@ CategorySchema.statics.refreshAllTemplateCounts = async function () {
       await this.findByIdAndUpdate(category._id, { templateCount: count });
     }
 
-    console.log("✅ All category template counts updated");
+    // console.log("✅ All category template counts updated");
   } catch (error) {
     console.error("❌ Error refreshing category template counts:", error);
   }
@@ -218,18 +218,15 @@ CategorySchema.methods.softDelete = async function () {
   this.isActive = false;
   await this.save();
 
-  await this.updateMany(
-    { parentCategory: this._id },
-    { parentCategory: null }
-  );
+  await this.updateMany({ parentCategory: this._id }, { parentCategory: null });
 
-  console.log(`Category ${this.name} soft deleted`);
+  // console.log(`Category ${this.name} soft deleted`);
 };
 
 CategorySchema.methods.restore = async function () {
   this.isActive = true;
   await this.save();
-  console.log(`Category ${this.name} restored`);
+  // console.log(`Category ${this.name} restored`);
 };
 
 // 8️⃣ Middleware
@@ -276,7 +273,7 @@ CategorySchema.pre(
 
       if (templateCount > 0) {
         const error = new Error(
-          `Cannot delete category with ${templateCount} active templates`
+          `Cannot delete category with ${templateCount} active templates`,
         );
         error.name = "ValidationError";
         return next(error);
@@ -286,7 +283,7 @@ CategorySchema.pre(
     } catch (error) {
       next(error as any);
     }
-  }
+  },
 );
 
 // 9️⃣ Create model

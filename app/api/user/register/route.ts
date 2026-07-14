@@ -3,7 +3,10 @@ import bcrypt from "bcryptjs";
 import { SignJWT } from "jose";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
-import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import {
+  createErrorResponse,
+  withAPIMiddleware,
+} from "@/lib/utils/api-helpers";
 
 // Types
 interface RegisterRequest {
@@ -50,7 +53,11 @@ async function registerHandler(req: NextRequest) {
     const body = await req.json();
 
     if (!validateRegisterRequest(body)) {
-      return createErrorResponse("Invalid request. Name, email, and password are required.", 400, { req }) as any;
+      return createErrorResponse(
+        "Invalid request. Name, email, and password are required.",
+        400,
+        { req },
+      ) as any;
     }
 
     const { name, email, password } = body;
@@ -61,15 +68,25 @@ async function registerHandler(req: NextRequest) {
 
     // Validate inputs
     if (!validateName(trimmedName)) {
-      return createErrorResponse("Name must be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes.", 400, { req }) as any;
+      return createErrorResponse(
+        "Name must be 2-50 characters and contain only letters, spaces, hyphens, and apostrophes.",
+        400,
+        { req },
+      ) as any;
     }
 
     if (!validateEmail(normalizedEmail)) {
-      return createErrorResponse("Please provide a valid email address.", 400, { req }) as any;
+      return createErrorResponse("Please provide a valid email address.", 400, {
+        req,
+      }) as any;
     }
 
     if (password.length < 6) {
-      return createErrorResponse("Password must be at least 6 characters long.", 400, { req }) as any;
+      return createErrorResponse(
+        "Password must be at least 6 characters long.",
+        400,
+        { req },
+      ) as any;
     }
 
     // Connect to database
@@ -110,10 +127,9 @@ async function registerHandler(req: NextRequest) {
       email: newUser.email,
       avatar: newUser.avatar,
     })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('7d')
-    .sign(secret);
-
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("7d")
+      .sign(secret);
 
     // Create response
     const response = NextResponse.json(
@@ -127,7 +143,7 @@ async function registerHandler(req: NextRequest) {
         // },
         success: true,
       },
-      { status: 200 }
+      { status: 200 },
     );
 
     // Set authentication cookie
@@ -152,7 +168,6 @@ async function registerHandler(req: NextRequest) {
 export const POST = withAPIMiddleware(registerHandler, {
   rateLimit: {
     maxRequests: 3,
-    windowMs: 60 * 60 * 1000
-  }
+    windowMs: 60 * 60 * 1000,
+  },
 });
-

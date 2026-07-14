@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import { toast } from "sonner";
 import Image from "next/image";
 import { resizeImage } from "@/lib/image-utils";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
-    onSend: (content: string, attachments?: string[]) => void;
+    onSend: (content: string, attachments?: File[]) => void;
     onTyping?: (isTyping: boolean) => void;
     disabled?: boolean;
     placeholder?: string;
@@ -23,14 +22,7 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
     const fileInputRef = useRef<HTMLInputElement>(null);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const { startUpload, isUploading } = useCloudinaryUpload("imageUploader", {
-        onClientUploadComplete: () => {
-            // handled manually in handleSubmit to wait for urls
-        },
-        onUploadError: (error: Error) => {
-            toast.error(`Upload failed: ${error.message}`);
-        },
-    });
+    const isUploading = false;
 
     // Cleanup typing timeout on unmount
     useEffect(() => {
@@ -41,6 +33,83 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
         };
     }, []);
 
+    const validateFileSecurity = async (file: File): Promise<boolean> => {
+        // 1. Check double extensions
+        const parts = file.name.split('.');
+        if (parts.length > 2) {
+            const suspiciousExts = ['exe', 'bat', 'cmd', 'sh', 'php', 'js', 'html', 'htm', 'vbs', 'scr', 'dll'];
+            if (suspiciousExts.some(ext => parts.includes(ext.toLowerCase()))) {
+                toast.error(`Security alert: Suspicious double extension in ${file.name}`);
+                return false;
+            }
+        }
+
+        // 2. Read first few bytes for Magic Number checks
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = (e) => {
+                const arr = (new Uint8Array(e.target?.result as ArrayBuffer)).subarray(0, 4);
+                const header = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+                
+                // Check if it claims to be a zip
+                if (file.name.toLowerCase().endsWith('.zip') || file.type === 'application/zip') {
+                    if (!header.startsWith('504B0304') && !header.startsWith('504B0506') && !header.startsWith('504B0708')) {
+                        toast.error(`Security alert: Invalid ZIP signature in ${file.name}. File spoofing detected.`);
+                        resolve(false);
+                        return;
+                    }
+                }
+
+                // Check if it claims to be text
+                if (file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') {
+                    const binarySignatures = ['4D5A', '7F454C46', '25504446', '89504E47', 'FFD8FF', '504B0304'];
+                    if (binarySignatures.some(sig => header.startsWith(sig))) {
+                        toast.error(`Security alert: Text file ${file.name} contains binary signatures.`);
+                        resolve(false);
+                        return;
+                    }
+                }
+
+                // Also check for executable mime types that might slip through
+                const dangerousMimeTypes = ['application/x-msdownload', 'application/x-sh', 'application/javascript', 'text/html'];
+                if (dangerousMimeTypes.includes(file.type)) {
+                    toast.error(`Security alert: Executable file types are not allowed.`);
+                    resolve(false);
+                    return;
+                }
+
+                resolve(true);
+            };
+            reader.onerror = () => {
+                toast.error(`Error reading file ${file.name}`);
+                resolve(false);
+            };
+            
+            // For text files, read more to check for null bytes (binary content spoofed as text)
+            if (file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') {
+                 const fullReader = new FileReader();
+                 fullReader.onloadend = (e) => {
+                     const textArr = new Uint8Array(e.target?.result as ArrayBuffer);
+                     // Check first 8KB for null bytes
+                     const scanLength = Math.min(textArr.length, 8192);
+                     for(let i=0; i<scanLength; i++) {
+                         if(textArr[i] === 0) {
+                             toast.error(`Security alert: Binary content detected in text file ${file.name}.`);
+                             resolve(false);
+                             return;
+                         }
+                     }
+                     // If passed null byte check, do the magic byte check
+                     reader.readAsArrayBuffer(file.slice(0, 4));
+                 };
+                 fullReader.onerror = () => resolve(false);
+                 fullReader.readAsArrayBuffer(file.slice(0, 8192));
+            } else {
+                 reader.readAsArrayBuffer(file.slice(0, 4));
+            }
+        });
+    };
+
     const processFiles = async (fileList: File[]) => {
         if (files.length + fileList.length > 4) {
             toast.error("Maximum 4 files allowed");
@@ -50,7 +119,20 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
         const processedFiles: File[] = [];
 
         for (const file of fileList) {
-            if (file.type.startsWith("image/")) {
+            const isImage = file.type.startsWith("image/");
+            const isZip = file.type === "application/zip" || file.name.toLowerCase().endsWith('.zip');
+            const isTxt = file.type === "text/plain" || file.name.toLowerCase().endsWith('.txt');
+
+            if (!isImage && !isZip && !isTxt) {
+                toast.error(`File type not allowed for ${file.name}. Only images, zip, and txt are permitted.`);
+                continue;
+            }
+
+            // High Security Validation
+            const isSafe = await validateFileSecurity(file);
+            if (!isSafe) continue;
+
+            if (isImage) {
                 try {
                     const resized = await resizeImage(file);
                     processedFiles.push(resized);
@@ -59,6 +141,15 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
                     processedFiles.push(file); // Fallback to original
                 }
             } else {
+                // Limit non-image file sizes (e.g. max 15MB for ZIP, 5MB for TXT)
+                if (isZip && file.size > 15 * 1024 * 1024) {
+                    toast.error(`Zip file ${file.name} is too large. Max 15MB.`);
+                    continue;
+                }
+                if (isTxt && file.size > 5 * 1024 * 1024) {
+                    toast.error(`Text file ${file.name} is too large. Max 5MB.`);
+                    continue;
+                }
                 processedFiles.push(file);
             }
         }
@@ -79,15 +170,7 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
 
         setIsSending(true);
         try {
-            let attachments: string[] = [];
-
-            if (files.length > 0) {
-                const uploadRes = await startUpload(files);
-                if (!uploadRes) throw new Error("Upload failed");
-                attachments = uploadRes.map(res => res.url);
-            }
-
-            await onSend(content.trim(), attachments);
+            await onSend(content.trim(), files);
 
             setContent("");
             setFiles([]);
@@ -249,7 +332,7 @@ export default function ChatInput({ onSend, onTyping, disabled = false, placehol
                     onChange={handleFileSelect}
                     className="hidden"
                     multiple
-                    accept="image/*"
+                    accept="image/*,application/zip,text/plain,.zip,.txt"
                 />
 
                 <div className="flex-1 relative">

@@ -13,7 +13,7 @@ async function getTemplates() {
     const data = await response.json();
     return data.data;
   } catch (err) {
-    console.log(`error getting templates: ${err}`);
+    // console.log(`error getting templates: ${err}`);
     return [];
   }
 }

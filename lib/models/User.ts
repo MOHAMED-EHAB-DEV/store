@@ -105,25 +105,21 @@ const UserSchema = new Schema<IUser>({
     },
     banId: {
         type: String,
-        default: null,
         unique: true,
         sparse: true,
     },
     banMetadata: {
         reason: {
-            type: String,
-            default: ""
+            type: String
         },
         bannedAt: {
             type: Date
         },
         bannedBy: {
-            type: String, // Admin user ID
-            default: ""
+            type: String // Admin user ID
         },
         notes: {
-            type: String,
-            default: ""
+            type: String
         },
         expiresAt: {
             type: Date // For temporary bans

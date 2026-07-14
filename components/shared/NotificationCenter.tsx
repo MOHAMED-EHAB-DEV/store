@@ -163,7 +163,7 @@ export default function NotificationCenter() {
                 </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-80 sm:w-96 glass-no-blur bg-black/90 backdrop-blur-xl border border-white/10 p-0 overflow-hidden" align="end">
+            <DropdownMenuContent className="w-80 sm:w-96 glass-no-blur z-60 bg-black/90 backdrop-blur-xl border border-white/10 p-0 overflow-hidden" align="end">
                 <div className="p-4 border-b border-white/10 flex items-center justify-between">
                     <h3 className="font-semibold text-white">Notifications</h3>
                     {unreadCount > 0 && (

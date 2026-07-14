@@ -24,6 +24,7 @@ async function getReviewStatus(req: NextRequest) {
       user: userId,
       isActive: true,
     });
+
     return NextResponse.json({ reviewed: !!existing });
   } catch (err: any) {
     return createErrorResponse("Something went wrong", 500, {

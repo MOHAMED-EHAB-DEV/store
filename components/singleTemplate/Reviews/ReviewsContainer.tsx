@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Star } from "@/components/ui/svgs/icons/Star";
+import { Heart } from "@/components/ui/svgs/icons/Heart";
+import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import { Edit } from "@/components/ui/svgs/icons/Edit";
 import { anyImgUrl } from "@/lib/utils/image";
 import { formatCount } from "@/lib/utils";
 import RatingDistribution from "@/components/singleTemplate/Reviews/RatingDistribution";
@@ -10,16 +13,19 @@ import AddReview from "@/components/Dialogs/AddReview";
 import { sonnerToast } from "@/components/ui/sonner";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
-import { userHasPurchased } from "@/lib/payments";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface Review {
   _id: string;
   user: {
+    _id: string;
     name: string;
     avatar?: string;
   };
   rating: number;
   comment: string;
+  helpfulCount: number;
+  helpfulVotes?: string[];
   createdAt: string;
 }
 
@@ -38,11 +44,32 @@ const ReviewsContainer = ({
   const [loading, setLoading] = useState(false);
   const [userReviewed, setUserReviewed] = useState(false);
 
+  // Edit state
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [editComment, setEditComment] = useState("");
+  const [editRating, setEditRating] = useState(0);
+  const [editHoverRating, setEditHoverRating] = useState(0);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
+
   const { purchasedTemplates, user } = useUser();
   const router = useRouter();
 
   const addAccess =
     !userReviewed && purchasedTemplates.some((id) => id === templateId);
+
+  // Helper to sort user's review to the top
+  const sortReviews = (fetchedReviews: Review[]) => {
+    if (!user?._id) return fetchedReviews;
+    const sorted = [...fetchedReviews];
+    const userReviewIndex = sorted.findIndex((r) => r.user._id === user._id);
+    if (userReviewIndex > 0) {
+      const [userReview] = sorted.splice(userReviewIndex, 1);
+      sorted.unshift(userReview);
+    }
+    return sorted;
+  };
 
   const loadReviews = async (pageNumber: number) => {
     try {
@@ -57,9 +84,9 @@ const ReviewsContainer = ({
       }
 
       if (pageNumber === 1) {
-        setReviews(data.reviews);
+        setReviews(sortReviews(data.reviews || []));
       } else {
-        setReviews((prev) => [...prev, ...data.reviews]);
+        setReviews((prev) => sortReviews([...prev, ...(data.reviews || [])]));
       }
     } catch (err) {
       console.error("Error loading reviews", err);
@@ -99,7 +126,7 @@ const ReviewsContainer = ({
     if (user?._id && templateId) {
       checkUserReviewStatus();
     }
-  }, [templateId]);
+  }, [templateId, user?._id]);
 
   const handleShowMore = async () => {
     const nextPage = page + 1;
@@ -126,12 +153,106 @@ const ReviewsContainer = ({
       if (data.success) {
         sonnerToast.success(data.message || "Review added successfully!");
         router.refresh();
-        setReviews((prev) => [data.review, ...prev]);
+        setReviews((prev) => sortReviews([data.review, ...prev]));
         setUserReviewed(true);
       } else sonnerToast.error(data.message || "Failed to add review");
     } catch (err) {
       sonnerToast.error("Error while adding your review, please try again.");
-      console.log(err);
+      // console.log(err);
+    }
+  };
+
+  const handleToggleHelpful = async (reviewId: string) => {
+    if (!user) {
+      sonnerToast.error("Please login to vote");
+      return;
+    }
+    try {
+      // Optimistic UI update
+      setReviews((prev) =>
+        prev.map((r) => {
+          if (r._id === reviewId) {
+            const hasVoted = r.helpfulVotes?.includes(user._id);
+            return {
+              ...r,
+              helpfulCount: hasVoted
+                ? Math.max(0, r.helpfulCount - 1)
+                : r.helpfulCount + 1,
+              helpfulVotes: hasVoted
+                ? r.helpfulVotes?.filter((id) => id !== user._id)
+                : [...(r.helpfulVotes || []), user._id],
+            };
+          }
+          return r;
+        }),
+      );
+
+      const response = await fetch(`/api/reviews/helpful`, {
+        method: "POST",
+        body: JSON.stringify({ reviewId }),
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        // Revert on failure by reloading
+        loadReviews(1);
+        sonnerToast.error(data.message || "Failed to submit vote");
+      }
+    } catch (err) {
+      loadReviews(1);
+      sonnerToast.error("Error submitting vote");
+    }
+  };
+
+  const confirmDeleteReview = (reviewId: string) => {
+    setReviewToDelete(reviewId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteReview = async () => {
+    if (!reviewToDelete) return;
+    try {
+      const response = await fetch(`/api/reviews?reviewId=${reviewToDelete}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      if (data.success) {
+        sonnerToast.success("Review deleted successfully");
+        setReviews((prev) => prev.filter((r) => r._id !== reviewToDelete));
+        setUserReviewed(false);
+      } else {
+        sonnerToast.error(data.message || "Failed to delete review");
+      }
+    } catch (err) {
+      sonnerToast.error("Error deleting review");
+    } finally {
+      setDeleteDialogOpen(false);
+      setReviewToDelete(null);
+    }
+  };
+
+  const handleEditSubmit = async (reviewId: string) => {
+    try {
+      const response = await fetch(`/api/reviews`, {
+        method: "PUT",
+        body: JSON.stringify({
+          reviewId,
+          comment: editComment,
+          rating: editRating,
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        sonnerToast.success("Review updated successfully");
+        setReviews((prev) =>
+          prev.map((r) => (r._id === reviewId ? { ...r, ...data.review } : r)),
+        );
+        setEditingReviewId(null);
+      } else {
+        sonnerToast.error(data.message || "Failed to update review");
+      }
+    } catch (err) {
+      sonnerToast.error("Error updating review");
     }
   };
 
@@ -139,9 +260,6 @@ const ReviewsContainer = ({
     <div className="mt-8">
       <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold pb-4 mb-4 border-b border-b-white/50 flex items-center gap-3">
         Reviews
-        {/*<span className="text-gray-400 text-xs sm:text-sm">*/}
-        {/*    {reviewCount ?? 0} reviews*/}
-        {/*</span>*/}
       </h2>
 
       <div className="grid grid-cols-[auto_auto_1fr] items-center gap-8 px-5 w-full">
@@ -179,65 +297,185 @@ const ReviewsContainer = ({
         <p className="text-gray-400">No reviews yet.</p>
       )}
 
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review._id} className="p-4 w-3/4">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2">
-                {review.user.avatar && (
-                  <Image
-                    src={anyImgUrl(review.user.avatar, {
-                      width: 64,
-                      quality: 80,
-                    })}
-                    alt={review.user.name}
-                    className="w-8 h-8 rounded-full"
-                    width={32}
-                    height={32}
-                    unoptimized
-                  />
-                )}
-                <span className="font-medium">{review.user.name}</span>
+      <div className="space-y-4 mt-4">
+        {reviews.map((review) => {
+          const isOwner = user?._id === review.user._id;
+          const isEditing = editingReviewId === review._id;
+          const hasVoted = review.helpfulVotes?.includes(user?._id || "");
+
+          return (
+            <div
+              key={review._id}
+              className="p-4 w-full md:w-3/4 rounded-xl border border-white/10 bg-white/5 relative"
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  {review.user.avatar && (
+                    <Image
+                      src={anyImgUrl(review.user.avatar, {
+                        width: 64,
+                        quality: 80,
+                      })}
+                      alt={review.user.name}
+                      className="w-8 h-8 rounded-full"
+                      width={32}
+                      height={32}
+                      unoptimized
+                    />
+                  )}
+                  <span className="font-medium">
+                    {review.user.name} {isOwner && "(You)"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
+                  {isEditing ? (
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setEditRating(star)}
+                          onMouseEnter={() => setEditHoverRating(star)}
+                          onMouseLeave={() => setEditHoverRating(0)}
+                          className="focus:outline-none"
+                        >
+                          <Star
+                            className={`w-4 h-4 transition-colors ${
+                              star <= (editHoverRating || editRating)
+                                ? "text-yellow-400 fill-current"
+                                : "text-gray-600"
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="flex items-center gap-1">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star
+                          key={`filled-${i}`}
+                          className={`w-4 h-4 text-yellow-400 fill-current`}
+                        />
+                      ))}
+                      {[...Array(5 - review.rating)].map((_, i) => (
+                        <Star
+                          key={`empty-${i}`}
+                          className={`w-4 h-4 text-gray-600`}
+                        />
+                      ))}
+                    </span>
+                  )}
+                </div>
               </div>
-              <span className="flex items-center gap-2">
-                {/*{"★".repeat(review.rating)}*/}
-                {/*{"☆".repeat(5 - review.rating)}*/}
-                {/*{review.rating}*/}
-                {review.rating}
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 text-yellow-400 fill-current`}
+
+              {isEditing ? (
+                <div className="mt-4 flex flex-col gap-2">
+                  <textarea
+                    value={editComment}
+                    onChange={(e) => setEditComment(e.target.value)}
+                    className="w-full p-3 rounded-lg bg-black/30 border border-white/20 text-white resize-none focus:outline-none focus:border-purple-500"
+                    rows={3}
                   />
-                ))}
-                {[...Array(5 - review.rating)].map((_, i) => (
-                  <Star key={i} className={`w-4 h-4 text-gray-600`} />
-                ))}
-              </span>
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      onClick={() => setEditingReviewId(null)}
+                      className="px-3 py-1.5 text-sm text-gray-400 hover:text-white"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => handleEditSubmit(review._id)}
+                      className="px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-500 rounded text-white"
+                      disabled={!editComment.trim() || !editRating}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-3 text-gray-300">{review.comment}</p>
+              )}
+
+              {!isEditing && (
+                <div className="mt-4 flex items-center justify-between text-sm">
+                  <p className="text-gray-500">
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </p>
+
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => handleToggleHelpful(review._id)}
+                      className={`flex items-center gap-1.5 transition-colors ${
+                        hasVoted
+                          ? "text-pink-500"
+                          : "text-gray-400 hover:text-pink-400"
+                      }`}
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${hasVoted ? "fill-current" : ""}`}
+                      />
+                      <span>{review.helpfulCount || 0}</span>
+                    </button>
+
+                    {isOwner && (
+                      <div className="flex items-center gap-2 border-l border-white/10 pl-4">
+                        <button
+                          onClick={() => {
+                            setEditingReviewId(review._id);
+                            setEditComment(review.comment);
+                            setEditRating(review.rating);
+                          }}
+                          className="text-gray-400 hover:text-purple-400 transition-colors p-1"
+                          aria-label="Edit review"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => confirmDeleteReview(review._id)}
+                          className="text-gray-400 hover:text-red-400 transition-colors p-1"
+                          aria-label="Delete review"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-            <p className="mt-2 text-gray-300">{review.comment}</p>
-            <p className="mt-1 text-xs text-gray-500">
-              {new Date(review.createdAt).toLocaleDateString()}
-            </p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Show more button */}
       {hasMore && reviews.length > 0 && (
         <button
           onClick={handleShowMore}
           disabled={loading}
           aria-label="Show More Reviews"
-          className="mt-4 px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700 disabled:opacity-50"
+          className="mt-6 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition disabled:opacity-50"
         >
-          {loading ? "Loading..." : "Show More"}
+          {loading ? "Loading..." : "Show More Reviews"}
         </button>
       )}
 
       {addAccess && (
-        <AddReview templateId={templateId} handleAddReview={handleAddReview} />
+        <div className="mt-6">
+          <AddReview
+            templateId={templateId}
+            handleAddReview={handleAddReview}
+          />
+        </div>
       )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDeleteReview}
+        title="Delete Review"
+        description="Are you sure you want to delete your review? This action cannot be undone."
+        confirmText="Delete"
+        variant="destructive"
+      />
     </div>
   );
 };

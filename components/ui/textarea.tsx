@@ -1,5 +1,5 @@
 import React, { forwardRef, useId } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 
 export interface TextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "disabled" | "readOnly" | "required"> {
@@ -74,7 +74,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       return (
         <div
           id={errorMessageId}
-          className={twMerge("text-xs text-red-500 px-4 pb-2", classNames?.errorMessage)}
+          className={cn("text-xs text-red-500 px-4 pb-2", classNames?.errorMessage)}
         >
           {content}
         </div>
@@ -88,7 +88,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         return (
           <div
             id={errorMessageId}
-            className={twMerge("text-xs text-red-500 mt-1", classNames?.errorMessage)}
+            className={cn("text-xs text-red-500 mt-1", classNames?.errorMessage)}
           >
             {content}
           </div>
@@ -99,7 +99,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         return (
           <div
             id={descriptionId}
-            className={twMerge("text-xs text-muted-foreground mt-1", classNames?.description)}
+            className={cn("text-xs text-muted-foreground mt-1", classNames?.description)}
           >
             {description}
           </div>
@@ -111,7 +111,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div
-        className={twMerge(
+        className={cn(
           "flex flex-col w-full group",
           isDisabled && "opacity-50 pointer-events-none",
           className,
@@ -122,7 +122,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           <label
             id={labelId}
             htmlFor={inputId}
-            className={twMerge(
+            className={cn(
               "text-sm font-medium mb-1.5",
               isRequired && "after:content-['*'] after:text-red-500 after:ml-0.5",
               isError ? "text-red-500" : "text-white/90 group-focus-within:text-white",
@@ -134,7 +134,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
 
         <div
-          className={twMerge(
+          className={cn(
             "relative flex flex-col w-full rounded-xl border bg-white/5 transition-all duration-200",
             isError
               ? "border-red-500/50 hover:border-red-500 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20"
@@ -155,7 +155,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             aria-labelledby={getAriaLabelledBy()}
             value={value}
             defaultValue={defaultValue}
-            className={twMerge(
+            className={cn(
               "w-full bg-transparent px-4 py-3 text-sm text-white placeholder:text-muted-foreground outline-none resize-none flex field-sizing-content min-h-16 max-h-[11.5rem] md:max-h-[9.75rem]",
               classNames?.input
             )}

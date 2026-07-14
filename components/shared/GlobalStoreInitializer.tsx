@@ -89,7 +89,7 @@ export function GlobalStoreInitializer() {
         const res = await fetch(`/api/user/purchased-templates`);
         const data = await res.json();
         if (data.success) {
-          setPurchasedTemplates(data.data.map((template: any) => template._id));
+          setPurchasedTemplates(data.data);
         }
       } catch (error) {
         setPurchasedTemplates([]);

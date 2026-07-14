@@ -32,7 +32,9 @@ const TicketMessageSchema = new Schema<ITicketMessage>({
     },
     content: {
         type: String,
-        required: true,
+        required: function(this: any) {
+            return !this.attachments || this.attachments.length === 0;
+        },
         maxlength: 10000
     },
     attachments: [{

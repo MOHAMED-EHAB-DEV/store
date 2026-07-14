@@ -148,7 +148,7 @@ const TemplateSchema = new Schema<ITemplate>(
     toObject: { virtuals: true },
     minimize: false,
     autoIndex: process.env.NODE_ENV !== "production",
-  }
+  },
 );
 
 TemplateSchema.index({ isActive: 1, averageRating: -1 }); // Featured templates
@@ -177,7 +177,7 @@ TemplateSchema.index(
       description: 1,
     },
     name: "template_search_index",
-  }
+  },
 );
 
 TemplateSchema.virtual("popularityScore").get(function () {
@@ -194,14 +194,13 @@ TemplateSchema.virtual("popularityScore").get(function () {
       this.views * 0.5 +
       Math.max(0, 30 - daysSinceViewed) * 2 + // Recency boost
       (this.categories.some(
-        (category) => category === "6895e37824be395fbc0b72ae"
+        (category) => category === "6895e37824be395fbc0b72ae",
       )
         ? 100
         : 0)) / // Featured boost
     Math.max(1, daysSinceCreated * 0.1)
   ); // Age penalty
 });
-
 
 TemplateSchema.statics.searchTemplates = function (
   searchOptions: {
@@ -215,7 +214,7 @@ TemplateSchema.statics.searchTemplates = function (
     includedFields?: string[];
   },
   limit = 20,
-  skip = 0
+  skip = 0,
 ) {
   const {
     search,
@@ -225,18 +224,20 @@ TemplateSchema.statics.searchTemplates = function (
     minRating,
     sortBy = "popular",
     type,
-    includedFields
+    includedFields,
   } = searchOptions;
 
   // Build match stage
   const matchStage: any = { isActive: true };
-  
+
   const searchTerms = search ? search.trim().split(/\s+/) : [];
 
   if (search) {
     matchStage.$or = [
       { title: { $regex: search.trim(), $options: "i" } },
-      ...searchTerms.map(term => ({ title: { $regex: term, $options: "i" } }))
+      ...searchTerms.map((term) => ({
+        title: { $regex: term, $options: "i" },
+      })),
     ];
   }
 
@@ -282,9 +283,10 @@ TemplateSchema.statics.searchTemplates = function (
       sortStage = { downloads: -1, averageRating: -1 };
       break;
     default: // popular
-      sortStage = (search || tags.length > 0)
-        ? { searchScore: -1, averageRating: -1, downloads: -1 }
-        : { downloads: -1, averageRating: -1 };
+      sortStage =
+        search || tags.length > 0
+          ? { searchScore: -1, averageRating: -1, downloads: -1 }
+          : { downloads: -1, averageRating: -1 };
   }
 
   const scoreStage = {
@@ -292,37 +294,59 @@ TemplateSchema.statics.searchTemplates = function (
       searchScore: {
         $add: [
           0,
-          ...(search ? [{
-            $cond: [
-              { $regexMatch: { input: { $ifNull: ["$title", ""] }, regex: search.trim(), options: "i" } },
-              10,
-              0,
-            ]
-          }] : []),
-          ...(searchTerms.length > 0 ? searchTerms.map(term => ({
-            $cond: [
-              { $regexMatch: { input: { $ifNull: ["$title", ""] }, regex: term, options: "i" } },
-              5,
-              0
-            ]
-          })) : []),
-          ...(tags.length > 0 ? [{
-            $size: {
-              $setIntersection: [
+          ...(search
+            ? [
                 {
-                  $map: {
-                    input: { $ifNull: ["$tags", []] },
-                    as: "t",
-                    in: { $toLower: "$$t" },
+                  $cond: [
+                    {
+                      $regexMatch: {
+                        input: { $ifNull: ["$title", ""] },
+                        regex: search.trim(),
+                        options: "i",
+                      },
+                    },
+                    10,
+                    0,
+                  ],
+                },
+              ]
+            : []),
+          ...(searchTerms.length > 0
+            ? searchTerms.map((term) => ({
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: { $ifNull: ["$title", ""] },
+                      regex: term,
+                      options: "i",
+                    },
+                  },
+                  5,
+                  0,
+                ],
+              }))
+            : []),
+          ...(tags.length > 0
+            ? [
+                {
+                  $size: {
+                    $setIntersection: [
+                      {
+                        $map: {
+                          input: { $ifNull: ["$tags", []] },
+                          as: "t",
+                          in: { $toLower: "$$t" },
+                        },
+                      },
+                      tags.map((t) => t.toLowerCase()),
+                    ],
                   },
                 },
-                tags.map((t) => t.toLowerCase()),
-              ],
-            },
-          }] : [])
-        ]
-      }
-    }
+              ]
+            : []),
+        ],
+      },
+    },
   };
 
   const pipeline = [
@@ -349,19 +373,6 @@ TemplateSchema.statics.searchTemplates = function (
         pipeline: [{ $project: { name: 1, slug: 1 } }],
       },
     },
-    {
-      $lookup: {
-        from: "reviews",
-        localField: "_id",
-        foreignField: "template",
-        as: "reviews",
-      },
-    },
-    {
-      $addFields: {
-        reviews: { $size: "$reviews" },
-      },
-    },
     { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
     {
       $project: {
@@ -375,22 +386,25 @@ TemplateSchema.statics.searchTemplates = function (
         downloads: 1,
         views: 1,
         averageRating: 1,
-        reviews: 1,
+        reviewCount: 1,
         author: 1,
         categories: 1,
         tags: 1,
         createdAt: 1,
-        ...(includedFields?.length && includedFields.reduce((acc, field) => {
-          acc[field] = 1;
-          return acc;
-        }, {} as Record<string, number>)),
+        ...(includedFields?.length &&
+          includedFields.reduce(
+            (acc, field) => {
+              acc[field] = 1;
+              return acc;
+            },
+            {} as Record<string, number>,
+          )),
       },
     },
   ];
 
   return this.aggregate(pipeline).allowDiskUse(true);
 };
-
 
 TemplateSchema.statics.getTemplateStats = function () {
   return this.aggregate([
@@ -456,7 +470,7 @@ TemplateSchema.methods.incrementViews = function (amount = 1) {
       $inc: { views: amount },
       $set: { lastViewedAt: new Date() },
     },
-    { new: true }
+    { new: true },
   );
 };
 
@@ -490,7 +504,7 @@ export interface ITemplateModel extends Model<ITemplate> {
       includedFields?: string[];
     },
     limit?: number,
-    skip?: number
+    skip?: number,
   ): Promise<ITemplate[]>;
   getTemplateStats(): Promise<any>;
 }

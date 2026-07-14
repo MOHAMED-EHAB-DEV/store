@@ -47,8 +47,11 @@ ModalOverlay.displayName = "ModalOverlay";
 
 export const ModalContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { showCloseButton?: boolean }
->(({ className, children, showCloseButton = true, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { 
+    showCloseButton?: boolean;
+    size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "full";
+  }
+>(({ className, children, showCloseButton = true, size = "lg", ...props }, ref) => {
   const { open, onOpenChange } = React.useContext(ModalContext);
 
   React.useEffect(() => {
@@ -74,6 +77,20 @@ export const ModalContent = React.forwardRef<
 
   if (!open) return null;
 
+  const sizeClasses = {
+    sm: "sm:max-w-sm",
+    md: "sm:max-w-md",
+    lg: "sm:max-w-lg",
+    xl: "sm:max-w-xl",
+    "2xl": "sm:max-w-2xl",
+    "3xl": "sm:max-w-3xl",
+    "4xl": "sm:max-w-4xl",
+    "5xl": "sm:max-w-5xl",
+    "6xl": "sm:max-w-6xl",
+    "7xl": "sm:max-w-7xl",
+    "full": "sm:max-w-full",
+  };
+
   return (
     <ModalPortal>
       <ModalOverlay data-state={open ? "open" : "closed"} onClick={() => onOpenChange?.(false)} />
@@ -82,7 +99,8 @@ export const ModalContent = React.forwardRef<
         role="dialog"
         data-state={open ? "open" : "closed"}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:max-w-lg",
+          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          sizeClasses[size],
           className
         )}
         {...props}

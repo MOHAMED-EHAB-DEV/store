@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
-import { verifyToken } from "@/lib/auth";
+import { authenticateUser } from "@/middleware/auth";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadToGoogleDrive } from "@/lib/google-drive";
 import Ticket from "@/lib/models/Ticket";
 import TicketMessage from "@/lib/models/TicketMessage";
-import User from "@/lib/models/User";
 import {
     createAPIResponse,
     createErrorResponse,
@@ -36,26 +37,17 @@ interface RouteParams {
 
 // GET - Get messages for a ticket
 async function getMessages(request: NextRequest, { params }: RouteParams) {
-    const token = request.cookies.get("token")?.value;
-    if (!token) {
-        return createErrorResponse("Unauthorized", 401);
-    }
-
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
-    }
-
     const { id } = await params;
     await connectToDatabase();
+    const user = await authenticateUser();
 
     const ticket = await Ticket.findById(id).lean();
     if (!ticket) {
         return createErrorResponse("Ticket not found", 404);
     }
 
-    const isOwner = ticket.user.toString() === decoded.userId;
-    const isAdmin = decoded.role === "admin";
+    const isOwner = ticket.user.toString() === user?._id.toString();
+    const isAdmin = user?.role === "admin";
 
     if (!isOwner && !isAdmin) {
         return createErrorResponse("Forbidden", 403);
@@ -69,33 +61,25 @@ async function getMessages(request: NextRequest, { params }: RouteParams) {
 
 // POST - Add message to ticket
 async function addMessage(request: NextRequest, { params }: RouteParams) {
-    const token = request.cookies.get("token")?.value;
-    if (!token) {
-        return createErrorResponse("Unauthorized", 401);
-    }
-
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
-    }
-
     const { id } = await params;
-    const body = await request.json();
-    const { content, attachments } = body;
+    const formData = await request.formData();
+    const content = formData.get("content") as string;
+    const files = formData.getAll("attachments") as File[];
 
-    if (!content?.trim()) {
-        return createErrorResponse("Message content is required", 400);
+    if (!content?.trim() && (!files || files.length === 0)) {
+        return createErrorResponse("Message content or attachments are required", 400);
     }
 
     await connectToDatabase();
+    const user = await authenticateUser();
 
     const ticket = await Ticket.findById(id);
     if (!ticket) {
         return createErrorResponse("Ticket not found", 404);
     }
 
-    const isOwner = ticket.user.toString() === decoded.userId;
-    const isAdmin = decoded.role === "admin";
+    const isOwner = ticket.user.toString() === user?._id.toString();
+    const isAdmin = user?.role === "admin";
 
     if (!isOwner && !isAdmin) {
         return createErrorResponse("Forbidden", 403);
@@ -107,12 +91,32 @@ async function addMessage(request: NextRequest, { params }: RouteParams) {
 
     const senderType = isAdmin ? "admin" : "user";
 
+    let attachmentsUrls: string[] = [];
+    if (files && files.length > 0) {
+        for (const file of files) {
+            const isImage = file.type.startsWith("image/");
+            
+            if (isImage) {
+                // Upload images to Cloudinary
+                const buffer = Buffer.from(await file.arrayBuffer());
+                const uploadResult = await uploadToCloudinary(buffer, "support_tickets", "image");
+                attachmentsUrls.push(uploadResult.secure_url);
+            } else {
+                // Upload everything else to Google Drive
+                const driveFileId = await uploadToGoogleDrive(file);
+                // Create a direct download link for the drive file
+                const driveUrl = `https://drive.google.com/uc?export=download&id=${driveFileId}`;
+                attachmentsUrls.push(driveUrl);
+            }
+        }
+    }
+
     const message = await TicketMessage.create({
         ticketId: id,
-        sender: decoded.userId,
+        sender: user?._id,
         senderType,
-        content: content.trim(),
-        attachments: attachments || [],
+        content: content?.trim() || "",
+        attachments: attachmentsUrls,
         isRead: false
     });
 
@@ -140,7 +144,6 @@ async function addMessage(request: NextRequest, { params }: RouteParams) {
         }
     } else {
         // Notify admins about user reply, excluding active admins
-        const user = await User.findById(decoded.userId).select("name").lean();
         const userName = user?.name || "Customer";
         // Pass active users to exclude them
         await notifyAdminsTicketReply(id, ticket.subject, userName, activeUsers);

@@ -53,13 +53,13 @@ const RegisterForm = () => {
         }),
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setLoading(false);
     }
 
     // const data = await response.json();
-    // console.log(data);
+    // // console.log(data);
 
     // Redirect to OTP verification with email
     // navigate("/verify-email", { state: { email: formData.email } });

@@ -3,13 +3,13 @@ import "./User";
 import "./Template";
 
 export interface IReview extends Document {
-
     user: ObjectId;
     template: ObjectId;
     rating: Number;
     comment: String;
     isActive: boolean; // For soft delete
     helpfulCount: number; // For helpful votes
+    helpfulVotes: mongoose.Types.ObjectId[]; // Users who voted this helpful
 }
 
 const ReviewSchema = new Schema<IReview>({
@@ -46,7 +46,11 @@ const ReviewSchema = new Schema<IReview>({
         type: Number,
         default: 0,
         min: 0
-    }
+    },
+    helpfulVotes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }]
 }, { 
     timestamps: true,
     versionKey: false
@@ -64,7 +68,7 @@ ReviewSchema.statics.findTemplateReviews = function(templateId: string, limit = 
         template: templateId, 
         isActive: true 
     })
-        .select('rating comment helpfulCount createdAt user')
+        .select('rating comment helpfulCount helpfulVotes createdAt user')
         .populate('user', 'name avatar')
         .sort({ helpfulCount: -1, createdAt: -1 })
         .limit(limit)
@@ -154,10 +158,16 @@ ReviewSchema.post('save', async function() {
             }
         ]);
 
+        const Template = mongoose.model('Template');
         if (stats.length > 0) {
-            const Template = mongoose.model('Template');
             await Template.findByIdAndUpdate(this.template, {
-                averageRating: Math.round(stats[0].averageRating * 10) / 10 // Round to 1 decimal
+                averageRating: Math.round(stats[0].averageRating * 10) / 10,
+                reviewCount: stats[0].totalReviews,
+            });
+        } else {
+            await Template.findByIdAndUpdate(this.template, {
+                averageRating: 0,
+                reviewCount: 0,
             });
         }
     } catch (error) {
@@ -165,7 +175,7 @@ ReviewSchema.post('save', async function() {
     }
 });
 
-// Post-remove middleware to update template average rating
+// Post-update middleware to update template average rating
 ReviewSchema.post('findOneAndUpdate', async function() {
     try {
         const doc = await this.model.findOne(this.getQuery());
@@ -175,7 +185,7 @@ ReviewSchema.post('findOneAndUpdate', async function() {
                 { 
                     $match: { 
                         template: doc.template, 
-                        isActive: true 
+                        isActive: true
                     } 
                 },
                 {
@@ -190,11 +200,13 @@ ReviewSchema.post('findOneAndUpdate', async function() {
             const Template = mongoose.model('Template');
             if (stats.length > 0) {
                 await Template.findByIdAndUpdate(doc.template, {
-                    averageRating: Math.round(stats[0].averageRating * 10) / 10
+                    averageRating: Math.round(stats[0].averageRating * 10) / 10,
+                    reviewCount: stats[0].totalReviews,
                 });
             } else {
                 await Template.findByIdAndUpdate(doc.template, {
-                    averageRating: 0
+                    averageRating: 0,
+                    reviewCount: 0,
                 });
             }
         }

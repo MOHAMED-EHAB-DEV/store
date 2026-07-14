@@ -9,6 +9,7 @@ import PriorityBadge from "@/components/Support/PriorityBadge";
 import MessageBubble from "@/components/Support/MessageBubble";
 import ChatInput from "@/components/Support/ChatInput";
 import { useUser } from "@/context/UserContext";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 interface TicketDetailClientProps {
     ticketId: string;
@@ -20,6 +21,7 @@ export default function TicketDetailClient({ ticketId }: TicketDetailClientProps
     const [ticket, setTicket] = useState<any>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isCloseDialogOpen, setIsCloseDialogOpen] = useState(false);
     const { user } = useUser();
 
     // Socket connection
@@ -102,12 +104,19 @@ export default function TicketDetailClient({ ticketId }: TicketDetailClientProps
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handleSendMessage = async (content: string, attachments?: string[]) => {
+    const handleSendMessage = async (content: string, attachments?: File[]) => {
         try {
+            const formData = new FormData();
+            formData.append("content", content);
+            if (attachments && attachments.length > 0) {
+                attachments.forEach(file => {
+                    formData.append("attachments", file);
+                });
+            }
+
             const response = await fetch(`/api/support/tickets/${ticketId}/messages`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content, attachments })
+                body: formData
             });
 
             const data = await response.json();
@@ -136,8 +145,6 @@ export default function TicketDetailClient({ ticketId }: TicketDetailClientProps
     };
 
     const handleCloseTicket = async () => {
-        if (!confirm("Are you sure you want to close this ticket?")) return;
-
         try {
             const response = await fetch(`/api/support/tickets/${ticketId}`, {
                 method: "PATCH",
@@ -215,7 +222,7 @@ export default function TicketDetailClient({ ticketId }: TicketDetailClientProps
 
                     {ticket.status !== "closed" && (
                         <button
-                            onClick={handleCloseTicket}
+                            onClick={() => setIsCloseDialogOpen(true)}
                             className="btn border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/10 backdrop-blur-sm text-sm"
                         >
                             Close Ticket
@@ -265,6 +272,17 @@ export default function TicketDetailClient({ ticketId }: TicketDetailClientProps
                     </div>
                 )}
             </div>
+
+            <ConfirmDialog
+                open={isCloseDialogOpen}
+                onOpenChange={setIsCloseDialogOpen}
+                onConfirm={handleCloseTicket}
+                title="Close Ticket"
+                description="Are you sure you want to close this ticket? You will not be able to send new messages."
+                confirmText="Close Ticket"
+                cancelText="Cancel"
+                variant="destructive"
+            />
         </div>
     );
 }

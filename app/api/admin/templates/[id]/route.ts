@@ -144,7 +144,7 @@ async function updateAdminTemplate(
       const added = newCats.filter((c: string) => !oldCats.includes(c));
       const removed = oldCats.filter((c: string) => !newCats.includes(c));
 
-      console.log(added, removed);
+      // console.log(added, removed);
 
       if (removed.length > 0) {
         await Category.updateMany(
@@ -152,7 +152,7 @@ async function updateAdminTemplate(
           { $inc: { templateCount: -1 } },
         );
       }
-      
+
       if (added.length > 0) {
         await Category.updateMany(
           { _id: { $in: added } },
@@ -169,7 +169,7 @@ async function updateAdminTemplate(
       message: "Template updated successfully",
     });
   } catch (error: any) {
-    console.log(error);
+    // console.log(error);
     return createErrorResponse("Something went wrong", 500, {
       req: req,
       error: error,
@@ -211,7 +211,10 @@ async function getAdminTemplate(
   }
 }
 
-async function disableTemplate(req: NextRequest, { params }: { params: Promise<{ id: string }> },) {
+async function disableTemplate(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const { id } = await params;
     const user = await authenticateUser(true);

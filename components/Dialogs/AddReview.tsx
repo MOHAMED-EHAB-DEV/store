@@ -4,9 +4,6 @@ import { useState } from "react";
 import {
     Modal,
     ModalContent,
-    ModalDescription,
-    ModalHeader,
-    ModalTitle,
 } from "@/components/ui/Modal";
 import { Star } from "@/components/ui/svgs/icons/Star";
 
@@ -17,7 +14,7 @@ interface AddReviewProps {
 
 const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
     const [rating, setRating] = useState(0);
-    const [hover, setHover] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
     const [comment, setComment] = useState("");
     const [open, setOpen] = useState(false);
 
@@ -31,63 +28,69 @@ const AddReview = ({ templateId, handleAddReview }: AddReviewProps) => {
 
     return (
         <>
-            <button type="button" onClick={() => setOpen(true)} className="cursor-pointer px-4 py-2 bg-blue-600 text-white hover:bg-blue-500 transition-colors rounded-lg">
+            <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="cursor-pointer px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-400 hover:to-pink-400 hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-200 rounded-lg font-medium text-sm active:scale-[0.98]"
+            >
                 Add Review
             </button>
             <Modal open={open} onOpenChange={setOpen}>
-                <ModalContent className="border-none outline-none focus:outline-none focus:border-none bg-[#1f1f23] text-white rounded-xl max-w-md">
-                    <ModalHeader className="border-b pb-2 border-b-white/20">
-                        <ModalTitle>Add Review</ModalTitle>
-                        <ModalDescription className="text-gray-400">
-                            Share your experience with this template
-                        </ModalDescription>
-                    </ModalHeader>
+                <ModalContent className="border border-white/10 outline-none focus:outline-none focus:border-none bg-[#15161b] text-white rounded-2xl max-w-md overflow-hidden p-6">
+                    <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent">
+                        How was this template? ⭐
+                    </h3>
+                    <p className="text-gray-400 text-xs mb-3">
+                        Your review helps fellow developers — it only takes a moment.
+                    </p>
 
-                {/* Rating stars */}
-                <div className="flex gap-2 my-4 justify-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                            key={star}
-                            type="button"
-                            onClick={() => setRating(star)}
-                            onMouseEnter={() => setHover(star)}
-                            onMouseLeave={() => setHover(0)}
-                            className="focus:outline-none"
-                            aria-label="Select rating"
-                        >
-                            <Star
-                                className={`w-8 h-8 transition-colors ${
-                                    star <= (hover || rating)
-                                        ? "text-yellow-400 fill-current"
-                                        : "text-gray-600"
-                                }`}
-                            />
-                        </button>
-                    ))}
-                </div>
+                    <div className="flex justify-center gap-2 mb-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                                key={star}
+                                type="button"
+                                onClick={() => setRating(star)}
+                                onMouseEnter={() => setHoverRating(star)}
+                                onMouseLeave={() => setHoverRating(0)}
+                                className="focus:outline-none transition-transform hover:scale-125 duration-150"
+                            >
+                                <Star
+                                    className={`w-8 h-8 transition-colors ${
+                                        star <= (hoverRating || rating)
+                                            ? "text-yellow-400 fill-current drop-shadow-[0_0_6px_rgba(250,204,21,0.4)]"
+                                            : "text-gray-600"
+                                    }`}
+                                />
+                            </button>
+                        ))}
+                    </div>
+                    <p className="text-center text-gray-500 text-xs mb-3 h-4">
+                        {rating === 0
+                            ? "Tap a star to rate"
+                            : rating <= 2
+                                ? "We appreciate your honesty 🙏"
+                                : rating <= 4
+                                    ? "Glad you liked it! 💜"
+                                    : "Amazing! You made our day! 🔥"}
+                    </p>
 
-                {/* Comment input */}
-                <textarea
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Write your review..."
-                    className="w-full p-3 rounded-lg bg-gray-800 text-white resize-none focus:ring-2 focus:ring-blue-500"
-                    rows={4}
-                />
+                    <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Write your review here..."
+                        className="w-full p-3 rounded-lg bg-black/40 border border-white/10 text-white resize-none focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 mb-4 text-sm placeholder:text-gray-500"
+                        rows={4}
+                    />
 
-                {/* Actions */}
-                <div className="flex justify-end gap-2 mt-4">
                     <button
                         onClick={handleSubmit}
                         disabled={!rating || !comment.trim()}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg disabled:opacity-50"
-                        aria-label="Submit review"
+                        className="w-full py-2.5 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white rounded-lg font-semibold disabled:opacity-40 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-200 active:scale-[0.98]"
                     >
-                        Submit
+                        Share Your Review 💬
                     </button>
-                </div>
-            </ModalContent>
-        </Modal>
+                </ModalContent>
+            </Modal>
         </>
     );
 };

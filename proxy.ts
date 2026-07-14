@@ -104,8 +104,8 @@ export async function proxy(req: NextRequest) {
     if (isAdmin) return;
     const limitResult = RateLimiter.check(
       clientIP + (isAuth ? ":auth" : ":api"),
-      isAuth ? 5 : 60, // 5 per 15min for auth, 60 per 15min for rest
-      15 * 60 * 1000,
+      isAuth ? 10 : 80,
+      10 * 60 * 1000,
     );
 
     if (!limitResult.allowed) {

@@ -8,6 +8,7 @@ import {
     createErrorResponse,
     withAPIMiddleware
 } from "@/lib/utils/api-helpers";
+import { authenticateUser } from "@/middleware/auth";
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -15,18 +16,9 @@ interface RouteParams {
 
 // GET - Get ticket details with messages
 async function getTicket(request: NextRequest, { params }: RouteParams) {
-    const token = request.cookies.get("token")?.value;
-    if (!token) {
-        return createErrorResponse("Unauthorized", 401);
-    }
-
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
-    }
-
     const { id } = await params;
     await connectToDatabase();
+    const user = await authenticateUser();
 
     const ticket = await Ticket.findById(id)
         .populate("user", "name email avatar")
@@ -36,8 +28,8 @@ async function getTicket(request: NextRequest, { params }: RouteParams) {
         return createErrorResponse("Ticket not found", 404);
     }
 
-    const isOwner = ticket.user._id.toString() === decoded.userId;
-    const isAdmin = decoded.role === "admin";
+    const isOwner = ticket.user._id.toString() === user?._id.toString();
+    const isAdmin = user?.role === "admin";
 
     if (!isOwner && !isAdmin) {
         return createErrorResponse("Forbidden", 403);
@@ -52,29 +44,20 @@ async function getTicket(request: NextRequest, { params }: RouteParams) {
 
 // PATCH - Update ticket status
 async function updateTicket(request: NextRequest, { params }: RouteParams) {
-    const token = request.cookies.get("token")?.value;
-    if (!token) {
-        return createErrorResponse("Unauthorized", 401);
-    }
-
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
-    }
-
     const { id } = await params;
     const body = await request.json();
     const { status, priority } = body;
 
     await connectToDatabase();
+    const user = await authenticateUser();
 
     const ticket = await Ticket.findById(id);
     if (!ticket) {
         return createErrorResponse("Ticket not found", 404);
     }
 
-    const isOwner = ticket.user.toString() === decoded.userId;
-    const isAdmin = decoded.role === "admin";
+    const isOwner = ticket.user.toString() === user?._id.toString();
+    const isAdmin = user?.role === "admin";
 
     if (!isOwner && !isAdmin) {
         return createErrorResponse("Forbidden", 403);
@@ -100,41 +83,5 @@ async function updateTicket(request: NextRequest, { params }: RouteParams) {
     return createAPIResponse(updatedTicket, { message: "Ticket updated" });
 }
 
-// DELETE - Close ticket
-async function closeTicket(request: NextRequest, { params }: RouteParams) {
-    const token = request.cookies.get("token")?.value;
-    if (!token) {
-        return createErrorResponse("Unauthorized", 401);
-    }
-
-    const decoded = await verifyToken(token);
-    if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
-    }
-
-    const { id } = await params;
-    await connectToDatabase();
-
-    const ticket = await Ticket.findById(id);
-    if (!ticket) {
-        return createErrorResponse("Ticket not found", 404);
-    }
-
-    const isOwner = ticket.user.toString() === decoded.userId;
-    const isAdmin = decoded.role === "admin";
-
-    if (!isOwner && !isAdmin) {
-        return createErrorResponse("Forbidden", 403);
-    }
-
-    await Ticket.findByIdAndUpdate(id, {
-        status: "closed",
-        resolvedAt: new Date()
-    });
-
-    return createAPIResponse(null, { message: "Ticket closed" });
-}
-
 export const GET = withAPIMiddleware(getTicket);
 export const PATCH = withAPIMiddleware(updateTicket);
-export const DELETE = withAPIMiddleware(closeTicket);

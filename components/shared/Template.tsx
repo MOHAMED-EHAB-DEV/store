@@ -118,14 +118,16 @@ const Template = ({
       </Button>
 
       {/* Thumbnail */}
-      <div 
+      <div
         className="relative w-full h-56 overflow-hidden"
         onMouseEnter={() => {
           if (template.demoVideo) {
             setIsHovering(true);
             if (videoRef.current) {
               videoRef.current.currentTime = 0;
-              videoRef.current.play().catch(e => console.log('Video play error:', e));
+              videoRef.current
+                .play()
+                .catch((e) => console.log("Video play error:", e));
             }
           }
         }}
@@ -188,7 +190,15 @@ const Template = ({
             <meta itemProp="name" content={`${template.title} demo video`} />
             <meta itemProp="description" content={template.description} />
             <meta itemProp="thumbnailUrl" content={highResUrl} />
-            <meta itemProp="uploadDate" content={template.createdAt ? new Date(template.createdAt).toISOString() : new Date().toISOString()} suppressHydrationWarning />
+            <meta
+              itemProp="uploadDate"
+              content={
+                template.createdAt
+                  ? new Date(template.createdAt).toISOString()
+                  : new Date().toISOString()
+              }
+              suppressHydrationWarning
+            />
           </video>
         )}
       </div>
@@ -213,7 +223,7 @@ const Template = ({
           )}
         </div>
         {/* Rating */}
-        {template?.reviews && template?.reviews > 0 ? (
+        {template?.reviewCount && template?.reviewCount > 0 ? (
           <div className="flex items-center gap-2 mb-4">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
@@ -231,7 +241,7 @@ const Template = ({
               {template.averageRating}
             </span>
             <span className="text-gray-400 text-sm">
-              ({template.reviews} reviews)
+              ({template.reviewCount} reviews)
             </span>
           </div>
         ) : null}

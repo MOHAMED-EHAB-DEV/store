@@ -5,23 +5,24 @@ import Ticket from "@/lib/models/Ticket";
 import TicketMessage from "@/lib/models/TicketMessage";
 import User from "@/lib/models/User";
 import {
-    createAPIResponse,
-    createErrorResponse,
-    validatePagination,
-    withAPIMiddleware
+  createAPIResponse,
+  createErrorResponse,
+  validatePagination,
+  withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
 import { notifyAdminsNewTicket } from "@/lib/utils/notifications";
 
 // GET - List user's tickets
 async function getTickets(request: NextRequest) {
+  try {
     const token = request.cookies.get("token")?.value;
     if (!token) {
-        return createErrorResponse("Unauthorized", 401);
+      return createErrorResponse("Unauthorized", 401);
     }
 
     const decoded = await verifyToken(token);
     if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
+      return createErrorResponse("Invalid token", 401);
     }
 
     await connectToDatabase();
@@ -32,41 +33,49 @@ async function getTickets(request: NextRequest) {
 
     const query: any = { user: decoded.userId };
     if (status && ["open", "resolved", "closed"].includes(status)) {
-        query.status = status;
+      query.status = status;
     }
 
     const [tickets, total] = await Promise.all([
-        Ticket.find(query)
-            .select("subject status priority category lastMessageAt createdAt")
-            .sort({ lastMessageAt: -1 })
-            .limit(limit)
-            .skip(skip)
-            .lean(),
-        Ticket.countDocuments(query)
+      Ticket.find(query)
+        .select("subject status priority category lastMessageAt createdAt")
+        .sort({ lastMessageAt: -1 })
+        .limit(limit)
+        .skip(skip)
+        .lean(),
+      Ticket.countDocuments(query),
     ]);
 
     return createAPIResponse(tickets, {
-        pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
+  } catch (error: any) {
+    return createErrorResponse("Failed to fetch tickets", 500, {
+      req: request,
+      error,
+    });
+  }
 }
 
 // POST - Create new ticket
 async function createTicket(request: NextRequest) {
+  try {
     const token = request.cookies.get("token")?.value;
     if (!token) {
-        return createErrorResponse("Unauthorized", 401);
+      return createErrorResponse("Unauthorized", 401);
     }
 
     const decoded = await verifyToken(token);
     if (!decoded) {
-        return createErrorResponse("Invalid token", 401);
+      return createErrorResponse("Invalid token", 401);
     }
 
     const body = await request.json();
-    const { subject, description, category, priority, attachments } = body;
+    const { subject, description, message, category, priority, attachments } =
+      body;
 
     if (!subject?.trim() || !description?.trim()) {
-        return createErrorResponse("Subject and description are required", 400);
+      return createErrorResponse("Subject and description are required", 400);
     }
 
     await connectToDatabase();
@@ -76,38 +85,52 @@ async function createTicket(request: NextRequest) {
     const userName = user?.name || "A user";
 
     const ticket = await Ticket.create({
-        user: decoded.userId,
-        subject: subject.trim(),
-        category: category || "general",
-        priority: priority || "medium",
-        lastMessageAt: new Date()
+      user: decoded.userId,
+      subject: subject.trim(),
+      category: category || "general",
+      priority: priority || "medium",
+      lastMessageAt: new Date(),
     });
 
     await TicketMessage.create({
-        ticketId: (ticket as any)?._id,
-        sender: decoded.userId,
-        senderType: "user",
-        content: description.trim(),
-        attachments: attachments || [],
-        isRead: false
+      ticketId: (ticket as any)?._id,
+      sender: decoded.userId,
+      senderType: "user",
+      content: message ? message.trim() : description.trim(),
+      attachments: attachments || [],
+      isRead: false,
     });
 
     // Notify admins about new ticket
-    await notifyAdminsNewTicket(String((ticket as any)?._id), subject.trim(), userName);
+    await notifyAdminsNewTicket(
+      String((ticket as any)?._id),
+      subject.trim(),
+      userName,
+    );
 
-    return createAPIResponse({
+    return createAPIResponse(
+      {
         _id: (ticket as any)?._id,
         subject: ticket.subject,
         status: ticket.status,
         priority: ticket.priority,
-        category: ticket.category
-    }, { message: "Ticket created successfully" });
+        category: ticket.category,
+      },
+      { message: "Ticket created successfully" },
+    );
+  } catch (error: any) {
+    // console.log(error);
+    return createErrorResponse("Failed to create ticket", 500, {
+      req: request,
+      error,
+    });
+  }
 }
 
 export const GET = withAPIMiddleware(getTickets, {
-    rateLimit: { maxRequests: 100, windowMs: 15 * 60 * 1000 }
+  rateLimit: { maxRequests: 100, windowMs: 15 * 60 * 1000 },
 });
 
 export const POST = withAPIMiddleware(createTicket, {
-    rateLimit: { maxRequests: 20, windowMs: 15 * 60 * 1000 }
+  rateLimit: { maxRequests: 20, windowMs: 15 * 60 * 1000 },
 });

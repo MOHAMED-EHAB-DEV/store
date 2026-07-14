@@ -54,7 +54,7 @@ const Sidebar = ({
         window.location.href = `/`;
       }, 100);
     } catch (err) {
-      // console.log(err);
+      // // console.log(err);
       sonnerToast.error((err as Error).message);
     }
   };

@@ -21,18 +21,11 @@ async function getTemplate(req: NextRequest, context: RouteContext) {
       : { slug: id, isActive: true };
 
     const template = await Template.findOne(query)
-      .select("+content")
+      .select("+content +reviewCount")
       .populate("categories", "_id name slug")
       .lean();
 
-    let totalReviews = 0;
-    if (template) {
-      totalReviews = await Review.countDocuments({ template: template._id });
-    }
-
-    return createAPIResponse(
-      template ? { ...template, reviews: totalReviews } : null,
-    );
+    return createAPIResponse(template);
   } catch (err) {
     return createErrorResponse("Something went wrong", 500, {
       req: req,

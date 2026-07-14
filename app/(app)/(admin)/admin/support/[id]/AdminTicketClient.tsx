@@ -106,7 +106,7 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handleSendMessage = async (content: string, attachments?: string[]) => {
+    const handleSendMessage = async (content: string, attachments?: File[]) => {
         try {
             const response = await fetch(`/api/support/tickets/${ticketId}/messages`, {
                 method: "POST",

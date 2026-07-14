@@ -78,7 +78,7 @@ const BlueprintCustomBuild = () => {
 
           <div className="relative z-10 shrink-0 mt-4 md:mt-0">
             <Link
-              href="/support?category=custom-build"
+              href="/custom-development"
               className="flex items-center gap-3 px-6 py-3 border border-purple-500/50 hover:bg-purple-500/10 text-purple-300 hover:text-purple-200 text-sm md:text-base font-mono font-medium rounded-lg transition-all duration-300 shadow-lg shadow-purple-500/5 hover:shadow-purple-500/15 group-hover:border-purple-500/80 focus:ring-2 focus:ring-purple-500 focus:outline-none"
             >
               Request a Custom Build

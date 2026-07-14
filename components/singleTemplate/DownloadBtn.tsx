@@ -2,10 +2,14 @@
 import { useState } from "react";
 import { sonnerToast } from "@/components/ui/sonner";
 import { LoginToDownloadDialog } from "@/components/Dialogs/LoginToDownloadDialog";
+import { MicroCommitmentModal } from "@/components/Dialogs/MicroCommitmentModal";
+import { useUser } from "@/context/UserContext";
 
 const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: string }) => {
+    const { setReload } = useUser();
     const [loading, setLoading] = useState(false);
     const [showLoginDialog, setShowLoginDialog] = useState(false);
+    const [showMicroCommitment, setShowMicroCommitment] = useState(false);
 
     const handleFreeDownload = async () => {
         setLoading(true);
@@ -52,10 +56,12 @@ const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: stri
             document.body.removeChild(a);
 
             sonnerToast.success("Template downloaded successfully!");
+            setShowMicroCommitment(true);
         } catch (e) {
             console.error('Download error:', e);
             sonnerToast.error("Failed to download template");
         } finally {
+            setReload();
             setLoading(false);
         }
     };
@@ -77,6 +83,7 @@ const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: stri
             console.error('Download error:', e);
             sonnerToast.error("Failed to download template");
         } finally {
+            setReload();
             setLoading(false);
         }
     }
@@ -92,6 +99,7 @@ const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: stri
                 {loading ? "Downloading" : isFree ? "Download" : "Buy Now"}
             </button>
             <LoginToDownloadDialog isOpen={showLoginDialog} onClose={() => setShowLoginDialog(false)} />
+            <MicroCommitmentModal open={showMicroCommitment} onOpenChange={setShowMicroCommitment} templateId={templateId} />
         </>
     );
 };

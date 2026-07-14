@@ -1,17 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import DownloadLog from "@/lib/models/DownloadLog";
+import User from "@/lib/models/User";
 import { getGoogleDriveDownloadUrlAndToken } from "@/lib/google-drive";
 import {
   withAPIMiddleware,
   createErrorResponse,
-  createAPIResponse,
 } from "@/lib/utils/api-helpers";
 import { userHasPurchased } from "@/lib/payments";
 import { authenticateUser } from "@/middleware/auth";
 import { sanitizeFilename } from "@/lib/utils";
+import revalidate from "@/actions/revalidateTag";
 
 /** Validate query params */
 function validateDownloadParams(req: NextRequest) {
@@ -160,40 +161,44 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
     resHeaders.set("X-Download-Template-Id", String(templateId));
     resHeaders.set("X-Download-Template-Type", String(template.type));
 
-    // Async logging: increment counter & create DownloadLog
-    await (async () => {
-      try {
-        // Increment download count
-        await Template.updateOne(
-          { _id: templateId },
-          { $inc: { downloads: 1 } },
-        ).exec();
+    try {
+      // Increment download count
+      await Template.updateOne(
+        { _id: templateId },
+        { $inc: { downloads: 1 } },
+      ).exec();
 
-        const ip =
-          req.headers.get("x-forwarded-for") ||
-          req.headers.get("x-real-ip") ||
-          "unknown";
-        const userAgent = req.headers.get("user-agent") || "";
-        const bytes = upstreamLength ? parseInt(upstreamLength, 10) : undefined;
-        const statusCode = upstreamRes.status;
+      // Add to user's purchased templates
+      await User.updateOne(
+        { _id: currentUser._id },
+        { $addToSet: { purchasedTemplates: templateId } },
+      ).exec();
 
-        await DownloadLog.create({
-          userId: currentUser._id,
-          templateId,
-          ip,
-          userAgent,
-          filename: suggestedFilename,
-          fileKey,
-          bytes,
-          status: statusCode >= 200 && statusCode < 300 ? "success" : "failed",
-          statusCode,
-          meta: { rangeRequested: Boolean(incomingRange) },
-        });
-      } catch (err) {
-        if (err && typeof err === "object" && "digest" in err) throw err;
-        console.warn("Failed to persist DownloadLog:", err);
-      }
-    })();
+      const ip =
+        req.headers.get("x-forwarded-for") ||
+        req.headers.get("x-real-ip") ||
+        "unknown";
+      const userAgent = req.headers.get("user-agent") || "";
+      const bytes = upstreamLength ? parseInt(upstreamLength, 10) : undefined;
+      const statusCode = upstreamRes.status;
+
+      await revalidate(`/templates/${template.slug}`);
+
+      await DownloadLog.create({
+        userId: currentUser._id,
+        templateId,
+        ip,
+        userAgent,
+        filename: suggestedFilename,
+        fileKey,
+        bytes,
+        status: statusCode >= 200 && statusCode < 300 ? "success" : "failed",
+        statusCode,
+        meta: { rangeRequested: Boolean(incomingRange) },
+      });
+    } catch (err) {
+      console.warn("Failed to persist DownloadLog:", err);
+    }
 
     const statusToReturn = upstreamRes.status === 206 ? 206 : 200;
     return new NextResponse(upstreamRes.body, {
@@ -209,7 +214,7 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
 
 export const GET = withAPIMiddleware(downloadHandler, {
   rateLimit: {
-    maxRequests: 60,
+    maxRequests: 15,
     windowMs: 15 * 60 * 1000,
   },
   validate: async (req: NextRequest) => {

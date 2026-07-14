@@ -91,6 +91,11 @@ const FooterLinks = [
         text: "Support",
         link: "/support",
     },
+    {
+        id: 6,
+        text: "Custom Development",
+        link: "/custom-development",
+    },
 ];
 
 const heroVariants = {

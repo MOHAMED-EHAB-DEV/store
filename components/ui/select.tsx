@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { useFloating } from "@/hooks/use-floating";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
 
 const flattenChildren = (children: React.ReactNode): React.ReactElement<any>[] => {
@@ -258,7 +258,7 @@ export function Select({
         data-slot="base"
         data-open={isOpen ? "true" : "false"}
         data-focus={isOpen ? "true" : "false"}
-        className={twMerge(
+        className={cn(
           "flex flex-col gap-1 outline-none group w-full",
           classNames.base,
           className,
@@ -268,7 +268,7 @@ export function Select({
         {label && labelPlacement === "outside" && (
           <label
             data-slot="label"
-            className={twMerge(
+            className={cn(
               "text-sm font-medium",
               isRequired
                 ? "after:content-['*'] after:text-red-400 after:ms-0.5"
@@ -295,7 +295,7 @@ export function Select({
           onClick={() => {
             if (!isDisabled) setIsOpen(!isOpen);
           }}
-          className={twMerge(
+          className={cn(
             "relative flex items-center justify-between gap-2 px-3 outline-none transition-colors w-full",
             isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
             sizes[size] || sizes.md,
@@ -311,7 +311,7 @@ export function Select({
           )}
           <div
             data-slot="inner-wrapper"
-            className={twMerge(
+            className={cn(
               "w-full h-full flex flex-col items-start justify-center flex-grow truncate gap-0.5",
               classNames.innerWrapper,
             )}
@@ -319,7 +319,7 @@ export function Select({
             {label && labelPlacement === "inside" && (
               <span
                 data-slot="label"
-                className={twMerge(
+                className={cn(
                   "text-xs text-white/50 origin-top-left transition-all",
                   displayString || isOpen
                     ? "scale-100 translateY-0"
@@ -332,7 +332,7 @@ export function Select({
             )}
             <span
               data-slot="value"
-              className={twMerge(
+              className={cn(
                 "truncate flex",
                 !displayString && "text-white/50",
                 label &&
@@ -354,7 +354,7 @@ export function Select({
           )}
           <ChevronDown
             data-slot="selector-icon"
-            className={twMerge(
+            className={cn(
               "w-4 h-4 text-white/50 transition-transform hover:bg-white/10",
               classNames.selectorIcon,
               isOpen && "rotate-180",
@@ -400,7 +400,7 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
         left: "-9999px",
       }}
       data-state={context.isOpen ? "open" : "closed"}
-      className={twMerge(
+      className={cn(
         "z-50 min-w-32 rounded-xl border border-white/10 bg-[#15161b] text-white p-1 shadow-md transition-opacity duration-200 max-h-96",
         context.isOpen
           ? "opacity-100 visible"
@@ -410,8 +410,9 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
     >
       <div
         ref={scrollRef}
+        data-lenis-prevent="true"
         data-slot="listbox-wrapper"
-        className={twMerge(
+        className={cn(
           "flex flex-col w-full max-h-72 overflow-x-hidden overflow-y-auto",
           classNames?.listboxWrapper,
         )}
@@ -419,7 +420,7 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
         <div
           data-slot="listbox"
           role="listbox"
-          className={twMerge("flex flex-col w-full gap-0.5", classNames?.list)}
+          className={cn("flex flex-col w-full gap-0.5", classNames?.list)}
         >
           {children.map((child, index) => {
             const itemKey =
@@ -485,7 +486,7 @@ export function SelectItem({
       aria-selected={isSelected}
       data-selected={isSelected ? "true" : "false"}
       data-focus={isFocused ? "true" : "false"}
-      className={twMerge(
+      className={cn(
         "flex w-full items-center gap-2 rounded-lg py-1.5 px-2 text-sm outline-none select-none transition-colors",
         isDisabled
           ? "opacity-50 cursor-not-allowed pointer-events-none"

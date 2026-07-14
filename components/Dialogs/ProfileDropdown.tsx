@@ -1,20 +1,22 @@
-import { MouseEvent as ReactMouseEvent, useState } from "react";
+"use client";
+
+import {
+  MouseEvent as ReactMouseEvent,
+  useState,
+} from "react";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Settings } from "@/components/ui/svgs/icons/Settings";
 import { Login } from "../ui/svgs/icons/Login";
 import { LogOut } from "@/components/ui/svgs/icons/LogOut";
 import { LayoutDashboard } from "@/components/ui/svgs/icons/LayoutDashboard";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
+import { X } from "@/components/ui/svgs/icons/X";
+import { Wrench } from "@/components/ui/svgs/icons/Wrench";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import { IUser } from "@/types";
+import Drawer from "@/components/ui/Drawer";
 
 const ProfileDropdown = ({
   user,
@@ -23,15 +25,16 @@ const ProfileDropdown = ({
   user: IUser | null;
   userFavorites: number;
 }) => {
-  const [open, isOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const handleLogout = async (e: ReactMouseEvent<HTMLDivElement>) => {
+  const openDrawer = () => setIsOpen(true);
+  const closeDrawer = () => setIsOpen(false);
+
+  const handleLogout = async (e: ReactMouseEvent<HTMLButtonElement>) => {
     try {
       e?.preventDefault();
-
       const response = await fetch("/api/user/logout");
-
       const data = await response.json();
       if (!data.success) throw new Error(data.message);
       sonnerToast.success("Successfully LoggedOut");
@@ -42,98 +45,186 @@ const ProfileDropdown = ({
       sonnerToast.error("Error logging out. Please try again.");
     }
   };
+
+  const handleNavigation = (path: string) => {
+    closeDrawer();
+    setTimeout(() => {
+      router.push(path);
+    }, 300); // Wait for animation to finish
+  };
+
   return (
-    <DropdownMenu open={open} onOpenChange={isOpen}>
-      <DropdownMenuTrigger className={`items-center w-10 h-10 outline-none justify-center cursor-pointer ${!user ? "flex sm:hidden" : "flex"}`}>
+    <div className={`relative ${!user ? "flex sm:hidden" : "flex"}`}>
+      <button
+        onClick={openDrawer}
+        className="items-center w-10 h-10 outline-none justify-center cursor-pointer p-0 bg-transparent border-none rounded-full"
+      >
         <Image
-          src={anyImgUrl(user?.avatar ? user.avatar : "/assets/Icons/profile.svg", { width: 100, quality: 95, original: user?.avatar ? false : true })}
+          src={anyImgUrl(
+            user?.avatar ? user.avatar : "/assets/Icons/profile.svg",
+            { width: 100, quality: 95, original: user?.avatar ? false : true },
+          )}
           alt={`${user?.name || ""} Profile`}
           width={50}
           height={50}
           unoptimized
-          className="p-px rounded-full w-full h-full"
+          className="p-px rounded-full w-full h-full hover:scale-105 transition-transform"
         />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col items-center justify-center bg-dark border-dark">
-        {user ? (
-            <>
-            <DropdownMenuItem className="flex items-center flex-row gap-6 p-6 pr-28">
-          <div className="items-center w-10 justify-center flex">
-            <Image
-              src={anyImgUrl(user.avatar ? user.avatar : "/assets/Icons/profile.svg", { width: 60, quality: 85, original: user?.avatar ? false : true })}
-              alt={`${user.name} Profile`}
-              width={30}
-              height={30}
-              unoptimized
-              className="p-px rounded-full transition-all duration-500 w-full h-full"
-            />
-          </div>
-          <div className="flex flex-col justify-center gap-1">
-            <h1 className="text-white font-medium text-lg">{user.name}</h1>
-            <p className="text-secondary font-medium text-md">{user.email}</p>
-          </div>
-        </DropdownMenuItem>
-        {user.role === "admin" && (
-          <DropdownMenuItem
-            onClick={() => router.push("/admin")}
-            className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
-          >
-            <LayoutDashboard className="text-gray-400 size-7" />
-            <span className="text-white font-medium text-md">
-              Admin Dashboard
-            </span>
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem
-          onClick={() => router.push(`/dashboard`)}
-          className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
-        >
-          <LayoutDashboard className="text-gray-400 size-7" />
-          <span className="text-white font-medium text-md">Dashboard</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => router.push("/favorites")}
-          className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
-        >
-          <div className="relative flex items-center justify-center">
-            <Heart className="text-gray-400 size-7" />
-            {userFavorites > 0 && (
-              <div className="absolute -top-1.5 -right-2 flex items-center justify-center rounded-full text-[10px] font-medium text-white min-w-[18px] min-h-[18px] px-1 bg-[#F48A42]">
-                {userFavorites}
+      </button>
+
+      <Drawer
+        isOpen={isOpen}
+        onClose={closeDrawer}
+        direction="bottom"
+        className="max-w-2xl mx-auto rounded-t-3xl border-t border-x border-white/10 overflow-hidden"
+      >
+        <div className="p-6 flex flex-col gap-2 max-h-[85vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4 border-b-[0.5px] border-white/15 pb-3">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <Image
+                  src={anyImgUrl(
+                    user.avatar ? user.avatar : "/assets/Icons/profile.svg",
+                    {
+                      width: 60,
+                      quality: 85,
+                      original: user?.avatar ? false : true,
+                    },
+                  )}
+                  alt={`${user.name} Profile`}
+                  width={40}
+                  height={40}
+                  unoptimized
+                  className="p-px rounded-full w-10 h-10"
+                />
+                <div className="flex flex-col">
+                  <h1 className="text-white font-bold text-lg">{user.name}</h1>
+                  <p className="text-secondary font-medium text-sm">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Image
+                  src={anyImgUrl("/assets/Icons/profile.svg", {
+                    width: 60,
+                    quality: 85,
+                    original: true,
+                  })}
+                  alt={`Profile`}
+                  width={40}
+                  height={40}
+                  unoptimized
+                  className="p-px rounded-full w-10 h-10"
+                />
+                <div className="flex flex-col">
+                  <h1 className="text-white font-bold text-lg">Account</h1>
+                </div>
               </div>
             )}
+
+            <button
+              className="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95 border-none outline-none bg-transparent cursor-pointer"
+              onClick={closeDrawer}
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
           </div>
-          <span className="text-white font-medium text-md">Favorites</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => router.push("/dashboard/settings")}
-          className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
-        >
-          <Settings className="text-gray-400 size-7" />
-          <span className="text-white font-medium text-md">Settings</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={handleLogout}
-          className="flex flex-row gap-10 items-center p-6 pr-28 hover:bg-secondary/30 cursor-pointer transition-all w-full"
-        >
-          <LogOut className="text-gray-400 size-7" />
-          <span className="text-white font-medium text-md">Logout</span>
-        </DropdownMenuItem>
-        </>
-        ) : (
-            <>
-                <DropdownMenuItem onClick={() => router.push("/login")} aria-label="Sign In button" className="flex flex-row gap-10 items-center p-3 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <Login className="text-gray-400 size-7" />
-                    <span className="text-white font-medium text-md">Signin</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/register")} aria-label="Get Started button" className="flex flex-row gap-10 items-center p-3 hover:bg-secondary/30 cursor-pointer transition-all w-full">
-                    <Login className="text-gray-400 size-7" />
-                    <span className="text-white font-medium text-md">Register</span>
-                </DropdownMenuItem>
-            </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+
+          <div className="flex flex-col gap-3">
+            {user ? (
+              <>
+                {user.role === "admin" && (
+                  <button
+                    onClick={() => handleNavigation("/admin")}
+                    className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                  >
+                    <LayoutDashboard className="text-gray-400 size-6" />
+                    <span className="text-white font-medium text-base">
+                      Admin Dashboard
+                    </span>
+                  </button>
+                )}
+                <button
+                  onClick={() => handleNavigation("/dashboard")}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <LayoutDashboard className="text-gray-400 size-6" />
+                  <span className="text-white font-medium text-base">
+                    Dashboard
+                  </span>
+                </button>
+                <button
+                  onClick={() => handleNavigation("/favorites")}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <div className="relative flex items-center justify-center">
+                    <Heart className="text-gray-400 size-6" />
+                    {userFavorites > 0 && (
+                      <div className="absolute -top-1.5 -right-2 flex items-center justify-center rounded-full text-[10px] font-bold text-white min-w-[18px] min-h-[18px] px-1 bg-[#F48A42]">
+                        {userFavorites}
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-white font-medium text-base">
+                    Favorites
+                  </span>
+                </button>
+                <button
+                  onClick={() => handleNavigation("/dashboard/settings")}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <Settings className="text-gray-400 size-6" />
+                  <span className="text-white font-medium text-base">
+                    Settings
+                  </span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <LogOut className="text-gray-400 size-6" />
+                  <span className="text-white font-medium text-base">
+                    Logout
+                  </span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleNavigation("/login")}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <Login className="text-gray-400 size-6" />
+                  <span className="text-white font-medium text-base">
+                    Signin
+                  </span>
+                </button>
+                <button
+                  onClick={() => handleNavigation("/register")}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <Login className="text-gray-400 size-6" />
+                  <span className="text-white font-medium text-base">
+                    Register
+                  </span>
+                </button>
+                <button
+                  onClick={() => handleNavigation("/custom-development")}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 cursor-pointer transition-colors w-full text-left outline-none"
+                >
+                  <Wrench className="text-gray-400 size-6" />
+                  <span className="text-white font-medium text-base">
+                    Custom Development
+                  </span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </Drawer>
+    </div>
   );
 };
 export default ProfileDropdown;

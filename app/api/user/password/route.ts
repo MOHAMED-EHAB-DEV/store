@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/database";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import User from "@/lib/models/User";
 import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 

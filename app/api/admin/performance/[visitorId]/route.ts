@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Analytics from "@/lib/models/Analytics";
 import Visitor from "@/lib/models/Visitor";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import {
   createAPIResponse,
   createErrorResponse,

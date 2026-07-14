@@ -44,7 +44,7 @@ function DropdownMenuTrigger({ asChild, className, onClick, ...props }: React.HT
 
   return (
     <Comp
-      ref={context.triggerRef as any}
+      ref={context.triggerRef}
       onClick={(e: any) => {
         context.setIsOpen(!context.isOpen);
         onClick?.(e);

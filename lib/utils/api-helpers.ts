@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import ErrorLog from "../models/ErrorLog";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { connectToDatabase } from "../database";
 
 // Response caching utility
@@ -347,7 +347,9 @@ export function withAPIMiddleware(
     cache?: { ttl: number; keyGenerator?: (req: NextRequest) => string };
     auth?: boolean;
     validate?: (req: NextRequest) => Promise<boolean>;
-  } = {},
+  } = {
+    rateLimit: { maxRequests: 60, windowMs: 10 * 60 * 1000 }, // Default: 60 req / 10 min
+  },
 ) {
   return async (req: NextRequest, context?: any): Promise<NextResponse> => {
     const timer = PerformanceMonitor.startTimer(
@@ -451,6 +453,12 @@ export function withAPIMiddleware(
         cacheHit,
         rateLimited,
       });
+
+      // Add security headers
+      response.headers.set("X-Content-Type-Options", "nosniff");
+      response.headers.set("X-Frame-Options", "SAMEORIGIN");
+      response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+
       return response;
     } catch (error) {
       // console.error("API middleware error:", error);

@@ -6,7 +6,7 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 
 async function getBlogPost(
   req: NextRequest,

@@ -137,6 +137,8 @@ async function loginHandler(
       id: String(user?._id),
       email: user.email,
       avatar: user.avatar,
+      role: user.role,
+      banned: user.banned,
     })
       .setProtectedHeader({ alg: "HS256" })
       .setExpirationTime("7d")

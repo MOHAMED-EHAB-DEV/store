@@ -8,7 +8,7 @@ import {
     createErrorResponse,
     withAPIMiddleware
 } from "@/lib/utils/api-helpers";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 
 interface RouteParams {
     params: Promise<{ id: string }>;

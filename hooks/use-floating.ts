@@ -1,6 +1,6 @@
 import { useEffect, useCallback, RefObject } from "react";
 
-export function useFloating({
+export function useFloating<T extends HTMLElement = HTMLElement, C extends HTMLElement = HTMLElement>({
   isOpen,
   setIsOpen,
   triggerRef,
@@ -10,8 +10,8 @@ export function useFloating({
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  triggerRef: RefObject<HTMLElement | null>;
-  contentRef: RefObject<HTMLElement | null>;
+  triggerRef: RefObject<T | null>;
+  contentRef: RefObject<C | null>;
   align?: "start" | "center" | "end";
   sideOffset?: number;
 }) {

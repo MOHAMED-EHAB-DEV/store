@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
+import User from "@/lib/models/User";
 
 async function getUserTemplates(req: NextRequest) {
     try {
@@ -14,6 +15,15 @@ async function getUserTemplates(req: NextRequest) {
 
         const { searchParams } = new URL(req.url);
         const limit = parseInt(searchParams.get("limit") || "100");
+        const idsOnly = searchParams.get("idsOnly") === "true";
+
+        if (idsOnly) {
+            const dbUser = await User.findById(user._id).select("purchasedTemplates");
+            return NextResponse.json({
+                success: true,
+                data: dbUser?.purchasedTemplates || [],
+            });
+        }
 
         // Get user's purchased templates
         const templates = await Template.find({

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
 
 async function setOffline(request: NextRequest) {

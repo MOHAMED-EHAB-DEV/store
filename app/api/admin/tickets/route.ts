@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Ticket from "@/lib/models/Ticket";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import {
   createErrorResponse,
   withAPIMiddleware,

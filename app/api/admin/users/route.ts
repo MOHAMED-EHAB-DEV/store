@@ -7,7 +7,7 @@ import {
 } from "@/lib/utils/api-helpers";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 
 async function getAdminUsers(request: NextRequest) {
   try {

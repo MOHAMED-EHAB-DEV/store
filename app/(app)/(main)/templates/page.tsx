@@ -77,11 +77,7 @@ const getInitialData = async (params: {
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL || ""}/api/template/search?${urlParams.toString()}`,
-      {
-        next: {
-          revalidate: 60 * 60 * 5,
-        },
-      },
+      { cache: "no-store" }
     );
 
     const data = await response.json();
@@ -104,6 +100,7 @@ const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const templates = await getInitialData(params);
   const categories = (await getCategories()) as ICategory[];
+  const allTags = Array.from(new Set(templates.flatMap((t: any) => t.tags))) as string[];
 
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -153,6 +150,7 @@ const Page = async ({ searchParams }: PageProps) => {
           initialData={templates}
           categories={categories}
           searchParams={params}
+          allTags={allTags}
         />
       </main>
     </>

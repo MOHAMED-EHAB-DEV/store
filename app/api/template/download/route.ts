@@ -10,7 +10,7 @@ import {
   createErrorResponse,
 } from "@/lib/utils/api-helpers";
 import { userHasPurchased } from "@/lib/payments";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { sanitizeFilename } from "@/lib/utils";
 import revalidate from "@/actions/revalidateTag";
 

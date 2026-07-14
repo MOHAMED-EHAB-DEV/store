@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { uploadToGoogleDrive } from "@/lib/google-drive";
 import Ticket from "@/lib/models/Ticket";

@@ -5,7 +5,7 @@ import {
   createAPIResponse,
   createErrorResponse,
   } from "@/lib/utils/api-helpers";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/database";
 
 // GET: Get user's favorite templates

@@ -20,11 +20,13 @@ const Templates = ({
   categories,
   searchParams,
   hideCategoryFilter = false,
+  allTags,
 }: {
   initialData: ITemplate[];
   categories: ICategory[];
   searchParams: { [key: string]: string | string[] | undefined };
   hideCategoryFilter?: boolean;
+  allTags?: string[];
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -109,9 +111,9 @@ const Templates = ({
     }));
   }, [categories, searchParams.categories]);
 
-  const allTags = useMemo(
-    () => Array.from(new Set(initialData.flatMap((t) => t.tags))),
-    [initialData],
+  const allTagsArray = useMemo(
+    () => allTags || Array.from(new Set(initialData.flatMap((t) => t.tags))),
+    [allTags, initialData],
   );
   const selectedTags = useMemo(() => {
     const raw = searchParams.tags;
@@ -120,11 +122,11 @@ const Templates = ({
       : typeof raw === "string"
         ? raw.split(",")
         : [];
-    return allTags.map((tag) => ({
+    return allTagsArray.map((tag) => ({
       tag,
       selected: selected.includes(tag),
     }));
-  }, [allTags, searchParams.tags]);
+  }, [allTagsArray, searchParams.tags]);
 
 
 
@@ -216,7 +218,7 @@ const Templates = ({
                   </button>
                 )}
                 <button
-                  onClick={() => window.location.reload()}
+                  onClick={() => router.refresh()}
                   aria-label="Retry"
                   className="px-4 py-2 rounded-lg border border-gray-600 text-white hover:bg-white/10 transition"
                 >

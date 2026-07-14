@@ -14,18 +14,18 @@ export const Slot = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLEleme
           if (typeof ref === "function") {
             ref(node);
           } else if (ref) {
-            (ref as any).current = node;
+            (ref as React.MutableRefObject<HTMLElement>).current = node;
           }
           
-          const childRef = (children as any).ref;
+          const childRef = (children as React.ReactElement & { ref?: React.Ref<HTMLElement> }).ref;
           if (typeof childRef === "function") {
             childRef(node);
-          } else if (childRef) {
-            childRef.current = node;
+          } else if (childRef && "current" in childRef) {
+            (childRef as React.MutableRefObject<HTMLElement>).current = node;
           }
         },
-        className: cn(props.className, (children.props as any).className),
-      } as any)
+        className: cn(props.className, (children.props as React.HTMLAttributes<HTMLElement>).className),
+      } as React.HTMLAttributes<HTMLElement>)
     }
     return <span {...props}>{children}</span>
   }

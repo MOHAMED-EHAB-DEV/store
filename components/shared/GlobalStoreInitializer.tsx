@@ -86,7 +86,7 @@ export function GlobalStoreInitializer() {
 
     const fetchPurchasedTemplates = async () => {
       try {
-        const res = await fetch(`/api/user/purchased-templates`);
+        const res = await fetch(`/api/user/templates?idsOnly=true`);
         const data = await res.json();
         if (data.success) {
           setPurchasedTemplates(data.data);

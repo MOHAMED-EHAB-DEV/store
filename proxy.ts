@@ -97,35 +97,7 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Rate Limiting for API routes
-  if (isApiRoute(pathname)) {
-    const isAuth = isAuthRoute(pathname);
-    const isAdmin = isAdminApiRoute(pathname);
-    if (isAdmin) return;
-    const limitResult = RateLimiter.check(
-      clientIP + (isAuth ? ":auth" : ":api"),
-      isAuth ? 10 : 80,
-      10 * 60 * 1000,
-    );
-
-    if (!limitResult.allowed) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Too many requests. Please try again later.",
-        },
-        {
-          status: 429,
-          headers: {
-            "X-RateLimit-Limit": (isAuth ? 5 : 60).toString(),
-            "X-RateLimit-Remaining": "0",
-            "X-RateLimit-Reset": limitResult.resetTime.toString(),
-          },
-        },
-      );
-    }
-  }
-
+  // 2. Security Headers for API routes
   if (isApiRoute(pathname)) {
     const response = NextResponse.next();
     addSecurityHeaders(response);
@@ -161,16 +133,26 @@ export async function proxy(req: NextRequest) {
     }
   }
 
+  // Handle banned users
+  if (decodedToken && decodedToken.banned) {
+    if (!isBannedRoute(pathname)) {
+      const response = NextResponse.redirect(new URL("/banned", req.url));
+      addSecurityHeaders(response);
+      return response;
+    }
+  } else if (isBannedRoute(pathname)) {
+    // If not banned but on /banned, redirect home
+    const response = NextResponse.redirect(new URL("/", req.url));
+    addSecurityHeaders(response);
+    return response;
+  }
+
   if (isProtectedRoute(pathname)) {
     if (!token || !decodedToken) return reLogin();
   }
 
   if (isAdminRoute(pathname)) {
-    if (!token || !decodedToken) return reLogin();
-  }
-
-  if (isBannedRoute(pathname)) {
-    if (!token || !decodedToken) return reLogin();
+    if (!token || !decodedToken || decodedToken.role !== "admin") return reLogin();
   }
 
   const response = NextResponse.next();

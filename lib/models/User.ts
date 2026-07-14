@@ -206,103 +206,7 @@ UserSchema.statics.findByEmail = function (email: string) {
         .lean();
 };
 
-UserSchema.statics.findByEmailWithPassword = function (email: string) {
-    return this.findOne({ email: email.toLowerCase() })
-        .select('_id name email password role avatar loginAttempts lockUntil') // TODO: Add isEmailVerified when its functionality being added
-        .lean();
-};
 
-UserSchema.statics.findActiveUsers = function (limit = 20, skip = 0) {
-    return this.find({
-        role: { $ne: 'deleted' },
-        // isEmailVerified: true TODO: Uncomment when isEmailVerified Functionality added
-    })
-        .select('name email role avatar createdAt lastLogin')
-        .sort({ lastLogin: -1, createdAt: -1 })
-        .limit(limit)
-        .skip(skip)
-        .lean();
-};
-
-UserSchema.statics.getUserStats = function () {
-    return this.aggregate([
-        {
-            $group: {
-                _id: null,
-                totalUsers: { $sum: 1 },
-                verifiedUsers: {
-                    $sum: { $cond: ['$isEmailVerified', 1, 0] }
-                },
-                adminUsers: {
-                    $sum: { $cond: [{ $eq: ['$role', 'admin'] }, 1, 0] }
-                },
-                activeLastMonth: {
-                    $sum: {
-                        $cond: [
-                            {
-                                $gte: [
-                                    '$lastLogin',
-                                    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-                                ]
-                            },
-                            1,
-                            0
-                        ]
-                    }
-                },
-                recentSignups: {
-                    $sum: {
-                        $cond: [
-                            {
-                                $gte: [
-                                    '$createdAt',
-                                    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-                                ]
-                            },
-                            1,
-                            0
-                        ]
-                    }
-                }
-            }
-        }
-    ]);
-};
-
-UserSchema.statics.findUsersWithPurchases = function (limit = 20, skip = 0) {
-    return this.find({
-        purchasedTemplates: { $exists: true, $not: { $size: 0 } }
-    })
-        .select('name email role avatar purchasedTemplates createdAt')
-        .populate('purchasedTemplates', 'title price')
-        .sort({ 'purchasedTemplates.length': -1 })
-        .limit(limit)
-        .skip(skip)
-        .lean();
-};
-
-UserSchema.statics.incrementLoginAttempts = function (userId: string) {
-    return this.findByIdAndUpdate(
-        userId,
-        {
-            $inc: { loginAttempts: 1 },
-            $set: {
-                lockUntil: new Date(Date.now() + 15 * 60 * 1000) // Lock for 15 minutes
-            }
-        },
-        { new: true }
-    );
-};
-
-UserSchema.statics.resetLoginAttempts = function (userId: string) {
-    return this.findByIdAndUpdate(
-        userId,
-        {
-            $unset: { loginAttempts: 1, lockUntil: 1 },
-            $set: { lastLogin: new Date() }
-        }
-    );
-};
 
 UserSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.password.startsWith('$2')) {
@@ -322,12 +226,6 @@ UserSchema.statics.cleanupExpiredLocks = function () {
 
 export interface IUserModel extends Model<IUser> {
     findByEmail(email: string): Promise<IUser | null>;
-    findByEmailWithPassword(email: string): Promise<IUser | null>;
-    findActiveUsers(limit?: number, skip?: number): Promise<IUser[]>;
-    getUserStats(): Promise<any[]>; // you can define a more specific shape later
-    findUsersWithPurchases(limit?: number, skip?: number): Promise<IUser[]>;
-    incrementLoginAttempts(userId: string): Promise<IUser | null>;
-    resetLoginAttempts(userId: string): Promise<IUser | null>;
     cleanupExpiredLocks(): Promise<any>;
 }
 

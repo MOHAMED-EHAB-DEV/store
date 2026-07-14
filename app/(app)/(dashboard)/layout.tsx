@@ -1,5 +1,5 @@
 import LayoutContainer from "@/components/Dashboard/Layout/LayoutContainer";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function RootLayout({

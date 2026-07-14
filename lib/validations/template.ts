@@ -21,7 +21,6 @@ export const TemplateSchema = v.object({
   views: v.number(),
   reviewCount: v.number(),
   type: v.union([v.literal("coded"), v.literal("framer"), v.literal("figma")]),
-  isPaid: v.boolean(),
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
   lastViewedAt: v.union([v.date(), v.string()]),

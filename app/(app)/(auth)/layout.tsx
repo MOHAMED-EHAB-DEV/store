@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 

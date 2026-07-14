@@ -1,4 +1,4 @@
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
 import { redirect } from "next/navigation";

@@ -33,7 +33,6 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         categories: initialData?.categories?.map((c: any) => c._id || c) || [],
         tags: initialData?.tags?.join(", ") || "",
         type: initialData?.type || "coded",
-        isPaid: initialData?.isPaid ?? true,
         isActive: initialData?.isActive ?? true,
     });
     const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(initialData?.thumbnail);
@@ -277,22 +276,12 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 </div>
 
                 {/* Checkboxes */}
-                <div className="flex gap-6">
-                    <div className="flex items-center gap-2">
-                        <Checkbox
-                            id="isPaid"
-                            checked={formData.isPaid}
-                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isPaid: !!checked }))}
-                        />
-                        <label htmlFor="isPaid" className="text-sm text-muted-foreground cursor-pointer">
-                            Paid Template
-                        </label>
-                    </div>
-                    <div className="flex items-center gap-2">
+                <div className="space-y-4 pt-4 border-t border-border/50">
+                    <div className="flex items-center space-x-2">
                         <Checkbox
                             id="isActive"
                             checked={formData.isActive}
-                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: !!checked }))}
+                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked as boolean }))}
                         />
                         <label htmlFor="isActive" className="text-sm text-muted-foreground cursor-pointer">
                             Active (visible to users)

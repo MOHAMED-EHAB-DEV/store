@@ -51,12 +51,13 @@ const Template = async ({
               <h2 className="text-white/60 text-sm font-semibold mb-2">Tags</h2>
               <div className="flex flex-wrap gap-2">
                 {template.tags?.map((tag: string, idx: number) => (
-                  <span
+                  <Link
+                    href={`/templates?tags=${tag}`}
                     key={idx}
-                    className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
+                    className="py-1 px-2 bg-white/20 hover:bg-white/30 transition-colors rounded-md text-xs sm:text-sm text-white/80 break-words"
                   >
                     #{tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -69,12 +70,13 @@ const Template = async ({
             </h2>
             <div className="flex flex-wrap gap-2">
               {template.categories?.map((cat: any) => (
-                <span
+                <Link
+                  href={`/templates/${cat.name.toLowerCase()}`}
                   key={cat._id}
-                  className="py-1 px-2 bg-white/20 rounded-md text-xs sm:text-sm text-white/80 break-words"
+                  className="py-1 px-2 bg-white/20 hover:bg-white/30 transition-colors rounded-md text-xs sm:text-sm text-white/80 break-words"
                 >
                   {cat.name}
-                </span>
+                </Link>
               ))}
             </div>
           </div>

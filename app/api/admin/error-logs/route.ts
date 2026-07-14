@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import ErrorLog from "@/lib/models/ErrorLog";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import {
   createAPIResponse,
   createErrorResponse,

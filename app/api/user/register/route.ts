@@ -126,6 +126,8 @@ async function registerHandler(req: NextRequest) {
       id: String(newUser?._id),
       email: newUser.email,
       avatar: newUser.avatar,
+      role: newUser.role,
+      banned: newUser.banned,
     })
       .setProtectedHeader({ alg: "HS256" })
       .setExpirationTime("7d")

@@ -5,7 +5,7 @@ import User from "@/lib/models/User";
 import Template from "@/lib/models/Template";
 import DownloadLog from "@/lib/models/DownloadLog";
 import Ticket from "@/lib/models/Ticket";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import {
   createAPIResponse,
   createErrorResponse,

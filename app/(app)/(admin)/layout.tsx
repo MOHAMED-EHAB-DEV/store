@@ -1,5 +1,5 @@
 import LayoutContainer from "@/components/Admin/Layout/LayoutContainer";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";

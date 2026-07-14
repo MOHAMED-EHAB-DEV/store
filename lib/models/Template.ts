@@ -20,7 +20,6 @@ export interface ITemplate extends Document {
   views: number;
   reviewCount: number;
   type: "framer" | "coded" | "figma";
-  isPaid: boolean;
   createdAt: Date;
   updatedAt: Date;
   lastViewedAt: Date;
@@ -125,7 +124,6 @@ const TemplateSchema = new Schema<ITemplate>(
       enum: ["coded", "framer", "figma"],
       required: true,
     },
-    isPaid: Boolean,
     lastViewedAt: {
       type: Date,
       default: Date.now,
@@ -179,28 +177,6 @@ TemplateSchema.index(
     name: "template_search_index",
   },
 );
-
-TemplateSchema.virtual("popularityScore").get(function () {
-  const now = Date.now();
-  const daysSinceCreated =
-    (now - this.createdAt?.getTime()) / (1000 * 60 * 60 * 24);
-  const daysSinceViewed =
-    (now - this.lastViewedAt?.getTime()) / (1000 * 60 * 60 * 24);
-
-  // Combine downloads, rating, recency, and views for popularity
-  return (
-    (this.downloads * 2 +
-      this.averageRating * 20 +
-      this.views * 0.5 +
-      Math.max(0, 30 - daysSinceViewed) * 2 + // Recency boost
-      (this.categories.some(
-        (category) => category === "6895e37824be395fbc0b72ae",
-      )
-        ? 100
-        : 0)) / // Featured boost
-    Math.max(1, daysSinceCreated * 0.1)
-  ); // Age penalty
-});
 
 TemplateSchema.statics.searchTemplates = function (
   searchOptions: {
@@ -406,73 +382,7 @@ TemplateSchema.statics.searchTemplates = function (
   return this.aggregate(pipeline).allowDiskUse(true);
 };
 
-TemplateSchema.statics.getTemplateStats = function () {
-  return this.aggregate([
-    {
-      $facet: {
-        overview: [
-          { $match: { isActive: true } },
-          {
-            $group: {
-              _id: null,
-              totalTemplates: { $sum: 1 },
-              totalDownloads: { $sum: "$downloads" },
-              totalViews: { $sum: "$views" },
-              averagePrice: { $avg: "$price" },
-              averageRating: { $avg: "$averageRating" },
-              freeTemplates: {
-                $sum: { $cond: [{ $eq: ["$price", 0] }, 1, 0] },
-              },
-              paidTemplates: {
-                $sum: { $cond: [{ $gt: ["$price", 0] }, 1, 0] },
-              },
-            },
-          },
-        ],
-        topCategories: [
-          { $match: { isActive: true } },
-          { $unwind: "$categories" },
-          {
-            $group: {
-              _id: "$categories",
-              templateCount: { $sum: 1 },
-              totalDownloads: { $sum: "$downloads" },
-            },
-          },
-          { $sort: { templateCount: -1 } },
-          { $limit: 10 },
-          {
-            $lookup: {
-              from: "categories",
-              localField: "_id",
-              foreignField: "_id",
-              as: "category",
-            },
-          },
-          { $unwind: "$category" },
-          {
-            $project: {
-              name: "$category.name",
-              templateCount: 1,
-              totalDownloads: 1,
-            },
-          },
-        ],
-      },
-    },
-  ]);
-};
 
-TemplateSchema.methods.incrementViews = function (amount = 1) {
-  return this.findByIdAndUpdate(
-    this._id,
-    {
-      $inc: { views: amount },
-      $set: { lastViewedAt: new Date() },
-    },
-    { new: true },
-  );
-};
 
 // Pre-save middleware for tag normalization
 TemplateSchema.pre("save", function (next) {
@@ -481,12 +391,6 @@ TemplateSchema.pre("save", function (next) {
     this.tags = [
       ...new Set(this.tags.map((tag: string) => tag.toLowerCase().trim())),
     ];
-  }
-
-  if (this.price === 0) {
-    this.isPaid = false;
-  } else {
-    this.isPaid = true;
   }
   next();
 });
@@ -506,7 +410,6 @@ export interface ITemplateModel extends Model<ITemplate> {
     limit?: number,
     skip?: number,
   ): Promise<ITemplate[]>;
-  getTemplateStats(): Promise<any>;
 }
 
 const Template =

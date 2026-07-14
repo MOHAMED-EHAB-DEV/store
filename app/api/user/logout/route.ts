@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/database";
 import User from "@/lib/models/User";
 import { withAPIMiddleware } from "@/lib/utils/api-helpers";

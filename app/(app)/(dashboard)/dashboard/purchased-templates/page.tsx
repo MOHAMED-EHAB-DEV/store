@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PurchasedTemplatesClient from "@/components/Dashboard/PurchasedTemplatesClient";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 import { getCategories as fetchCategories } from "@/static/categories";
 
 export const metadata: Metadata = {
@@ -27,8 +27,6 @@ async function getPurchasedTemplates() {
       categories: categories || [],
     };
   } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("Error fetching templates:", error);
     return { templates: [], categories: [] };
   }

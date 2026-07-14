@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import crypto from "crypto";
 import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
-import { authenticateUser } from "@/middleware/auth";
+import { authenticateUser } from "@/lib/auth";
 
 async function track(req: NextRequest) {
   try {

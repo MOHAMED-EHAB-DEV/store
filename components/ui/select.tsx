@@ -379,8 +379,8 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
   const { updatePosition } = useFloating({
     isOpen: context?.isOpen || false,
     setIsOpen: context?.setIsOpen || (() => {}),
-    triggerRef: context?.triggerRef as any,
-    contentRef: context?.contentRef as any,
+    triggerRef: context?.triggerRef || { current: null },
+    contentRef: context?.contentRef || { current: null },
   });
 
   if (!context) return null;
@@ -472,11 +472,12 @@ export function SelectItem({
   if (!context) throw new Error("SelectItem must be used within Select");
 
   const itemValue =
-    itemKey !== undefined ? itemKey : value !== undefined ? value : (props as any).key;
+    itemKey !== undefined ? itemKey : value !== undefined ? value : (props as React.HTMLAttributes<HTMLElement> & { key?: string | number }).key;
   const isSelected =
     context.value === "all" ||
     (context.value instanceof Set &&
-      (context.value.has(itemValue) || context.value.has(String(itemValue))));
+      itemValue !== undefined &&
+      (context.value.has(itemValue as string) || context.value.has(String(itemValue))));
   const isFocused = context.focusedIndex === index;
 
   return (
@@ -499,7 +500,7 @@ export function SelectItem({
       )}
       onClick={(e) => {
         if (isDisabled) return;
-        if (itemValue !== undefined) context.onValueChange(itemValue);
+        if (itemValue !== undefined) context.onValueChange(String(itemValue));
         if (onPress) onPress(e);
         if (onClick) onClick(e);
       }}

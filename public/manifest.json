@@ -20,16 +20,16 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/1.jpg",
-      "sizes": "1280x720",
-      "type": "image/jpg",
+      "src": "/screenshots/home-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
       "form_factor": "wide",
       "label": "MHD Store Desktop View"
     },
     {
-      "src": "/screenshots/2.jpg",
-      "sizes": "1080x2180",
-      "type": "image/jpg",
+      "src": "/screenshots/home-mobile.png",
+      "sizes": "1080x2340",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "MHD Store Mobile View"
     },
@@ -46,6 +46,34 @@
       "type": "image/png",
       "form_factor": "wide",
       "label": "MHD Store register screen"
+    },
+    {
+      "src": "/screenshots/custom-development.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHD Store custom development screen"
+    },
+    {
+      "src": "/screenshots/faqs.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHD Store faqs screen"
+    },
+    {
+      "src": "/screenshots/support.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHD Store support screen"
+    },
+    {
+      "src": "/screenshots/pricing.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHD Store pricing screen"
     }
   ]
 }

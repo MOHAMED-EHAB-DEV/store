@@ -8,12 +8,14 @@ import GSAPInitializer from "@/components/home/GSAPInitializer";
 // import CustomBuildBand from "@/components/home/CustomBuildBand";
 // import BlueprintCustomBuild from "@/components/home/BlueprintCustomBuild";
 import { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "MHD Store | Premium Web Templates",
-  description:
-    "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
-};
+  description: "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
+  path: "/",
+  screenshotName: "home-desktop"
+});
 
 // const FramerFeatures = dynamic(
 //   () => import("@/components/home/FramerFeatures"),

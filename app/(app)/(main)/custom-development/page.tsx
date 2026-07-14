@@ -1,4 +1,3 @@
-import React from "react";
 import Hero from "@/components/CustomDevelopment/Hero";
 import ValueProposition from "@/components/CustomDevelopment/ValueProposition";
 import ProcessTimeline from "@/components/CustomDevelopment/ProcessTimeline";
@@ -6,10 +5,14 @@ import TechStack from "@/components/CustomDevelopment/TechStack";
 import ApplicationForm from "@/components/CustomDevelopment/ApplicationForm";
 import GSAPInitializer from "@/components/home/GSAPInitializer";
 
-export const metadata = {
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
   title: "Custom Development | MHD Store",
   description: "Get a custom, premium web application built specifically for your brand.",
-};
+  path: "/custom-development",
+  screenshotName: "custom-development"
+});
 
 const CustomDevelopmentPage = () => {
   return (

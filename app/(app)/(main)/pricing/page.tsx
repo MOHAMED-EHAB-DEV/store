@@ -5,6 +5,7 @@ export const metadata = buildMetadata({
   title: "Pricing | MHD Store",
   description: "View pricing plans for premium web templates at MHD Store.",
   path: "/pricing",
+  screenshotName: "pricing"
 });
 
 const Page = () => {

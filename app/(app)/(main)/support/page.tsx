@@ -11,6 +11,7 @@ export const metadata = buildMetadata({
     title: "Contact Support | Premium Templates",
     description: "Get help with your orders, account, or any questions. Our support team is here to assist you.",
     path: "/support",
+    screenshotName: "support",
 });
 
 const supportFeatures = [

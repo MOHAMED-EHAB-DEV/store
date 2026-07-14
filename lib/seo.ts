@@ -17,8 +17,8 @@ export function buildMetadata({
   const canonicalUrl = `https://mhd-store.vercel.app${cleanPath}`;
 
   const ogImage = screenshotName 
-    ? `/screenshots/${screenshotName}.png` 
-    : "/screenshots/1.png";
+    ? `/og/${screenshotName}.png` 
+    : "/og/home-desktop.png";
 
   const imageUrl = `https://mhd-store.vercel.app${ogImage}`;
 

@@ -43,7 +43,7 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: `${domain}/assets/Icons/cover.jpg`,
+          url: `${domain}/og/home-desktop.png`,
           width: 1200,
           height: 630,
           alt: title,
@@ -54,7 +54,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [`${domain}/assets/Icons/cover.jpg`],
+      images: [`${domain}/og/home-desktop.png`],
     },
   };
 }

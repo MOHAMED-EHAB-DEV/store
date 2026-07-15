@@ -184,7 +184,8 @@ const Page = async ({ params }: PageProps) => {
                 height={600}
                 unoptimized
                 className="w-full h-full object-cover rounded-md opacity-40 blur-sm scale-105"
-                priority
+                preload={true}
+                fetchPriority="high"
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent rounded-md" />

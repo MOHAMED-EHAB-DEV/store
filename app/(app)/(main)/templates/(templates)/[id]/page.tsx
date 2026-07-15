@@ -13,15 +13,12 @@ interface PageProps {
 
 const getTemplate = async (id: string) => {
   try {
-    const response = await fetch(
-      `${APP_URL}/api/template/${id}`,
-      {
-        next: {
-          revalidate: 60 * 60 * 24 * 7, // 1 week
-          tags: ["everyTemplate", `template-${id}`],
-        },
+    const response = await fetch(`${APP_URL}/api/template/${id}`, {
+      next: {
+        revalidate: 60 * 60 * 24 * 7, // 1 week
+        tags: ["everyTemplate", `template-${id}`],
       },
-    );
+    });
 
     if (!response.ok)
       throw new Error(`Failed to fetch template: ${response.status}`);
@@ -93,17 +90,18 @@ export async function generateMetadata({
   }
 
   const url = `${APP_URL}/templates/${id}`;
-  const truncatedDesc = truncateDescription(template.description || `Premium template - ${template.title}`, 160);
+  const truncatedDesc = truncateDescription(
+    template.description || `Premium template - ${template.title}`,
+    160,
+  );
   const imageUrl = template.thumbnail || `${APP_URL}/screenshots/1.png`;
 
   return {
     title: `${template.title} | MHD Store Premium Templates`,
     description: `Premium template - ${template.title}`,
-    keywords: [
-      ...(template.tags || []),
-      "template",
-      "web template",
-    ].filter(Boolean),
+    keywords: [...(template.tags || []), "template", "web template"].filter(
+      Boolean,
+    ),
     alternates: {
       canonical: url,
     },

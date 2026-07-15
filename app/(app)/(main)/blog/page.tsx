@@ -45,8 +45,8 @@ const getData = async () => {
     const data = await response.json();
     return data.success ? (data.data as BlogPost[]) : [];
   } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    console.error("Failed to fetch public blogs:", error);
+    // if (error && typeof error === 'object' && 'digest' in error) throw error;
+    // console.error("Failed to fetch public blogs:", error);
     return [];
   }
 };
@@ -74,7 +74,8 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
             height={400}
             unoptimized
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            priority={featured}
+            preload={featured}
+            fetchPriority={featured ? "high" : undefined}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">

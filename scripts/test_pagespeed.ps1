@@ -1,12 +1,14 @@
 # Script to open PageSpeed Insights for multiple URLs in Brave Private Tabs
 
 $urls = @(
-    "https://mhd-store.vercel.app/",
-    "https://mhd-store.vercel.app/templates",
-    "https://mhd-store.vercel.app/templates/category/vite",
-    "https://mhd-store.vercel.app/templates/obsidian-portfolio"
+    # "https://mhd-store.vercel.app/",
+    # "https://mhd-store.vercel.app/templates",
+    # "https://mhd-store.vercel.app/templates/category/vite",
+    "https://mhd-store.vercel.app/templates/aura-studio",
+    "https://mhd-store-test.vercel.app/templates/aura-studio",
+    "https://mhd-store-test.vercel.app/blog/nextjs-pagespeed-score-100-real-fixes",
+    "https://mhd-store.vercel.app/blog/nextjs-pagespeed-score-100-real-fixes"
     # "https://mhd-store.vercel.app/test",
-    # "https://mhd-store.vercel.app/test/templates/obsidian-portfolio"
 )
 
 # Detect Brave path (standard locations)
@@ -37,7 +39,7 @@ foreach ($url in $urls) {
     
     # Open 2 tabs for each URL
     Start-Process $bravePath -ArgumentList "--incognito", $psiUrl
-    # Start-Process $bravePath -ArgumentList "--incognito", $psiUrl
+    Start-Process $bravePath -ArgumentList "--incognito", $psiUrl
     
     # Small delay to prevent issues with multiple process starts
     Start-Sleep -Milliseconds 500

@@ -97,6 +97,7 @@ const nextConfig: NextConfig = {
       "tailwind-merge",
       "tailwindcss-animate",
       "zustand",
+      "react-day-picker",
     ],
     optimizeCss: true,
     esmExternals: true,

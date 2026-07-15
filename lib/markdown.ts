@@ -8,6 +8,7 @@ import rehypeSlug from "rehype-slug";
 import { visit } from "unist-util-visit";
 import { createHighlighter } from "shiki";
 import rehypeRaw from "rehype-raw";
+import { anyImgUrl } from "./utils/image";
 
 /**
  * Server-side Markdown -> HTML with shiki highlighting and copy button functionality
@@ -400,6 +401,10 @@ function rehypeAddClasses() {
         case "img":
           if (!node.properties.loading) node.properties.loading = "lazy";
           if (!node.properties.alt) node.properties.alt = "Blog Image";
+          if (node.properties.src) node.properties.src = anyImgUrl(node.properties.src, {
+            width: node.properties.width || 800,
+            quality: 80,
+          });
           addClass("rounded-lg shadow-lg my-6 mx-auto max-w-full h-auto border border-gray-800 object-cover");
           break;
         case "iframe":

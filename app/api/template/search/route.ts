@@ -250,9 +250,9 @@ export const GET = withAPIMiddleware(searchTemplatesHandler, {
     maxRequests: 100,
     windowMs: 15 * 60 * 1000,
   },
-  // Cache results for 2 minutes
+  // Cache results for 5 minutes
   cache: {
-    ttl: 2 * 60 * 1000,
+    ttl: 5 * 60 * 1000,
     keyGenerator: generateCacheKey,
   },
   // Custom validation

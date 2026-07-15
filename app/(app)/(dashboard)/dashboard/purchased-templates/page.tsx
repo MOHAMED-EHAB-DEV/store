@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import PurchasedTemplatesClient from "@/components/Dashboard/PurchasedTemplatesClient";
 import { authenticateUser } from "@/lib/auth";
 import { getCategories as fetchCategories } from "@/static/categories";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Purchased Templates | Dashboard",
@@ -11,10 +12,13 @@ export const metadata: Metadata = {
 
 async function getPurchasedTemplates() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  const cookieHeader = token ? `token=${token}` : "";
 
   try {
     const [templatesRes, categories] = await Promise.all([
-      fetch(`${baseUrl}/api/user/templates`),
+      fetch(`${baseUrl}/api/user/templates`, { headers: { Cookie: cookieHeader } }),
       fetchCategories(),
     ]);
 

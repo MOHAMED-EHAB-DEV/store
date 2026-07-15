@@ -4,8 +4,21 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { LoginToDownloadDialog } from "@/components/Dialogs/LoginToDownloadDialog";
 import { MicroCommitmentModal } from "@/components/Dialogs/MicroCommitmentModal";
 import { useUser } from "@/context/UserContext";
+import { Slot } from "@/components/ui/slot";
 
-const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: string }) => {
+const DownloadBtn = ({
+    isFree,
+    templateId,
+    asChild,
+    children,
+    className,
+}: {
+    isFree: boolean;
+    templateId: string;
+    asChild?: boolean;
+    children?: React.ReactNode;
+    className?: string;
+}) => {
     const { setReload } = useUser();
     const [loading, setLoading] = useState(false);
     const [showLoginDialog, setShowLoginDialog] = useState(false);
@@ -88,16 +101,18 @@ const DownloadBtn = ({ isFree, templateId }: { isFree: boolean; templateId: stri
         }
     }
 
+    const Comp = asChild ? Slot : "button";
+
     return (
         <>
-            <button
-                className="w-full cursor-pointer px-5 py-2.5 sm:py-3 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base"
+            <Comp
+                className={className !== undefined ? className : (asChild ? undefined : "w-full cursor-pointer px-5 py-2.5 sm:py-3 bg-linear-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 text-sm sm:text-base")}
                 onClick={isFree ? handleFreeDownload : handlePaidDownload}
                 disabled={loading}
                 aria-label={isFree ? "Download" : "Buy Now"}
             >
-                {loading ? "Downloading" : isFree ? "Download" : "Buy Now"}
-            </button>
+                {children || (loading ? "Downloading" : isFree ? "Download" : "Buy Now")}
+            </Comp>
             <LoginToDownloadDialog isOpen={showLoginDialog} onClose={() => setShowLoginDialog(false)} />
             <MicroCommitmentModal open={showMicroCommitment} onOpenChange={setShowMicroCommitment} templateId={templateId} />
         </>

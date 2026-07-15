@@ -22,20 +22,17 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import TemplateSkeleton from "../ui/TemplateSkeleton";
+import { ITemplate } from "@/lib/models/Template";
+import DownloadBtn from "@/components/singleTemplate/DownloadBtn";
 
-interface Template {
+interface IPopulatedTemplate extends Omit<ITemplate, "categories"> {
   _id: string;
-  title: string;
-  slug: string;
-  description: string;
-  image: string;
-  category: { _id: string; name: string };
-  downloadedAt: string;
-  downloadCount?: number;
+  categories: { _id: string; name: string; slug: string }[];
+  downloadedAt?: string | null;
 }
 
 interface PurchasedTemplatesClientProps {
-  templates: Template[];
+  templates: IPopulatedTemplate[];
   categories: any[];
 }
 
@@ -76,8 +73,8 @@ export default function PurchasedTemplatesClient({
 
     // Category filter
     if (filters.category) {
-      result = result.filter(
-        (template) => template.category._id === filters.category,
+      result = result.filter((template) =>
+        template.categories?.some((cat) => cat._id === filters.category)
       );
     }
 
@@ -86,13 +83,13 @@ export default function PurchasedTemplatesClient({
       switch (sortBy) {
         case "newest":
           return (
-            new Date(b.downloadedAt).getTime() -
-            new Date(a.downloadedAt).getTime()
+            new Date(b.downloadedAt || b.createdAt).getTime() -
+            new Date(a.downloadedAt || a.createdAt).getTime()
           );
         case "oldest":
           return (
-            new Date(a.downloadedAt).getTime() -
-            new Date(b.downloadedAt).getTime()
+            new Date(a.downloadedAt || a.createdAt).getTime() -
+            new Date(b.downloadedAt || b.createdAt).getTime()
           );
         case "name":
           return a.title.localeCompare(b.title);
@@ -250,7 +247,7 @@ export default function PurchasedTemplatesClient({
               >
                 <div className="relative aspect-video overflow-hidden">
                   <Image
-                    src={anyImgUrl(template.image || "/placeholder.png", {
+                    src={anyImgUrl(template?.thumbnail, {
                       width: 600,
                       quality: 80,
                     })}
@@ -261,7 +258,7 @@ export default function PurchasedTemplatesClient({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <Badge className="absolute top-3 right-3 bg-primary/90 text-white border-0">
-                    {template.category.name}
+                    {template.categories?.[0]?.name}
                   </Badge>
                 </div>
                 <div className="p-4 space-y-3">
@@ -274,27 +271,32 @@ export default function PurchasedTemplatesClient({
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3" />
                     <span>
-                      Downloaded{" "}
-                      {new Date(template.downloadedAt).toLocaleDateString()}
+                      {template.downloadedAt
+                        ? `Downloaded ${new Date(template.downloadedAt).toLocaleDateString()}`
+                        : `Purchased ${new Date(template.createdAt).toLocaleDateString()}`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 pt-2">
-                    <Link
-                      href={`/templates/${template.slug}`}
-                      className="flex-1"
+                    <Button
+                      variant="outline"
+                      className="w-full bg-white/5 border-white/10 text-white hover:bg-white/10 flex-1"
+                      asChild
                     >
-                      <Button
-                        variant="outline"
-                        className="w-full bg-white/5 border-white/10 text-white hover:bg-white/10"
-                      >
+                      <Link href={`/templates/${template.slug}`}>
                         <Eye className="w-4 h-4 mr-2" />
                         View
-                      </Button>
-                    </Link>
-                    <Button className="flex-1 bg-primary hover:bg-primary/90">
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
+                      </Link>
                     </Button>
+                    <DownloadBtn
+                      templateId={template._id}
+                      isFree={template.price === 0}
+                      asChild
+                    >
+                      <Button className="flex-1 bg-primary hover:bg-primary/90">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download
+                      </Button>
+                    </DownloadBtn>
                   </div>
                 </div>
               </div>
@@ -310,7 +312,7 @@ export default function PurchasedTemplatesClient({
             >
               <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
                 <Image
-                  src={anyImgUrl(template.image || "/placeholder.png", {
+                  src={anyImgUrl(template.thumbnail || "/placeholder.png", {
                     width: 200,
                     quality: 80,
                   })}
@@ -329,28 +331,37 @@ export default function PurchasedTemplatesClient({
                     variant="secondary"
                     className="bg-white/10 text-white border-white/20"
                   >
-                    {template.category.name}
+                    {template.categories?.[0]?.name}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {new Date(template.downloadedAt).toLocaleDateString()}
+                    {template.downloadedAt
+                      ? `Downloaded: ${new Date(template.downloadedAt).toLocaleDateString()}`
+                      : `Purchased: ${new Date(template.createdAt).toLocaleDateString()}`}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Link href={`/templates/${template.slug}`}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-white hover:bg-white/10"
-                  >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/10"
+                  asChild
+                >
+                  <Link href={`/templates/${template.slug}`}>
                     <Eye className="w-4 h-4 mr-2" />
                     View
-                  </Button>
-                </Link>
-                <Button size="sm" className="bg-primary hover:bg-primary/90">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
+                  </Link>
                 </Button>
+                <DownloadBtn
+                  templateId={template._id}
+                  isFree={template.price === 0}
+                  asChild
+                >
+                  <Button size="sm" className="bg-primary hover:bg-primary/90">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </DownloadBtn>
               </div>
             </div>
           ))}

@@ -44,7 +44,7 @@ export async function authenticateUser(
     if (error && typeof error === "object" && "digest" in error) {
       throw error;
     }
-    console.error(`Error while authenticating user: ${error}`);
+    // console.error(`Error while authenticating user: ${error}`);
     return null;
   }
 }
@@ -114,7 +114,7 @@ export async function getUserFromServer({
     };
     return JSON.parse(JSON.stringify(data));
   } catch (error) {
-    console.error("Server auth error:", error);
+    // console.error("Server auth error:", error);
     return null;
   }
 }

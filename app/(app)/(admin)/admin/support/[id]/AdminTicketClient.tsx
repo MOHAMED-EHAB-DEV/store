@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { sonnerToast } from "@/components/ui/sonner";
 import StatusBadge from "@/components/Support/StatusBadge";
 import PriorityBadge from "@/components/Support/PriorityBadge";
@@ -108,10 +107,17 @@ export default function AdminTicketClient({ ticketId }: AdminTicketClientProps) 
 
     const handleSendMessage = async (content: string, attachments?: File[]) => {
         try {
+            const formData = new FormData();
+            formData.append("content", content);
+            if (attachments && attachments.length > 0) {
+                attachments.forEach(file => {
+                    formData.append("attachments", file);
+                });
+            }
+
             const response = await fetch(`/api/support/tickets/${ticketId}/messages`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content, attachments })
+                body: formData
             });
 
             const data = await response.json();

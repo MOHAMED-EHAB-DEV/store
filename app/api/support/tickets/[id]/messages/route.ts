@@ -37,119 +37,129 @@ interface RouteParams {
 
 // GET - Get messages for a ticket
 async function getMessages(request: NextRequest, { params }: RouteParams) {
-    const { id } = await params;
-    await connectToDatabase();
-    const user = await authenticateUser();
+    try {
+        const { id } = await params;
+        await connectToDatabase();
+        const user = await authenticateUser();
 
-    const ticket = await Ticket.findById(id).lean();
-    if (!ticket) {
-        return createErrorResponse("Ticket not found", 404);
+        const ticket = await Ticket.findById(id).lean();
+        if (!ticket) {
+            return createErrorResponse("Ticket not found", 404);
+        }
+
+        const isOwner = ticket.user.toString() === user?._id.toString();
+        const isAdmin = user?.role === "admin";
+
+        if (!isOwner && !isAdmin) {
+            return createErrorResponse("Forbidden", 403);
+        }
+
+        const { limit, skip } = validatePagination(request);
+        const messages = await TicketMessage.findByTicket(id, limit, skip);
+
+        return createAPIResponse(messages);
+    } catch (error) {
+        console.error("Error in getMessages:", error);
+        return createErrorResponse("Internal server error", 500);
     }
-
-    const isOwner = ticket.user.toString() === user?._id.toString();
-    const isAdmin = user?.role === "admin";
-
-    if (!isOwner && !isAdmin) {
-        return createErrorResponse("Forbidden", 403);
-    }
-
-    const { limit, skip } = validatePagination(request);
-    const messages = await TicketMessage.findByTicket(id, limit, skip);
-
-    return createAPIResponse(messages);
 }
 
 // POST - Add message to ticket
 async function addMessage(request: NextRequest, { params }: RouteParams) {
-    const { id } = await params;
-    const formData = await request.formData();
-    const content = formData.get("content") as string;
-    const files = formData.getAll("attachments") as File[];
+    try {
+        const { id } = await params;
+        const formData = await request.formData();
+        const content = formData.get("content") as string;
+        const files = formData.getAll("attachments") as File[];
 
-    if (!content?.trim() && (!files || files.length === 0)) {
-        return createErrorResponse("Message content or attachments are required", 400);
-    }
+        if (!content?.trim() && (!files || files.length === 0)) {
+            return createErrorResponse("Message content or attachments are required", 400);
+        }
 
-    await connectToDatabase();
-    const user = await authenticateUser();
+        await connectToDatabase();
+        const user = await authenticateUser();
 
-    const ticket = await Ticket.findById(id);
-    if (!ticket) {
-        return createErrorResponse("Ticket not found", 404);
-    }
+        const ticket = await Ticket.findById(id);
+        if (!ticket) {
+            return createErrorResponse("Ticket not found", 404);
+        }
 
-    const isOwner = ticket.user.toString() === user?._id.toString();
-    const isAdmin = user?.role === "admin";
+        const isOwner = ticket.user.toString() === user?._id.toString();
+        const isAdmin = user?.role === "admin";
 
-    if (!isOwner && !isAdmin) {
-        return createErrorResponse("Forbidden", 403);
-    }
+        if (!isOwner && !isAdmin) {
+            return createErrorResponse("Forbidden", 403);
+        }
 
-    if (ticket.status === "closed") {
-        return createErrorResponse("Cannot add message to closed ticket", 400);
-    }
+        if (ticket.status === "closed") {
+            return createErrorResponse("Cannot add message to closed ticket", 400);
+        }
 
-    const senderType = isAdmin ? "admin" : "user";
+        const senderType = isAdmin ? "admin" : "user";
 
-    let attachmentsUrls: string[] = [];
-    if (files && files.length > 0) {
-        for (const file of files) {
-            const isImage = file.type.startsWith("image/");
-            
-            if (isImage) {
-                // Upload images to Cloudinary
-                const buffer = Buffer.from(await file.arrayBuffer());
-                const uploadResult = await uploadToCloudinary(buffer, "support_tickets", "image");
-                attachmentsUrls.push(uploadResult.secure_url);
-            } else {
-                // Upload everything else to Google Drive
-                const driveFileId = await uploadToGoogleDrive(file);
-                // Create a direct download link for the drive file
-                const driveUrl = `https://drive.google.com/uc?export=download&id=${driveFileId}`;
-                attachmentsUrls.push(driveUrl);
+        let attachmentsUrls: string[] = [];
+        if (files && files.length > 0) {
+            for (const file of files) {
+                const isImage = file.type.startsWith("image/");
+                
+                if (isImage) {
+                    // Upload images to Cloudinary
+                    const buffer = Buffer.from(await file.arrayBuffer());
+                    const uploadResult = await uploadToCloudinary(buffer, "support_tickets", "image");
+                    attachmentsUrls.push(uploadResult.secure_url);
+                } else {
+                    // Upload everything else to Google Drive
+                    const driveFileId = await uploadToGoogleDrive(file);
+                    // Create a direct download link for the drive file
+                    const driveUrl = `https://drive.google.com/uc?export=download&id=${driveFileId}`;
+                    attachmentsUrls.push(driveUrl);
+                }
             }
         }
-    }
 
-    const message = await TicketMessage.create({
-        ticketId: id,
-        sender: user?._id,
-        senderType,
-        content: content?.trim() || "",
-        attachments: attachmentsUrls,
-        isRead: false
-    });
+        const message = await TicketMessage.create({
+            ticketId: id,
+            sender: user?._id,
+            senderType,
+            content: content?.trim() || "",
+            attachments: attachmentsUrls,
+            isRead: false
+        });
 
-    const ticketUpdate: any = { lastMessageAt: new Date() };
-    if (ticket.status === "resolved" && senderType === "user") {
-        ticketUpdate.status = "open";
-    }
-    await Ticket.findByIdAndUpdate(id, ticketUpdate);
-
-    const populatedMessage = await TicketMessage.findById(message._id)
-        .populate("sender", "name avatar role")
-        .lean();
-
-
-    // Fetch active users in the ticket room
-    const activeUsers = await getActiveUsers(id);
-
-    // Send notifications
-    if (senderType === "admin") {
-        // Notify user about admin reply if not active
-        const recipientId = ticket.user.toString();
-
-        if (!activeUsers.includes(recipientId)) {
-            await notifyUserTicketReply(recipientId, id, ticket.subject);
+        const ticketUpdate: any = { lastMessageAt: new Date() };
+        if (ticket.status === "resolved" && senderType === "user") {
+            ticketUpdate.status = "open";
         }
-    } else {
-        // Notify admins about user reply, excluding active admins
-        const userName = user?.name || "Customer";
-        // Pass active users to exclude them
-        await notifyAdminsTicketReply(id, ticket.subject, userName, activeUsers);
-    }
+        await Ticket.findByIdAndUpdate(id, ticketUpdate);
 
-    return createAPIResponse(populatedMessage, { message: "Message added" });
+        const populatedMessage = await TicketMessage.findById(message._id)
+            .populate("sender", "name avatar role")
+            .lean();
+
+
+        // Fetch active users in the ticket room
+        const activeUsers = await getActiveUsers(id);
+
+        // Send notifications
+        if (senderType === "admin") {
+            // Notify user about admin reply if not active
+            const recipientId = ticket.user.toString();
+
+            if (!activeUsers.includes(recipientId)) {
+                await notifyUserTicketReply(recipientId, id, ticket.subject);
+            }
+        } else {
+            // Notify admins about user reply, excluding active admins
+            const userName = user?.name || "Customer";
+            // Pass active users to exclude them
+            await notifyAdminsTicketReply(id, ticket.subject, userName, activeUsers);
+        }
+
+        return createAPIResponse(populatedMessage, { message: "Message added" });
+    } catch (error) {
+        console.error("Error in addMessage:", error);
+        return createErrorResponse("Internal server error", 500);
+    }
 }
 
 export const GET = withAPIMiddleware(getMessages);

@@ -167,7 +167,7 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
       <Input
         label="Name"
         type="text"
-        disabled={isLoading}
+        isDisabled={isLoading}
         name="name"
         placeholder="Enter your name"
         value={name}

@@ -135,7 +135,7 @@ const ChangePassword = () => {
                         onChange={handleInputChange}
                         placeholder="Enter your current password"
                         isRequired
-                        disabled={isLoading}
+                        isDisabled={isLoading}
                         startContent={<Lock className="w-5 h-5 text-gray-400" />}
                         endContent={
                             <button
@@ -168,7 +168,7 @@ const ChangePassword = () => {
                         onChange={handleInputChange}
                         placeholder="Create a strong password"
                         isRequired
-                        disabled={isLoading}
+                        isDisabled={isLoading}
                         startContent={<Lock className="w-5 h-5 text-gray-400" />}
                         endContent={
                             <button
@@ -217,7 +217,7 @@ const ChangePassword = () => {
                         onChange={handleInputChange}
                         placeholder="Confirm your password"
                         isRequired
-                        disabled={isLoading}
+                        isDisabled={isLoading}
                         startContent={<Lock className="w-5 h-5 text-gray-400" />}
                         endContent={
                             <button

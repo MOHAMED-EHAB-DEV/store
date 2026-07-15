@@ -19,6 +19,7 @@ import {
 import { whatLoseWhenDeleteMyAccount } from "@/constants";
 import { Mail } from "@/components/ui/svgs/icons/Mail";
 import { X } from "@/components/ui/svgs/icons/X";
+import { Input } from "@/components/ui/input";
 
 const ChangePassword = () => {
     const { user } = useUser();
@@ -127,62 +128,66 @@ const ChangePassword = () => {
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                         Current Password
                     </label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                        <input
-                            type={isPasswordVisible ? "text" : "password"}
-                            name="currentPassword"
-                            value={passwordData.currentPassword}
-                            onChange={handleInputChange}
-                            className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
-                            placeholder="Enter your current password"
-                            required
-                            disabled={isLoading}
-                        />
-                        <button
-                            type="button"
-                            aria-label='Toggle password visibility'
-                            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                        >
-                            {isPasswordVisible ? (
-                                <EyeOff className="w-5 h-5" />
-                            ) : (
-                                <Eye className="w-5 h-5" />
-                            )}
-                        </button>
-                    </div>
+                    <Input
+                        type={isPasswordVisible ? "text" : "password"}
+                        name="currentPassword"
+                        value={passwordData.currentPassword}
+                        onChange={handleInputChange}
+                        placeholder="Enter your current password"
+                        isRequired
+                        disabled={isLoading}
+                        startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                        endContent={
+                            <button
+                                type="button"
+                                aria-label='Toggle password visibility'
+                                onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                {isPasswordVisible ? (
+                                    <EyeOff className="w-5 h-5" />
+                                ) : (
+                                    <Eye className="w-5 h-5" />
+                                )}
+                            </button>
+                        }
+                        classNames={{
+                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                        }}
+                    />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                         New Password
                     </label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                        <input
-                            type={isNewPasswordVisible ? "text" : "password"}
-                            name="newPassword"
-                            value={passwordData.newPassword}
-                            onChange={handleInputChange}
-                            className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
-                            placeholder="Create a strong password"
-                            required
-                            disabled={isLoading}
-                        />
-                        <button
-                            type="button"
-                            aria-label="Toggle new password visibility"
-                            onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                        >
-                            {isNewPasswordVisible ? (
-                                <EyeOff className="w-5 h-5" />
-                            ) : (
-                                <Eye className="w-5 h-5" />
-                            )}
-                        </button>
-                    </div>
+                    <Input
+                        type={isNewPasswordVisible ? "text" : "password"}
+                        name="newPassword"
+                        value={passwordData.newPassword}
+                        onChange={handleInputChange}
+                        placeholder="Create a strong password"
+                        isRequired
+                        disabled={isLoading}
+                        startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                        endContent={
+                            <button
+                                type="button"
+                                aria-label="Toggle new password visibility"
+                                onClick={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                {isNewPasswordVisible ? (
+                                    <EyeOff className="w-5 h-5" />
+                                ) : (
+                                    <Eye className="w-5 h-5" />
+                                )}
+                            </button>
+                        }
+                        classNames={{
+                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                        }}
+                    />
 
                     {passwordData.newPassword && (
                         <div className="mt-3 space-y-2">
@@ -205,31 +210,33 @@ const ChangePassword = () => {
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                         Confirm Password
                     </label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                        <input
-                            type={isConfirmPasswordVisible ? "text" : "password"}
-                            name="confirmPassword"
-                            value={passwordData.confirmPassword}
-                            onChange={handleInputChange}
-                            className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
-                            placeholder="Confirm your password"
-                            required
-                            disabled={isLoading}
-                        />
-                        <button
-                            type="button"
-                            aria-label='Toggle password visibility'
-                            onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                        >
-                            {isConfirmPasswordVisible ? (
-                                <EyeOff className="w-5 h-5" />
-                            ) : (
-                                <Eye className="w-5 h-5" />
-                            )}
-                        </button>
-                    </div>
+                    <Input
+                        type={isConfirmPasswordVisible ? "text" : "password"}
+                        name="confirmPassword"
+                        value={passwordData.confirmPassword}
+                        onChange={handleInputChange}
+                        placeholder="Confirm your password"
+                        isRequired
+                        disabled={isLoading}
+                        startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                        endContent={
+                            <button
+                                type="button"
+                                aria-label='Toggle password visibility'
+                                onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                {isConfirmPasswordVisible ? (
+                                    <EyeOff className="w-5 h-5" />
+                                ) : (
+                                    <Eye className="w-5 h-5" />
+                                )}
+                            </button>
+                        }
+                        classNames={{
+                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                        }}
+                    />
                     {passwordData.confirmPassword &&
                         passwordData.newPassword !== passwordData.confirmPassword && (
                             <p className="text-red-400 text-sm mt-2">
@@ -281,46 +288,46 @@ const ChangePassword = () => {
                             <p className="text-sm font-medium">If you are sure, confirm by using your credentials below:</p>
                             <form onSubmit={handleDeleteAccount} className="flex flex-col gap-4 justify-center">
                                 <div>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-1/2 z-20 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={deleteFormData.email}
-                                            onChange={handleDeleteInputChange}
-                                            className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent backdrop-blur-sm"
-                                            placeholder="Enter your email"
-                                            required
-                                        />
-                                    </div>
+                                    <Input
+                                        type="email"
+                                        name="email"
+                                        value={deleteFormData.email}
+                                        onChange={handleDeleteInputChange}
+                                        placeholder="Enter your email"
+                                        isRequired
+                                        startContent={<Mail className="w-5 h-5 text-gray-400" />}
+                                        classNames={{
+                                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-red-500 focus-within:border-transparent"
+                                        }}
+                                    />
                                 </div>
                                 <div>
-                                    <div className="relative">
-                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                                        <input
-                                            type="password"
-                                            name="currentPassword"
-                                            value={deleteFormData.currentPassword}
-                                            onChange={handleDeleteInputChange}
-                                            className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent backdrop-blur-sm"
-                                            placeholder="Enter your password"
-                                            required
-                                        />
-                                    </div>
+                                    <Input
+                                        type="password"
+                                        name="currentPassword"
+                                        value={deleteFormData.currentPassword}
+                                        onChange={handleDeleteInputChange}
+                                        placeholder="Enter your password"
+                                        isRequired
+                                        startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                                        classNames={{
+                                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-red-500 focus-within:border-transparent"
+                                        }}
+                                    />
                                 </div>
                                 <div>
-                                    <div className="relative">
-                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                                        <input
-                                            type="password"
-                                            name="confirmPassword"
-                                            value={deleteFormData.confirmPassword}
-                                            onChange={handleDeleteInputChange}
-                                            className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent backdrop-blur-sm"
-                                            placeholder="Confirm your password"
-                                            required
-                                        />
-                                    </div>
+                                    <Input
+                                        type="password"
+                                        name="confirmPassword"
+                                        value={deleteFormData.confirmPassword}
+                                        onChange={handleDeleteInputChange}
+                                        placeholder="Confirm your password"
+                                        isRequired
+                                        startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                                        classNames={{
+                                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-red-500 focus-within:border-transparent"
+                                        }}
+                                    />
                                     {deleteFormData.confirmPassword &&
                                         deleteFormData.currentPassword !== deleteFormData.confirmPassword && (
                                             <p className="text-red-400 text-sm mt-2">

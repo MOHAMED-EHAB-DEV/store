@@ -71,90 +71,53 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Full Name
-        </label>
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <Input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
-              formData.name
-                ? "border-green-500/50 focus:ring-green-500/50 focus:border-green-500"
-                : "border-white/10 focus:ring-gold focus:border-transparent"
-            }`}
-            placeholder="Enter your full name"
-            required
-          />
-        </div>
-      </div>
+      <Input
+        label="Full Name"
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        startContent={<User className="w-5 h-5 text-gray-400" />}
+        placeholder="Enter your full name"
+        isRequired
+      />
+
+      <Input
+        label="Email"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        startContent={<Mail className="w-5 h-5 text-gray-400" />}
+        placeholder="Enter your email"
+        isRequired
+        isInvalid={!!formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)}
+        errorMessage="Please enter a valid email address"
+      />
 
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Email
-        </label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <Input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
-              formData.email &&
-              /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-                ? "border-green-500/50 focus:ring-green-500/50 focus:border-green-500"
-                : formData.email &&
-                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-                  ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                  : "border-white/10 focus:ring-gold focus:border-transparent"
-            }`}
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Password
-        </label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <Input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
-              formData.password && formData.password.length >= 8
-                ? "border-green-500/50 focus:ring-green-500/50 focus:border-green-500"
-                : formData.password && formData.password.length < 8
-                  ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                  : "border-white/10 focus:ring-gold focus:border-transparent"
-            }`}
-            placeholder="Create a strong password"
-            required
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-            aria-label={
-              showPassword ? "Hide Current Password" : "Show Current Password"
-            }
-          >
-            {showPassword ? (
-              <EyeOff className="w-5 h-5" />
-            ) : (
-              <Eye className="w-5 h-5" />
-            )}
-          </button>
-        </div>
+        <Input
+          label="Password"
+          type={showPassword ? "text" : "password"}
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          startContent={<Lock className="w-5 h-5 text-gray-400" />}
+          endContent={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label={showPassword ? "Hide Current Password" : "Show Current Password"}
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          }
+          placeholder="Create a strong password"
+          isRequired
+          isInvalid={!!formData.password && formData.password.length < 8}
+          errorMessage="Password must be at least 8 characters"
+        />
 
         {/* Password requirements */}
         {formData.password && (
@@ -178,54 +141,31 @@ const RegisterForm = () => {
         )}
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Confirm Password
-        </label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <Input
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${
-              formData.confirmPassword &&
-              formData.password === formData.confirmPassword
-                ? "border-green-500/50 focus:ring-green-500/50 focus:border-green-500"
-                : formData.confirmPassword &&
-                    formData.password !== formData.confirmPassword
-                  ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500"
-                  : "border-white/10 focus:ring-gold focus:border-transparent"
-            }`}
-            placeholder="Confirm your password"
-            required
-          />
+      <Input
+        label="Confirm Password"
+        type={showConfirmPassword ? "text" : "password"}
+        name="confirmPassword"
+        value={formData.confirmPassword}
+        onChange={handleChange}
+        startContent={<Lock className="w-5 h-5 text-gray-400" />}
+        endContent={
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-            aria-label={
-              showConfirmPassword
-                ? "Hide Confirm Password"
-                : "Show Confirm Password"
-            }
+            className="text-gray-400 hover:text-white transition-colors"
+            aria-label={showConfirmPassword ? "Hide Confirm Password" : "Show Confirm Password"}
           >
-            {showConfirmPassword ? (
-              <EyeOff className="w-5 h-5" />
-            ) : (
-              <Eye className="w-5 h-5" />
-            )}
+            {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
-        </div>
-        {formData.confirmPassword &&
-          formData.password !== formData.confirmPassword && (
-            <p className="text-red-400 text-sm mt-2">Passwords don't match</p>
-          )}
-      </div>
+        }
+        placeholder="Confirm your password"
+        isRequired
+        isInvalid={!!formData.confirmPassword && formData.password !== formData.confirmPassword}
+        errorMessage="Passwords don't match"
+      />
 
       <label className="flex items-center" htmlFor="agree-terms">
-        <Input
+        <input
           type="checkbox"
           id="agree-terms"
           checked={agreed}

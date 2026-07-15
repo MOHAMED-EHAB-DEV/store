@@ -95,18 +95,18 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
         <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto space-y-8 text-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Title</label>
                     <Input
+                        label="Title"
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        required
+                        isRequired
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Slug (Optional)</label>
                     <Input
+                        label="Slug (Optional)"
                         name="slug"
                         value={formData.slug}
                         onChange={handleChange}
@@ -185,8 +185,8 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Tags (comma separated)</label>
                     <Input
+                        label="Tags (comma separated)"
                         name="tags"
                         value={formData.tags}
                         onChange={handleChange}

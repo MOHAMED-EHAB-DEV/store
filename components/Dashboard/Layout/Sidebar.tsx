@@ -1,4 +1,4 @@
-import React, { MouseEvent as ReactMouseEvent, useState } from 'react';
+import React, { MouseEvent as ReactMouseEvent, useState, useTransition } from 'react';
 import { X } from "@/components/ui/svgs/icons/X";
 import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
@@ -18,6 +18,8 @@ import { Home } from "@/components/ui/svgs/icons/Home";
 import { sonnerToast } from "@/components/ui/sonner";
 import { IUser } from '@/types';
 import NotificationCenter from "@/components/shared/NotificationCenter";
+import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
 
 const Sidebar = ({ open, setOpen, user }: {
     open: Boolean,
@@ -28,6 +30,8 @@ const Sidebar = ({ open, setOpen, user }: {
     const path = usePathname();
 
     const [isOpen, setIsOpen] = useState(false);
+    const [loadingLink, setLoadingLink] = useState("");
+    const [isLoading, startTransition] = useTransition();
 
     const handleLogout = async (e: ReactMouseEvent<HTMLDivElement>) => {
         try {
@@ -68,19 +72,26 @@ const Sidebar = ({ open, setOpen, user }: {
 
                 <div className="flex flex-col gap-1 md:mt-14 mt-10">
                     {DashboardSidebarLinks.map(({ Icon, text, link }, idx) => (
-                        <button
+                        <Button
                             key={idx}
-                            type="button"
                             aria-current={path === link ? "page" : undefined}
                             onClick={() => {
-                                setIsOpen(false);
-                                router.push(link);
+                                setLoadingLink(link);
+                                startTransition(() => {
+                                    router.push(link);
+                                    setIsOpen(false);
+                                });
                             }}
-                            className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center ${path === link ? "bg-white/10" : "hover:bg-white/10"}`}
+                            loading={isLoading && loadingLink === link}
+                            className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center justify-start ${path === link ? "bg-white/10" : "hover:bg-white/10 bg-transparent"}`}
                         >
-                            <Icon className="w-5 h-5 text-white" />
+                            {isLoading && loadingLink === link ? (
+                                <Spinner />
+                            ) : (
+                                <Icon className="w-5 h-5 text-white" />
+                            )}
                             <span className={`text-white text-sm ${path === link ? "font-bold" : ""}`}>{text}</span>
-                        </button>
+                        </Button>
                     ))}
                 </div>
             </div>

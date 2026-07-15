@@ -152,14 +152,14 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
                 {/* Title */}
                 <div>
-                    <label className="block text-sm text-muted-foreground mb-1">Title *</label>
                     <Input
+                        label="Title"
                         type="text"
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
                         placeholder="Enter template title..."
-                        required
+                        isRequired
                     />
                 </div>
 
@@ -179,8 +179,8 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 {/* Demo Link & Price */}
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Demo Link</label>
                         <Input
+                            label="Demo Link"
                             type="url"
                             name="demoLink"
                             value={formData.demoLink}
@@ -189,8 +189,8 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Price (USD)</label>
                         <Input
+                            label="Price (USD)"
                             type="number"
                             name="price"
                             value={formData.price}
@@ -244,8 +244,8 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Tags (comma-separated)</label>
                         <Input
+                            label="Tags (comma-separated)"
                             type="text"
                             name="tags"
                             value={formData.tags}

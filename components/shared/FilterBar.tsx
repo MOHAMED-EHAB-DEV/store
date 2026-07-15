@@ -220,29 +220,31 @@ const FilterBar = ({
                 </button>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex-1 flex flex-col gap-1">
-                  <label className="text-xs text-white/50 uppercase tracking-wider">
-                    Min
-                  </label>
+                <div className="flex-1">
                   <Input
+                    label="Min"
                     type="number"
                     value={minPrice || ""}
                     onChange={(e) => handlePriceChange("min", e.target.value)}
                     placeholder="0"
-                    className="bg-white/5 border-white/10 text-white focus-visible:ring-blue-500"
+                    classNames={{
+                      label: "text-xs text-white/50 uppercase tracking-wider",
+                      inputWrapper: "bg-white/5 border-white/10 text-white focus-within:ring-blue-500"
+                    }}
                   />
                 </div>
                 <span className="text-white/30 pt-4">-</span>
-                <div className="flex-1 flex flex-col gap-1">
-                  <label className="text-xs text-white/50 uppercase tracking-wider">
-                    Max
-                  </label>
+                <div className="flex-1">
                   <Input
+                    label="Max"
                     type="number"
                     value={maxPrice || ""}
                     onChange={(e) => handlePriceChange("max", e.target.value)}
                     placeholder="Any"
-                    className="bg-white/5 border-white/10 text-white focus-visible:ring-blue-500"
+                    classNames={{
+                      label: "text-xs text-white/50 uppercase tracking-wider",
+                      inputWrapper: "bg-white/5 border-white/10 text-white focus-within:ring-blue-500"
+                    }}
                   />
                 </div>
               </div>

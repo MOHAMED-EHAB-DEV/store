@@ -13,6 +13,7 @@ import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
 import { Lock } from "@/components/ui/svgs/icons/Lock";
 import { Mail } from "@/components/ui/svgs/icons/Mail";
 import { X } from "@/components/ui/svgs/icons/X";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
@@ -106,71 +107,81 @@ const Settings = ({ userId }: { userId: string }) => {
               className="flex flex-col gap-2 justify-center"
             >
               <div>
-                <div className="relative w-4/5">
-                  <Mail className="absolute left-3 top-1/2 z-20 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                <div className="w-4/5">
+                  <Input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
                     placeholder="Enter your email"
-                    required
+                    isRequired
+                    startContent={<Mail className="w-5 h-5 text-gray-400" />}
+                    classNames={{
+                        inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                    }}
                   />
                 </div>
               </div>
               <div>
-                <div className="relative w-4/5">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                  <input
+                <div className="w-4/5">
+                  <Input
                     type={isPasswordVisible ? "text" : "password"}
                     name="currentPassword"
                     value={formData.currentPassword}
                     onChange={handleInputChange}
-                    className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
                     placeholder="Enter your current password"
-                    required
+                    isRequired
+                    startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                    endContent={
+                      <button
+                        type="button"
+                        aria-label="Toggle password visibility"
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                        className="text-gray-400 hover:text-white transition-colors"
+                      >
+                        {isPasswordVisible ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
+                    }
+                    classNames={{
+                        inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                    }}
                   />
-                  <button
-                    type="button"
-                    aria-label="Toggle password visibility"
-                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                  >
-                    {isPasswordVisible ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
                 </div>
               </div>
               <div>
-                <div className="relative w-4/5">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-                  <input
+                <div className="w-4/5">
+                  <Input
                     type={isConfirmPasswordVisible ? "text" : "password"}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
                     placeholder="Confirm your password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    aria-label="Toggle confirm password visibility"
-                    onClick={() =>
-                      setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                    isRequired
+                    startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                    endContent={
+                      <button
+                        type="button"
+                        aria-label="Toggle confirm password visibility"
+                        onClick={() =>
+                          setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                        }
+                        className="text-gray-400 hover:text-white transition-colors"
+                      >
+                        {isConfirmPasswordVisible ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
                     }
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                  >
-                    {isConfirmPasswordVisible ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
+                    classNames={{
+                        inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                    }}
+                  />
                 </div>
                 {formData.confirmPassword &&
                   formData.currentPassword !== formData.confirmPassword && (

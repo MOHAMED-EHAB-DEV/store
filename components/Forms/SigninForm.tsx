@@ -93,53 +93,31 @@ const SigninForm = ({ queryMessage, queryURL }: { queryMessage: String, queryURL
                     {message.content}
                 </div>
             )}
-            <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Email
-                </label>
-                <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={`w-full pl-12 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-                            ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500'
-                            : formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-                                ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
-                                : 'border-white/10 focus:ring-gold focus:border-transparent'
-                            }`}
-                        placeholder="Enter your email"
-                        required
-                    />
-                </div>
-            </div>
+            <Input
+                label="Email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                startContent={<Mail className="w-5 h-5 text-gray-400" />}
+                placeholder="Enter your email"
+                isRequired
+                isInvalid={!!formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)}
+                errorMessage="Please enter a valid email address"
+            />
 
-            <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Password
-                </label>
-                <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className={`w-full pl-12 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 backdrop-blur-sm transition-all duration-200 ${formData.password && formData.password.length >= 6
-                            ? 'border-green-500/50 focus:ring-green-500/50 focus:border-green-500'
-                            : formData.password && formData.password.length < 6
-                                ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500'
-                                : 'border-white/10 focus:ring-gold focus:border-transparent'
-                            }`}
-                        placeholder="Enter your password"
-                        required
-                    />
+            <Input
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                startContent={<Lock className="w-5 h-5 text-gray-400" />}
+                endContent={
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                        className="text-gray-400 hover:text-white transition-colors"
                         aria-label={showPassword ? "Hide Current Password" : "Show Current Password"}
                     >
                         {showPassword ? (
@@ -148,8 +126,12 @@ const SigninForm = ({ queryMessage, queryURL }: { queryMessage: String, queryURL
                             <Eye className="w-5 h-5" />
                         )}
                     </button>
-                </div>
-            </div>
+                }
+                placeholder="Enter your password"
+                isRequired
+                isInvalid={!!formData.password && formData.password.length < 6}
+                errorMessage="Password must be at least 6 characters"
+            />
 
             <button
                 type="submit"

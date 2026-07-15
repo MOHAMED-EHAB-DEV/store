@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sonnerToast } from "@/components/ui/sonner";
 import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Preferences() {
     const [isLoading, setIsLoading] = useState(false);
@@ -57,13 +58,11 @@ export default function Preferences() {
                             Receive notifications about your account activity
                         </p>
                     </div>
-                    <input
-                        type="checkbox"
+                    <Checkbox
                         checked={preferences.emailNotifications}
-                        onChange={(e) =>
-                            setPreferences({ ...preferences, emailNotifications: e.target.checked })
+                        onCheckedChange={(checked) =>
+                            setPreferences({ ...preferences, emailNotifications: !!checked })
                         }
-                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-primary focus:ring-2 focus:ring-primary cursor-pointer"
                     />
                 </label>
 
@@ -74,13 +73,11 @@ export default function Preferences() {
                             Receive updates about new templates and features
                         </p>
                     </div>
-                    <input
-                        type="checkbox"
+                    <Checkbox
                         checked={preferences.marketingEmails}
-                        onChange={(e) =>
-                            setPreferences({ ...preferences, marketingEmails: e.target.checked })
+                        onCheckedChange={(checked) =>
+                            setPreferences({ ...preferences, marketingEmails: !!checked })
                         }
-                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-primary focus:ring-2 focus:ring-primary cursor-pointer"
                     />
                 </label>
 
@@ -91,13 +88,11 @@ export default function Preferences() {
                             Get a weekly summary of your activity
                         </p>
                     </div>
-                    <input
-                        type="checkbox"
+                    <Checkbox
                         checked={preferences.weeklyDigest}
-                        onChange={(e) =>
-                            setPreferences({ ...preferences, weeklyDigest: e.target.checked })
+                        onCheckedChange={(checked) =>
+                            setPreferences({ ...preferences, weeklyDigest: !!checked })
                         }
-                        className="w-5 h-5 rounded border-white/20 bg-white/5 text-primary focus:ring-2 focus:ring-primary cursor-pointer"
                     />
                 </label>
             </div>

@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
 import { CATEGORY_ICONS } from "@/components/ui/svgs/CategoriesIcons";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface CategoryFormProps {
     initialData?: any;
@@ -91,16 +94,18 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
 
                 {/* Name */}
                 <div>
-                    <label className="block text-sm text-muted-foreground mb-1">Name *</label>
-                    <input
+                    <Input
+                        label="Name"
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                         onBlur={() => !formData.slug && generateSlug()}
                         placeholder="Enter category name..."
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                        required
+                        isRequired
+                        classNames={{
+                            inputWrapper: "bg-white/5 border border-white/10 rounded-lg focus-within:ring-2 focus-within:ring-primary"
+                        }}
                     />
                 </div>
 
@@ -108,18 +113,20 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
                 <div>
                     <label className="block text-sm text-muted-foreground mb-1">Slug</label>
                     <div className="flex gap-2">
-                        <input
+                        <Input
                             type="text"
                             name="slug"
                             value={formData.slug}
                             onChange={handleChange}
                             placeholder="category-slug"
-                            className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                            classNames={{
+                                inputWrapper: "flex-1 bg-white/5 border border-white/10 rounded-lg focus-within:ring-2 focus-within:ring-primary"
+                            }}
                         />
                         <button
                             type="button"
                             onClick={generateSlug}
-                            className="px-4 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
+                            className="px-4 py-2 h-12 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
                         >
                             Generate
                         </button>
@@ -128,14 +135,16 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
 
                 {/* Description */}
                 <div>
-                    <label className="block text-sm text-muted-foreground mb-1">Description</label>
-                    <textarea
+                    <Textarea
+                        label="Description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                         placeholder="Enter category description..."
                         rows={3}
-                        className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-y"
+                        classNames={{
+                            inputWrapper: "bg-white/5 border border-white/10 rounded-lg focus-within:ring-2 focus-within:ring-primary"
+                        }}
                     />
                 </div>
 
@@ -156,29 +165,28 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Sort Order</label>
-                        <input
+                        <Input
+                            label="Sort Order"
                             type="number"
                             name="sortOrder"
                             value={formData.sortOrder}
                             onChange={handleChange}
                             min={0}
-                            className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                            classNames={{
+                                inputWrapper: "bg-white/5 border border-white/10 rounded-lg focus-within:ring-2 focus-within:ring-primary"
+                            }}
                         />
                     </div>
                 </div>
 
                 {/* Active Toggle */}
-                <div className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        name="isActive"
+                <div className="flex items-center gap-2 pt-4">
+                    <Checkbox
                         id="isActive"
                         checked={formData.isActive}
-                        onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-                        className="w-4 h-4"
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: !!checked }))}
                     />
-                    <label htmlFor="isActive" className="text-sm text-muted-foreground">
+                    <label htmlFor="isActive" className="text-sm text-muted-foreground cursor-pointer">
                         Active (visible in navigation)
                     </label>
                 </div>

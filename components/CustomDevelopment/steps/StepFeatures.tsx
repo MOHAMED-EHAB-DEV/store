@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { SelectableCard } from "@/components/ui/selectable-card";
+import { Input } from "@/components/ui/input";
 
 interface StepFeaturesProps {
   features: string[];
@@ -103,12 +104,15 @@ const StepFeatures = ({ features, setFeatures }: StepFeaturesProps) => {
           
           {isOtherActive && (
             <div className="w-full animate-in fade-in slide-in-from-top-2 duration-300">
-              <input
+              <Input
                 type="text"
                 placeholder="Describe your custom feature..."
                 value={otherText}
                 onChange={handleOtherTextChange}
-                className="w-full p-4 rounded-xl border border-white/20 bg-black/40 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all placeholder:text-gray-600"
+                classNames={{
+                  inputWrapper: "rounded-xl border border-white/20 bg-black/40 focus-within:ring-2 focus-within:ring-purple-500/50 focus-within:border-purple-500 transition-all",
+                  input: "placeholder:text-gray-600"
+                }}
               />
             </div>
           )}

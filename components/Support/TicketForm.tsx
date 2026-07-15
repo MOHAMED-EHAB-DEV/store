@@ -85,19 +85,18 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Subject */}
-      <div>
-        <label className="block text-sm font-medium text-white mb-2">
-          Subject <span className="text-red-400">*</span>
-        </label>
-        <Input
-          type="text"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          placeholder="Brief summary of your issue"
-          className="w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/50 focus-visible:border-transparent"
-          maxLength={200}
-        />
-      </div>
+      <Input
+        label="Subject"
+        type="text"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
+        placeholder="Brief summary of your issue"
+        maxLength={200}
+        isRequired
+        classNames={{
+          inputWrapper: "rounded-xl border border-white/10 bg-white/5 focus-within:ring-purple-500/50 focus-within:border-transparent"
+        }}
+      />
 
       {/* Category & Priority */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

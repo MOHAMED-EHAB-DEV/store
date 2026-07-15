@@ -1,4 +1,5 @@
 import React from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface StepSituationProps {
   situation: string;
@@ -14,11 +15,16 @@ const StepSituation = ({ situation, setSituation }: StepSituationProps) => {
       </p>
 
       <div className="relative flex-1 min-h-[200px]">
-        <textarea
+        <Textarea
           value={situation}
           onChange={(e) => setSituation(e.target.value)}
           placeholder="e.g., We are a growing SaaS company needing a new marketing site that converts better and loads faster..."
-          className="w-full h-full min-h-[200px] p-6 rounded-2xl bg-black/40 border border-white/10 text-white resize-none focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all text-base md:text-lg leading-relaxed placeholder:text-gray-600"
+          classNames={{
+            base: "h-full",
+            inputWrapper: "h-full min-h-[200px] p-0 rounded-2xl border-white/10 bg-black/40 focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/50",
+            input: "p-6 text-base md:text-lg leading-relaxed placeholder:text-gray-600 resize-none h-full"
+          }}
+          rows={10}
         />
         <div className="absolute bottom-4 right-4 text-xs text-gray-500 font-medium">
           {situation.length} characters

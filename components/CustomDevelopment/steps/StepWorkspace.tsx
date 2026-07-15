@@ -11,6 +11,7 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { Shield } from "@/components/ui/svgs/icons/Shield";
 import { FileText } from "@/components/ui/svgs/icons/FileText";
 import { Activity } from "@/components/ui/svgs/icons/Activity";
+import { Input } from "@/components/ui/input";
 
 interface StepWorkspaceProps {
   onSubmitComplete: () => void;
@@ -30,16 +31,30 @@ const StepWorkspace = ({
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setErrors({ ...errors, [e.target.name]: "" });
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!isLogin && !formData.name) newErrors.name = "Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
+    if (!formData.password) newErrors.password = "Password is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
+    
     setLoadingAuth(true);
 
     try {
@@ -137,62 +152,55 @@ const StepWorkspace = ({
         ) : (
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your name"
-                    required
-                    className="w-full pl-12 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all"
-                  />
-                </div>
-              </div>
+              <Input
+                label="Full Name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                isRequired
+                isInvalid={!!errors.name}
+                errorMessage={errors.name}
+                startContent={<UserIcon className="w-5 h-5 text-gray-400" />}
+                classNames={{
+                  inputWrapper: "bg-black/40 border-white/10 rounded-xl focus-within:border-purple-500 focus-within:ring-1 focus-within:ring-purple-500 transition-all"
+                }}
+              />
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  required
-                  className="w-full pl-12 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all"
-                />
-              </div>
-            </div>
+            <Input
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              isRequired
+              isInvalid={!!errors.email}
+              errorMessage={errors.email}
+              startContent={<Mail className="w-5 h-5 text-gray-400" />}
+              classNames={{
+                inputWrapper: "bg-black/40 border-white/10 rounded-xl focus-within:border-purple-500 focus-within:ring-1 focus-within:ring-purple-500 transition-all"
+              }}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Create a secure password"
-                  required
-                  className="w-full pl-12 pr-12 py-3 bg-black/40 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all"
-                />
+            <Input
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Create a secure password"
+              isRequired
+              isInvalid={!!errors.password}
+              errorMessage={errors.password}
+              startContent={<Lock className="w-5 h-5 text-gray-400" />}
+              endContent={
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -200,8 +208,11 @@ const StepWorkspace = ({
                     <Eye className="w-5 h-5" />
                   )}
                 </button>
-              </div>
-            </div>
+              }
+              classNames={{
+                inputWrapper: "bg-black/40 border-white/10 rounded-xl focus-within:border-purple-500 focus-within:ring-1 focus-within:ring-purple-500 transition-all"
+              }}
+            />
 
             <button
               type="submit"

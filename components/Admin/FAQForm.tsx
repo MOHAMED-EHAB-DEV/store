@@ -107,14 +107,14 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
         <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto space-y-8 text-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Question *</label>
                     <Input
+                        label="Question"
                         type="text"
                         name="question"
                         value={formData.question}
                         onChange={handleChange}
                         placeholder="Enter the question..."
-                        required
+                        isRequired
                     />
                 </div>
 
@@ -153,8 +153,8 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Display Order</label>
                     <Input
+                        label="Display Order"
                         type="number"
                         name="order"
                         value={formData.order}

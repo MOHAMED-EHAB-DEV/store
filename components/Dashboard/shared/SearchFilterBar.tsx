@@ -57,14 +57,21 @@ function SearchFilterBar({
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search Input */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className="flex-1">
           <Input
             type="text"
             placeholder={searchPlaceholder}
             value={searchValue}
             onChange={handleSearchChange}
-            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-muted-foreground"
+            startContent={<Search className="w-4 h-4 text-muted-foreground" />}
+            isClearable
+            onClear={() => {
+              setSearchValue("");
+              onSearchChange("");
+            }}
+            classNames={{
+              inputWrapper: "bg-white/5 border-white/10 text-white"
+            }}
           />
         </div>
 

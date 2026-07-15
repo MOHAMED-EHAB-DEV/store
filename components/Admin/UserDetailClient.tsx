@@ -183,13 +183,15 @@ export default function UserDetailClient({ user }: UserDetailClientProps) {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Name</label>
                         <Input
+                            label="Name"
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="bg-white/5 border-white/10 text-white"
+                            classNames={{
+                                inputWrapper: "bg-white/5 border-white/10 text-white"
+                            }}
                         />
                     </div>
                     <div>

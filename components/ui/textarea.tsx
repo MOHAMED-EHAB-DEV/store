@@ -148,7 +148,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             id={inputId}
             disabled={isDisabled}
             readOnly={isReadOnly}
-            required={isRequired}
             aria-invalid={isError}
             aria-required={isRequired}
             aria-describedby={getAriaDescribedBy()}

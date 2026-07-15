@@ -9,6 +9,7 @@ import { isBase64Image } from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import { useRouter } from "next/navigation";
 import { User } from "@/components/ui/svgs/icons/User";
+import { Input } from "@/components/ui/input";
 import {
   Dropzone,
   DropzoneContent,
@@ -163,23 +164,19 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-2 justify-center">
-        <label className="text-gray-300 font-medium text-sm" htmlFor="name">
-          Name
-        </label>
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-20" />
-          <input
-            type="text"
-            disabled={isLoading}
-            className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
-            name="name"
-            placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value! as string)}
-          />
-        </div>
-      </div>
+      <Input
+        label="Name"
+        type="text"
+        disabled={isLoading}
+        name="name"
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value! as string)}
+        startContent={<User className="w-5 h-5 text-gray-400" />}
+        classNames={{
+            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+        }}
+      />
 
       <button
         disabled={isLoading}

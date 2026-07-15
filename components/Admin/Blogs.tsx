@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search } from "@/components/ui/svgs/icons/Search";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
@@ -60,15 +61,19 @@ const Blogs = ({ initialData }: { initialData: any[] }) => {
     return (
         <div className="w-full">
             <div className="flex gap-6 justify-between items-center mb-6">
-                <div className="relative w-full flex-1">
-                    <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
+                <div className="w-full flex-1">
+                    <Input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
                         placeholder="Search..."
-                        required
+                        isRequired
+                        startContent={<Search className="w-4 h-4 text-gray-400" />}
+                        isClearable
+                        onClear={() => setSearchQuery("")}
+                        classNames={{
+                            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+                        }}
                     />
                 </div>
                 <Link href="/admin/blogs/new" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition font-medium">

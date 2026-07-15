@@ -13,6 +13,7 @@ import FilterBar from "@/components/shared/FilterBar";
 import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { Search } from "@/components/ui/svgs/icons/Search";
+import { Input } from "@/components/ui/input";
 import { ICategory, ITemplate } from "@/types";
 
 const Templates = ({
@@ -132,20 +133,22 @@ const Templates = ({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="relative w-full flex-1">
-        <Search className="absolute left-4 z-20 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-        <input
+      <div className="w-full flex-1">
+        <Input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent backdrop-blur-sm"
           placeholder="Search..."
+          startContent={<Search className="w-4 h-4 text-gray-400" />}
+          endContent={
+            isPending ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gold" />
+            ) : undefined
+          }
+          classNames={{
+            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+          }}
         />
-        {isPending && (
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gold" />
-          </div>
-        )}
       </div>
 
       <div className="flex flex-col gap-6">

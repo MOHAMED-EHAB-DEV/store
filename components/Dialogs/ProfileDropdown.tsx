@@ -37,7 +37,7 @@ const ProfileDropdown = ({
       const response = await fetch("/api/user/logout");
       const data = await response.json();
       if (!data.success) throw new Error(data.message);
-      sonnerToast.success("Successfully LoggedOut");
+      sonnerToast.success("Successfully Logged Out");
       setTimeout(() => {
         window.location.href = `/`;
       }, 100);

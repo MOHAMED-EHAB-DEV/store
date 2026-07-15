@@ -156,13 +156,13 @@ ${budget}`;
             <span className="text-purple-400 font-medium tracking-wider text-sm uppercase">Application</span>
             <span className="text-gray-400 font-medium text-sm">Step {step} of {TOTAL_STEPS}</span>
           </div>
-          <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div className="w-full h-1 bg-white/10 rounded-full">
             <div className="progress-bar-fill h-full bg-gradient-to-r from-purple-500 to-pink-500 w-0" />
           </div>
         </div>
 
         {/* Steps Container */}
-        <div ref={stepsWrapRef} className="relative flex-1 grid grid-cols-1 grid-rows-1 overflow-hidden min-h-[500px]">
+        <div ref={stepsWrapRef} className="relative flex-1 grid grid-cols-1 grid-rows-1  min-h-[500px]">
           {/* STEP 1 */}
           <div
             ref={stepRefs[0]}

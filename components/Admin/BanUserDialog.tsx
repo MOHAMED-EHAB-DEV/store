@@ -156,16 +156,16 @@ export default function BanUserDialog({
 
                     {/* Custom Reason (if Other) */}
                     {isOtherReason && (
-                        <div>
-                            <label className="block text-white font-medium mb-2">
-                                Custom Reason
-                            </label>
+                        <div className="w-full">
                             <Input
+                                label="Custom Reason"
                                 type="text"
                                 placeholder="Enter custom ban reason..."
                                 value={formData.reason}
                                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                                className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus-visible:ring-red-500"
+                                classNames={{
+                                    inputWrapper: "bg-white/10 border-white/20 focus-within:border-red-500 focus-within:ring-red-500/20"
+                                }}
                             />
                         </div>
                     )}
@@ -201,16 +201,20 @@ export default function BanUserDialog({
                         {/* Expiration Date */}
                         {formData.isTemporary && (
                             <div className="mt-4">
-                                <label className="text-white font-medium mb-2 flex items-center gap-2">
-                                    <Calendar className="w-4 h-4 text-purple-400" />
-                                    Expiration Date
-                                </label>
                                 <Input
+                                    label={
+                                        <div className="flex items-center gap-2">
+                                            <Calendar className="w-4 h-4 text-purple-400" />
+                                            Expiration Date
+                                        </div>
+                                    }
                                     type="datetime-local"
                                     value={formData.expiresAt}
                                     onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
                                     min={new Date().toISOString().slice(0, 16)}
-                                    className="bg-white/10 border-white/20 text-white focus-visible:ring-purple-500"
+                                    classNames={{
+                                        inputWrapper: "bg-white/10 border-white/20 focus-within:border-purple-500 focus-within:ring-purple-500/20"
+                                    }}
                                 />
                             </div>
                         )}

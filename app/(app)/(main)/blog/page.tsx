@@ -8,10 +8,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
 import { buildMetadata } from "@/lib/seo";
-import Blog from "@/lib/models/Blog";
-import { connectToDatabase } from "@/lib/database";
 
-export const revalidate = 604800; // 7 days
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 interface BlogPost {
   _id: string;
@@ -38,10 +36,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const getData = async () => {
   try {
-    await connectToDatabase();
-    const blogs = await Blog.find({ isPublished: true }).sort({ createdAt: -1 }).lean();
-    return JSON.parse(JSON.stringify(blogs)) as BlogPost[];
+    const response = await fetch(`${APP_URL}/api/blogs`,{
+      method: 'GET',
+      next: { revalidate: 60 * 60 * 24 * 7, tags: ["blogs"] }
+    })
+
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.success ? (data.data as BlogPost[]) : [];
   } catch (error) {
+    // if (error && typeof error === 'object' && 'digest' in error) throw error;
+    // console.error("Failed to fetch public blogs:", error);
     return [];
   }
 };

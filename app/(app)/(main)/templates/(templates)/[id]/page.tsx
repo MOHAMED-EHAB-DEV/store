@@ -4,12 +4,8 @@ import { ICategory, ITemplate } from "@/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MarkdownCopyHandler from "@/components/Markdown/MarkdownCopyHandler";
-import TemplateModel from "@/lib/models/Template";
-import { connectToDatabase } from "@/lib/database";
-import mongoose from "mongoose";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-export const revalidate = 604800; // 1 week
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -17,20 +13,23 @@ interface PageProps {
 
 const getTemplate = async (id: string) => {
   try {
-    await connectToDatabase();
-    const query = mongoose.isValidObjectId(id)
-      ? { $or: [{ _id: id }, { slug: id }], isActive: true }
-      : { slug: id, isActive: true };
+    const response = await fetch(`${APP_URL}/api/template/${id}`, {
+      next: {
+        revalidate: 60 * 60 * 24 * 7, // 1 week
+        tags: ["everyTemplate", `template-${id}`],
+      },
+    });
 
-    const template = await TemplateModel.findOne(query)
-      .select("+content +reviewCount")
-      .populate("categories", "_id name slug")
-      .lean();
+    if (!response.ok)
+      throw new Error(`Failed to fetch template: ${response.status}`);
 
-    return template
-      ? { data: JSON.parse(JSON.stringify(template)) as ITemplate, err: null }
-      : { err: "No Template Found", data: null };
+    const data = await response.json();
+
+    return data.success
+      ? { data: data.data as ITemplate, err: null }
+      : { err: data.message || "No Template Found", data: null };
   } catch (err: any) {
+    if (err && typeof err === "object" && "digest" in err) throw err;
     return {
       err: `Error fetching template with id ${id}: ${err.message || err}`,
       data: null,
@@ -44,74 +43,33 @@ const getSimilarTemplates = async (
   excludeId: string,
 ) => {
   try {
-    await connectToDatabase();
-    const parsedCategoryIds = categoryIds.map((c: any) => c._id || c);
-    
-    const matchConditions: any = {
-      isActive: true,
-      $or: [],
-    };
+    const queryParams = new URLSearchParams({
+      categories: categoryIds.join(","),
+      tags: tags.join(","),
+      excludeId,
+      limit: "3",
+    });
 
-    if (mongoose.isValidObjectId(excludeId)) {
-      matchConditions._id = { $ne: new mongoose.Types.ObjectId(excludeId) };
-    } else {
-      matchConditions._id = { $ne: excludeId };
-    }
-
-    if (parsedCategoryIds.length > 0) {
-      matchConditions.$or.push({ categories: { $in: parsedCategoryIds } });
-    }
-    if (tags.length > 0) {
-      matchConditions.$or.push({ tags: { $in: tags } });
-    }
-
-    if (matchConditions.$or.length === 0) {
-      return { data: [], error: null };
-    }
-
-    const pipeline: any[] = [
-      { $match: matchConditions },
-      { $sort: { createdAt: -1 } },
-      { $limit: 3 },
+    const response = await fetch(
+      `${APP_URL}/api/templates?${queryParams.toString()}`,
       {
-        $lookup: {
-          from: "reviews",
-          localField: "_id",
-          foreignField: "template",
-          as: "reviews",
+        next: {
+          revalidate: 60 * 60 * 24 * 7, // 1 week
         },
       },
-      {
-        $addFields: {
-          reviews: { $size: "$reviews" },
-        },
-      },
-      { $unwind: { path: "$author", preserveNullAndEmptyArrays: true } },
-      {
-        $project: {
-          title: 1,
-          slug: 1,
-          description: 1,
-          thumbnail: 1,
-          demoLink: 1,
-          demoVideo: 1,
-          price: 1,
-          downloads: 1,
-          views: 1,
-          averageRating: 1,
-          reviews: 1,
-          author: 1,
-          categories: 1,
-          tags: 1,
-          createdAt: 1,
-        },
-      },
-    ];
+    );
 
-    const templates = await TemplateModel.aggregate(pipeline).allowDiskUse(true);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch similar templates: ${response.status}`);
+    }
 
-    return { data: JSON.parse(JSON.stringify(templates)) as ITemplate[], error: null };
+    const data = await response.json();
+
+    return data.success
+      ? { data: data.data as ITemplate[], error: null }
+      : { error: data.message || "No similar templates found", data: null };
   } catch (err: any) {
+    if (err && typeof err === "object" && "digest" in err) throw err;
     return {
       error: `Error fetching similar templates: ${err.message || err}`,
       data: null,
@@ -132,17 +90,18 @@ export async function generateMetadata({
   }
 
   const url = `${APP_URL}/templates/${id}`;
-  const truncatedDesc = truncateDescription(template.description || `Premium template - ${template.title}`, 160);
+  const truncatedDesc = truncateDescription(
+    template.description || `Premium template - ${template.title}`,
+    160,
+  );
   const imageUrl = template.thumbnail || `${APP_URL}/screenshots/1.png`;
 
   return {
     title: `${template.title} | MHD Store Premium Templates`,
     description: `Premium template - ${template.title}`,
-    keywords: [
-      ...(template.tags || []),
-      "template",
-      "web template",
-    ].filter(Boolean),
+    keywords: [...(template.tags || []), "template", "web template"].filter(
+      Boolean,
+    ),
     alternates: {
       canonical: url,
     },

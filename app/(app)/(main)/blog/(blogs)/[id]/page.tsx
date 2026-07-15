@@ -13,11 +13,8 @@ import { truncateDescription } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { anyImgUrl } from "@/lib/utils/image";
 import ViewTracker from "@/components/Blog/ViewTracker";
-import Blog from "@/lib/models/Blog";
-import { connectToDatabase } from "@/lib/database";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-export const revalidate = 604800; // 7 days
 
 interface BlogPost {
   _id: string;
@@ -40,27 +37,33 @@ interface PageProps {
 
 const getData = async (idOrSlug: string) => {
   try {
-    await connectToDatabase();
-    let query = { slug: idOrSlug, isPublished: true };
-    if (idOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
-      query = { _id: idOrSlug, isPublished: true } as any;
-    }
-    const blog = await Blog.findOne(query).populate("author", "name avatar").lean();
-    return blog ? JSON.parse(JSON.stringify(blog)) : null;
+    const res = await fetch(`${APP_URL}/api/blogs/${idOrSlug}`, {
+      method: "GET",
+      next: { revalidate: 60 * 60 * 24 * 7, tags: [`blog-${idOrSlug}`] },
+    });
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    return data.success ? data.data : null;
   } catch (error) {
+    if (error && typeof error === "object" && "digest" in error) throw error;
+    console.error("Failed to fetch blog post:", error);
     return null;
   }
 };
 
 const getRecentPosts = async (): Promise<BlogPost[]> => {
   try {
-    await connectToDatabase();
-    const blogs = await Blog.find({ isPublished: true })
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .lean();
-    return JSON.parse(JSON.stringify(blogs));
+    const response = await fetch(`${APP_URL}/api/blogs?limit=5`, {
+      next: { revalidate: 60 * 60 * 24 * 7 },
+    });
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    return data.success ? (data.data as BlogPost[]) : [];
   } catch (error) {
+    if (error && typeof error === "object" && "digest" in error) throw error;
     return [];
   }
 };

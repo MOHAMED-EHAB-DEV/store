@@ -49,14 +49,16 @@ export default function TemplateThumbnail({
   }, [highResUrl]);
 
   return (
-    <div 
+    <div
       className="relative w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl overflow-hidden shadow-lg"
       onMouseEnter={() => {
         if (demoVideo) {
           setIsHovering(true);
           if (videoRef.current) {
             videoRef.current.currentTime = 0;
-            videoRef.current.play().catch(e => console.log('Video play error:', e));
+            videoRef.current
+              .play()
+              .catch((e) => console.log("Video play error:", e));
           }
         }
       }}
@@ -81,7 +83,7 @@ export default function TemplateThumbnail({
         sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
         className="w-full h-auto rounded-xl block"
         priority
-        fetchPriority="high"
+        preload={true}
         placeholder="blur"
         blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
       />
@@ -126,7 +128,11 @@ export default function TemplateThumbnail({
           <meta itemProp="name" content={`${title} demo video`} />
           <meta itemProp="description" content={description || title} />
           <meta itemProp="thumbnailUrl" content={highResUrl} />
-          <meta itemProp="uploadDate" content={new Date().toISOString()} suppressHydrationWarning />
+          <meta
+            itemProp="uploadDate"
+            content={new Date().toISOString()}
+            suppressHydrationWarning
+          />
         </video>
       )}
     </div>

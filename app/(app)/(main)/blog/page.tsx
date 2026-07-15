@@ -72,6 +72,7 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
             unoptimized
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             priority={featured}
+            preload={featured}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">

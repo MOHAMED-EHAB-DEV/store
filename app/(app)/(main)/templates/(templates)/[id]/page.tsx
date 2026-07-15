@@ -31,7 +31,6 @@ const getTemplate = async (id: string) => {
       ? { data: JSON.parse(JSON.stringify(template)) as ITemplate, err: null }
       : { err: "No Template Found", data: null };
   } catch (err: any) {
-    if (err && typeof err === "object" && "digest" in err) throw err;
     return {
       err: `Error fetching template with id ${id}: ${err.message || err}`,
       data: null,
@@ -113,7 +112,6 @@ const getSimilarTemplates = async (
 
     return { data: JSON.parse(JSON.stringify(templates)) as ITemplate[], error: null };
   } catch (err: any) {
-    if (err && typeof err === "object" && "digest" in err) throw err;
     return {
       error: `Error fetching similar templates: ${err.message || err}`,
       data: null,

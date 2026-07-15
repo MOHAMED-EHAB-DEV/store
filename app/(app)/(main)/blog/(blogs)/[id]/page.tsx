@@ -48,8 +48,6 @@ const getData = async (idOrSlug: string) => {
     const blog = await Blog.findOne(query).populate("author", "name avatar").lean();
     return blog ? JSON.parse(JSON.stringify(blog)) : null;
   } catch (error) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
-    console.error("Failed to fetch blog post:", error);
     return null;
   }
 };
@@ -63,7 +61,6 @@ const getRecentPosts = async (): Promise<BlogPost[]> => {
       .lean();
     return JSON.parse(JSON.stringify(blogs));
   } catch (error) {
-    if (error && typeof error === "object" && "digest" in error) throw error;
     return [];
   }
 };

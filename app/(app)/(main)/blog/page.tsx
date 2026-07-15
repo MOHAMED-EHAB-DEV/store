@@ -42,8 +42,6 @@ const getData = async () => {
     const blogs = await Blog.find({ isPublished: true }).sort({ createdAt: -1 }).lean();
     return JSON.parse(JSON.stringify(blogs)) as BlogPost[];
   } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    console.error("Failed to fetch public blogs:", error);
     return [];
   }
 };

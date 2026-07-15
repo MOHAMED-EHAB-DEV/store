@@ -4,10 +4,10 @@ $urls = @(
     # "https://mhd-store.vercel.app/",
     # "https://mhd-store.vercel.app/templates",
     # "https://mhd-store.vercel.app/templates/category/vite",
-    "https://mhd-store.vercel.app/templates/obsidian-portfolio",
-    "https://mhd-store-test.vercel.app/templates/obsidian-portfolio",
-    "https://mhd-store-test.vercel.app/blog/stop-manual-deploys-github-actions-for-web-devs",
-    "https://mhd-store.vercel.app/blog/stop-manual-deploys-github-actions-for-web-devs"
+    "https://mhd-store.vercel.app/templates/aura-studio",
+    "https://mhd-store-test.vercel.app/templates/aura-studio",
+    "https://mhd-store-test.vercel.app/blog/nextjs-pagespeed-score-100-real-fixes",
+    "https://mhd-store.vercel.app/blog/nextjs-pagespeed-score-100-real-fixes"
     # "https://mhd-store.vercel.app/test",
 )
 

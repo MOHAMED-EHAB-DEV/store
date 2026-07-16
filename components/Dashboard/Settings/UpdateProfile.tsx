@@ -146,7 +146,6 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
                   alt={user?.name}
                   width={32}
                   height={32}
-                  unoptimized={!filePreview}
                   className="w-full h-full object-contain rounded-full"
                 />
               )}

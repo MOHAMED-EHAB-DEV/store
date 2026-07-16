@@ -89,7 +89,6 @@ export function VerticalMarquee(
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
                             width={28}
                             height={28}
-                            unoptimized
                         />
                         <span
                             className="whitespace-nowrap w-full bg-primary px-3 py-2 rounded-full font-medium text-sm">
@@ -138,7 +137,6 @@ export default function HorizontialMarquee(
                                         alt="Testimonials"
                                         width={58}
                                         height={58}
-                                        unoptimized
                                     />
                                 </div>
                                 <div className="font-semibold text-sm text-white">

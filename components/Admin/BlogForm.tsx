@@ -150,7 +150,6 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
                                 alt={formData?.title || "Cover image"}
                                 width={600}
                                 height={300}
-                                unoptimized={image.startsWith("data:")}
                                 className="rounded-lg object-cover w-full max-h-48"
                             />
                             <Button

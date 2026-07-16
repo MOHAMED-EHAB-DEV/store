@@ -76,7 +76,6 @@ export default function TemplateThumbnail({
       {/* Low-res base image that establishes natural height and aspect ratio */}
       <Image
         src={lowResUrl}
-        unoptimized
         alt={title}
         width={1200}
         height={575}
@@ -91,7 +90,6 @@ export default function TemplateThumbnail({
       {/* High-res overlay image that fades in when fully loaded */}
       <Image
         src={highResUrl}
-        unoptimized
         alt={title}
         width={1200}
         height={575}

@@ -67,7 +67,6 @@ const ProfileDropdown = ({
           alt={`${user?.name || ""} Profile`}
           width={50}
           height={50}
-          unoptimized
           className="p-px rounded-full w-full h-full hover:scale-105 transition-transform"
         />
       </button>
@@ -94,7 +93,6 @@ const ProfileDropdown = ({
                   alt={`${user.name} Profile`}
                   width={40}
                   height={40}
-                  unoptimized
                   className="p-px rounded-full w-10 h-10"
                 />
                 <div className="flex flex-col">
@@ -115,7 +113,6 @@ const ProfileDropdown = ({
                   alt={`Profile`}
                   width={40}
                   height={40}
-                  unoptimized
                   className="p-px rounded-full w-10 h-10"
                 />
                 <div className="flex flex-col">

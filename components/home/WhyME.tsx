@@ -35,7 +35,6 @@ const WhyME = () => {
           alt="Cursor Icon"
           width={330}
           height={330}
-          unoptimized
           className="w-1/2 md:w-full"
         />
       </div>

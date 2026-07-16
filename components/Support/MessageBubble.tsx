@@ -144,7 +144,6 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
           src={anyImgUrl(url, { width: 200, quality: 80 })}
           alt={`Attachment ${index + 1}`}
           fill
-          unoptimized
           className="object-cover pointer-events-none"
         />
       </button>
@@ -161,7 +160,6 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
               src={anyImgUrl(url, { width: 1200, quality: 90 })}
               alt={`Attachment ${index + 1}`}
               fill
-              unoptimized
               className="object-contain"
             />
           </div>

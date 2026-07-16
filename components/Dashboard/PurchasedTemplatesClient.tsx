@@ -259,7 +259,6 @@ export default function PurchasedTemplatesClient({
                     width: 200,
                     quality: 80,
                   })}
-                  unoptimized
                   alt={template.title}
                   fill
                   className="object-cover"

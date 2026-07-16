@@ -185,7 +185,6 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                                 alt={formData?.question || "Cover image"}
                                 width={600}
                                 height={300}
-                                unoptimized={coverImage.startsWith("data:")}
                                 className="rounded-lg object-cover w-full max-h-48"
                             />
                             <Button

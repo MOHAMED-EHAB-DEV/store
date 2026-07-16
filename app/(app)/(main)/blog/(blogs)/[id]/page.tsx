@@ -182,7 +182,6 @@ const Page = async ({ params }: PageProps) => {
                 alt={blog.title}
                 width={1200}
                 height={600}
-                unoptimized
                 className="w-full h-full object-cover rounded-md opacity-40 blur-sm scale-105"
                 preload={true}
                 fetchPriority="high"
@@ -269,7 +268,6 @@ const Page = async ({ params }: PageProps) => {
                           alt={post.title}
                           width={100}
                           height={100}
-                          unoptimized
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                         />
                       ) : (

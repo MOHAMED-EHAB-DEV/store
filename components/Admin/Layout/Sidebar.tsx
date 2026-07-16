@@ -126,7 +126,6 @@ const Sidebar = ({
                     original: user?.avatar ? false : true,
                   },
                 )}
-                unoptimized
                 alt={`${user?.name} Profile`}
                 width={30}
                 height={30}

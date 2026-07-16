@@ -42,7 +42,6 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
                 alt={name} 
                 width={56} 
                 height={56} 
-                unoptimized
               />
             </div>
           </div>

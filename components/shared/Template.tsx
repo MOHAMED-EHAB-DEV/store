@@ -120,7 +120,6 @@ const Template = ({
           alt={template.title}
           width={400}
           height={288}
-          unoptimized
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="w-full h-full object-contain block"
         />
@@ -129,7 +128,6 @@ const Template = ({
           alt={template.title}
           width={400}
           height={288}
-          unoptimized
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out ${
             highResLoaded ? "opacity-100" : "opacity-0"

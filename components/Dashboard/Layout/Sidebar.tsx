@@ -106,7 +106,6 @@ const Sidebar = ({ open, setOpen, user }: {
                         <div className="w-7 h-7 flex items-center justify-center">
                             <Image
                                 src={anyImgUrl(user?.avatar === "" ? "/assets/Icons/profile.svg" : user?.avatar as string, { width: 60, quality: 85, original: user?.avatar ? false : true })}
-                                unoptimized
                                 alt={`${user?.name} Profile`}
                                 width={30}
                                 height={30}

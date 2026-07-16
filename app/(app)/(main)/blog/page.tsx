@@ -72,7 +72,6 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
             alt={blog.title}
             width={800}
             height={400}
-            unoptimized
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             preload={featured}
             fetchPriority={featured ? "high" : undefined}

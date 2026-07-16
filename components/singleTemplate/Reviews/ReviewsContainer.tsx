@@ -320,7 +320,6 @@ const ReviewsContainer = ({
                       className="w-8 h-8 rounded-full"
                       width={32}
                       height={32}
-                      unoptimized
                     />
                   )}
                   <span className="font-medium">

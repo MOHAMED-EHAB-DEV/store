@@ -254,7 +254,7 @@ export default function PurchasedTemplatesClient({
               className="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors"
             >
               <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                <Image
+                <Image unoptimized
                   src={anyImgUrl(template.thumbnail || "/placeholder.png", {
                     width: 200,
                     quality: 80,

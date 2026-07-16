@@ -115,7 +115,7 @@ const Template = ({
           }
         }}
       >
-        <Image
+        <Image unoptimized
           src={lowResUrl}
           alt={template.title}
           width={400}
@@ -123,7 +123,7 @@ const Template = ({
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="w-full h-full object-contain block"
         />
-        <Image
+        <Image unoptimized
           src={highResUrl}
           alt={template.title}
           width={400}

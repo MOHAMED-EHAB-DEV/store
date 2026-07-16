@@ -26,7 +26,7 @@ const WhyME = () => {
         </span>
       </div>
       <div className="flex items-center justify-center w-full md:w-1/4">
-        <Image
+        <Image unoptimized
           src={anyImgUrl("https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp", {
             width: 660,
             quality: 100

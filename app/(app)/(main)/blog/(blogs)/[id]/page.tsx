@@ -177,7 +177,7 @@ const Page = async ({ params }: PageProps) => {
         <div className="relative w-full max-w-7xl mx-auto h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden lg:rounded-3xl">
           <div className="absolute inset-0 bg-gray-950">
             {blog.coverImage && (
-              <Image
+              <Image unoptimized
                 src={anyImgUrl(blog.coverImage, { width: 1200, quality: 85 })}
                 alt={blog.title}
                 width={1200}
@@ -260,7 +260,7 @@ const Page = async ({ params }: PageProps) => {
                   >
                     <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-800 shrink-0">
                       {post.coverImage ? (
-                        <Image
+                        <Image unoptimized
                           src={anyImgUrl(post.coverImage, {
                             width: 100,
                             quality: 70,

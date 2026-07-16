@@ -83,7 +83,7 @@ export function VerticalMarquee(
             >
                 {marqueeItems.map(({iconPath, text}, i) => (
                     <span key={i} className="flex items-center w-full shrink-0">
-                        <Image
+                        <Image unoptimized
                             src={anyImgUrl(iconPath, { width: 48, quality: 80 })}
                             alt=""
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
@@ -132,7 +132,7 @@ export default function HorizontialMarquee(
                                 <div
                                     className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold me-4"
                                 >
-                                    <Image
+                                    <Image unoptimized
                                         src={anyImgUrl(testimonial.avatar, { width: 60, quality: 80 })}
                                         alt="Testimonials"
                                         width={58}

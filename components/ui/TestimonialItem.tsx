@@ -37,7 +37,7 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
           {/* Avatar with gradient ring */}
           <div className="relative w-14 h-14 rounded-full p-[2px] bg-linear-to-r from-yellow-400 via-orange-400 to-pink-500 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
             <div className="w-full h-full rounded-full overflow-hidden bg-black">
-              <Image 
+              <Image unoptimized 
                 src={anyImgUrl(avatar, { width: 60, quality: 80 })} 
                 alt={name} 
                 width={56} 

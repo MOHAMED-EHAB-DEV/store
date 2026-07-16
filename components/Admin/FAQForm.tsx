@@ -180,7 +180,7 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
                 <div className="flex flex-col items-center gap-3 w-full">
                     {coverImage ? (
                         <div className="relative w-full max-w-lg">
-                            <Image
+                            <Image unoptimized
                                 src={coverImage.startsWith("data:") ? coverImage : anyImgUrl(coverImage || "", { width: 600, quality: 80 })}
                                 alt={formData?.question || "Cover image"}
                                 width={600}

@@ -23,7 +23,7 @@ const Logo = ({
         <div className="w-3 h-3 bg-white rounded-xs" />
         <div className="w-3 h-3 bg-white rounded-xs" />
       </div>
-      {/*<Image*/}
+      {/*<Image unoptimized*/}
       {/*    src="/assets/Icons/Logo.svg"*/}
       {/*    alt="Logo"*/}
       {/*    layout="fill"*/}

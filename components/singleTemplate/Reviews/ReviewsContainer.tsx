@@ -311,7 +311,7 @@ const ReviewsContainer = ({
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-2">
                   {review.user.avatar && (
-                    <Image
+                    <Image unoptimized
                       src={anyImgUrl(review.user.avatar, {
                         width: 64,
                         quality: 80,

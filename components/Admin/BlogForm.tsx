@@ -145,7 +145,7 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
                 <div className="flex flex-col items-center gap-3 w-full">
                     {image ? (
                         <div className="relative w-full max-w-lg">
-                            <Image
+                            <Image unoptimized
                                 src={image.startsWith("data:") ? image : anyImgUrl(image || "", { width: 600, quality: 80 })}
                                 alt={formData?.title || "Cover image"}
                                 width={600}

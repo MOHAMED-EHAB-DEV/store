@@ -145,7 +145,7 @@ const Template = async ({
 
       {/* Author Section */}
       {/*<div className="flex items-center gap-4 border-t border-white/10 pt-8">*/}
-      {/*    <Image*/}
+      {/*    <Image unoptimized*/}
       {/*        src={template.author?.avatar}*/}
       {/*        alt={template.author?.name}*/}
       {/*        width={50}*/}

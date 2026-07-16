@@ -115,7 +115,7 @@ const Sidebar = ({
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
             <div className="w-7 h-7 flex items-center justify-center">
-              <Image
+              <Image unoptimized
                 src={anyImgUrl(
                   user?.avatar === ""
                     ? "/assets/Icons/profile.svg"

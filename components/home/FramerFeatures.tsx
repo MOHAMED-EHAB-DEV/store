@@ -198,7 +198,7 @@ const FramerFeatures = () => {
               className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6 feature-video"
               style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
-              <Image
+              <Image unoptimized
                 src={anyImgUrl("/assets/Icons/cover.jpg", { width: 1200, original: true })}
                 alt="cover"
                 fill
@@ -224,14 +224,14 @@ const FramerFeatures = () => {
             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
           >
             <div className="w-full flex items-center justify-center relative">
-              <Image
+              <Image unoptimized
                 src={anyImgUrl("/assets/Icons/publish.webp", { width: 300, original: true })}
                 alt="publish"
                 width={150}
                 height={150}
                 className="w-auto h-auto"
               />
-              <Image
+              <Image unoptimized
                 src={anyImgUrl("/assets/Icons/smCursor.avif", { width: 50, original: true })}
                 alt="cursor"
                 width={25}

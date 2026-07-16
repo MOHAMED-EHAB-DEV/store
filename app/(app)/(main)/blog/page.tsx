@@ -67,7 +67,7 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
         className={`relative overflow-hidden ${featured ? "h-64 md:h-full" : "h-48"} w-full bg-gray-800`}
       >
         {blog.coverImage ? (
-          <Image
+          <Image unoptimized
             src={anyImgUrl(blog.coverImage, { width: 800, quality: 80 })}
             alt={blog.title}
             width={800}

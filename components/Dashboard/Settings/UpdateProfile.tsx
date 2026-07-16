@@ -137,7 +137,7 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
             <DropzoneEmptyState />
             <DropzoneContent>
               {image && (
-                <Image
+                <Image unoptimized
                   src={
                     filePreview
                       ? filePreview

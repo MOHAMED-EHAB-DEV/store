@@ -59,7 +59,7 @@ const ProfileDropdown = ({
         onClick={openDrawer}
         className="items-center w-10 h-10 outline-none justify-center cursor-pointer p-0 bg-transparent border-none rounded-full"
       >
-        <Image
+        <Image unoptimized
           src={anyImgUrl(
             user?.avatar ? user.avatar : "/assets/Icons/profile.svg",
             { width: 100, quality: 95, original: user?.avatar ? false : true },
@@ -81,7 +81,7 @@ const ProfileDropdown = ({
           <div className="flex justify-between items-center mb-4 border-b-[0.5px] border-white/15 pb-3">
             {user ? (
               <div className="flex items-center gap-4">
-                <Image
+                <Image unoptimized
                   src={anyImgUrl(
                     user.avatar ? user.avatar : "/assets/Icons/profile.svg",
                     {
@@ -104,7 +104,7 @@ const ProfileDropdown = ({
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Image
+                <Image unoptimized
                   src={anyImgUrl("/assets/Icons/profile.svg", {
                     width: 60,
                     quality: 85,

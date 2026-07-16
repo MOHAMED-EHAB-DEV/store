@@ -363,7 +363,7 @@ export default function ChatInput({
               className="relative group shrink-0 w-16 h-16 rounded-lg overflow-hidden border border-white/10 bg-white/5"
             >
               {file.type.startsWith("image/") ? (
-                <Image
+                <Image unoptimized
                   src={URL.createObjectURL(file)}
                   alt="preview"
                   fill

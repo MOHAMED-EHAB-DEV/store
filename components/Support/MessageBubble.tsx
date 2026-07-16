@@ -44,7 +44,7 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
       <div className="flex-shrink-0">
         {message.sender.avatar ? (
           <div className="relative w-8 h-8 rounded-full overflow-hidden">
-            <Image
+            <Image unoptimized
               src={message.sender.avatar}
               alt={message.sender.name}
               fill
@@ -140,7 +140,7 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
         onClick={() => setOpen(true)}
         className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20 cursor-pointer"
       >
-        <Image
+        <Image unoptimized
           src={anyImgUrl(url, { width: 200, quality: 80 })}
           alt={`Attachment ${index + 1}`}
           fill
@@ -156,7 +156,7 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
             className="relative w-[90vw] h-[80vh] sm:w-[80vw] sm:h-[80vh]"
             onClick={() => setOpen(false)}
           >
-            <Image
+            <Image unoptimized
               src={anyImgUrl(url, { width: 1200, quality: 90 })}
               alt={`Attachment ${index + 1}`}
               fill

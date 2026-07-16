@@ -20,6 +20,7 @@ import { IUser } from '@/types';
 import NotificationCenter from "@/components/shared/NotificationCenter";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { IconRenderer } from '@/components/ui/svgs/IconRenderer';
 
 const Sidebar = ({ open, setOpen, user }: {
     open: Boolean,
@@ -88,7 +89,7 @@ const Sidebar = ({ open, setOpen, user }: {
                             {isLoading && loadingLink === link ? (
                                 <Spinner />
                             ) : (
-                                <Icon className="w-5 h-5 text-white" />
+                                <IconRenderer name={Icon as string} className="w-5 h-5 text-white" />
                             )}
                             <span className={`text-white text-sm ${path === link ? "font-bold" : ""}`}>{text}</span>
                         </Button>

@@ -3,13 +3,15 @@
 import { useState, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import dynamic from "next/dynamic";
 import SocialProofWheel from "./SocialProofWheel";
 import StepSituation from "./steps/StepSituation";
 import StepFeatures from "./steps/StepFeatures";
 import StepBudget from "./steps/StepBudget";
 import StepWorkspace from "./steps/StepWorkspace";
-import SuccessModal from "./SuccessModal";
 import { sonnerToast } from "@/components/ui/sonner";
+
+const SuccessModal = dynamic(() => import("./SuccessModal"), { ssr: false });
 
 const TOTAL_STEPS = 4;
 
@@ -18,14 +20,14 @@ const ApplicationForm = () => {
   const [situation, setSituation] = useState("");
   const [features, setFeatures] = useState<string[]>([]);
   const [budget, setBudget] = useState("");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [ticketId, setTicketId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const stepsWrapRef = useRef<HTMLDivElement>(null);
-  
+
   // Create refs for each step container
   const stepRefs = [
     useRef<HTMLDivElement>(null),
@@ -51,12 +53,23 @@ const ApplicationForm = () => {
     if (step < TOTAL_STEPS) {
       const currentRef = stepRefs[step - 1].current;
       const nextRef = stepRefs[step].current;
-      
-      gsap.to(currentRef, { xPercent: -100, opacity: 0, duration: 0.5, ease: "power2.inOut" });
+
+      gsap.to(currentRef, {
+        xPercent: -100,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      });
       gsap.fromTo(
         nextRef,
         { xPercent: 100, opacity: 0 },
-        { xPercent: 0, opacity: 1, duration: 0.5, ease: "power2.inOut", onStart: () => setStep(step + 1) }
+        {
+          xPercent: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.inOut",
+          onStart: () => setStep(step + 1),
+        },
       );
     }
   };
@@ -65,19 +78,30 @@ const ApplicationForm = () => {
     if (step > 1) {
       const currentRef = stepRefs[step - 1].current;
       const prevRef = stepRefs[step - 2].current;
-      
-      gsap.to(currentRef, { xPercent: 100, opacity: 0, duration: 0.5, ease: "power2.inOut" });
+
+      gsap.to(currentRef, {
+        xPercent: 100,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      });
       gsap.fromTo(
         prevRef,
         { xPercent: -100, opacity: 0 },
-        { xPercent: 0, opacity: 1, duration: 0.5, ease: "power2.inOut", onStart: () => setStep(step - 1) }
+        {
+          xPercent: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.inOut",
+          onStart: () => setStep(step - 1),
+        },
       );
     }
   };
 
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
-    
+
     // Format the data for the ticket message
     const message = `📋 Project Application
 
@@ -100,7 +124,7 @@ ${budget}`;
           category: "custom-build",
           priority: "high",
           message,
-          attachments: []
+          attachments: [],
         }),
       });
 
@@ -124,26 +148,29 @@ ${budget}`;
     gsap.to(".progress-bar-fill", {
       width: `${(step / TOTAL_STEPS) * 100}%`,
       duration: 0.4,
-      ease: "power2.out"
+      ease: "power2.out",
     });
   }, [step]);
 
   // Navbar hide animation on scroll
-  useGSAP(() => {
-    const navbar = document.querySelector(".navbar");
-    if (navbar) {
-      gsap.to(navbar, {
-        opacity: 0,
-        pointerEvents: "none",
-        duration: 0.4,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 40%", 
-          toggleActions: "play reverse play reverse",
-        }
-      });
-    }
-  }, { scope: containerRef });
+  useGSAP(
+    () => {
+      const navbar = document.querySelector(".navbar");
+      if (navbar) {
+        gsap.to(navbar, {
+          opacity: 0,
+          pointerEvents: "none",
+          duration: 0.4,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 40%",
+            toggleActions: "play reverse play reverse",
+          },
+        });
+      }
+    },
+    { scope: containerRef },
+  );
 
   return (
     <section className="py-24 px-4 w-full max-w-4xl mx-auto min-h-screen flex flex-col">
@@ -153,8 +180,12 @@ ${budget}`;
         {/* Progress Bar & Header */}
         <div className="mb-8 relative z-20">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-purple-400 font-medium tracking-wider text-sm uppercase">Application</span>
-            <span className="text-gray-400 font-medium text-sm">Step {step} of {TOTAL_STEPS}</span>
+            <span className="text-purple-400 font-medium tracking-wider text-sm uppercase">
+              Application
+            </span>
+            <span className="text-gray-400 font-medium text-sm">
+              Step {step} of {TOTAL_STEPS}
+            </span>
           </div>
           <div className="w-full h-1 bg-white/10 rounded-full">
             <div className="progress-bar-fill h-full bg-gradient-to-r from-purple-500 to-pink-500 w-0" />
@@ -162,7 +193,10 @@ ${budget}`;
         </div>
 
         {/* Steps Container */}
-        <div ref={stepsWrapRef} className="relative flex-1 grid grid-cols-1 grid-rows-1  min-h-[500px]">
+        <div
+          ref={stepsWrapRef}
+          className="relative flex-1 grid grid-cols-1 grid-rows-1  min-h-[500px]"
+        >
           {/* STEP 1 */}
           <div
             ref={stepRefs[0]}
@@ -187,7 +221,11 @@ ${budget}`;
             className="col-start-1 row-start-1 w-full h-auto opacity-0"
             style={{ pointerEvents: step === 3 ? "auto" : "none" }}
           >
-            <StepBudget budget={budget} setBudget={setBudget} featureCount={features.length} />
+            <StepBudget
+              budget={budget}
+              setBudget={setBudget}
+              featureCount={features.length}
+            />
           </div>
 
           {/* STEP 4 */}
@@ -196,7 +234,10 @@ ${budget}`;
             className="col-start-1 row-start-1 w-full h-auto opacity-0"
             style={{ pointerEvents: step === 4 ? "auto" : "none" }}
           >
-            <StepWorkspace onSubmitComplete={handleFinalSubmit} isSubmittingTicket={isSubmitting} />
+            <StepWorkspace
+              onSubmitComplete={handleFinalSubmit}
+              isSubmittingTicket={isSubmitting}
+            />
           </div>
         </div>
 
@@ -207,7 +248,9 @@ ${budget}`;
               onClick={handleBack}
               disabled={step === 1}
               className={`px-6 py-3 rounded-xl font-medium transition-colors ${
-                step === 1 ? "text-gray-600 cursor-not-allowed" : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10"
+                step === 1
+                  ? "text-gray-600 cursor-not-allowed"
+                  : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10"
               }`}
             >
               Go Back
@@ -222,7 +265,11 @@ ${budget}`;
         )}
       </div>
 
-      <SuccessModal open={showSuccess} onOpenChange={setShowSuccess} ticketId={ticketId} />
+      <SuccessModal
+        open={showSuccess}
+        onOpenChange={setShowSuccess}
+        ticketId={ticketId}
+      />
     </section>
   );
 };

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import dynamic from "next/dynamic";
 import { Roboto, Parastoo } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
@@ -11,8 +10,6 @@ import {
   WebSiteSchema,
 } from "@/components/SEO/StructuredData";
 import { GoogleTagManager } from "@next/third-parties/google";
-
-const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
 
 export const viewport = {
   width: "device-width",
@@ -144,7 +141,6 @@ export default async function RootLayout({
           <Providers>{children}</Providers>
         </div>
 
-        <BackToTop />
         <OrganizationSchema />
         <WebSiteSchema />
         <PersonSchema

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
@@ -36,7 +35,10 @@ interface PerformanceDetailClientProps {
   visitorId: string;
 }
 
-export default function PerformanceDetailClient({ data, visitorId }: PerformanceDetailClientProps) {
+export default function PerformanceDetailClient({
+  data,
+  visitorId,
+}: PerformanceDetailClientProps) {
   if (!data) {
     return (
       <div className="p-6">
@@ -118,19 +120,29 @@ export default function PerformanceDetailClient({ data, visitorId }: Performance
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
             {visitorInfo?.userId?.avatar ? (
-              <img src={visitorInfo.userId.avatar} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
+              <img
+                src={visitorInfo.userId.avatar}
+                alt="Avatar"
+                className="w-12 h-12 rounded-full object-cover"
+              />
             ) : (
               <User className="w-6 h-6 text-blue-400" />
             )}
           </div>
           <div>
             <h3 className="text-xl font-bold text-white">
-              {visitorInfo?.userId ? visitorInfo.userId.name : "Anonymous Visitor"}
+              {visitorInfo?.userId
+                ? visitorInfo.userId.name
+                : "Anonymous Visitor"}
             </h3>
             {visitorInfo?.userId?.email && (
-              <p className="text-sm text-gray-400">{visitorInfo.userId.email}</p>
+              <p className="text-sm text-gray-400">
+                {visitorInfo.userId.email}
+              </p>
             )}
-            <p className="text-sm text-gray-500 mt-1 font-mono">ID: {visitorId}</p>
+            <p className="text-sm text-gray-500 mt-1 font-mono">
+              ID: {visitorId}
+            </p>
           </div>
         </div>
       </section>
@@ -175,7 +187,8 @@ export default function PerformanceDetailClient({ data, visitorId }: Performance
               </thead>
               <tbody className="divide-y divide-white/5">
                 {pages.map((page, idx) => {
-                  const getMetric = (name: string) => page.metrics.find(m => m.name === name);
+                  const getMetric = (name: string) =>
+                    page.metrics.find((m) => m.name === name);
                   const lcp = getMetric("LCP");
                   const inp = getMetric("INP");
                   const cls = getMetric("CLS");
@@ -196,19 +209,30 @@ export default function PerformanceDetailClient({ data, visitorId }: Performance
                       <td className="p-4 text-sm text-gray-300">
                         {new Date(page.createdAt).toLocaleString()}
                       </td>
-                      <td className="p-4 text-sm font-medium text-white truncate max-w-[200px]" title={page.path}>
+                      <td
+                        className="p-4 text-sm font-medium text-white truncate max-w-[200px]"
+                        title={page.path}
+                      >
                         {page.path}
                       </td>
-                      <td className={`p-4 text-sm font-medium ${getRatingColor(lcp?.rating)}`}>
+                      <td
+                        className={`p-4 text-sm font-medium ${getRatingColor(lcp?.rating)}`}
+                      >
                         {lcp ? `${lcp.value.toFixed(0)} ms` : "-"}
                       </td>
-                      <td className={`p-4 text-sm font-medium ${getRatingColor(inp?.rating)}`}>
+                      <td
+                        className={`p-4 text-sm font-medium ${getRatingColor(inp?.rating)}`}
+                      >
                         {inp ? `${inp.value.toFixed(0)} ms` : "-"}
                       </td>
-                      <td className={`p-4 text-sm font-medium ${getRatingColor(cls?.rating)}`}>
+                      <td
+                        className={`p-4 text-sm font-medium ${getRatingColor(cls?.rating)}`}
+                      >
                         {cls ? cls.value.toFixed(3) : "-"}
                       </td>
-                      <td className={`p-4 text-sm font-medium ${getRatingColor(ttfb?.rating)}`}>
+                      <td
+                        className={`p-4 text-sm font-medium ${getRatingColor(ttfb?.rating)}`}
+                      >
                         {ttfb ? `${ttfb.value.toFixed(0)} ms` : "-"}
                       </td>
                     </tr>

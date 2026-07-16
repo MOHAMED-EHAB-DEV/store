@@ -2,19 +2,17 @@
 
 import { useState, Suspense, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import NotificationCenter from "@/components/shared/NotificationCenter";
 import { NavigationLinks } from "@/constants";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
-import Loader from "@/components/ui/Loader";
 import { useUser } from "@/context/UserContext";
-import { IUser } from "@/types";
 import { sendGTMEvent } from "@next/third-parties/google";
 import dynamic from "next/dynamic";
 
 const ProfileDropdown = dynamic(
   () => import("@/components/Dialogs/ProfileDropdown"),
 );
+const NotificationCenter = dynamic(() => import("@/components/shared/NotificationCenter"))
 const MobileDrawer = dynamic(() => import("./MobileDrawer"), { ssr: false });
 
 const Navbar = () => {
@@ -65,7 +63,7 @@ const Navbar = () => {
           </ul>
         </nav>
         <div className={`flex gap-2 ${!user && "flex-1 justify-end"}`}>
-          <MobileDrawer user={user as IUser} />
+          <MobileDrawer />
           {!user && (
             <div className="hidden sm:flex gap-2 items-center justify-end">
               <Link

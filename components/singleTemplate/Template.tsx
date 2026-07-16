@@ -175,7 +175,6 @@ const Template = async ({
               <SimilarTemplate
                 key={temp._id}
                 template={temp}
-                showPrice={true}
               />
             ))}
           </div>

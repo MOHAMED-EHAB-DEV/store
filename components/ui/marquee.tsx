@@ -9,7 +9,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
 interface VerticalMarqueeProps {
-    items: { iconPath: string; text: string }[];
+    items: readonly { iconPath: string; text: string }[];
     speed?: number;
     height?: string;
     className?: string;

@@ -16,8 +16,6 @@ const FavoritesClient = () => {
       ) : (
         favoriteTemplates.map((template) => (
           <Template
-            showActionButtons={true}
-            showPrice={true}
             key={template?._id! as string}
             template={template}
           />

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { io, Socket } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { useUserStore } from "@/store/useUserStore";
 import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useSocketStore } from "@/store/useSocketStore";
@@ -131,61 +131,72 @@ export function GlobalStoreInitializer() {
   useEffect(() => {
     if (!visitorId) return;
 
-    const socket = io(SOCKET_URL, {
-      auth: { visitorId, userId: user?._id, role: user?.role },
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-      reconnection: true,
-      reconnectionAttempts: 10,
-      reconnectionDelay: 2000,
-    });
+    let isCancelled = false;
+    let socketInstance: Socket | null = null;
 
-    socket.on("connect", () => {
-      setIsConnected(true);
-      if (user) {
-        runWhenIdle(() => {
-          fetch("/api/user/online", {
-            method: "POST",
-          });
-        }, 200);
-      }
-    });
-    socket.on("disconnect", () => {
-      setIsConnected(false);
-      if (user) {
-        runWhenIdle(() => {
-          fetch("/api/user/offline", {
-            method: "POST",
-          });
-        }, 200);
-      }
-    });
-    socket.on("online-count", ({ count }: { count: number }) =>
-      setOnlineCount(count),
-    );
+    import("socket.io-client").then(({ io }) => {
+      if (isCancelled) return;
 
-    socket.on("user-typing", (data: any) => {
-      setTypingUsers((prev) => {
-        const ticketTyping = prev[data.ticketId] || [];
-        if (data.isTyping) {
-          if (!ticketTyping.includes(data.userId)) {
-            return { ...prev, [data.ticketId]: [...ticketTyping, data.userId] };
-          }
-        } else {
-          return {
-            ...prev,
-            [data.ticketId]: ticketTyping.filter((id) => id !== data.userId),
-          };
-        }
-        return prev;
+      const socket = io(SOCKET_URL as string, {
+        auth: { visitorId, userId: user?._id, role: user?.role },
+        withCredentials: true,
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 2000,
       });
-    });
 
-    socketRef.current = socket;
-    setSocket(socket);
+      socket.on("connect", () => {
+        setIsConnected(true);
+        if (user) {
+          runWhenIdle(() => {
+            fetch("/api/user/online", {
+              method: "POST",
+            });
+          }, 200);
+        }
+      });
+      socket.on("disconnect", () => {
+        setIsConnected(false);
+        if (user) {
+          runWhenIdle(() => {
+            fetch("/api/user/offline", {
+              method: "POST",
+            });
+          }, 200);
+        }
+      });
+      socket.on("online-count", ({ count }: { count: number }) =>
+        setOnlineCount(count),
+      );
+
+      socket.on("user-typing", (data: any) => {
+        setTypingUsers((prev) => {
+          const ticketTyping = prev[data.ticketId] || [];
+          if (data.isTyping) {
+            if (!ticketTyping.includes(data.userId)) {
+              return { ...prev, [data.ticketId]: [...ticketTyping, data.userId] };
+            }
+          } else {
+            return {
+              ...prev,
+              [data.ticketId]: ticketTyping.filter((id) => id !== data.userId),
+            };
+          }
+          return prev;
+        });
+      });
+
+      socketInstance = socket;
+      socketRef.current = socket;
+      setSocket(socket);
+    });
 
     return () => {
-      socket.disconnect();
+      isCancelled = true;
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
       socketRef.current = null;
       setSocket(null);
     };

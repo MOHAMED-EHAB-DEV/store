@@ -5,10 +5,9 @@ import { X } from "@/components/ui/svgs/icons/X";
 import { useState } from "react";
 import { NavigationLinks } from "@/constants";
 import Link from "next/link";
-import { IUser } from "@/types";
 import Drawer from "@/components/ui/Drawer";
 
-const MobileDrawer = ({ user }: { user: IUser }) => {
+const MobileDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openDrawer = () => setIsOpen(true);

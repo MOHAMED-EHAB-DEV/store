@@ -1,6 +1,4 @@
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { Star } from "@/components/ui/svgs/icons/Star";
 import TemplateComponent from "@/components/shared/Template";
 import { ITemplate } from "@/types";
 import SplitText from "@/components/ui/SplitText";
@@ -59,7 +57,7 @@ const FeaturedTemplates = async () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-12">
             {templates.map((template, idx) => (
-              <TemplateComponent template={template} key={template._id} />
+              <TemplateComponent template={template} mode="store" key={template._id} />
             ))}
           </div>
         )}

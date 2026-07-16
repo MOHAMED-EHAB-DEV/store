@@ -75,9 +75,9 @@ const Template = ({
       />
 
       {/* Featured Badge */}
-      {template.categories?.some(
-        (category: any) =>
-          category?.name?.toLowerCase() === "featured",
+      {template.tags?.some(
+        (tag: string) =>
+          tag?.toLowerCase() === "featured",
       ) && (
         <div className="absolute top-4 left-4 z-10">
           <Badge className="bg-linear-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">

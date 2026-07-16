@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
@@ -56,65 +56,63 @@ export function useSocket({
 
   // Initialize socket connection
   useEffect(() => {
-    if (!enabled) {
-      // // console.log("[Socket] Disabled");
-      return;
-    }
+    if (!enabled) return;
+    if (!visitorId) return;
 
-    if (!visitorId) {
-      // // console.log("[Socket] No visitorId provided");
-      return;
-    }
+    let isCancelled = false;
+    let socketInstance: Socket | null = null;
 
-    // // console.log("[Socket] Connecting to:", SOCKET_URL);
+    import("socket.io-client").then(({ io }) => {
+      if (isCancelled) return;
 
-    const socket = io(SOCKET_URL, {
-      auth: { userId, visitorId, role },
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
-
-    socket.on("connect", () => {
-      // // console.log("[Socket] Connected! ID:", socket.id);
-      setIsConnected(true);
-    });
-
-    socket.on("disconnect", () => {
-      // // console.log("[Socket] Disconnected");
-      setIsConnected(false);
-    });
-
-    socket.on("connect_error", (error) => {
-      // console.error("[Socket] Connection error:", error.message);
-      setIsConnected(false);
-    });
-
-    // Handle typing status
-    socket.on("user-typing", (data: TypingStatus) => {
-      // // console.log("[Socket] User typing:", data);
-      setTypingUsers((prev) => {
-        const ticketTyping = prev[data.ticketId] || [];
-        if (data.isTyping) {
-          if (!ticketTyping.includes(data.userId)) {
-            return { ...prev, [data.ticketId]: [...ticketTyping, data.userId] };
-          }
-        } else {
-          return {
-            ...prev,
-            [data.ticketId]: ticketTyping.filter((id) => id !== data.userId),
-          };
-        }
-        return prev;
+      const socket = io(SOCKET_URL as string, {
+        auth: { userId, visitorId, role },
+        withCredentials: true,
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
       });
-    });
 
-    socketRef.current = socket;
+      socket.on("connect", () => {
+        setIsConnected(true);
+      });
+
+      socket.on("disconnect", () => {
+        setIsConnected(false);
+      });
+
+      socket.on("connect_error", (error) => {
+        setIsConnected(false);
+      });
+
+      // Handle typing status
+      socket.on("user-typing", (data: TypingStatus) => {
+        setTypingUsers((prev) => {
+          const ticketTyping = prev[data.ticketId] || [];
+          if (data.isTyping) {
+            if (!ticketTyping.includes(data.userId)) {
+              return { ...prev, [data.ticketId]: [...ticketTyping, data.userId] };
+            }
+          } else {
+            return {
+              ...prev,
+              [data.ticketId]: ticketTyping.filter((id) => id !== data.userId),
+            };
+          }
+          return prev;
+        });
+      });
+
+      socketInstance = socket;
+      socketRef.current = socket;
+    });
 
     return () => {
-      socket.disconnect();
+      isCancelled = true;
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
       socketRef.current = null;
     };
   }, [enabled, userId, visitorId, role]);

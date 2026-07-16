@@ -6,6 +6,7 @@ import {figmaFeatures} from "@/constants";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { IconRenderer } from '@/components/ui/svgs/IconRenderer';
 
 const FigmaFeatures = () => {
     useGSAP(() => {
@@ -83,7 +84,7 @@ const FigmaFeatures = () => {
                             {figmaFeatures.map((feature) => (
                                 <div key={feature.title} className="figma-feature flex space-x-4">
                                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shrink-0">
-                                        <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                                        <IconRenderer name={feature.icon as string} className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                                     </div>
                                     <div>
                                         <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">

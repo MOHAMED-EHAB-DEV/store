@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import Logo from "@/components/ui/Logo";
 import { socialImgs, FooterLinks } from "@/constants";
+import { IconRenderer } from '@/components/ui/svgs/IconRenderer';
+
+const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
 
 const Footer = () => {
   const pathname = usePathname();
@@ -14,7 +18,10 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
-            <Logo />
+            <div className="flex items-center gap-2">
+              <Logo />
+              <span className="text-2xl font-bold">MHD Store</span>
+            </div>
             <p className="text-secondary">
               Premium Templates for creative entrepreneurs
             </p>
@@ -28,10 +35,11 @@ const Footer = () => {
                   aria-label={social.name}
                   className="text-secondary hover:text-white transition"
                 >
-                  <social.Icon />
+                  <IconRenderer name={social.Icon as string} />
                 </a>
               ))}
             </div>
+            <BackToTop />
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Navigation</h3>

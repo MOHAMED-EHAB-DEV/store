@@ -14,7 +14,7 @@ const WebVitalsReporter = dynamic(
 );
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
-const runWhenIdle = (callback: () => void, timeout = 2000) => {
+export const runWhenIdle = (callback: () => void, timeout = 2000) => {
   if (typeof window !== "undefined" && window.requestIdleCallback) {
     const id = window.requestIdleCallback(callback, { timeout });
     return () => window.cancelIdleCallback(id);

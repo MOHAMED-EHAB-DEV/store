@@ -3,8 +3,8 @@
 import { useReportWebVitals } from "next/web-vitals";
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { runWhenIdle } from "../shared/GlobalStoreInitializer";
 
-// Define the metric format
 interface Metric {
   name: string;
   value: number;
@@ -63,11 +63,7 @@ export default function WebVitalsReporter() {
     });
 
     // Schedule sending metrics when the browser is idle
-    if (typeof requestIdleCallback !== "undefined") {
-      requestIdleCallback(() => flushQueue(), { timeout: 2000 });
-    } else {
-      setTimeout(flushQueue, 2000);
-    }
+    return runWhenIdle(flushQueue, 2000)
   });
 
   // Flush remaining metrics on unmount (navigation)

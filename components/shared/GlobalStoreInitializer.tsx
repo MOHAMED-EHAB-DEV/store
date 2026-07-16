@@ -8,8 +8,21 @@ import { useAnalyticsStore } from "@/store/useAnalyticsStore";
 import { useSocketStore } from "@/store/useSocketStore";
 import dynamic from "next/dynamic";
 
-const WebVitalsReporter = dynamic(() => import("@/components/SEO/WebVitalsReporter"), { ssr: false });
+const WebVitalsReporter = dynamic(
+  () => import("@/components/SEO/WebVitalsReporter"),
+  { ssr: false },
+);
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
+
+const runWhenIdle = (callback: () => void, timeout = 2000) => {
+  if (typeof window !== "undefined" && window.requestIdleCallback) {
+    const id = window.requestIdleCallback(callback, { timeout });
+    return () => window.cancelIdleCallback(id);
+  } else {
+    const id = setTimeout(callback, timeout);
+    return () => clearTimeout(id);
+  }
+};
 
 function generateVisitorId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -32,11 +45,17 @@ function getOrCreateVisitorId(): string {
 
 export function GlobalStoreInitializer() {
   const pathname = usePathname();
-  
+
   const { visitorId, setVisitorId, setOnlineCount } = useAnalyticsStore();
-  const { user, setUser, reloadTrigger, setFavoriteTemplates, setPurchasedTemplates } = useUserStore();
+  const {
+    user,
+    setUser,
+    reloadTrigger,
+    setFavoriteTemplates,
+    setPurchasedTemplates,
+  } = useUserStore();
   const { setSocket, setIsConnected, setTypingUsers } = useSocketStore();
-  
+
   const socketRef = useRef<Socket | null>(null);
   const trackedPaths = useRef<Set<string>>(new Set());
 
@@ -63,13 +82,7 @@ export function GlobalStoreInitializer() {
       }).catch(() => {});
     };
 
-    if (typeof requestIdleCallback !== "undefined") {
-      const id = requestIdleCallback(doTrack, { timeout: 4000 });
-      return () => cancelIdleCallback(id);
-    } else {
-      const t = setTimeout(doTrack, 200);
-      return () => clearTimeout(t);
-    }
+    return runWhenIdle(doTrack, 200);
   }, [pathname, visitorId]);
 
   // 3. Fetch User Data
@@ -127,9 +140,29 @@ export function GlobalStoreInitializer() {
       reconnectionDelay: 2000,
     });
 
-    socket.on("connect", () => setIsConnected(true));
-    socket.on("disconnect", () => setIsConnected(false));
-    socket.on("online-count", ({ count }: { count: number }) => setOnlineCount(count));
+    socket.on("connect", () => {
+      setIsConnected(true);
+      if (user) {
+        runWhenIdle(() => {
+          fetch("/api/user/online", {
+            method: "POST",
+          });
+        }, 200);
+      }
+    });
+    socket.on("disconnect", () => {
+      setIsConnected(false);
+      if (user) {
+        runWhenIdle(() => {
+          fetch("/api/user/offline", {
+            method: "POST",
+          });
+        }, 200);
+      }
+    });
+    socket.on("online-count", ({ count }: { count: number }) =>
+      setOnlineCount(count),
+    );
 
     socket.on("user-typing", (data: any) => {
       setTypingUsers((prev) => {
@@ -156,7 +189,15 @@ export function GlobalStoreInitializer() {
       socketRef.current = null;
       setSocket(null);
     };
-  }, [visitorId, user?._id, user?.role, setIsConnected, setOnlineCount, setTypingUsers, setSocket]);
+  }, [
+    visitorId,
+    user?._id,
+    user?.role,
+    setIsConnected,
+    setOnlineCount,
+    setTypingUsers,
+    setSocket,
+  ]);
 
   return <WebVitalsReporter />;
 }

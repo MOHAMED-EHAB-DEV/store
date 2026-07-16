@@ -24,6 +24,7 @@ import {
 import TemplateSkeleton from "../ui/TemplateSkeleton";
 import { ITemplate } from "@/lib/models/Template";
 import DownloadBtn from "@/components/singleTemplate/DownloadBtn";
+import Template from "@/components/shared/Template";
 
 interface IPopulatedTemplate extends Omit<ITemplate, "categories"> {
   _id: string;
@@ -241,65 +242,7 @@ export default function PurchasedTemplatesClient({
                 <TemplateSkeleton />
             </>}>
             {filteredTemplates.map((template) => (
-              <div
-                key={template._id}
-                className="glass rounded-xl overflow-hidden hover:bg-white/5 transition-all duration-300 group"
-              >
-                <div className="relative aspect-video overflow-hidden">
-                  <Image
-                    src={anyImgUrl(template?.thumbnail, {
-                      width: 600,
-                      quality: 80,
-                    })}
-                    unoptimized
-                    alt={template.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <Badge className="absolute top-3 right-3 bg-primary/90 text-white border-0">
-                    {template.categories?.[0]?.name}
-                  </Badge>
-                </div>
-                <div className="p-4 space-y-3">
-                  <h3 className="text-lg font-semibold text-white line-clamp-1">
-                    {template.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {template.description}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Calendar className="w-3 h-3" />
-                    <span>
-                      {template.downloadedAt
-                        ? `Downloaded ${new Date(template.downloadedAt).toLocaleDateString()}`
-                        : `Purchased ${new Date(template.createdAt).toLocaleDateString()}`}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 pt-2">
-                    <Button
-                      variant="outline"
-                      className="w-full bg-white/5 border-white/10 text-white hover:bg-white/10 flex-1"
-                      asChild
-                    >
-                      <Link href={`/templates/${template.slug}`}>
-                        <Eye className="w-4 h-4 mr-2" />
-                        View
-                      </Link>
-                    </Button>
-                    <DownloadBtn
-                      templateId={template._id}
-                      isFree={template.price === 0}
-                      asChild
-                    >
-                      <Button className="flex-1 bg-primary hover:bg-primary/90">
-                        <Download className="w-4 h-4 mr-2" />
-                        Download
-                      </Button>
-                    </DownloadBtn>
-                  </div>
-                </div>
-              </div>
+              <Template key={template._id} template={template} mode="dashboard" />
             ))}
           </Suspense>
         </div>

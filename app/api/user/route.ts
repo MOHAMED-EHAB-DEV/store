@@ -9,12 +9,8 @@ import {
 async function getUser(request: NextRequest) {
   try {
     await connectToDatabase();
-    // Get token from Authorization header or cookie (handled by getUserFromServer)
-    const authHeader = request.headers.get("Authorization");
-    const headerToken = authHeader?.split(" ")[1];
-
     const user = await getUserFromServer({
-      headerToken: headerToken as string,
+      headerToken: request.headers.get("Authorization")?.split(" ")[1],
     });
     return NextResponse.json({ user });
   } catch (error: any) {

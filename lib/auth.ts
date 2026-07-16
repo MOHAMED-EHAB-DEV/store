@@ -103,16 +103,7 @@ export async function getUserFromServer({
       "_id name email avatar role online banned",
     );
     if (!user) return null;
-    const data = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      role: user.role,
-      online: user.online,
-      banned: user.banned,
-    };
-    return JSON.parse(JSON.stringify(data));
+    return JSON.parse(JSON.stringify(user));
   } catch (error) {
     // console.error("Server auth error:", error);
     return null;

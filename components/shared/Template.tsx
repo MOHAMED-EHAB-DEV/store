@@ -1,39 +1,32 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
-import { Star } from "@/components/ui/svgs/icons/Star";
-import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
-import { capitalizeFirstChar } from "@/lib/utils";
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { useUser } from "@/context/UserContext";
-import { ICategory, ITemplate } from "@/types";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { anyImgUrl } from "@/lib/utils/image";
+import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const DynamicFavoriteButton = dynamic(() => import("./FavoriteButton"), { ssr: false });
+const DynamicStoreTemplateDetails = dynamic(() => import("./StoreTemplateDetails"), { ssr: false });
+const DynamicDashboardTemplateDetails = dynamic(() => import("./DashboardTemplateDetails"), { ssr: false });
 
 const Template = ({
   template,
-  showPrice = false,
-  showActionButtons = false,
+  mode = "store",
 }: {
-  template: ITemplate;
-  showPrice?: Boolean;
-  showActionButtons?: Boolean;
+  template: any; // Using any to support both ITemplate and IPopulatedTemplate
+  mode?: "store" | "dashboard";
 }) => {
-  const lowResUrl = anyImgUrl(template.thumbnail, { width: 400, quality: 100 });
-  const highResUrl = anyImgUrl(template.thumbnail, {
+  const lowResUrl = useMemo(() => anyImgUrl(template.thumbnail, { width: 400, quality: 100 }), [template.thumbnail]);
+  const highResUrl = useMemo(() => anyImgUrl(template.thumbnail, {
     width: 400,
     original: true,
-  });
+  }), [template.thumbnail]);
+  
   const [highResLoaded, setHighResLoaded] = useState(false);
-  const { favoriteTemplates, toggleFavorite } = useUser();
-  const isFavorite = favoriteTemplates?.some(
-    (favTemplate: ITemplate) => favTemplate._id === template._id,
-  );
-
   const [isHovering, setIsHovering] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -63,6 +56,7 @@ const Template = ({
       return () => window.removeEventListener("load", loadHighRes);
     }
   }, [highResUrl]);
+
   return (
     <Link
       href={`/templates/${template.slug}`}
@@ -73,17 +67,17 @@ const Template = ({
           template_title: template.title,
         })
       }
-      className="group relative overflow-hidden w-full h-fit rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02] block"
+      className="group relative overflow-hidden w-full h-fit rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02] flex flex-col"
     >
       {/* Gradient Background */}
       <div
-        className={`absolute inset-0 bg-linear-to-br ${template.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}
+        className={`absolute inset-0 bg-linear-to-br ${template.gradient || 'from-gray-800 to-gray-900'} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}
       />
 
       {/* Featured Badge */}
-      {template.categories.some(
-        (category) =>
-          (category as ICategory)?.name?.toLowerCase() === "featured",
+      {template.categories?.some(
+        (category: any) =>
+          category?.name?.toLowerCase() === "featured",
       ) && (
         <div className="absolute top-4 left-4 z-10">
           <Badge className="bg-linear-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">
@@ -93,33 +87,12 @@ const Template = ({
         </div>
       )}
 
-      {/* Favorite Button */}
-      <Button
-        className={`absolute top-4 right-4 ${
-          isFavorite ? "bg-pink-100" : "bg-white/75"
-        } transition hover:bg-white/90 cursor-pointer z-20 rounded-full p-2 shadow-md`}
-        aria-label="Toggle Favorite"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          toggleFavorite(template);
-          sendGTMEvent({
-            event: "template_favorite_toggle",
-            template_id: template._id,
-            template_title: template.title,
-            is_favorite: !isFavorite,
-          });
-        }}
-      >
-        <Heart
-          className={`size-5 ${isFavorite ? "text-pink-500" : "text-gray-400"}`}
-          isActive={isFavorite}
-        />
-      </Button>
+      {/* Favorite Button (Store mode only) */}
+      {mode === "store" && <DynamicFavoriteButton template={template} />}
 
       {/* Thumbnail */}
       <div
-        className="relative w-full h-56 overflow-hidden"
+        className="relative w-full h-56 overflow-hidden flex-shrink-0"
         onMouseEnter={() => {
           if (template.demoVideo) {
             setIsHovering(true);
@@ -203,87 +176,16 @@ const Template = ({
         )}
       </div>
 
-      {/* Template Info */}
-      <div className="p-6 relative z-10">
-        <div className="flex items-start justify-between mb-3">
-          <div>
-            <h3 className="text-xl font-bold text-white mb-1">
-              {template.title}
-            </h3>
-            <p className="text-gray-300 text-sm">
-              {template.description?.slice(0, 100)}...
-            </p>
-          </div>
-          {showPrice && (
-            <div className="text-right">
-              <div className="text-2xl font-bold text-white">
-                {template.price === 0 ? `Free` : `$${template.price}`}
-              </div>
-            </div>
-          )}
-        </div>
-        {/* Rating */}
-        {template?.reviewCount && template?.reviewCount > 0 ? (
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-4 h-4 ${
-                    i < Math.floor(template.averageRating)
-                      ? "text-yellow-400 fill-current"
-                      : "text-gray-600"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-white font-medium">
-              {template.averageRating}
-            </span>
-            <span className="text-gray-400 text-sm">
-              ({template.reviewCount} reviews)
-            </span>
-          </div>
-        ) : null}
-
-        <div className="flex h-fit justify-between items-center">
-          {/* Tags */}
-          <div className="flex items-center flex-wrap gap-2 mb-4">
-            {template.tags?.slice(0, 3).map((tag: string) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="bg-white/10 text-gray-300 border-white/20"
-              >
-                {capitalizeFirstChar(tag)}
-              </Badge>
-            ))}
-          </div>
-
-          {/* Action Buttons */}
-          {showActionButtons && (
-            <Button
-              aria-label="Live Demo"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                window.open(template.demoLink, "_blank");
-                sendGTMEvent({
-                  event: "template_demo_click",
-                  template_id: template._id,
-                  template_title: template.title,
-                });
-              }}
-              className="px-4 cursor-pointer bg-transparent py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200"
-            >
-              <ExternalLink className="w-5 h-5" />
-            </Button>
-          )}
-        </div>
-      </div>
+      {/* Details based on mode */}
+      {mode === "store" ? (
+        <DynamicStoreTemplateDetails template={template} />
+      ) : (
+        <DynamicDashboardTemplateDetails template={template} />
+      )}
     </Link>
   );
 };
 
-export default Template;
+export default memo(Template, (prevProps, nextProps) => {
+  return prevProps.template._id === nextProps.template._id && prevProps.mode === nextProps.mode;
+});

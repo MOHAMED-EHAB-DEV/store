@@ -6,8 +6,14 @@ import { useCallback } from "react";
 import { ITemplate } from "@/types";
 
 // Define minimal types to satisfy the backward compat
-interface SocketMessage { ticketId: string; message: any; }
-interface TicketUpdate { ticketId: string; updates: any; }
+interface SocketMessage {
+  ticketId: string;
+  message: any;
+}
+interface TicketUpdate {
+  ticketId: string;
+  updates: any;
+}
 
 export const useUser = () => {
   const router = useRouter();
@@ -22,7 +28,11 @@ export const useUser = () => {
       const res = await fetch("/api/user/favorites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userState.user?._id, templateId: template._id, action: "add" }),
+        body: JSON.stringify({
+          userId: userState.user?._id,
+          templateId: template._id,
+          action: "add",
+        }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -40,7 +50,11 @@ export const useUser = () => {
       const res = await fetch("/api/user/favorites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userState.user._id, templateId: template._id, action: "remove" }),
+        body: JSON.stringify({
+          userId: userState.user._id,
+          templateId: template._id,
+          action: "remove",
+        }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -53,42 +67,86 @@ export const useUser = () => {
 
   const toggleFavorite = (template: ITemplate) => {
     if (!userState.user) return router.push("/login?message=unauthorized");
-    if (userState.favoriteTemplates.some(t => t._id === template._id)) removeFromFavorites(template);
+    if (userState.favoriteTemplates.some((t) => t._id === template._id))
+      removeFromFavorites(template);
     else addToFavorites(template);
   };
 
   // Socket Proxy Methods
-  const joinTicket = useCallback((ticketId: string) => socket?.emit("join-ticket", ticketId), [socket]);
-  const leaveTicket = useCallback((ticketId: string) => socket?.emit("leave-ticket", ticketId), [socket]);
-  const sendMessage = useCallback((ticketId: string, message: any) => socket?.emit("send-message", { ticketId, message }), [socket]);
-  const setTyping = useCallback((ticketId: string, isTyping: boolean) => socket?.emit("typing", { ticketId, isTyping }), [socket]);
-  const notifyTicketUpdate = useCallback((ticketId: string, updates: any) => socket?.emit("ticket-updated", { ticketId, updates }), [socket]);
+  const joinTicket = useCallback(
+    (ticketId: string) => socket?.emit("join-ticket", ticketId),
+    [socket],
+  );
+  const leaveTicket = useCallback(
+    (ticketId: string) => socket?.emit("leave-ticket", ticketId),
+    [socket],
+  );
+  const sendMessage = useCallback(
+    (ticketId: string, message: any) =>
+      socket?.emit("send-message", { ticketId, message }),
+    [socket],
+  );
+  const setTyping = useCallback(
+    (ticketId: string, isTyping: boolean) =>
+      socket?.emit("typing", { ticketId, isTyping }),
+    [socket],
+  );
+  const notifyTicketUpdate = useCallback(
+    (ticketId: string, updates: any) =>
+      socket?.emit("ticket-updated", { ticketId, updates }),
+    [socket],
+  );
 
-  const onNewMessage = useCallback((callback: (data: SocketMessage) => void) => {
-    socket?.on("new-message", callback);
-    return () => { socket?.off("new-message", callback); };
-  }, [socket]);
+  const onNewMessage = useCallback(
+    (callback: (data: SocketMessage) => void) => {
+      socket?.on("new-message", callback);
+      return () => {
+        socket?.off("new-message", callback);
+      };
+    },
+    [socket],
+  );
 
-  const onTicketStatusChange = useCallback((callback: (data: TicketUpdate) => void) => {
-    socket?.on("ticket-status-changed", callback);
-    return () => { socket?.off("ticket-status-changed", callback); };
-  }, [socket]);
+  const onTicketStatusChange = useCallback(
+    (callback: (data: TicketUpdate) => void) => {
+      socket?.on("ticket-status-changed", callback);
+      return () => {
+        socket?.off("ticket-status-changed", callback);
+      };
+    },
+    [socket],
+  );
 
-  const onNewNotification = useCallback((callback: (notification: any) => void) => {
-    socket?.on("new-notification", callback);
-    return () => { socket?.off("new-notification", callback); };
-  }, [socket]);
+  const onNewNotification = useCallback(
+    (callback: (notification: any) => void) => {
+      socket?.on("new-notification", callback);
+      return () => {
+        socket?.off("new-notification", callback);
+      };
+    },
+    [socket],
+  );
 
-  const onUserStatusChange = useCallback((callback: (data: { userId: string; status: "online" | "offline" }) => void) => {
-    const handleOnline = (data: { userId: string }) => callback({ userId: data.userId, status: "online" });
-    const handleOffline = (data: { userId: string }) => callback({ userId: data.userId, status: "offline" });
-    socket?.on("user-online", handleOnline);
-    socket?.on("user-offline", handleOffline);
-    return () => {
-      socket?.off("user-online", handleOnline);
-      socket?.off("user-offline", handleOffline);
-    };
-  }, [socket]);
+  const onUserStatusChange = useCallback(
+    (
+      callback: (data: {
+        userId: string;
+        status: "online" | "offline";
+      }) => void,
+    ) => {
+      const handleOnline = (data: { userId: string }) =>
+        callback({ userId: data.userId, status: "online" });
+      const handleOffline = (data: { userId: string }) =>
+        callback({ userId: data.userId, status: "offline" });
+      socket?.on("user-online", handleOnline);
+      socket?.on("user-offline", handleOffline);
+      return () => {
+        socket?.off("user-online", handleOnline);
+        socket?.off("user-offline", handleOffline);
+      };
+    },
+    [socket],
+  );
 
   return {
     user: userState.user,

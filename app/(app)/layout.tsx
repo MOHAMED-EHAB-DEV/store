@@ -98,7 +98,7 @@ export default async function RootLayout({
           Parastoo.variable,
         )}
       >
-        <GoogleTagManager gtmId="GTM-TR5KGJS3" />
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID as string} />
         <Toaster />
         <a
           href="#main-content"

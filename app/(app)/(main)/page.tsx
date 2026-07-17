@@ -55,9 +55,9 @@ export default async function Home() {
       </div>
 
       <FeaturedTemplates />
+      <CategoriesSection />
       <WhyME />
       <HowItWorks />
-      <CategoriesSection />
       {/* <FramerFeatures /> */}
       <CodedFeatures />
       <BlueprintCustomBuild />

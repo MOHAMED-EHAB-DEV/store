@@ -111,10 +111,6 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
   },
   reactStrictMode: true,
-  productionBrowserSourceMaps: false,
-  typescript: {
-    ignoreBuildErrors: true, // Prevents out-of-memory errors from heavy type trees
-  },
 };
 
 export default nextConfig;

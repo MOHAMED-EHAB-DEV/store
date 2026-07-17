@@ -90,7 +90,7 @@ const HowItWorks = () => {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: containerRef.current,
-              start: "top top",
+              start: "top 0.2%",
               end: isMobile
                 ? `+=${STEPS.length * 80}%`
                 : `+=${STEPS.length * 100}%`,

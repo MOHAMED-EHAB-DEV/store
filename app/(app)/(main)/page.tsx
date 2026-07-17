@@ -47,6 +47,7 @@ export default async function Home() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
 
       {/*<StickyCTA/>*/}
+      <GSAPInitializer />
       <div className="w-full flex flex-col items-center justify-center gap-10 pb-16 relative">
         <Hero />
         {/* <HeroFeatures /> */}

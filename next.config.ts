@@ -111,16 +111,7 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
   },
   reactStrictMode: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        port: "",
-        pathname: "/**"
-      },
-    ],
-  },
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

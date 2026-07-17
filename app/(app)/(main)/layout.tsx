@@ -1,7 +1,7 @@
-import { ReactLenis } from "lenis/react";
 import { ReactNode } from "react";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
+import LenisInitializer from "@/components/home/LenisInitializer";
 
 export default function RootLayout({
   children,
@@ -9,8 +9,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <>
-      <ReactLenis root />
+    <LenisInitializer>
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
@@ -23,6 +22,6 @@ export default function RootLayout({
 
         <Footer />
       </div>
-    </>
+    </LenisInitializer>
   );
 }

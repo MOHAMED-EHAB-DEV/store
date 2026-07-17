@@ -90,7 +90,7 @@ const HowItWorks = () => {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: containerRef.current,
-              start: "top 1%",
+              start: "top top",
               end: isMobile
                 ? `+=${STEPS.length * 80}%`
                 : `+=${STEPS.length * 100}%`,
@@ -180,8 +180,12 @@ const HowItWorks = () => {
       const refresh = () => ScrollTrigger.refresh();
       document.fonts?.ready?.then(refresh);
       window.addEventListener("load", refresh);
+      const lateRefresh = window.setTimeout(refresh, 500);
 
-      return () => window.removeEventListener("load", refresh);
+      return () => {
+        window.removeEventListener("load", refresh);
+        window.clearTimeout(lateRefresh);
+      };
     },
     { scope: containerRef, dependencies: [] },
   );

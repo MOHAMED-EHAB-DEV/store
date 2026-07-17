@@ -9,7 +9,7 @@ import {
   OrganizationSchema,
   WebSiteSchema,
 } from "@/components/SEO/StructuredData";
-import { GoogleTagManager } from "@next/third-parties/google";
+// import { GoogleTagManager } from "@next/third-parties/google";
 
 export const viewport = {
   width: "device-width",
@@ -89,16 +89,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <head></head>
       <body
         className={cn(
-          "antialiased scroll-smooth bg-primary text-white",
+          "antialiased bg-primary text-white",
           Roboto.className,
           Parastoo.variable,
         )}
       >
-        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID as string} />
+        {/* <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID as string} /> */}
         <Toaster />
         <a
           href="#main-content"

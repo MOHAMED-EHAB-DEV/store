@@ -1,6 +1,7 @@
 import { buildMetadata } from "@/lib/seo";
 import FAQsClient from "@/components/faqs/FAQsClient";
 import { FAQS, FAQ_CATEGORIES } from "@/constants/faqs";
+import GSAPInitializer from "@/components/home/GSAPInitializer";
 
 export const metadata = buildMetadata({
   title: "Frequently Asked Questions | Premium Templates",
@@ -49,6 +50,7 @@ export default async function FAQsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      <GSAPInitializer />
       <FAQsClient faqs={faqs} categories={categories} />
     </>
   );

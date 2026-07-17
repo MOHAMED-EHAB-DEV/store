@@ -1,15 +1,22 @@
 const SplitText = (text: string, className: string = "") => {
-    return text.split("").map((char, index) => (
+  const words = text.split(" ");
+  return words.map((word, wordIndex) => (
+    <span key={wordIndex} className="inline-block whitespace-nowrap">
+      {word.split("").map((char, charIndex) => (
         <span
-            key={index}
-            className={`char inline-block! ${char === " " ? "w-[0.3em]" : "w-auto"} transition-transform duration-200 hover:scale-110 ${className}`}
-            style={{
-                minWidth: char === " " ? "0.3em" : "auto",
-            }}
+          key={charIndex}
+          className={`char inline-block! transition-transform duration-200 hover:scale-110 ${className}`}
         >
-          {char === " " ? "\u00A0" : char}
+          {char}
         </span>
-    ));
+      ))}
+      {wordIndex < words.length - 1 && (
+        <span className="inline-block" style={{ width: "0.3em" }}>
+          &nbsp;
+        </span>
+      )}
+    </span>
+  ));
 };
 
 export default SplitText;

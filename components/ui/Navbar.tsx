@@ -71,7 +71,7 @@ const Navbar = () => {
                 aria-label="Login button"
                 href="/login"
                 onClick={() =>
-                  sendGTMEvent({ event: "auth_nav_click", auth_type: "login" })
+                  sendGTMEvent({ event: "button_click", button_name: "navbar-login" })
                 }
               >
                 Login
@@ -83,7 +83,7 @@ const Navbar = () => {
                   scrolled && !isCustomDev ? "/custom-development" : "/register"
                 }
                 onClick={() =>
-                  sendGTMEvent({ event: "auth_nav_click", auth_type: "signup" })
+                  sendGTMEvent({ event: "button_click", button_name: "navbar-signup" })
                 }
               >
                 <span className="relative inline-grid items-center justify-items-center">

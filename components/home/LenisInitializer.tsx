@@ -4,8 +4,12 @@ import { useEffect, useRef } from "react";
 import { ReactLenis, type LenisRef } from "lenis/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
+import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, TextPlugin, useGSAP);
+}
 
 export default function LenisInitializer({
   children,

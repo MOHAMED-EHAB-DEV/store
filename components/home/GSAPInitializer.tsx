@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, memo } from "react";
+import { useLayoutEffect, memo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
@@ -14,10 +14,12 @@ if (typeof window !== "undefined") {
 const GSAPInitializer = memo(function GSAPInitializer() {
   const lenis = useLenis(ScrollTrigger.update);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!lenis) return;
 
-    lenis.options.autoRaf = false;
+    // Tell GlobalLenisProvider to stop running its own RAF loop
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).gsapTickerEnabled = true;
 
     function update(time: number) {
       lenis?.raf(time * 1000);
@@ -25,9 +27,14 @@ const GSAPInitializer = memo(function GSAPInitializer() {
 
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
+    
+    // Force ScrollTrigger to recalculate positions now that the ticker is completely synced with GSAP
+    ScrollTrigger.refresh();
 
     return () => {
       gsap.ticker.remove(update);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).gsapTickerEnabled = false;
     };
   }, [lenis]);
 

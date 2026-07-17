@@ -49,7 +49,6 @@ export default async function FAQsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
       <GSAPInitializer />
       <FAQsClient faqs={faqs} categories={categories} />
     </>

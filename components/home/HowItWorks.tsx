@@ -176,15 +176,26 @@ const HowItWorks = () => {
           });
         },
       );
-
-      const refresh = () => ScrollTrigger.refresh();
+      let timeoutId: number;
+      const refresh = () => {
+        window.clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(() => ScrollTrigger.refresh(), 100);
+      };
+      
       document.fonts?.ready?.then(refresh);
-      window.addEventListener("load", refresh);
-      const lateRefresh = window.setTimeout(refresh, 500);
+      
+      let ro: ResizeObserver;
+      if (typeof ResizeObserver !== "undefined") {
+        ro = new ResizeObserver(() => refresh());
+        ro.observe(document.body);
+      } else {
+        window.addEventListener("load", refresh);
+      }
 
       return () => {
+        window.clearTimeout(timeoutId);
+        if (ro) ro.disconnect();
         window.removeEventListener("load", refresh);
-        window.clearTimeout(lateRefresh);
       };
     },
     { scope: containerRef, dependencies: [] },

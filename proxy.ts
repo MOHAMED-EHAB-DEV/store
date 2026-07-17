@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export const runtime = 'edge';
-
 function addSecurityHeaders(response: NextResponse) {
   response.headers.delete("X-Powered-By");
 

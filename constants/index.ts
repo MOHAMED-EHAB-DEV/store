@@ -1,4 +1,29 @@
 import { Step } from "@/types";
+import { Code2 } from "@/components/ui/svgs/icons/Code2";
+import { Blocks } from "@/components/ui/svgs/icons/Blocks";
+import { Shield } from "@/components/ui/svgs/icons/Shield";
+import { Cpu } from "@/components/ui/svgs/icons/Cpu";
+import { Palette } from "@/components/ui/svgs/icons/Palette";
+import { Layers } from "@/components/ui/svgs/icons/Layers";
+import { MousePointer } from "@/components/ui/svgs/icons/MousePointer";
+import { Smartphone } from "@/components/ui/svgs/icons/Smartphone";
+import { Instagram } from "@/components/ui/svgs/icons/Instagram";
+import { Linkedin } from "@/components/ui/svgs/icons/Linkedin";
+import { LayoutDashboard } from "@/components/ui/svgs/icons/LayoutDashboard";
+import { Templates } from "@/components/ui/svgs/icons/Templates";
+import { Headset } from "@/components/ui/svgs/icons/Headset";
+import { Settings } from "@/components/ui/svgs/icons/Settings";
+import { Users } from "@/components/ui/svgs/icons/Users";
+import { FolderOpen } from "@/components/ui/svgs/icons/FolderOpen";
+import { HelpCircle } from "@/components/ui/svgs/icons/HelpCircle";
+import { Download } from "@/components/ui/svgs/icons/Download";
+import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
+import { Analytics } from "@/components/ui/svgs/icons/Analytics";
+import { Zap } from "@/components/ui/svgs/icons/Zap";
+import { Code } from "@/components/ui/svgs/icons/Code";
+import { Star } from "@/components/ui/svgs/icons/Star";
+import { Rocket } from "@/components/ui/svgs/icons/Rocket";
+import { Target } from "@/components/ui/svgs/icons/Target";
 
 export const NavigationLinks = [
   {
@@ -101,25 +126,25 @@ export const featuresBusinessSales = [
 
 export const codeFeatures = [
   {
-    icon: "Code2",
+    icon: Code2,
     title: "Next-Gen Frameworks",
     description:
       "Cutting-edge template built with React, Next.js, and TypeScript for lightning-fast development.",
   },
   {
-    icon: "Blocks",
+    icon: Blocks,
     title: "Scalable Architecture",
     description:
       "Crafted with modular, reusable components following industry-leading best practices.",
   },
   {
-    icon: "Shield",
+    icon: Shield,
     title: "Battle-Tested Code",
     description:
       "Production-ready, secure, and optimized template that are trusted for real-world deployments.",
   },
   {
-    icon: "Cpu",
+    icon: Cpu,
     title: "Blazing Performance",
     description:
       "Ultra-fast template engineered for SEO, accessibility, and modern performance standards.",
@@ -128,23 +153,23 @@ export const codeFeatures = [
 
 export const figmaFeatures = [
   {
-    icon: "Palette",
+    icon: Palette,
     title: "Design Systems",
     description:
       "Complete design systems with components, colors, and typography",
   },
   {
-    icon: "Layers",
+    icon: Layers,
     title: "Component Libraries",
     description: "Reusable components for faster design workflow",
   },
   {
-    icon: "MousePointer",
+    icon: MousePointer,
     title: "Interactive Prototypes",
     description: "Ready-to-use prototypes with micro-interactions",
   },
   {
-    icon: "Smartphone",
+    icon: Smartphone,
     title: "Multi-Device Layouts",
     description: "Responsive designs for all screen sizes",
   },
@@ -153,34 +178,34 @@ export const figmaFeatures = [
 export const socialImgs = [
   {
     name: "Instagram",
-    Icon: "Instagram",
+    Icon: Instagram,
     link: "https://www.instagram.com/__m4_e__/",
   },
   {
     name: "Linkedin",
-    Icon: "Linkedin",
+    Icon: Linkedin,
     link: "https://www.linkedin.com/in/1-mohammed",
   },
 ] as const;
 
 export const DashboardSidebarLinks = [
   {
-    Icon: "LayoutDashboard",
+    Icon: LayoutDashboard,
     text: "Dashboard",
     link: "/dashboard",
   },
   {
-    Icon: "Templates",
+    Icon: Templates,
     text: "Purchased Templates",
     link: "/dashboard/purchased-templates",
   },
   {
-    Icon: "Headset",
+    Icon: Headset,
     text: "Support",
     link: "/dashboard/support",
   },
   {
-    Icon: "Settings",
+    Icon: Settings,
     text: "Settings",
     link: "/dashboard/settings",
   },
@@ -188,57 +213,57 @@ export const DashboardSidebarLinks = [
 
 export const AdminSidebarLinks = [
   {
-    Icon: "LayoutDashboard",
+    Icon: LayoutDashboard,
     text: "Dashboard",
     link: "/admin",
   },
   {
-    Icon: "Users",
+    Icon: Users,
     text: "Users",
     link: "/admin/users",
   },
   {
-    Icon: "Templates",
+    Icon: Templates,
     text: "Templates",
     link: "/admin/templates",
   },
   {
-    Icon: "FolderOpen",
+    Icon: FolderOpen,
     text: "Categories",
     link: "/admin/categories",
   },
   {
-    Icon: "Blocks",
+    Icon: Blocks,
     text: "Blog",
     link: "/admin/blogs",
   },
   {
-    Icon: "HelpCircle",
+    Icon: HelpCircle,
     text: "FAQs",
     link: "/admin/faqs",
   },
   {
-    Icon: "Download",
+    Icon: Download,
     text: "Downloads",
     link: "/admin/download-logs",
   },
   {
-    Icon: "AlertCircle",
+    Icon: AlertCircle,
     text: "Error Logs",
     link: "/admin/error-logs",
   },
   {
-    Icon: "Analytics",
+    Icon: Analytics,
     text: "Analytics",
     link: "/admin/analytics",
   },
   {
-    Icon: "Headset",
+    Icon: Headset,
     text: "Support",
     link: "/admin/support",
   },
   {
-    Icon: "Zap",
+    Icon: Zap,
     text: "Performance",
     link: "/admin/performance",
   },
@@ -281,10 +306,10 @@ export const Icons = ["Zap", "ExternalLink", "Palette", "Code"] as const;
 
 // About Me
 export const stats = [
-  { label: "Templates Created", value: "10+", icon: "Code" },
-  { label: "Happy Customers", value: "1K+", icon: "Users" },
-  { label: "Downloads", value: "2K+", icon: "Download" },
-  { label: "5-Star Reviews", value: "98%", icon: "Star" },
+  { label: "Templates Created", value: "10+", icon: Code },
+  { label: "Happy Customers", value: "1K+", icon: Users },
+  { label: "Downloads", value: "2K+", icon: Download },
+  { label: "5-Star Reviews", value: "98%", icon: Star },
 ] as const;
 
 export const skills = [
@@ -305,16 +330,16 @@ export const skills = [
 export const badges = [
   // { text: "Top Seller", icon: Award, gradient: "from-yellow-400 to-orange-500" },
   // { text: "Design Expert", icon: "Palette", gradient: "from-purple-500 to-pink-500" },
-  { text: "Code Wizard", icon: "Zap", gradient: "from-blue-500 to-cyan-500" },
+  { text: "Code Wizard", icon: Zap, gradient: "from-blue-500 to-cyan-500" },
   {
     text: "Innovation Leader",
-    icon: "Rocket",
+    icon: Rocket,
     gradient: "from-green-500 to-teal-500",
   },
   // { text: "Customer Favorite", icon: Heart, gradient: "from-red-500 to-pink-500" },
   {
     text: "Quality Focused",
-    icon: "Target",
+    icon: Target,
     gradient: "from-indigo-500 to-purple-500",
   },
 ] as const;

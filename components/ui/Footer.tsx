@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import Logo from "@/components/ui/Logo";
 import { socialImgs, FooterLinks } from "@/constants";
-import { IconRenderer } from '@/components/ui/svgs/IconRenderer';
 
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
 
@@ -35,7 +34,7 @@ const Footer = () => {
                   aria-label={social.name}
                   className="text-secondary hover:text-white transition"
                 >
-                  <IconRenderer name={social.Icon as string} />
+                  <social.Icon />
                 </a>
               ))}
             </div>

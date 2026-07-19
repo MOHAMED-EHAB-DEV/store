@@ -9,7 +9,6 @@ import Link from "next/link";
 import { stats, skills, badges } from "@/constants";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { IconRenderer } from '@/components/ui/svgs/IconRenderer';
 
 const AboutMe = () => {
   useGSAP(() => {
@@ -116,7 +115,7 @@ const AboutMe = () => {
                     <div
                       className={`w-12 h-12 mx-auto mb-2 rounded-full bg-linear-to-br ${badge.gradient} flex items-center justify-center`}
                     >
-                      <IconRenderer name={Icon as string} className="w-6 h-6 text-white" />
+                      <Icon className="w-6 h-6 text-white" />
                     </div>
                     <p className="text-white text-sm font-medium">
                       {badge.text}
@@ -159,7 +158,7 @@ const AboutMe = () => {
                 >
                   <div className="absolute inset-0 bg-linear-to-br from-purple-500/20 via-pink-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative z-10 text-center">
-                    <IconRenderer name={Icon as string} className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
+                    <Icon className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
                     {/* <div className="text-3xl font-bold text-white mb-1">{stat.value}</div> */}
                     <div className="text-3xl flex justify-center items-center gap-[0.5px] font-bold text-white mb-1">
                       <CountUp

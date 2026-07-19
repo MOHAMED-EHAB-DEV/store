@@ -6,7 +6,6 @@ import { codeFeatures } from "@/constants";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { IconRenderer } from '@/components/ui/svgs/IconRenderer';
 
 const CodedFeatures = () => {
     useGSAP(() => {
@@ -93,7 +92,7 @@ const CodedFeatures = () => {
                                     className="h-full w-full rounded-xl bg-neutral-900/60 group-hover:bg-neutral-900/70 border border-white/10 px-5 py-8 flex flex-col shadow-[0_0_0_0_rgba(255,255,255,0)] group-hover:shadow-[0_0_32px_-8px_rgba(0,255,180,0.35)] transition-all">
                                     <div
                                         className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-linear-to-r from-emerald-400 to-teal-500 flex items-center justify-center ring-4 ring-emerald-400/20 group-hover:scale-105 group-hover:rotate-3 transition-transform duration-500">
-                                        <IconRenderer name={Icon as string} className="w-8 h-8 text-white" aria-hidden="true"/>
+                                        <Icon className="w-8 h-8 text-white" aria-hidden="true"/>
                                     </div>
                                     <h3 className="text-xl md:text-2xl font-paras font-semibold text-white mb-3 tracking-tight">
                                         {f.title}

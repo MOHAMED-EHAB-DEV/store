@@ -74,9 +74,7 @@ function isAuthRoute(pathname: string) {
 }
 
 function isAdminApiRoute(pathname: string) {
-  return (
-    pathname.startsWith("/api/admin")
-  );
+  return pathname.startsWith("/api/admin");
 }
 
 export async function proxy(req: NextRequest) {
@@ -112,16 +110,6 @@ export async function proxy(req: NextRequest) {
   // 2. Security Headers for API routes
   if (isApiRoute(pathname)) {
     const response = NextResponse.next();
-    if (isTokenInvalid) {
-      if (process.env.NODE_ENV === "production") {
-        response.cookies.set("token", "", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          path: "/",
-        });
-      }
-    }
     addSecurityHeaders(response);
     return response;
   }
@@ -139,11 +127,13 @@ export async function proxy(req: NextRequest) {
   const reLogin = () => {
     if (process.env.DisableAuth) return NextResponse.next();
     const response = NextResponse.redirect(new URL("/login", req.url));
-    if (process.env.NODE_ENV === "production") {
+    const isProduction = process.env.NODE_ENV === "production";
+    if (isProduction) {
       response.cookies.set("token", "", {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: isProduction,
+        sameSite: "lax",
+        maxAge: 0,
         path: "/",
       });
     }
@@ -161,16 +151,6 @@ export async function proxy(req: NextRequest) {
   } else if (isBannedRoute(pathname)) {
     // If not banned but on /banned, redirect home
     const response = NextResponse.redirect(new URL("/", req.url));
-    if (isTokenInvalid) {
-      if (process.env.NODE_ENV === "production") {
-        response.cookies.set("token", "", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          path: "/",
-        });
-      }
-    }
     addSecurityHeaders(response);
     return response;
   }
@@ -180,20 +160,11 @@ export async function proxy(req: NextRequest) {
   }
 
   if (isAdminRoute(pathname)) {
-    if (!token || !decodedToken || decodedToken.role !== "admin") return reLogin();
+    if (!token || !decodedToken || decodedToken.role !== "admin")
+      return reLogin();
   }
 
   const response = NextResponse.next();
-  if (isTokenInvalid) {
-    if (process.env.NODE_ENV === "production") {
-      response.cookies.set("token", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-      });
-    }
-  }
   addSecurityHeaders(response);
   return response;
 }

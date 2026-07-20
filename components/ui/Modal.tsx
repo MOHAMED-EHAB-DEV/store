@@ -31,12 +31,13 @@ export const ModalPortal = ({ children }: { children: React.ReactNode }) => {
   return createPortal(children, document.body);
 };
 
-export const ModalOverlay = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+export const ModalOverlay = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & { show?: boolean }>(
+  ({ className, show, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        "fixed inset-0 z-50 bg-black/50 transition-opacity duration-200 ease-out",
+        show ? "opacity-100" : "opacity-0",
         className
       )}
       {...props}
@@ -53,19 +54,27 @@ export const ModalContent = React.forwardRef<
   }
 >(({ className, children, showCloseButton = true, size = "lg", ...props }, ref) => {
   const { open, onOpenChange } = React.useContext(ModalContext);
+  const [render, setRender] = React.useState(open);
+  const [show, setShow] = React.useState(false);
 
   React.useEffect(() => {
     if (open) {
+      setRender(true);
+      // Slight delay to ensure DOM is ready before triggering transition
+      requestAnimationFrame(() => requestAnimationFrame(() => setShow(true)));
       document.body.style.overflow = "hidden";
     } else {
+      setShow(false);
       document.body.style.overflow = "";
+      const timeout = setTimeout(() => setRender(false), 200); // match duration
+      return () => clearTimeout(timeout);
     }
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
-  if (!open) return null;
+  if (!render) return null;
 
   const sizeClasses = {
     sm: "sm:max-w-sm",
@@ -96,13 +105,16 @@ export const ModalContent = React.forwardRef<
         className="m-0 p-0 bg-transparent border-none w-screen h-dvh max-w-none max-h-none focus:outline-none backdrop:bg-transparent"
         aria-modal="true"
       >
-        <ModalOverlay data-state={open ? "open" : "closed"} onClick={() => onOpenChange?.(false)} />
+        <ModalOverlay show={show} onClick={() => onOpenChange?.(false)} />
         <div
           ref={ref}
           role="document"
-          data-state={open ? "open" : "closed"}
           className={cn(
-            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            "fixed left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg",
+            "transition-all duration-200",
+            show 
+              ? "opacity-100 scale-100 top-[50%] ease-[cubic-bezier(0.175,0.885,0.32,1.15)]" 
+              : "opacity-0 scale-95 top-[52%] ease-in",
             sizeClasses[size],
             className
           )}

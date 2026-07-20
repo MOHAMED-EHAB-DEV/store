@@ -8,7 +8,7 @@ import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
 import { User } from "@/components/ui/svgs/icons/User";
 import { Check } from "@/components/ui/svgs/icons/Check";
 import { useRouter } from "next/navigation";
-import { passwordRequirements } from "@/constants";
+import { passwordRequirements } from "@/constants/auth";
 import { useUser } from "@/context/UserContext";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";

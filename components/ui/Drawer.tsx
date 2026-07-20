@@ -81,55 +81,17 @@ const Drawer = ({
     };
   }, [isOpen]);
 
-  // Focus management: move focus into the panel on open, restore it to the
-  // trigger element on close (restored immediately on close intent, not
-  // after the animation finishes).
+  // Native <dialog> handles focus trapping, Escape key, and restoring focus on close.
+  // We manage the `.showModal()` call and `.close()` sync with our animations.
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
-    if (isRendered && isOpen) {
-      previouslyFocusedEl.current = document.activeElement as HTMLElement | null;
-      const raf = requestAnimationFrame(() => {
-        const firstFocusable = panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-        (firstFocusable ?? panelRef.current)?.focus();
-      });
-      return () => cancelAnimationFrame(raf);
-    }
-    if (!isOpen) {
-      previouslyFocusedEl.current?.focus();
-      previouslyFocusedEl.current = null;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isRendered && isOpen && !dialog.open) {
+      dialog.showModal();
     }
   }, [isRendered, isOpen]);
-
-  // Escape to close + Tab focus trap.
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab" || !panelRef.current) return;
-
-      const focusables = panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
-      if (focusables.length === 0) {
-        e.preventDefault();
-        return;
-      }
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
 
   if (!mounted || !isRendered) return null;
 
@@ -154,34 +116,47 @@ const Drawer = ({
   };
 
   return createPortal(
-    <div className="relative z-[9999999]" role="dialog" aria-modal="true">
-      {/* Backdrop */}
-      <div
-        onClick={onClose}
-        className={cn(
-          "fixed inset-0 w-screen h-dvh bg-black/40 backdrop-blur-lg transition-opacity duration-300",
-          isVisible ? "opacity-100" : "opacity-0",
-          backdropClassName
-        )}
-        aria-hidden="true"
-      />
+    <dialog
+      ref={dialogRef}
+      className="m-0 p-0 bg-transparent border-none w-screen h-dvh max-w-none max-h-none focus:outline-none backdrop:bg-transparent"
+      aria-modal="true"
+      onCancel={(e) => {
+        e.preventDefault(); // Prevent immediate native close
+        onClose(); // Trigger our animated close
+      }}
+    >
+      <div className="relative z-[9999999] w-full h-full flex" role="document">
+        {/* Backdrop */}
+        <div
+          onClick={onClose}
+          className={cn(
+            "fixed inset-0 w-screen h-dvh bg-black/40 backdrop-blur-lg transition-opacity duration-300",
+            isVisible ? "opacity-100" : "opacity-0",
+            backdropClassName
+          )}
+          aria-hidden="true"
+        />
 
-      {/* Drawer Panel */}
-      <div
-        ref={panelRef}
-        className={cn(baseClasses, positionClasses[direction], className)}
-        style={{ transform: getTransform() }}
-        tabIndex={-1}
-        onTransitionEnd={(e) => {
-          // ignore bubbled transitions from children — only the panel's own
-          // transform transition should trigger unmount
-          if (e.target !== e.currentTarget) return;
-          if (!isOpen) setIsRendered(false);
-        }}
-      >
-        {children}
+        {/* Drawer Panel */}
+        <div
+          ref={panelRef}
+          className={cn(baseClasses, positionClasses[direction], className)}
+          style={{ transform: getTransform() }}
+          tabIndex={-1}
+          onTransitionEnd={(e) => {
+            // ignore bubbled transitions from children — only the panel's own
+            // transform transition should trigger unmount
+            if (e.target !== e.currentTarget) return;
+            if (!isOpen) {
+              dialogRef.current?.close();
+              setIsRendered(false);
+            }
+          }}
+        >
+          {children}
+        </div>
       </div>
-    </div>,
+    </dialog>,
     document.body
   );
 };

@@ -80,7 +80,7 @@ export default function DownloadLogsClient({
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded overflow-hidden bg-white/5 flex-shrink-0">
                         {log.templateId?.thumbnail ? (
-                            <img src={log.templateId.thumbnail} alt={log.templateId.title} className="w-full h-full object-cover" />
+                            <Image src={anyImgUrl(log.templateId.thumbnail)} alt={log.templateId.title} className="w-full h-full object-cover" unoptimized width={40} height={40} />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center">
                                 <Templates className="w-5 h-5 text-muted-foreground" />

@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from "@/components/Dashboard/Layout/Sidebar";
-import { IUser } from '@/types';
+import { IUser } from "@/lib/validations/user";
 
 const LayoutContainer = ({ children, user }: { children: React.ReactNode, user: IUser }) => (
     <div className="lg:w-[calc(100%-18rem)] w-full ms-auto">

@@ -11,3 +11,5 @@ export const TicketMessageSchema = v.object({
   isRead: v.boolean(),
   createdAt: v.union([v.date(), v.string()]),
 });
+
+export type ITicketMessage = v.InferOutput<typeof TicketMessageSchema>;

@@ -14,7 +14,8 @@ import Template from "@/components/shared/Template";
 import TemplateSkeleton from "@/components/ui/TemplateSkeleton";
 import { Search } from "@/components/ui/svgs/icons/Search";
 import { Input } from "@/components/ui/input";
-import { ICategory, ITemplate } from "@/types";
+import { ICategory } from "@/lib/validations/category";
+import { ITemplate } from "@/lib/validations/template";
 
 const Templates = ({
   initialData,
@@ -155,14 +156,14 @@ const Templates = ({
         <FilterBar
           categories={selectedCategories}
           setCategories={(updated) => {
-            const selected = (updated as any[])
+            const selected = updated
               .filter((c) => c.selected)
               .map((c) => c.name);
             updateFilters({ categories: selected });
           }}
           tags={selectedTags}
           setTags={(updated) => {
-            const selected = (updated as any[])
+            const selected = updated
               .filter((t) => t.selected)
               .map((t) => t.tag);
             updateFilters({ tags: selected });
@@ -173,7 +174,7 @@ const Templates = ({
           setMaxPrice={(val) => updateFilters({ maxPrice: String(val) })}
           minRating={Number(searchParams.minRating) || 0}
           setMinRating={(val) => updateFilters({ minRating: String(val) })}
-          sortedBy={(searchParams.sortBy as any) || "popular"}
+          sortedBy={(searchParams.sortBy as "popular" | "recent" | "rating" | "price" | "downloads") || "popular"}
           setSortedBy={(val) => updateFilters({ sortBy: val })}
           hideCategoryFilter={hideCategoryFilter}
           clearFilters={clearFilters}

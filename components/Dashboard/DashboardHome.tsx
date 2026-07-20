@@ -1,6 +1,6 @@
 "use client";
 
-import { IUser } from "@/types";
+import { IUser } from "@/lib/validations/user";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import { Templates } from "@/components/ui/svgs/icons/Templates";

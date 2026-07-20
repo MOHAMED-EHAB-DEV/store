@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { HeroItems } from "@/constants";
+import { HeroItems } from "@/constants/features";
 
 export default function HeroFeatures() {
   const containerRef = useRef<HTMLDivElement>(null);

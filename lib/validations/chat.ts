@@ -7,3 +7,5 @@ export const ChatSchema = v.object({
   lastMessageAt: v.union([v.date(), v.string()]),
   createdAt: v.union([v.date(), v.string()]),
 });
+
+export type IChat = v.InferOutput<typeof ChatSchema>;

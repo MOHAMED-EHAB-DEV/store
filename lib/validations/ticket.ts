@@ -13,3 +13,5 @@ export const TicketSchema = v.object({
   lastMessageAt: v.union([v.date(), v.string()]),
   resolvedAt: v.optional(v.union([v.date(), v.string()])),
 });
+
+export type ITicket = v.InferOutput<typeof TicketSchema>;

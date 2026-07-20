@@ -13,3 +13,5 @@ export const ReviewSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type IReview = v.InferOutput<typeof ReviewSchema>;

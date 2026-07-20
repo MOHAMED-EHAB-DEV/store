@@ -16,3 +16,5 @@ export const ErrorLogSchema = v.object({
   ip: v.optional(v.string()),
   timestamp: v.union([v.date(), v.string()]),
 });
+
+export type IErrorLog = v.InferOutput<typeof ErrorLogSchema>;

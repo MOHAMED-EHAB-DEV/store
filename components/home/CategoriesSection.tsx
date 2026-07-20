@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { getCategories } from "@/static/categories";
-import { ICategory } from "@/types";
+import { ICategory } from "@/lib/validations/category";
 import CategoriesGrid from "./CategoriesGrid";
 
 const CategoriesSection = async () => {

@@ -96,9 +96,32 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  let decodedToken: any = null;
+  let isTokenInvalid = false;
+  if (token) {
+    try {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+      const { payload } = await jwtVerify(token, secret);
+      decodedToken = payload;
+    } catch (e) {
+      decodedToken = null;
+      isTokenInvalid = true;
+    }
+  }
+
   // 2. Security Headers for API routes
   if (isApiRoute(pathname)) {
     const response = NextResponse.next();
+    if (isTokenInvalid) {
+      if (process.env.NODE_ENV === "production") {
+        response.cookies.set("token", "", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          path: "/",
+        });
+      }
+    }
     addSecurityHeaders(response);
     return response;
   }
@@ -116,21 +139,17 @@ export async function proxy(req: NextRequest) {
   const reLogin = () => {
     if (process.env.DisableAuth) return NextResponse.next();
     const response = NextResponse.redirect(new URL("/login", req.url));
-    response.cookies.delete("token");
+    if (process.env.NODE_ENV === "production") {
+      response.cookies.set("token", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
+    }
     addSecurityHeaders(response);
     return response;
   };
-
-  let decodedToken: any = null;
-  if (token) {
-    try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-      const { payload } = await jwtVerify(token, secret);
-      decodedToken = payload;
-    } catch (e) {
-      decodedToken = null;
-    }
-  }
 
   // Handle banned users
   if (decodedToken && decodedToken.banned) {
@@ -142,6 +161,16 @@ export async function proxy(req: NextRequest) {
   } else if (isBannedRoute(pathname)) {
     // If not banned but on /banned, redirect home
     const response = NextResponse.redirect(new URL("/", req.url));
+    if (isTokenInvalid) {
+      if (process.env.NODE_ENV === "production") {
+        response.cookies.set("token", "", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          path: "/",
+        });
+      }
+    }
     addSecurityHeaders(response);
     return response;
   }
@@ -155,6 +184,16 @@ export async function proxy(req: NextRequest) {
   }
 
   const response = NextResponse.next();
+  if (isTokenInvalid) {
+    if (process.env.NODE_ENV === "production") {
+      response.cookies.set("token", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
+    }
+  }
   addSecurityHeaders(response);
   return response;
 }

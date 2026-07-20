@@ -19,3 +19,5 @@ export const CategorySchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type ICategory = v.InferOutput<typeof CategorySchema>;

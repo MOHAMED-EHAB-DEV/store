@@ -11,3 +11,5 @@ export const FAQSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type IFAQ = v.InferOutput<typeof FAQSchema>;

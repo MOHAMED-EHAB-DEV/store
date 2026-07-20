@@ -10,7 +10,7 @@ import { ChevronUp } from "@/components/ui/svgs/icons/ChevronUp";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
 import { LogOut } from "@/components/ui/svgs/icons/LogOut";
 import Logo from "@/components/ui/Logo";
-import { DashboardSidebarLinks } from "@/constants";
+import { DashboardSidebarLinks } from "@/constants/navigation";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Home } from "@/components/ui/svgs/icons/Home";
 import { sonnerToast } from "@/components/ui/sonner";
-import { IUser } from "@/types";
+import { IUser } from "@/lib/validations/user";
 import NotificationCenter from "@/components/shared/NotificationCenter";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";

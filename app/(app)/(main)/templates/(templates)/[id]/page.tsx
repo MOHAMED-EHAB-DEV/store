@@ -1,6 +1,7 @@
 import "@/app/markdown.css";
 import Template from "@/components/singleTemplate/Template";
-import { ICategory, ITemplate } from "@/types";
+import { ICategory } from "@/lib/validations/category";
+import { ITemplate } from "@/lib/validations/template";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MarkdownCopyHandler from "@/components/Markdown/MarkdownCopyHandler";

@@ -17,3 +17,5 @@ export const DownloadLogSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type IDownloadLog = v.InferOutput<typeof DownloadLogSchema>;

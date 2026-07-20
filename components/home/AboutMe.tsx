@@ -6,7 +6,7 @@ import { Coffee } from "@/components/ui/svgs/icons/Coffee";
 import { Sparkles } from "@/components/ui/svgs/icons/Sparkles";
 import CountUp from "../ui/CountUp";
 import Link from "next/link";
-import { stats, skills, badges } from "@/constants";
+import { stats, skills, badges } from "@/constants/features";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 

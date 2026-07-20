@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/Modal";
-import { whatLoseWhenDeleteMyAccount } from "@/constants";
+import { whatLoseWhenDeleteMyAccount } from "@/constants/auth";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Eye } from "@/components/ui/svgs/icons/Eye";
 import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";

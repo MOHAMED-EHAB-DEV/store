@@ -10,3 +10,5 @@ export const MessageSchema = v.object({
   isRead: v.boolean(),
   createdAt: v.union([v.date(), v.string()]),
 });
+
+export type IMessage = v.InferOutput<typeof MessageSchema>;

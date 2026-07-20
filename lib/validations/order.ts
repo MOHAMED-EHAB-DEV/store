@@ -14,3 +14,5 @@ export const OrderSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type IOrder = v.InferOutput<typeof OrderSchema>;

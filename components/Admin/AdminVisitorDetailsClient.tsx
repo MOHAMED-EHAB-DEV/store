@@ -7,6 +7,8 @@ import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { History } from "@/components/ui/svgs/icons/History";
 import { MousePointer2 } from "@/components/ui/svgs/icons/MousePointer2";
 import { useMemo } from "react";
+import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 
 interface Visitor {
     _id: string;
@@ -129,7 +131,7 @@ export default function AdminVisitorDetailsClient({
                                  <p className="text-[10px] text-gray-500 uppercase mb-3 font-bold tracking-widest">Authenticated As</p>
                                  <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10">
                                     {visitor.userId.avatar ? (
-                                        <img src={visitor.userId.avatar} alt={visitor.userId.name} className="w-10 h-10 rounded-full object-cover border border-blue-500/20" />
+                                        <Image src={anyImgUrl(visitor.userId.avatar)} alt={visitor.userId.name} className="w-10 h-10 rounded-full object-cover border border-blue-500/20" unoptimized width={40} height={40} />
                                     ) : (
                                         <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/20">
                                             <span className="text-blue-400 font-bold uppercase">{visitor.userId.name?.charAt(0) || '?'}</span>

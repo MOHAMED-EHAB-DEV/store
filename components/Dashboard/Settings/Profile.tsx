@@ -1,4 +1,4 @@
-import { IUser } from "@/types";
+import { IUser } from "@/lib/validations/user";
 import UpdateProfile from "./UpdateProfile";
 
 const Profile = ({user} : {user:IUser}) => {

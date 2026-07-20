@@ -27,3 +27,5 @@ export const TemplateSchema = v.object({
   fileKey: v.string(),
   slug: v.string(),
 });
+
+export type ITemplate = v.InferOutput<typeof TemplateSchema>;

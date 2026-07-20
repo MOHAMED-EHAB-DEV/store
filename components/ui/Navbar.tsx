@@ -2,7 +2,7 @@
 
 import { useState, Suspense, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { NavigationLinks } from "@/constants";
+import { NavigationLinks } from "@/constants/navigation";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
 import { useUser } from "@/context/UserContext";
@@ -125,13 +125,10 @@ const Navbar = () => {
 export default Navbar;
 
 const NavbarItem = ({ text, link }: { text: string; link: string }) => {
-  const [isHovered, setIsHovered] = useState(false);
   return (
     <Link
       href={link}
-      className="decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="group decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
       onClick={() =>
         sendGTMEvent({
           event: "nav_link_click",
@@ -142,7 +139,7 @@ const NavbarItem = ({ text, link }: { text: string; link: string }) => {
     >
       {text}
       <div
-        className={`w-0 h-[2px] ${isHovered && "w-full!"} bg-linear-to-r from-[#8BFA9E] to-[#3FD6DD] rounded-[2px] transition-all duration-300 ease-out`}
+        className="w-0 h-[2px] group-hover:w-full bg-linear-to-r from-[#8BFA9E] to-[#3FD6DD] rounded-[2px] transition-all duration-300 ease-out"
       />
     </Link>
   );

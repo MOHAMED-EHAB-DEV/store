@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { headers } from "next/headers";
+import { Suspense } from "react";
 import DownloadLogsClient from "@/components/Admin/DownloadLogsClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
 
@@ -54,11 +55,13 @@ export default async function DownloadLogsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <DownloadLogsClient
-      initialData={data.data.logs}
-      stats={data.data.stats}
-      pagination={data.pagination}
-      searchParams={params}
-    />
+    <Suspense fallback={<div className="p-6 text-center text-muted-foreground animate-pulse">Loading data...</div>}>
+      <DownloadLogsClient
+        initialData={data.data.logs}
+        stats={data.data.stats}
+        pagination={data.pagination}
+        searchParams={params}
+      />
+    </Suspense>
   );
 }

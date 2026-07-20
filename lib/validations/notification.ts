@@ -12,3 +12,5 @@ export const NotificationSchema = v.object({
   isRead: v.boolean(),
   createdAt: v.union([v.date(), v.string()]),
 });
+
+export type INotification = v.InferOutput<typeof NotificationSchema>;

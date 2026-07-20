@@ -3,7 +3,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useSocketStore } from "@/store/useSocketStore";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { ITemplate } from "@/types";
+import { ITemplate } from "@/lib/validations/template";
 
 // Define minimal types to satisfy the backward compat
 interface SocketMessage {

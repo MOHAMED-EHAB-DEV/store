@@ -65,16 +65,6 @@ export const ModalContent = React.forwardRef<
     };
   }, [open]);
 
-  React.useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        onOpenChange?.(false);
-      }
-    };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [open, onOpenChange]);
-
   if (!open) return null;
 
   const sizeClasses = {
@@ -93,29 +83,43 @@ export const ModalContent = React.forwardRef<
 
   return (
     <ModalPortal>
-      <ModalOverlay data-state={open ? "open" : "closed"} onClick={() => onOpenChange?.(false)} />
-      <div
-        ref={ref}
-        role="dialog"
-        data-state={open ? "open" : "closed"}
-        className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-          sizeClasses[size],
-          className
-        )}
-        {...props}
+      <dialog
+        ref={(el) => {
+          if (el && !el.open) {
+            el.showModal();
+          }
+        }}
+        onCancel={(e) => {
+          e.preventDefault();
+          onOpenChange?.(false);
+        }}
+        className="m-0 p-0 bg-transparent border-none w-screen h-dvh max-w-none max-h-none focus:outline-none backdrop:bg-transparent"
+        aria-modal="true"
       >
-        {children}
-        {showCloseButton && (
-          <button
-            onClick={() => onOpenChange?.(false)}
-            className="absolute right-4 top-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none text-foreground"
-          >
-            <X className="size-4" />
-            <span className="sr-only">Close</span>
-          </button>
-        )}
-      </div>
+        <ModalOverlay data-state={open ? "open" : "closed"} onClick={() => onOpenChange?.(false)} />
+        <div
+          ref={ref}
+          role="document"
+          data-state={open ? "open" : "closed"}
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            sizeClasses[size],
+            className
+          )}
+          {...props}
+        >
+          {children}
+          {showCloseButton && (
+            <button
+              onClick={() => onOpenChange?.(false)}
+              className="absolute right-4 top-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none text-foreground"
+            >
+              <X className="size-4" />
+              <span className="sr-only">Close</span>
+            </button>
+          )}
+        </div>
+      </dialog>
     </ModalPortal>
   );
 });

@@ -4,7 +4,7 @@ import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { ITemplate } from "@/types";
+import { ITemplate } from "@/lib/validations/template";
 
 export default function FavoriteButton({ template }: { template: ITemplate }) {
   const { favoriteTemplates, toggleFavorite } = useUser();

@@ -2,7 +2,7 @@
 
 import { Code2 } from "@/components/ui/svgs/icons/Code2";
 import SplitText from "../ui/SplitText";
-import { codeFeatures } from "@/constants";
+import { codeFeatures } from "@/constants/features";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

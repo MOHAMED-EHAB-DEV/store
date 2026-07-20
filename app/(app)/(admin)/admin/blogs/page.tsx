@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import AdminBlogsClient from "@/components/Admin/AdminBlogsClient";
@@ -48,11 +49,13 @@ export default async function AdminBlogsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <AdminBlogsClient
+    <Suspense fallback={<div className="p-6 text-center text-muted-foreground animate-pulse">Loading data...</div>}>
+      <AdminBlogsClient
       initialData={data.data.data}
       stats={data.data.stats}
       pagination={data.pagination}
       searchParams={params}
     />
+    </Suspense>
   );
 }

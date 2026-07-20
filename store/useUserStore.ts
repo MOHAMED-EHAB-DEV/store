@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { ITemplate, IUser } from "@/types";
+import { ITemplate } from "@/lib/validations/template";
+import { IUser } from "@/lib/validations/user";
 
 interface UserState {
   user: IUser | null;

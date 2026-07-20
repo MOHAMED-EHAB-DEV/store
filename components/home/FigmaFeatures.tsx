@@ -2,7 +2,7 @@
 
 import { Figma } from "@/components/ui/svgs/icons/Figma";
 import SplitText from '../ui/SplitText';
-import {figmaFeatures} from "@/constants";
+import { figmaFeatures } from "@/constants/features";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { anyImgUrl } from "@/lib/utils/image";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
 import { Input } from "@/components/ui/input";
@@ -296,10 +298,13 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
                 {thumbnailUrl ? (
                     <div className="relative">
-                        <img
-                            src={thumbnailUrl}
+                        <Image
+                            src={thumbnailUrl.startsWith("blob:") ? thumbnailUrl : anyImgUrl(thumbnailUrl)}
                             alt="Thumbnail"
                             className="rounded-lg object-contain w-full max-h-64"
+                            unoptimized
+                            width={800}
+                            height={400}
                         />
                         <Button
                             type="button"

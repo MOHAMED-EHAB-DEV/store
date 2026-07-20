@@ -35,3 +35,5 @@ export const UserSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type IUser = v.InferOutput<typeof UserSchema>;

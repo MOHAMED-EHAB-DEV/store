@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import AdminTemplatesClient from "@/components/Admin/AdminTemplatesClient";
 import ErrorState from "@/components/Dashboard/shared/ErrorState";
@@ -67,12 +68,14 @@ export default async function AdminTemplatesPage({ searchParams }: PageProps) {
     }
 
     return (
-        <AdminTemplatesClient
+    <Suspense fallback={<div className="p-6 text-center text-muted-foreground animate-pulse">Loading data...</div>}>
+      <AdminTemplatesClient
             initialData={data.templates}
             stats={data.stats}
             pagination={data.pagination}
             categories={data.categories}
             searchParams={params}
         />
-    );
+    </Suspense>
+  );
 }

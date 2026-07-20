@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ICategory } from "@/types";
+import { ICategory } from "@/lib/validations/category";
 import { getCategories } from "@/static/categories";
 
 export async function generateStaticParams() {

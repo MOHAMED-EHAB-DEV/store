@@ -5,7 +5,7 @@ import { Check } from "@/components/ui/svgs/icons/Check";
 import { Eye } from "@/components/ui/svgs/icons/Eye";
 import { EyeOff } from "@/components/ui/svgs/icons/EyeOff";
 import { Lock } from "@/components/ui/svgs/icons/Lock";
-import { passwordRequirements } from "@/constants";
+import { passwordRequirements } from "@/constants/auth";
 import { sonnerToast } from "@/components/ui/sonner";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import {
     ModalHeader,
     ModalTitle,
 } from "@/components/ui/Modal";
-import { whatLoseWhenDeleteMyAccount } from "@/constants";
+import { whatLoseWhenDeleteMyAccount } from "@/constants/auth";
 import { Mail } from "@/components/ui/svgs/icons/Mail";
 import { X } from "@/components/ui/svgs/icons/X";
 import { Input } from "@/components/ui/input";

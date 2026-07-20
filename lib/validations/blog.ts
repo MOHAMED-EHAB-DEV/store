@@ -16,3 +16,5 @@ export const BlogSchema = v.object({
   createdAt: v.union([v.date(), v.string()]),
   updatedAt: v.union([v.date(), v.string()]),
 });
+
+export type IBlog = v.InferOutput<typeof BlogSchema>;

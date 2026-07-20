@@ -6,7 +6,7 @@ import { Framer } from "@/components/ui/svgs/icons/Framer";
 import { Layers } from "@/components/ui/svgs/icons/Layers";
 import Image from "next/image";
 import { anyImgUrl } from "@/lib/utils/image";
-import { featuresBusinessSales } from "@/constants";
+import { featuresBusinessSales } from "@/constants/features";
 import { VerticalMarquee } from "@/components/ui/marquee";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";

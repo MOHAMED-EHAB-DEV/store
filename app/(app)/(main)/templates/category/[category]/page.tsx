@@ -1,5 +1,5 @@
 import Templates from "@/components/shared/Templates";
-import { ICategory } from "@/types";
+import { ICategory } from "@/lib/validations/category";
 import { Metadata } from "next";
 import { getCategories } from "@/static/categories";
 

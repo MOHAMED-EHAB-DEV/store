@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { getCategoryIcon } from "@/components/ui/svgs/CategoriesIcons";
-import type { ICategory } from "@/types";
+import type { ICategory } from "@/lib/validations/category";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

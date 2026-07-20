@@ -16,7 +16,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { sonnerToast } from "@/components/ui/sonner";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import { ICategory, ITemplate } from "@/types";
+import { ICategory } from "@/lib/validations/category";
+import { ITemplate } from "@/lib/validations/template";
 import Link from "next/link";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 

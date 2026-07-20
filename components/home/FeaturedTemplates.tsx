@@ -1,6 +1,6 @@
 import Link from "next/link";
 import TemplateComponent from "@/components/shared/Template";
-import { ITemplate } from "@/types";
+import { ITemplate } from "@/lib/validations/template";
 import SplitText from "@/components/ui/SplitText";
 async function getTemplates() {
   try {

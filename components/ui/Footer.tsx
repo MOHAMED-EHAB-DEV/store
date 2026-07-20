@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import Logo from "@/components/ui/Logo";
-import { socialImgs, FooterLinks } from "@/constants";
+import { socialImgs } from "@/constants/assets";
+import { FooterLinks } from "@/constants/navigation";
 
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
 

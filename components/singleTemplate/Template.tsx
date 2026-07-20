@@ -7,7 +7,7 @@ import Markdown from "./Markdown";
 import SimilarTemplate from "../shared/Template";
 import ReviewsContainer from "@/components/singleTemplate/Reviews/ReviewsContainer";
 import DownloadBtn from "./DownloadBtn";
-import { ITemplate } from "@/types";
+import { ITemplate } from "@/lib/validations/template";
 import TemplateThumbnail from "./TemplateThumbnail";
 
 const Template = async ({

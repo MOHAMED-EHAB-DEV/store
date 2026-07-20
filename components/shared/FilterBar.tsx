@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Input } from "@/components/ui/input";
-import { ICategory } from "@/types";
+import { ICategory } from "@/lib/validations/category";
 import { sendGTMEvent } from "@next/third-parties/google";
 
 const sortOptions: {
@@ -102,12 +102,12 @@ const FilterBar = ({
                     {selectedCategoriesCount}
                   </span>
                 )}
-                <ChevronDown className="w-4 h-4 text-white/50" />
+                <ChevronDown className="w-4 h-4 text-white/70" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-64 p-4 bg-dark border-white/10">
               <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
-                {categories?.map((cat: any, idx) => (
+                {categories?.map((cat, idx) => (
                   <label
                     key={cat._id}
                     className="flex items-center gap-2 cursor-pointer text-white/80 hover:text-white"
@@ -149,12 +149,12 @@ const FilterBar = ({
                     {selectedTagsCount}
                   </span>
                 )}
-                <ChevronDown className="w-4 h-4 text-white/50" />
+                <ChevronDown className="w-4 h-4 text-white/70" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-64 p-4 bg-dark border-white/10">
               <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
-                {tags?.map((tagObj: any, idx) => (
+                {tags?.map((tagObj, idx) => (
                   <label
                     key={idx}
                     className="flex items-center gap-2 cursor-pointer text-white/80 hover:text-white"
@@ -195,7 +195,7 @@ const FilterBar = ({
                   1
                 </span>
               )}
-              <ChevronDown className="w-4 h-4 text-white/50" />
+              <ChevronDown className="w-4 h-4 text-white/70" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-72 p-4 bg-dark border-white/10">
@@ -228,12 +228,12 @@ const FilterBar = ({
                     onChange={(e) => handlePriceChange("min", e.target.value)}
                     placeholder="0"
                     classNames={{
-                      label: "text-xs text-white/50 uppercase tracking-wider",
+                      label: "text-xs text-white/70 uppercase tracking-wider",
                       inputWrapper: "bg-white/5 border-white/10 text-white focus-within:ring-blue-500"
                     }}
                   />
                 </div>
-                <span className="text-white/30 pt-4">-</span>
+                <span className="text-white/60 pt-4">-</span>
                 <div className="flex-1">
                   <Input
                     label="Max"
@@ -242,7 +242,7 @@ const FilterBar = ({
                     onChange={(e) => handlePriceChange("max", e.target.value)}
                     placeholder="Any"
                     classNames={{
-                      label: "text-xs text-white/50 uppercase tracking-wider",
+                      label: "text-xs text-white/70 uppercase tracking-wider",
                       inputWrapper: "bg-white/5 border-white/10 text-white focus-within:ring-blue-500"
                     }}
                   />
@@ -264,7 +264,7 @@ const FilterBar = ({
                   {minRating}+
                 </span>
               )}
-              <ChevronDown className="w-4 h-4 text-white/50" />
+              <ChevronDown className="w-4 h-4 text-white/70" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-56 p-4 bg-dark border-white/10">
@@ -325,7 +325,7 @@ const FilterBar = ({
               className="bg-white/5 border-white/10 hover:bg-white/10 text-white gap-2"
             >
               Sort by: {sortOptions.find((o) => o.value === sortedBy)?.label}
-              <ChevronDown className="w-4 h-4 text-white/50" />
+              <ChevronDown className="w-4 h-4 text-white/70" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-56 p-2 bg-dark border-white/10">
@@ -361,7 +361,7 @@ const FilterBar = ({
           <Button
             variant="ghost"
             onClick={clearFilters}
-            className="text-white/50 hover:text-white hover:bg-transparent px-2"
+            className="text-white/70 hover:text-white hover:bg-transparent px-2"
           >
             Clear All
           </Button>

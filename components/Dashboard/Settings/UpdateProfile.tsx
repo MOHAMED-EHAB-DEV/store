@@ -15,7 +15,7 @@ import {
   DropzoneContent,
   DropzoneEmptyState,
 } from "@/components/ui/dropzone";
-import { IUser } from "@/types";
+import { IUser } from "@/lib/validations/user";
 
 const UpdateProfile = ({ user }: { user: IUser }) => {
   const [files, setFiles] = useState<File[]>([]);

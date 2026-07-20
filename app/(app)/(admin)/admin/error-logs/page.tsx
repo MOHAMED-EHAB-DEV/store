@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AdminErrorLogsClient from "@/components/Admin/AdminErrorLogsClient";
 import { headers } from "next/headers";
 
@@ -21,6 +22,8 @@ export default async function AdminErrorLogsPage({
   const { data, pagination } = await getErrorLogs(await searchParams);
 
   return (
-    <AdminErrorLogsClient initialData={data || []} pagination={pagination} />
+    <Suspense fallback={<div className="p-6 text-center text-muted-foreground animate-pulse">Loading data...</div>}>
+      <AdminErrorLogsClient initialData={data || []} pagination={pagination} />
+    </Suspense>
   );
 }

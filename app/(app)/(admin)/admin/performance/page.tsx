@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { headers } from "next/headers";
+import { Suspense } from "react";
 import PerformanceClient from "@/components/Admin/PerformanceClient";
 
 export const metadata: Metadata = {
@@ -39,5 +40,9 @@ export default async function PerformancePage(
   const page = parseInt(searchParams.page as string || "1", 10);
   const data = await getPerformanceData(page);
 
-  return <PerformanceClient data={data} />;
+  return (
+    <Suspense fallback={<div className="p-6 text-center text-muted-foreground animate-pulse">Loading data...</div>}>
+      <PerformanceClient data={data} />
+    </Suspense>
+  );
 }

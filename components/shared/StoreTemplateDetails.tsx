@@ -6,7 +6,7 @@ import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
 import { Button } from "@/components/ui/button";
 import { capitalizeFirstChar } from "@/lib/utils";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { ITemplate } from "@/types";
+import { ITemplate } from "@/lib/validations/template";
 
 export default function StoreTemplateDetails({ template }: { template: ITemplate }) {
   return (

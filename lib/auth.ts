@@ -2,7 +2,7 @@ import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import User from "@/lib/models/User";
 import { connectToDatabase } from "@/lib/database";
-import { IUser } from "@/types";
+import { IUser } from "@/lib/validations/user";
 
 export async function authenticateUser(
   connectDB: boolean = false,

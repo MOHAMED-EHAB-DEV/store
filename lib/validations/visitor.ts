@@ -13,3 +13,5 @@ export const VisitorSchema = v.object({
   })),
   visitCount: v.number(),
 });
+
+export type IVisitor = v.InferOutput<typeof VisitorSchema>;

@@ -4,8 +4,8 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { STEPS } from "@/constants";
-import { StepKey } from "@/types";
+import { STEPS } from "@/constants/steps";
+import { StepKey } from "@/types/step";
 // import { Badge } from "../ui/badge";
 import SplitText from "../ui/SplitText";
 

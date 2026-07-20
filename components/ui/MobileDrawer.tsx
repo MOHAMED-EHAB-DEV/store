@@ -3,7 +3,7 @@
 import { Menu } from "@/components/ui/svgs/icons/Menu";
 import { X } from "@/components/ui/svgs/icons/X";
 import { useState } from "react";
-import { NavigationLinks } from "@/constants";
+import { NavigationLinks } from "@/constants/navigation";
 import Link from "next/link";
 import Drawer from "@/components/ui/Drawer";
 

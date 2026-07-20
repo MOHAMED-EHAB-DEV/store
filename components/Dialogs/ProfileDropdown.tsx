@@ -15,7 +15,7 @@ import { X } from "@/components/ui/svgs/icons/X";
 import { Wrench } from "@/components/ui/svgs/icons/Wrench";
 import { useRouter } from "next/navigation";
 import { sonnerToast } from "@/components/ui/sonner";
-import { IUser } from "@/types";
+import { IUser } from "@/lib/validations/user";
 import Drawer from "@/components/ui/Drawer";
 
 const ProfileDropdown = ({

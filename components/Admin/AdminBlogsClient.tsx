@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
@@ -17,6 +17,7 @@ import { sonnerToast } from "@/components/ui/sonner";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Link from "next/link";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import { Heart } from "../ui/svgs/icons/Heart";
 
 interface Blog {
     _id: string;
@@ -27,6 +28,7 @@ interface Blog {
     tags?: string[];
     isPublished: boolean;
     views?: number;
+    loves?: number;
     createdAt: string;
 }
 
@@ -204,6 +206,17 @@ export default function AdminBlogsClient({
                 <div className="flex items-center gap-2">
                     <Eye className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
                     <span className="text-sm text-white">{blog.views || 0}</span>
+                </div>
+            ),
+        },
+        {
+            key: "loves",
+            label: "Loves",
+            sortable: true,
+            render: (blog) => (
+                <div className="flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-red-500" aria-hidden="true" />
+                    <span className="text-sm text-white">{blog.loves || 0}</span>
                 </div>
             ),
         },

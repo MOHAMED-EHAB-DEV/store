@@ -5,8 +5,9 @@ import { anyImgUrl } from "@/lib/utils/image";
 
 const WhyME = () => {
   return (
-    <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28">
-      <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2">
+    <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28 relative">
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2 relative z-10">
         <h2 className="md:text-4xl font-bold text-2xl font-paras">
           Stop stressing over your business website.
         </h2>

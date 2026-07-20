@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import Logo from "@/components/ui/Logo";
 import { socialImgs } from "@/constants/assets";
@@ -10,11 +9,8 @@ import { FooterLinks } from "@/constants/navigation";
 const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
 
 const Footer = () => {
-  const pathname = usePathname();
-  const isCustomDev = pathname === "/custom-development";
-
   return (
-    <footer className={`w-full text-white ${isCustomDev ? "bg-transparent border-t border-white/5" : "bg-dark"}`}>
+    <footer className={`w-full text-white bg-transparent border-t border-white/5`}>
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">

@@ -61,7 +61,8 @@ const CodedFeatures = () => {
 
     return (
         <section className="code-section relative z-10 px-6 py-6">
-            <div className="max-w-7xl mx-auto">
+            <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="max-w-7xl mx-auto relative z-10">
                 <div className="text-center mb-16">
                     <h2 className="code-title text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-8 font-paras">
                         <span className="relative">

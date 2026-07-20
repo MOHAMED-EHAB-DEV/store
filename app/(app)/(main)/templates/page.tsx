@@ -14,7 +14,7 @@ export async function generateMetadata({
 
   const categories = params?.categories;
 
-  let title = "Browse Templates | Mohammed Ehab Store";
+  let title = "Premium Next.js Templates | Buy & Download | MHD Store";
   let description =
     "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.";
 
@@ -131,20 +131,49 @@ const Page = async ({ searchParams }: PageProps) => {
     }))
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: APP_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Templates",
+        item: `${APP_URL}/templates`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <main
-        className="flex flex-col justify-center px-2 py-36 gap-8 w-dvw max-w-6xl"
+        className="flex flex-col justify-center px-2 py-36 gap-8 w-dvw max-w-6xl mx-auto"
         role="main"
         id="main-content"
       >
-        <h1 className="text-white font-paras text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold">
-          Templates
-        </h1>
+        <div className="space-y-4">
+          <h1 className="text-white font-paras text-4xl sm:text-5xl md:text-6xl font-bold">
+            Premium Next.js & Tailwind CSS Templates
+          </h1>
+          <p className="text-gray-400 text-lg max-w-2xl">
+            Launch your next project faster with our high-quality, production-ready React templates. 
+            Built with modern technologies and optimized for performance.
+          </p>
+        </div>
 
         <Templates
           initialData={templates}

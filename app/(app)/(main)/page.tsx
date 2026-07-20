@@ -32,6 +32,7 @@ const AboutMe = dynamic(() => import("@/components/home/AboutMe"));
 const CategoriesSection = dynamic(() => import("@/components/home/CategoriesSection"));
 const BlueprintCustomBuild = dynamic(() => import("@/components/home/BlueprintCustomBuild"));
 const HowItWorks = dynamic(() => import("@/components/home/HowItWorks"));
+const HomeFAQ = dynamic(() => import("@/components/home/HomeFAQ"));
 
 export default async function Home() {
   return (
@@ -64,6 +65,7 @@ export default async function Home() {
       <BlueprintCustomBuild />
       {/* <FigmaFeatures /> */}
       <Pricing />
+      <HomeFAQ />
       {/*<Testimonials/>*/}
       {/*<AnimatedTestimonialsDemo testimonials={testimonials} />*/}
       <AboutMe />

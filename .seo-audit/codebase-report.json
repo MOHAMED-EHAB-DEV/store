@@ -1,0 +1,821 @@
+{
+  "generatedAt": "2026-07-20T11:33:58.938Z",
+  "projectRoot": "d:\\my-store",
+  "routerType": "app",
+  "appRouter": {
+    "routeCount": 46,
+    "routesMissingMetadata": [],
+    "routesWithOwnDynamicMetadata": [
+      "app\\(app)\\(main)\\blog\\(blogs)\\[id]\\page.tsx",
+      "app\\(app)\\(main)\\blog\\page.tsx",
+      "app\\(app)\\(main)\\templates\\(templates)\\[id]\\page.tsx",
+      "app\\(app)\\(main)\\templates\\category\\[category]\\page.tsx",
+      "app\\(app)\\(main)\\templates\\page.tsx"
+    ],
+    "dynamicRoutesMissingMetadata": [],
+    "routesMissingOpenGraph": [
+      "app\\(app)\\(admin)\\admin\\analytics\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\analytics\\[id]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\blogs\\edit\\[id]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\blogs\\new\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\blogs\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\categories\\edit\\[id]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\categories\\new\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\categories\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\download-logs\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\error-logs\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\faqs\\edit\\[id]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\faqs\\new\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\faqs\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\performance\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\performance\\[visitorId]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\refresh\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\support\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\support\\tickets\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\support\\[id]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\templates\\edit\\[id]\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\templates\\new\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\templates\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\users\\page.tsx",
+      "app\\(app)\\(admin)\\admin\\users\\[id]\\page.tsx",
+      "app\\(app)\\(auth)\\login\\page.tsx",
+      "app\\(app)\\(auth)\\register\\page.tsx",
+      "app\\(app)\\(dashboard)\\dashboard\\page.tsx",
+      "app\\(app)\\(dashboard)\\dashboard\\purchased-templates\\page.tsx",
+      "app\\(app)\\(dashboard)\\dashboard\\settings\\page.tsx",
+      "app\\(app)\\(dashboard)\\dashboard\\support\\page.tsx",
+      "app\\(app)\\(dashboard)\\dashboard\\support\\[id]\\page.tsx",
+      "app\\(app)\\(main)\\blog\\page.tsx",
+      "app\\(app)\\(main)\\custom-development\\page.tsx",
+      "app\\(app)\\(main)\\faqs\\page.tsx",
+      "app\\(app)\\(main)\\page.tsx",
+      "app\\(app)\\(main)\\pricing\\page.tsx",
+      "app\\(app)\\(main)\\privacy-policy\\page.tsx",
+      "app\\(app)\\(main)\\support\\page.tsx",
+      "app\\(app)\\(main)\\terms-of-service\\page.tsx",
+      "app\\(app)\\(user)\\favorites\\page.tsx",
+      "app\\banned\\page.tsx"
+    ],
+    "routes": [
+      {
+        "route": "app\\(app)\\(admin)\\admin\\analytics\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\analytics\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": false,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\blogs\\edit\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": false,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\blogs\\new\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": false,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\blogs\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\categories\\edit\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\categories\\new\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\categories\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\download-logs\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\error-logs\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": false,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\faqs\\edit\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\faqs\\new\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\faqs\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\performance\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\performance\\[visitorId]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\refresh\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": false,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\support\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\support\\tickets\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": false,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\support\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\templates\\edit\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\templates\\new\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\templates\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\users\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(admin)\\admin\\users\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(auth)\\login\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(auth)\\register\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(dashboard)\\dashboard\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(dashboard)\\dashboard\\purchased-templates\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(dashboard)\\dashboard\\settings\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(dashboard)\\dashboard\\support\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(dashboard)\\dashboard\\support\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(main)\\blog\\(blogs)\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": true,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": true,
+        "hasOpenGraphOnPage": true,
+        "hasTwitterCardOnPage": true,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(main)\\blog\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": true,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\custom-development\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\faqs\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\pricing\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\privacy-policy\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\support\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\templates\\(templates)\\[id]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": true,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": true,
+        "hasOpenGraphOnPage": true,
+        "hasTwitterCardOnPage": true,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(main)\\templates\\category\\[category]\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": true,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": true,
+        "hasOpenGraphOnPage": true,
+        "hasTwitterCardOnPage": true,
+        "isDynamicRoute": true
+      },
+      {
+        "route": "app\\(app)\\(main)\\templates\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": true,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": true,
+        "hasOpenGraphOnPage": true,
+        "hasTwitterCardOnPage": true,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(main)\\terms-of-service\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\(app)\\(user)\\favorites\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [
+          "app\\(app)\\layout.tsx"
+        ],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      },
+      {
+        "route": "app\\banned\\page.tsx",
+        "isApiRoute": false,
+        "ownMetadata": true,
+        "ownMetadataIsDynamic": false,
+        "inheritedFrom": [],
+        "hasMetadataSomewhere": true,
+        "hasCanonicalOnPage": false,
+        "hasOpenGraphOnPage": false,
+        "hasTwitterCardOnPage": false,
+        "isDynamicRoute": false
+      }
+    ]
+  },
+  "pagesRouter": null,
+  "sitemap": {
+    "exists": true,
+    "method": "app router — programmatic",
+    "file": "app\\sitemap.ts"
+  },
+  "robots": {
+    "exists": true,
+    "method": "app router — programmatic",
+    "file": "app\\robots.ts"
+  },
+  "nextConfig": {
+    "exists": true,
+    "file": "next.config.ts",
+    "hasImagesConfig": false,
+    "hasHeadersFn": true,
+    "hasRedirectsFn": false,
+    "hasCompress": true
+  },
+  "images": {
+    "nextImageTagCount": 34,
+    "rawImgTagCount": 0,
+    "missingAltCount": 0,
+    "missingAltSamples": []
+  },
+  "fonts": {
+    "usesNextFont": true,
+    "externalGoogleFontLinkFiles": [
+      "next.config.ts",
+      "proxy.ts"
+    ]
+  },
+  "structuredData": {
+    "filesWithJsonLd": 6,
+    "files": [
+      "app\\(app)\\(main)\\blog\\(blogs)\\[id]\\page.tsx",
+      "app\\(app)\\(main)\\faqs\\page.tsx",
+      "app\\(app)\\(main)\\templates\\(templates)\\[id]\\page.tsx",
+      "app\\(app)\\(main)\\templates\\category\\[category]\\page.tsx",
+      "app\\(app)\\(main)\\templates\\page.tsx",
+      "components\\SEO\\StructuredData.tsx"
+    ]
+  },
+  "clientBundleRisk": {
+    "useClientFileCount": 128,
+    "largeClientFiles": [
+      {
+        "file": "components\\ui\\select.tsx",
+        "lines": 553
+      },
+      {
+        "file": "components\\Admin\\AdminUsersClient.tsx",
+        "lines": 494
+      },
+      {
+        "file": "components\\Support\\ChatInput.tsx",
+        "lines": 493
+      },
+      {
+        "file": "components\\Admin\\AdminTemplatesClient.tsx",
+        "lines": 486
+      },
+      {
+        "file": "components\\singleTemplate\\Reviews\\ReviewsContainer.tsx",
+        "lines": 483
+      },
+      {
+        "file": "components\\Admin\\AdminCategoriesClient.tsx",
+        "lines": 453
+      },
+      {
+        "file": "components\\Admin\\AdminBlogsClient.tsx",
+        "lines": 452
+      },
+      {
+        "file": "components\\Admin\\TemplateForm.tsx",
+        "lines": 427
+      },
+      {
+        "file": "components\\Admin\\AdminFAQsClient.tsx",
+        "lines": 425
+      },
+      {
+        "file": "components\\Admin\\AdminErrorLogsClient.tsx",
+        "lines": 403
+      },
+      {
+        "file": "components\\Admin\\AdminSupportClient.tsx",
+        "lines": 400
+      },
+      {
+        "file": "components\\home\\HowItWorks.tsx",
+        "lines": 385
+      },
+      {
+        "file": "components\\Dashboard\\Settings\\ChangePassword.tsx",
+        "lines": 355
+      },
+      {
+        "file": "app\\(app)\\(admin)\\admin\\support\\[id]\\AdminTicketClient.tsx",
+        "lines": 347
+      },
+      {
+        "file": "components\\Dashboard\\PurchasedTemplatesClient.tsx",
+        "lines": 315
+      },
+      {
+        "file": "components\\Admin\\UserDetailClient.tsx",
+        "lines": 307
+      }
+    ],
+    "iconImportFlags": []
+  },
+  "totals": {
+    "codeFilesScanned": 451
+  }
+}

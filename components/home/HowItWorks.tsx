@@ -207,6 +207,7 @@ const HowItWorks = () => {
         className="w-full h-[100dvh] relative z-10 overflow-hidden"
         ref={containerRef}
       >
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />
         {/* Header */}
         <div className="absolute top-16 left-0 w-full text-center z-20 pointer-events-none">
           <div className="flex flex-col items-center justify-center gap-4 mb-10">

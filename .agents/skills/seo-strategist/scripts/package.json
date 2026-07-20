@@ -1,0 +1,9 @@
+{
+  "name": "seo-strategist-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Helper scripts for the seo-strategist skill. Run 'npm install' in this folder once before first use.",
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}

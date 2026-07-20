@@ -6,138 +6,81 @@ export interface FAQ {
 }
 
 export const FAQ_CATEGORIES = [
-    {
-        id: "general",
-        name: "General",
-        icon: "ℹ️",
-    },
-    {
-        id: "orders",
-        name: "Orders",
-        icon: "📦",
-    },
-    {
-        id: "products",
-        name: "Templates",
-        icon: "🛍️",
-    },
-    // {
-    //     id: "returns",
-    //     name: "Refunds",
-    //     icon: "↩️",
-    // },
-    {
-        id: "account",
-        name: "Account",
-        icon: "🔐",
-    },
-    {
-        id: "payment",
-        name: "Payment",
-        icon: "💳",
-    },
+    { id: "general", name: "General", icon: "ℹ️" },
+    { id: "products", name: "Templates", icon: "🛍️" },
+    { id: "custom-dev", name: "Custom Dev", icon: "💻" },
+    { id: "technical", name: "Technical", icon: "⚙️" },
+    { id: "payment", name: "Payment", icon: "💳" },
 ] as const;
 
 export const FAQS: FAQ[] = [
     // General
     {
         id: "what-is-store",
-        question: "What does this templates store offer?",
-        answer: "We provide high-quality digital templates including website templates, landing pages, Framer templates, dashboards, and coded components. All items are ready to use and fully customizable.",
-        category: "general",
-    },
-    {
-        id: "how-to-contact",
-        question: "How can I contact support?",
-        answer: "You can contact us anytime via our Contact Form. We typically respond within 24 hours.",
+        question: "What exactly do you offer?",
+        answer: "We specialize in premium, production-ready Next.js and Tailwind CSS templates designed for developers and agencies. In addition to our template marketplace, we offer bespoke custom Next.js development services for businesses needing tailored architectures.",
         category: "general",
     },
     {
         id: "usage-rights",
-        question: "Can I use the templates for commercial projects?",
-        answer: "No. Paid templates only include a commercial use license, allowing you to use them in client work or commercial projects. However, reselling or redistributing the template files is not allowed.",
+        question: "Can I use your templates for commercial client projects?",
+        answer: "Yes! All of our premium templates come with a commercial license. You can use them to build websites for your personal business or for your clients. However, you cannot resell the raw template files or distribute the source code publicly.",
         category: "general",
     },
 
-    // Orders
+    // Templates
     {
-        id: "delivery",
-        question: "How do I receive my template after purchase?",
-        answer: "All purchases are available for download in your account dashboard.",
-        category: "orders",
+        id: "template-customization",
+        question: "How easy is it to customize the templates?",
+        answer: "Extremely easy if you know React. Our templates are built using standard Next.js (App Router) and Tailwind CSS. We avoid overly complex abstractions, meaning you can jump right into the code and modify components, colors, and logic just like any standard React project.",
+        category: "products",
     },
     {
         id: "update-access",
-        question: "Do I get free updates after purchasing a template?",
-        answer: "Yes, all templates come with lifetime free updates. You can re-download the updated version anytime from your account.",
-        category: "orders",
-    },
-
-    // Products
-    {
-        id: "template-customization",
-        question: "Are the templates customizable?",
-        answer: "Yes. All templates are designed to be fully editable. Figma templates include layered files, coded templates provide full source code, and Framer templates can be modified visually inside Framer.",
+        question: "Do I get free updates when Next.js releases new versions?",
+        answer: "Yes. When you purchase a template, you receive lifetime access to updates. As Next.js and React evolve, we update our codebases to ensure compatibility with the latest best practices, and you can download the latest version from your dashboard at any time.",
         category: "products",
     },
     {
-        id: "software-needed",
-        question: "What software do I need to edit my template?",
-        answer: "It depends on the template type: Figma requires Figma, Framer templates require a Framer account, and coded templates require a code editor such as VS Code.",
-        category: "products",
-    },
-    {
-        id: "license-details",
-        question: "What type of license is included?",
-        answer: "Each purchase includes a standard commercial license that allows unlimited personal and client projects. You cannot resell, redistribute, or share the files publicly.",
-        category: "products",
-    },
-    {
-        id: "template-support",
-        question: "Do you offer support for customizing the template?",
-        answer: "Yes, we offer guidance and technical support for any template-related issues. However, full custom work or major redesigns are not included.",
+        id: "figma-files",
+        question: "Are Figma design files included with the code?",
+        answer: "Yes, the majority of our premium templates include the original Figma design files, allowing your design team to map out changes before you touch the codebase.",
         category: "products",
     },
 
-    // Refunds
-    // {
-    //     id: "refund-policy",
-    //     question: "What is your refund policy?",
-    //     answer: "Since templates are digital products, refunds are only provided if the item is defective, not delivered, or does not match the description. Contact support within 7 days for refund requests.",
-    //     category: "returns",
-    // },
-    // {
-    //     id: "accidental-purchase",
-    //     question: "I purchased the wrong template. Can I exchange it?",
-    //     answer: "Yes, if the file has not been downloaded yet. Contact support to request an exchange.",
-    //     category: "returns",
-    // },
-
-    // Account
+    // Custom Dev
     {
-        id: "account-need",
-        question: "Do I need an account to access my purchases?",
-        answer: "An account is required during checkout, so you can re-download your purchased templates anytime.",
-        category: "account",
+        id: "custom-dev-process",
+        question: "How does the custom development process work?",
+        answer: "It starts with a discovery call to map out your architecture and database needs. From there, we handle UI/UX prototyping in Figma, followed by full-stack development using Next.js, Tailwind, and MongoDB. We finish with rigorous performance testing and deployment.",
+        category: "custom-dev",
     },
-    // {
-    //     id: "reset-password",
-    //     question: "How do I reset my password?",
-    //     answer: "Click 'Forgot Password' on the login page and you’ll receive a reset link by email.",
-    //     category: "account",
-    // },
+    {
+        id: "custom-dev-pricing",
+        question: "How much does custom Next.js development cost?",
+        answer: "Our custom development projects start at $599. The final price depends entirely on the scope, number of pages, backend complexity, and interactive features (like GSAP animations) required. We provide a fixed-price quote before any work begins.",
+        category: "custom-dev",
+    },
+
+    // Technical
+    {
+        id: "tech-stack-details",
+        question: "What tech stack do your templates use?",
+        answer: "Our templates are strictly built on Next.js (using the modern App Router) and React. For styling, we use Tailwind CSS. For animations, we utilize Framer Motion or GSAP depending on the template's requirements.",
+        category: "technical",
+    },
+    {
+        id: "seo-optimization",
+        question: "Are the templates optimized for SEO?",
+        answer: "Absolutely. SEO is a first-class citizen in our templates. We utilize Next.js Server-Side Rendering (SSR), dynamic metadata generation, and inject structured JSON-LD data by default to ensure you rank highly on Google right out of the box.",
+        category: "technical",
+    },
 
     // Payment
     {
         id: "payment-methods",
         question: "What payment methods do you accept?",
-        answer: "We accept major credit cards and digital payment options depending on your region.",
-        category: "payment",
-    },
-    {
-        id: "payment-security",
-        question: "Is my payment information secure?",
-        answer: "Yes. All payments are processed by secure, encrypted third-party payment processors. No payment information is stored on our servers.",
+        answer: "We securely process payments via Stripe, accepting all major credit cards, Apple Pay, and Google Pay.",
         category: "payment",
     },
 ];

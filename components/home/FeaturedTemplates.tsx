@@ -23,6 +23,7 @@ const FeaturedTemplates = async () => {
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 relative">
       {/* Section Background */}
       <div className="absolute inset-0 bg-linear-to-br from-card/30 via-transparent to-card/20 rounded-3xl" />
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="relative z-10">
         {/* Section Header */}
         <div className="text-center mb-20">

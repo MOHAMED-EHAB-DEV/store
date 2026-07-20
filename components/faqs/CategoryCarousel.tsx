@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { FAQ_CATEGORIES } from "@/constants/faqs";
-import { ChevronRight } from "@/components/ui/svgs/icons/ChevronRight";
 
 interface CategoryCarouselProps {
     selectedCategory: string | null;
@@ -15,74 +14,64 @@ export default function CategoryCarousel({
     onCategorySelect,
 }: CategoryCarouselProps) {
     const [emblaRef, emblaApi] = useEmblaCarousel({
-        align: "center",
+        align: "start",
         loop: false,
         dragFree: true,
         containScroll: "trimSnaps",
-        startIndex: 1,
+        breakpoints: {
+            '(min-width: 768px)': { active: false }
+        }
     });
 
-    const scrollPrev = useCallback(() => {
-        if (emblaApi) emblaApi.scrollPrev();
-    }, [emblaApi]);
-
-    const scrollNext = useCallback(() => {
-        if (emblaApi) emblaApi.scrollNext();
-    }, [emblaApi]);
-
-    // Center the carousel on mount
+    // Update selected index to ensure it is visible on mobile
     useEffect(() => {
-        if (emblaApi) {
-            emblaApi.reInit();
+        if (emblaApi && selectedCategory && emblaApi.internalEngine().options.active) {
+            const index = FAQ_CATEGORIES.findIndex(c => c.id === selectedCategory);
+            if (index !== -1) {
+                // Add 1 to account for the "All Questions" button
+                emblaApi.scrollTo(index + 1);
+            }
         }
-    }, [emblaApi]);
+    }, [emblaApi, selectedCategory]);
 
     return (
-        <div className="relative mb-12 py-4">
-            {/* Left Arrow */}
-            <button
-                onClick={scrollPrev}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white dark:bg-gray-900 border-2 border-purple-300 dark:border-purple-700 rounded-full p-3 shadow-xl hover:bg-purple-50 dark:hover:bg-purple-950 hover:border-purple-500 transition-all duration-200"
-                aria-label="Scroll left"
-            >
-                <ChevronRight className="h-5 w-5 text-purple-600 dark:text-purple-400 rotate-180" />
-            </button>
+        <div className="relative mb-12">
+            {/* Carousel / Flex Container */}
+            <div className="overflow-hidden md:overflow-visible px-4 md:px-0" ref={emblaRef}>
+                <div className="flex gap-3 py-4 flex-nowrap md:flex-wrap md:justify-center w-full touch-pan-y">
+                    {/* All Category Pill */}
+                    <button
+                        onClick={() => onCategorySelect(null)}
+                        className={`flex-[0_0_auto] px-6 py-2.5 rounded-full font-medium transition-all duration-300 border backdrop-blur-sm ${
+                            selectedCategory === null 
+                            ? "bg-purple-600 text-white border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
+                            : "bg-gray-900/50 text-gray-400 border-gray-800 hover:bg-gray-800 hover:text-white"
+                        }`}
+                    >
+                        All Questions
+                    </button>
 
-            {/* Embla Carousel Container */}
-            <div className="overflow-visible px-14" ref={emblaRef}>
-                <div className="flex gap-6 touch-pan-y">
-                    {/* Category Cards */}
+                    {/* Dynamic Category Pills */}
                     {FAQ_CATEGORIES.map((category) => (
-                        <div key={category.id} className="flex-[0_0_auto] w-80">
-                            <button
-                                onClick={() => onCategorySelect(category.id === selectedCategory ? null : category.id)}
-                                className={`w-full h-[200px] rounded-2xl p-6 flex flex-col items-center justify-center gap-4 border-2 transition-all duration-300 shadow-lg hover:shadow-2xl ${selectedCategory === category.id ? "bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 border-transparent text-white scale-105" : "bg-white dark:bg-gray-900 border-purple-200 dark:border-purple-800 hover:border-purple-500 dark:hover:border-purple-500 hover:scale-105"}`}
-                            >
-                                <div className={`text-5xl ${selectedCategory === category.id ? "animate-bounce" : ""}`}>
-                                    {category.icon}
-                                </div>
-                                <div className="text-center">
-                                    <h3 className={`text-xl font-bold ${selectedCategory === category.id ? "text-white" : "text-gray-900 dark:text-white"}`}>
-                                        {category.name}
-                                    </h3>
-                                    {/* <p className={`text-sm mt-1 ${selectedCategory === category.id ? "text-white/90" : "text-muted-foreground"}`}>
-                                        Click to explore
-                                    </p> */}
-                                </div>
-                            </button>
-                        </div>
+                        <button
+                            key={category.id}
+                            onClick={() => onCategorySelect(category.id === selectedCategory ? null : category.id)}
+                            className={`flex-[0_0_auto] px-6 py-2.5 rounded-full font-medium transition-all duration-300 border backdrop-blur-sm flex items-center gap-2 ${
+                                selectedCategory === category.id 
+                                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
+                                : "bg-gray-900/50 text-gray-400 border-gray-800 hover:bg-gray-800 hover:text-white"
+                            }`}
+                        >
+                            <span>{category.icon}</span>
+                            <span>{category.name}</span>
+                        </button>
                     ))}
                 </div>
             </div>
 
-            {/* Right Arrow */}
-            <button
-                onClick={scrollNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white dark:bg-gray-900 border-2 border-purple-300 dark:border-purple-700 rounded-full p-3 shadow-xl hover:bg-purple-50 dark:hover:bg-purple-950 hover:border-purple-500 transition-all duration-200"
-                aria-label="Scroll right"
-            >
-                <ChevronRight className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-            </button>
+            {/* Gradient masks for smooth edge fading (Mobile Only) */}
+            <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-[#0A0A0B] to-transparent pointer-events-none md:hidden" />
+            <div className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-[#0A0A0B] to-transparent pointer-events-none md:hidden" />
         </div>
     );
 }

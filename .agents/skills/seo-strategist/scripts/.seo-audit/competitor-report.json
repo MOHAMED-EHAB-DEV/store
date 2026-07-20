@@ -1,0 +1,171 @@
+{
+  "generatedAt": "2026-07-20T11:34:19.158Z",
+  "competitors": [
+    {
+      "url": "https://thekitbase.app/",
+      "ok": true,
+      "fetchedAt": "2026-07-20T11:34:17.394Z",
+      "onPage": {
+        "title": "Premium Next.js Templates - TypeScript, Dark Mode, From $39 | TheKitBase",
+        "titleLength": 72,
+        "metaDescription": "Premium Next.js templates with TypeScript strict, 98 Lighthouse, and dark mode built in. SaaS dashboards, portfolios, landing pages. One-time purchase from $39.",
+        "metaDescriptionLength": 160,
+        "canonical": "https://thekitbase.app",
+        "robotsMeta": "index, follow",
+        "viewport": "width=device-width, initial-scale=1",
+        "lang": "en",
+        "openGraph": {
+          "present": true,
+          "title": "Premium Next.js Templates - TypeScript, Dark Mode, From $39",
+          "description": "Premium Next.js templates with TypeScript strict, 98 Lighthouse, and dark mode built in. SaaS dashboards, portfolios, landing pages. One-time purchase from $39.",
+          "image": "https://thekitbase.app/og-image.png",
+          "type": null,
+          "url": "https://thekitbase.app"
+        },
+        "twitterCard": {
+          "present": true,
+          "card": "summary_large_image",
+          "title": "Premium Next.js Templates - TypeScript, Dark Mode, From $39",
+          "description": "Premium Next.js templates with TypeScript strict, 98 Lighthouse, and dark mode built in. SaaS dashboards, portfolios, landing pages. One-time purchase from $39.",
+          "image": "https://thekitbase.app/og-image.png"
+        },
+        "headingOutline": {
+          "h1": 1,
+          "h2": 11,
+          "h3": 24,
+          "h4": 9,
+          "h5": 0,
+          "h6": 0
+        },
+        "h1Count": 1,
+        "h1Texts": [
+          "Premium Next.js templates. Ship this weekend."
+        ],
+        "wordCount": 10513,
+        "images": {
+          "count": 15,
+          "missingAlt": 0
+        },
+        "links": {
+          "internal": 79,
+          "external": 11
+        },
+        "structuredData": {
+          "blockCount": 3,
+          "validBlockCount": 3,
+          "types": [
+            "Organization",
+            "WebSite",
+            "FAQPage"
+          ]
+        }
+      },
+      "siteFiles": {
+        "robotsExists": true,
+        "robotsMentionsSitemap": true,
+        "sitemapExists": true,
+        "sitemapUrlCount": 72
+      },
+      "pageSpeed": {
+        "mobile": {
+          "ok": false,
+          "error": "PSI HTTP 429",
+          "detail": "{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.\",\n    \"errors\": [\n      {\n        \"message\": \"Quota exceeded for quota metric 'Queries' and li"
+        },
+        "desktop": null
+      }
+    },
+    {
+      "url": "https://ui8.net/",
+      "ok": false,
+      "error": "HTTP 403"
+    },
+    {
+      "url": "https://creative-tim.com/",
+      "ok": false,
+      "error": "HTTP 403"
+    },
+    {
+      "url": "https://themefisher.com/",
+      "ok": true,
+      "fetchedAt": "2026-07-20T11:34:19.158Z",
+      "onPage": {
+        "title": "200+ Website Templates Built with Modern Stacks | Themefisher",
+        "titleLength": 61,
+        "metaDescription": "200+ modern website templates built with Astro, Next.js,Tailwind, Hugo & Bootstrap. Perfect for startups, developers, and agencies. Trusted by 120K+ users worldwide. ",
+        "metaDescriptionLength": 166,
+        "canonical": "https://themefisher.com/",
+        "robotsMeta": "index, follow",
+        "viewport": "width=device-width, initial-scale=1, maximum-scale=5",
+        "lang": "en",
+        "openGraph": {
+          "present": true,
+          "title": "200+ Website Templates Built with Modern Stacks | Themefisher",
+          "description": "200+ modern website templates built with Astro, Next.js,Tailwind, Hugo & Bootstrap. Perfect for startups, developers, and agencies. Trusted by 120K+ users worldwide. ",
+          "image": "https://themefisher.com/images/og-image.png",
+          "type": "website",
+          "url": "https://themefisher.com/"
+        },
+        "twitterCard": {
+          "present": true,
+          "card": "summary_large_image",
+          "title": "200+ Website Templates Built with Modern Stacks | Themefisher",
+          "description": "200+ modern website templates built with Astro, Next.js,Tailwind, Hugo & Bootstrap. Perfect for startups, developers, and agencies. Trusted by 120K+ users worldwide. ",
+          "image": "https://themefisher.com/images/og-image.png"
+        },
+        "headingOutline": {
+          "h1": 1,
+          "h2": 5,
+          "h3": 55,
+          "h4": 1,
+          "h5": 0,
+          "h6": 0
+        },
+        "h1Count": 1,
+        "h1Texts": [
+          "200+ templates to build fast and secure websites without starting from scratch"
+        ],
+        "wordCount": 15615,
+        "images": {
+          "count": 89,
+          "missingAlt": 0
+        },
+        "links": {
+          "internal": 131,
+          "external": 10
+        },
+        "structuredData": {
+          "blockCount": 1,
+          "validBlockCount": 1,
+          "types": [
+            "CollectionPage"
+          ]
+        }
+      },
+      "siteFiles": {
+        "robotsExists": true,
+        "robotsMentionsSitemap": true,
+        "sitemapExists": true,
+        "sitemapUrlCount": 657
+      },
+      "pageSpeed": {
+        "mobile": {
+          "ok": false,
+          "error": "PSI HTTP 429",
+          "detail": "{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.\",\n    \"errors\": [\n      {\n        \"message\": \"Quota exceeded for quota metric 'Queries' and li"
+        },
+        "desktop": null
+      }
+    }
+  ],
+  "comparisonSummary": {
+    "competitorsAudited": 2,
+    "competitorsFailed": 2,
+    "avgWordCount": 13064,
+    "avgH1Count": 1,
+    "pctWithStructuredData": 100,
+    "pctWithOpenGraph": 100,
+    "avgMobilePerformanceScore": null,
+    "avgMobileSeoScore": null
+  }
+}

@@ -185,7 +185,7 @@ async function loginHandler(
 
 export const POST = withAPIMiddleware(loginHandler, {
   rateLimit: {
-    maxRequests: 5,
-    windowMs: 15 * 60 * 1000,
+    maxRequests: 20,
+    windowMs: 60 * 60,
   },
 });

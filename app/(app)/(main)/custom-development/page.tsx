@@ -3,6 +3,7 @@ import ValueProposition from "@/components/CustomDevelopment/ValueProposition";
 import ProcessTimeline from "@/components/CustomDevelopment/ProcessTimeline";
 import TechStack from "@/components/CustomDevelopment/TechStack";
 import ApplicationForm from "@/components/CustomDevelopment/ApplicationForm";
+import SEOContent from "@/components/CustomDevelopment/SEOContent";
 import GSAPInitializer from "@/components/home/GSAPInitializer";
 
 import { buildMetadata } from "@/lib/seo";
@@ -26,6 +27,7 @@ const CustomDevelopmentPage = () => {
       <ValueProposition />
       <ProcessTimeline />
       <TechStack />
+      <SEOContent />
       <div id="application-form">
         <ApplicationForm />
       </div>

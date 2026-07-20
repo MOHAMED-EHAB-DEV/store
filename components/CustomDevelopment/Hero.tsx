@@ -102,7 +102,10 @@ const Hero = () => {
         </h1>
 
         <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl">
-          Transform your brand with a custom-developed, high-performance web application tailored to your exact specifications.
+          Transform your brand with a custom-developed, high-performance web application tailored to your exact specifications. 
+          {/* <span className="block mt-4 text-purple-400 font-semibold tracking-wide uppercase text-sm">
+            Projects starting from $599
+          </span> */}
         </p>
 
         <button

@@ -1,0 +1,393 @@
+{
+  "generatedAt": "2026-07-20T14:29:35.038Z",
+  "target": "https://mhd-store.vercel.app/",
+  "homepage": {
+    "url": "https://mhd-store.vercel.app/",
+    "ok": true,
+    "fetchedAt": "2026-07-20T14:29:33.851Z",
+    "onPage": {
+      "title": "MHD Store | Premium Web Templates",
+      "titleLength": 33,
+      "metaDescription": "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
+      "metaDescriptionLength": 90,
+      "canonical": "https://mhd-store.vercel.app",
+      "robotsMeta": "index, follow",
+      "viewport": "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
+      "lang": "en",
+      "openGraph": {
+        "present": true,
+        "title": "MHD Store | Premium Web Templates",
+        "description": "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
+        "image": "https://mhd-store.vercel.app/og/home-desktop.png",
+        "type": "website",
+        "url": "https://mhd-store.vercel.app"
+      },
+      "twitterCard": {
+        "present": true,
+        "card": "summary_large_image",
+        "title": "MHD Store | Premium Web Templates",
+        "description": "Premium, responsive Next.js and Tailwind CSS templates for modern creators and businesses.",
+        "image": "https://mhd-store.vercel.app/og/home-desktop.png"
+      },
+      "headingOutline": {
+        "h1": 1,
+        "h2": 7,
+        "h3": 20,
+        "h4": 1,
+        "h5": 0,
+        "h6": 0
+      },
+      "h1Count": 1,
+      "h1Texts": [
+        "Premium Templates to Elevate Your Projects"
+      ],
+      "wordCount": 1202,
+      "images": {
+        "count": 6,
+        "missingAlt": 0
+      },
+      "links": {
+        "internal": 30,
+        "external": 2
+      },
+      "structuredData": {
+        "blockCount": 3,
+        "validBlockCount": 3,
+        "types": [
+          "Organization",
+          "WebSite",
+          "Person"
+        ]
+      }
+    },
+    "siteFiles": {
+      "robotsExists": true,
+      "robotsMentionsSitemap": true,
+      "sitemapExists": true,
+      "sitemapUrlCount": 17
+    },
+    "pageSpeed": {
+      "mobile": {
+        "ok": true,
+        "strategy": "mobile",
+        "scores": {
+          "performance": 83,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "labMetrics": {
+          "largest-contentful-paint": {
+            "value": 3301,
+            "displayValue": "3.3 s"
+          },
+          "cumulative-layout-shift": {
+            "value": 0.00005171656050987367,
+            "displayValue": "0"
+          },
+          "total-blocking-time": {
+            "value": 263,
+            "displayValue": "260 ms"
+          },
+          "first-contentful-paint": {
+            "value": 1351,
+            "displayValue": "1.4 s"
+          },
+          "interactive": {
+            "value": 3766,
+            "displayValue": "3.8 s"
+          },
+          "speed-index": {
+            "value": 5181.136095472424,
+            "displayValue": "5.2 s"
+          }
+        },
+        "fieldMetrics": {},
+        "opportunities": [
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "displayValue": "Est savings of 21 KiB"
+          }
+        ]
+      },
+      "desktop": {
+        "ok": true,
+        "strategy": "desktop",
+        "scores": {
+          "performance": 99,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "labMetrics": {
+          "largest-contentful-paint": {
+            "value": 645.5,
+            "displayValue": "0.6 s"
+          },
+          "cumulative-layout-shift": {
+            "value": 0.0022508389301507713,
+            "displayValue": "0.002"
+          },
+          "total-blocking-time": {
+            "value": 101.5,
+            "displayValue": "100 ms"
+          },
+          "first-contentful-paint": {
+            "value": 321,
+            "displayValue": "0.3 s"
+          },
+          "interactive": {
+            "value": 843.95,
+            "displayValue": "0.8 s"
+          },
+          "speed-index": {
+            "value": 1013.3701123117145,
+            "displayValue": "1.0 s"
+          }
+        },
+        "fieldMetrics": {},
+        "opportunities": [
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "displayValue": "Est savings of 21 KiB"
+          }
+        ]
+      }
+    }
+  },
+  "extraPages": [
+    {
+      "url": "https://mhd-store.vercel.app/templates",
+      "ok": true,
+      "onPage": {
+        "title": "Browse Templates | Mohammed Ehab Store",
+        "titleLength": 38,
+        "metaDescription": "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.",
+        "metaDescriptionLength": 85,
+        "canonical": "https://mhd-store.vercel.app/templates",
+        "robotsMeta": "index, follow",
+        "viewport": "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
+        "lang": "en",
+        "openGraph": {
+          "present": true,
+          "title": "Browse Templates | Mohammed Ehab Store",
+          "description": "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.",
+          "image": "https://mhd-store.vercel.app/og/home-desktop.png",
+          "type": "website",
+          "url": "https://mhd-store.vercel.app/templates"
+        },
+        "twitterCard": {
+          "present": true,
+          "card": "summary_large_image",
+          "title": "Browse Templates | Mohammed Ehab Store",
+          "description": "Explore our collection of premium web templates for SaaS, e-commerce, and portfolios.",
+          "image": "https://mhd-store.vercel.app/og/home-desktop.png"
+        },
+        "headingOutline": {
+          "h1": 1,
+          "h2": 0,
+          "h3": 2,
+          "h4": 0,
+          "h5": 0,
+          "h6": 0
+        },
+        "h1Count": 1,
+        "h1Texts": [
+          "Templates"
+        ],
+        "wordCount": 628,
+        "images": {
+          "count": 5,
+          "missingAlt": 0
+        },
+        "links": {
+          "internal": 18,
+          "external": 2
+        },
+        "structuredData": {
+          "blockCount": 4,
+          "validBlockCount": 4,
+          "types": [
+            "Organization",
+            "WebSite",
+            "Person",
+            "ItemList"
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://mhd-store.vercel.app/blog",
+      "ok": true,
+      "onPage": {
+        "title": "Web Design & Development Blog | MHD Store",
+        "titleLength": 41,
+        "metaDescription": "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.",
+        "metaDescriptionLength": 108,
+        "canonical": "https://mhd-store.vercel.app/blog",
+        "robotsMeta": "index, follow",
+        "viewport": "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
+        "lang": "en",
+        "openGraph": {
+          "present": true,
+          "title": "Web Design & Development Blog | MHD Store",
+          "description": "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.",
+          "image": "https://mhd-store.vercel.app/og/home-desktop.png",
+          "type": "website",
+          "url": "https://mhd-store.vercel.app/blog"
+        },
+        "twitterCard": {
+          "present": true,
+          "card": "summary_large_image",
+          "title": "Web Design & Development Blog | MHD Store",
+          "description": "Discover the latest stories, tutorials, and insights about development, design, and modern web technologies.",
+          "image": "https://mhd-store.vercel.app/og/home-desktop.png"
+        },
+        "headingOutline": {
+          "h1": 1,
+          "h2": 0,
+          "h3": 5,
+          "h4": 0,
+          "h5": 0,
+          "h6": 0
+        },
+        "h1Count": 1,
+        "h1Texts": [
+          "Insights & Updates"
+        ],
+        "wordCount": 885,
+        "images": {
+          "count": 4,
+          "missingAlt": 0
+        },
+        "links": {
+          "internal": 19,
+          "external": 2
+        },
+        "structuredData": {
+          "blockCount": 3,
+          "validBlockCount": 3,
+          "types": [
+            "Organization",
+            "WebSite",
+            "Person"
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://mhd-store.vercel.app/pricing",
+      "ok": true,
+      "onPage": {
+        "title": "Pricing | MHD Store",
+        "titleLength": 19,
+        "metaDescription": "View pricing plans for premium web templates at MHD Store.",
+        "metaDescriptionLength": 58,
+        "canonical": "https://mhd-store.vercel.app/pricing",
+        "robotsMeta": "index, follow",
+        "viewport": "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
+        "lang": "en",
+        "openGraph": {
+          "present": true,
+          "title": "Pricing | MHD Store",
+          "description": "View pricing plans for premium web templates at MHD Store.",
+          "image": "https://mhd-store.vercel.app/og/pricing.png",
+          "type": "website",
+          "url": "https://mhd-store.vercel.app/pricing"
+        },
+        "twitterCard": {
+          "present": true,
+          "card": "summary_large_image",
+          "title": "Pricing | MHD Store",
+          "description": "View pricing plans for premium web templates at MHD Store.",
+          "image": "https://mhd-store.vercel.app/og/pricing.png"
+        },
+        "headingOutline": {
+          "h1": 0,
+          "h2": 1,
+          "h3": 5,
+          "h4": 0,
+          "h5": 0,
+          "h6": 0
+        },
+        "h1Count": 0,
+        "h1Texts": [],
+        "wordCount": 301,
+        "images": {
+          "count": 1,
+          "missingAlt": 0
+        },
+        "links": {
+          "internal": 19,
+          "external": 2
+        },
+        "structuredData": {
+          "blockCount": 3,
+          "validBlockCount": 3,
+          "types": [
+            "Organization",
+            "WebSite",
+            "Person"
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://mhd-store.vercel.app/custom-development",
+      "ok": true,
+      "onPage": {
+        "title": "Custom Development | MHD Store",
+        "titleLength": 30,
+        "metaDescription": "Get a custom, premium web application built specifically for your brand.",
+        "metaDescriptionLength": 72,
+        "canonical": "https://mhd-store.vercel.app/custom-development",
+        "robotsMeta": "index, follow",
+        "viewport": "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
+        "lang": "en",
+        "openGraph": {
+          "present": true,
+          "title": "Custom Development | MHD Store",
+          "description": "Get a custom, premium web application built specifically for your brand.",
+          "image": "https://mhd-store.vercel.app/og/custom-development.png",
+          "type": "website",
+          "url": "https://mhd-store.vercel.app/custom-development"
+        },
+        "twitterCard": {
+          "present": true,
+          "card": "summary_large_image",
+          "title": "Custom Development | MHD Store",
+          "description": "Get a custom, premium web application built specifically for your brand.",
+          "image": "https://mhd-store.vercel.app/og/custom-development.png"
+        },
+        "headingOutline": {
+          "h1": 0,
+          "h2": 0,
+          "h3": 0,
+          "h4": 0,
+          "h5": 0,
+          "h6": 0
+        },
+        "h1Count": 0,
+        "h1Texts": [],
+        "wordCount": 250,
+        "images": {
+          "count": 0,
+          "missingAlt": 0
+        },
+        "links": {
+          "internal": 0,
+          "external": 0
+        },
+        "structuredData": {
+          "blockCount": 3,
+          "validBlockCount": 3,
+          "types": [
+            "Organization",
+            "WebSite",
+            "Person"
+          ]
+        }
+      }
+    }
+  ]
+}

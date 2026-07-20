@@ -1,6 +1,14 @@
 import LayoutContainer from "@/components/Admin/Layout/LayoutContainer";
 import { authenticateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export const dynamic = "force-dynamic";
 

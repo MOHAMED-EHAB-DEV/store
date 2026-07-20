@@ -36,6 +36,7 @@ const BlueprintCustomBuild = () => {
 
   return (
     <section className="w-full py-16 text-white relative z-20">
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="container mx-auto px-4 md:px-6 max-w-6xl">
         <div
           ref={bandRef}

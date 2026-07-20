@@ -12,7 +12,7 @@ export const metadata = buildMetadata({
 
 export default async function FAQsPage() {
   const faqs = FAQS.map((faq) => ({
-    _id: faq.id,
+    ...faq,
     question: faq.question,
     answer: faq.answer,
     category: faq.category,
@@ -22,7 +22,7 @@ export default async function FAQsPage() {
   const categories = FAQ_CATEGORIES.map((cat) => {
     const count = FAQS.filter((faq) => faq.category === cat.id).length;
     return {
-      _id: cat.id,
+      ...cat,
       name: cat.name,
       count,
     };

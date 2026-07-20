@@ -40,8 +40,9 @@ const AboutMe = () => {
     });
   }, []);
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4 items-center justify-center">
-      <div className="text-center mb-16 about-header">
+    <div className="w-full max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4 items-center justify-center relative">
+      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="text-center mb-16 about-header relative z-10">
         <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-linear-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
           <Sparkles className="w-4 h-4 mr-2" />
           Proof of Skill

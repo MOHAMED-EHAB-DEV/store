@@ -10,7 +10,6 @@ import HeroOrbs from "@/components/home/HeroOrbs";
 // import BlueprintCustomBuild from "@/components/home/BlueprintCustomBuild";
 import { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
-import LenisInitializer from "@/components/home/LenisInitializer";
 
 export const metadata: Metadata = buildMetadata({
   title: "MHD Store | Premium Web Templates",

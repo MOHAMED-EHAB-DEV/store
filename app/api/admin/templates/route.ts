@@ -194,7 +194,10 @@ async function createAdminTemplate(req: NextRequest) {
       views: 0,
     });
 
+    await revalidateWithTag("everyTemplate");
+    await revalidateWithTag("templates");
     await revalidateWithTag("categories");
+    await revalidate("/templates");
     await revalidate("/");
 
     return createAPIResponse(template, {

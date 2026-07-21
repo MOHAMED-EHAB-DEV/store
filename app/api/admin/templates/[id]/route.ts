@@ -39,7 +39,14 @@ async function deleteAdminTemplate(
       );
     }
 
+    await revalidateWithTag(`template-${id}`);
+    if (template.slug) {
+      await revalidateWithTag(`template-${template.slug}`);
+      await revalidate(`/templates/${template.slug}`);
+    }
+    await revalidateWithTag("everyTemplate");
     await revalidateWithTag("categories");
+    await revalidate("/templates");
     await revalidate("/");
 
     return createAPIResponse(null, {
@@ -162,7 +169,17 @@ async function updateAdminTemplate(
     }
 
     await revalidateWithTag(`template-${id}`);
+    if (template.slug) {
+      await revalidateWithTag(`template-${template.slug}`);
+      await revalidate(`/templates/${template.slug}`);
+    }
+    if (body.slug && body.slug !== template.slug) {
+      await revalidateWithTag(`template-${body.slug}`);
+      await revalidate(`/templates/${body.slug}`);
+    }
+    await revalidateWithTag("everyTemplate");
     await revalidateWithTag("categories");
+    await revalidate("/templates");
     await revalidate("/");
 
     return createAPIResponse(template, {

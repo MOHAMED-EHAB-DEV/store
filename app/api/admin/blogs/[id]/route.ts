@@ -30,8 +30,14 @@ async function deleteAdminBlog(
       return createErrorResponse("Blog not found", 404, { req });
     }
 
-    await revalidate("/blog");
     await revalidateWithTag(`blog-${id}`);
+    if (blog.slug) {
+      await revalidateWithTag(`blog-${blog.slug}`);
+      await revalidate(`/blog/${blog.slug}`);
+    }
+    await revalidateWithTag("blogs");
+    await revalidate("/blog");
+    await revalidate("/");
 
     return createAPIResponse(blog,
       {
@@ -75,8 +81,18 @@ async function updateAdminBlog(
       return createErrorResponse("Blog not found", 404, { req });
     }
 
+    await revalidateWithTag(`blog-${id}`);
+    if (blog?.slug) {
+      await revalidateWithTag(`blog-${blog.slug}`);
+      await revalidate(`/blog/${blog.slug}`);
+    }
+    if (body.slug && body.slug !== blog?.slug) {
+      await revalidateWithTag(`blog-${body.slug}`);
+      await revalidate(`/blog/${body.slug}`);
+    }
+    await revalidateWithTag("blogs");
     await revalidate("/blog");
-    await revalidateWithTag(`blog-${blog?.slug}`);
+    await revalidate("/");
 
     return createAPIResponse(
       {

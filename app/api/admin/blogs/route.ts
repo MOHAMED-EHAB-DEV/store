@@ -124,7 +124,9 @@ async function createBlog(req: NextRequest) {
 
     const newBlog = await Blog.create(body);
 
+    await revalidateWithTag("blogs");
     await revalidate("/blog");
+    await revalidate("/");
 
     return createAPIResponse(newBlog, { message: "Blog post created successfully" });
   } catch (error: any) {

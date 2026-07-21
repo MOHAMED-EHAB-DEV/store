@@ -37,7 +37,7 @@ const HomeFAQ = dynamic(() => import("@/components/home/HomeFAQ"));
 export default async function Home() {
   return (
     <main
-      className="flex flex-col items-center justify-center gap-24 overflow-x-hidden w-dvw md:px-0 relative"
+      className="flex flex-col items-center justify-center gap-24 w-full md:px-0 relative"
       role="main"
       id="main-content"
     >

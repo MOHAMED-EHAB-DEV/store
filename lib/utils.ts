@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function capitalizeFirstChar(str: string) {
   if (!str) return "";
+  if (str.toLowerCase() == "gsap") return str.toUpperCase();
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 

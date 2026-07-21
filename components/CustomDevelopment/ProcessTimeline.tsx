@@ -65,7 +65,7 @@ const ProcessTimeline = () => {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="py-24 px-4 w-full max-w-7xl mx-auto overflow-x-hidden">
+    <section ref={containerRef} className="py-24 px-4 w-full max-w-7xl mx-auto">
       <div className="text-center mb-24">
         <h2 className="text-3xl md:text-5xl font-bold mb-4 font-paras">Our Process</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">

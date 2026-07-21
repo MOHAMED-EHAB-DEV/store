@@ -161,7 +161,7 @@ const Page = async ({ searchParams }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <main
-        className="flex flex-col justify-center px-2 py-36 gap-8 w-dvw max-w-6xl mx-auto"
+        className="flex flex-col justify-center px-2 py-36 gap-8 w-full max-w-6xl mx-auto"
         role="main"
         id="main-content"
       >

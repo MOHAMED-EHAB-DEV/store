@@ -173,7 +173,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <main
-        className="flex flex-col justify-center py-36 gap-8 w-dvw max-w-6xl mx-auto px-4"
+        className="flex flex-col justify-center py-36 gap-8 w-full max-w-6xl mx-auto px-4"
         role="main"
         id="main-content"
       >

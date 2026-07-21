@@ -11,6 +11,7 @@ import { sonnerToast } from "@/components/ui/sonner";
 import { Input } from "@/components/ui/input";
 import { ICategory } from "@/lib/validations/category";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { capitalizeFirstChar } from "@/lib/utils";
 
 const sortOptions: {
   value: "popular" | "recent" | "rating" | "price" | "downloads";
@@ -175,7 +176,7 @@ const FilterBar = ({
                       }}
                       className="rounded border-white/20 bg-transparent text-blue-500 focus:ring-blue-500"
                     />
-                    <span className="text-sm">{tagObj.tag}</span>
+                    <span className="text-sm">{capitalizeFirstChar(tagObj.tag)}</span>
                   </label>
                 ))}
               </div>

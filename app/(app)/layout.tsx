@@ -107,7 +107,7 @@ export default async function RootLayout({
           Skip to main content
         </a>
 
-        <div className="min-h-screen min-w-screen h-full w-full relative overflow-x-hidden">
+        <div className="min-h-screen w-full relative">
           {/* Enhanced background with multiple gradients */}
           <div className="fixed inset-0 -z-10">
             {/* Primary background */}

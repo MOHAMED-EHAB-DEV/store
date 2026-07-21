@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const Page = async () => {
   return (
-    <div className="flex flex-col justify-center gap-10 p-8 py-36 overflow-x-hidden w-dvw px-5 md:px-56">
+    <div className="flex flex-col justify-center gap-10 p-8 py-36 w-full px-5 md:px-56">
       <h1 className="text-white font-bold text-2xl md:text-4xl">
         Favorite Templates
       </h1>

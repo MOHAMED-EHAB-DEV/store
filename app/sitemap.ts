@@ -4,7 +4,7 @@ import Template from "@/lib/models/Template";
 import Blog from "@/lib/models/Blog";
 import Category from "@/lib/models/Category";
 
-export const revalidate = 172800; // 48 hours
+export const revalidate = 2 * 60 * 60;
 
 const getTemplates = async () => {
   try {

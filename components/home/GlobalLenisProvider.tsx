@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReactLenis, type LenisRef } from "lenis/react";
+import { isLowHardware } from "@/lib/utils";
 
 export default function GlobalLenisProvider({
   children,
@@ -9,8 +10,15 @@ export default function GlobalLenisProvider({
   children: React.ReactNode;
 }) {
   const lenisRef = useRef<LenisRef>(null);
+  const [shouldEnable, setShouldEnable] = useState<boolean | null>(null);
 
   useEffect(() => {
+    setShouldEnable(!isLowHardware());
+  }, []);
+
+  useEffect(() => {
+    if (!shouldEnable) return;
+
     let frame: number;
 
     function update(time: number) {
@@ -27,11 +35,16 @@ export default function GlobalLenisProvider({
 
     frame = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [shouldEnable]);
+
+  if (shouldEnable === false) {
+    return <>{children}</>;
+  }
 
   return (
-    <ReactLenis root options={{ autoRaf: false }} ref={lenisRef}>
+    <ReactLenis root options={{ autoRaf: false, syncTouch: false }} ref={lenisRef}>
       {children}
     </ReactLenis>
   );
 }
+

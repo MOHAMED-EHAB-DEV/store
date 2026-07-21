@@ -63,3 +63,19 @@ export function slugify(text: string) {
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
 }
+
+export function isLowHardware(): boolean {
+  if (typeof window === "undefined") return false;
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+
+  const nav = navigator as Navigator & { deviceMemory?: number };
+  if (nav.deviceMemory && nav.deviceMemory < 4) return true;
+  if (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) return true;
+
+  const isTouch = "ontouchstart" in window || nav.maxTouchPoints > 0;
+  if (isTouch && window.innerWidth < 768) return true;
+
+  return false;
+}
+

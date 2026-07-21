@@ -1,4 +1,5 @@
 import Templates from "@/components/shared/Templates";
+import ShowMoreText from "@/components/ui/ShowMoreText";
 import { ICategory } from "@/lib/validations/category";
 import { Metadata } from "next";
 import { getCategories } from "@/static/categories";
@@ -182,9 +183,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
             {category.charAt(0).toUpperCase() + category.slice(1)} Templates
           </h1>
           {currentCategory?.description && (
-            <p className="text-gray-400 text-lg max-w-3xl leading-relaxed">
-              {currentCategory.description}
-            </p>
+            <ShowMoreText text={currentCategory.description} maxLength={180} />
           )}
         </div>
 

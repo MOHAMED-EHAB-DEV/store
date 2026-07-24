@@ -107,8 +107,10 @@ const nextConfig: NextConfig = {
     "cloudinary",
     "googleapis",
     "jose",
-    "sharp",
   ],
+  images: {
+    unoptimized: true,
+  },
   logging: {
     browserToTerminal: true,
   },

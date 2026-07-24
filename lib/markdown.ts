@@ -46,18 +46,7 @@ export async function createHighlighterSafe() {
 
   try {
     cachedHighlighter = await createHighlighter({
-      // Use only bundled theme names (or replace material-default -> material-theme)
-      themes: [
-        "github-dark",
-        "github-light",
-        "nord",
-        "dracula",
-        "material-theme",
-        "monokai",
-        "min-dark",
-        "min-light",
-        "dark-plus",
-      ],
+      themes: ["github-dark", "github-light"],
       langs: [
         "ts",
         "tsx",
@@ -66,17 +55,9 @@ export async function createHighlighterSafe() {
         "json",
         "markdown",
         "bash",
-        "shell",
         "css",
         "html",
         "python",
-        "yaml",
-        "toml",
-        "dockerfile",
-        "php",
-        "go",
-        "c",
-        "cpp",
       ],
     });
 

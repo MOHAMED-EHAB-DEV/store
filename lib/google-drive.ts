@@ -1,8 +1,8 @@
-import { google } from 'googleapis';
 import { Readable } from 'stream';
 
 export async function uploadToGoogleDrive(file: File) {
   try {
+    const { google } = await import('googleapis');
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -51,6 +51,7 @@ export async function uploadToGoogleDrive(file: File) {
 }
 
 export async function getGoogleDriveDownloadUrlAndToken(fileId: string) {
+  const { google } = await import('googleapis');
   const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,

@@ -3,6 +3,7 @@
 # dependencies
 /my-store-server
 **/node_modules
+.open-next
 /.cache
 /server/node_modules
 /.pnp

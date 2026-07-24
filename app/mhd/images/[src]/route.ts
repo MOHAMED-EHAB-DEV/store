@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import sharp from "sharp";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+
+let sharp: any = null;
+try {
+  sharp = require("sharp");
+} catch {
+  // sharp native C++ addon unavailable in Cloudflare Workers / Edge environment
+}
 import {
   createErrorResponse,
   withAPIMiddleware,
@@ -292,13 +298,19 @@ async function processingImage(
 
     await tryCacheWrite(oPath, inputBuffer);
 
-    if (serveOriginal) {
+    if (serveOriginal || !sharp) {
       const tag = makeETag(inputBuffer);
       if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
-      const meta = await sharp(inputBuffer).metadata();
-      const mime = meta.format === "svg" ? "image/svg+xml" : meta.format ? `image/${meta.format}` : "application/octet-stream";
-      return imageResponse(inputBuffer, tag, "MISS", mime);
+      const mime = sharp ? (await sharp(inputBuffer).metadata()).format : null;
+      const contentType = mime === "svg" ? "image/svg+xml" : mime ? `image/${mime}` : "image/jpeg";
+      return imageResponse(inputBuffer, tag, "MISS", contentType);
     }
+  }
+
+  if (!sharp) {
+    const tag = makeETag(inputBuffer);
+    if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
+    return imageResponse(inputBuffer, tag, "MISS");
   }
 
   let pipeline = sharp(inputBuffer).rotate();

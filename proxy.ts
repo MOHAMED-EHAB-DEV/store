@@ -35,8 +35,6 @@ function addSecurityHeaders(response: NextResponse) {
   );
   response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
 
   if (process.env.NODE_ENV === "production")
     response.headers.set(

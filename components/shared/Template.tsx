@@ -22,8 +22,8 @@ const Template = ({
 }) => {
   const lowResUrl = useMemo(() => anyImgUrl(template.thumbnail, { width: 400, quality: 100 }), [template.thumbnail]);
   const highResUrl = useMemo(() => anyImgUrl(template.thumbnail, {
-    width: 400,
-    original: true,
+    width: 800,
+    quality: 85,
   }), [template.thumbnail]);
   
   const [highResLoaded, setHighResLoaded] = useState(false);

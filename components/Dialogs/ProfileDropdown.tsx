@@ -57,6 +57,7 @@ const ProfileDropdown = ({
     <div className={`relative ${!user ? "flex sm:hidden" : "flex"}`}>
       <button
         onClick={openDrawer}
+        aria-label="Open account menu"
         className="items-center w-10 h-10 outline-none justify-center cursor-pointer p-0 bg-transparent border-none rounded-full"
       >
         <Image unoptimized
@@ -124,6 +125,7 @@ const ProfileDropdown = ({
             <button
               className="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95 border-none outline-none bg-transparent cursor-pointer"
               onClick={closeDrawer}
+              aria-label="Close account menu"
             >
               <X className="w-6 h-6 text-white" />
             </button>

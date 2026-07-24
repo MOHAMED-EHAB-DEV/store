@@ -33,6 +33,7 @@ const MobileDrawer = () => {
           <button
             className="p-3 mb-4 hover:bg-white/10 rounded-full w-fit transition-colors duration-200 active:scale-95 bg-transparent border-none outline-none cursor-pointer"
             onClick={closeDrawer}
+            aria-label="Close navigation menu"
           >
             <X className="w-6 h-6 text-white" />
           </button>

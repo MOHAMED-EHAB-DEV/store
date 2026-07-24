@@ -29,8 +29,8 @@ const WhyME = () => {
       <div className="flex items-center justify-center w-full md:w-1/4">
         <Image unoptimized
           src={anyImgUrl("https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp", {
-            width: 660,
-            quality: 100
+            width: 400,
+            quality: 85
             // original: true,
           })}
           alt="Cursor Icon"

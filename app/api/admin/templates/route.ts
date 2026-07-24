@@ -197,8 +197,10 @@ async function createAdminTemplate(req: NextRequest) {
     await revalidateWithTag("everyTemplate");
     await revalidateWithTag("templates");
     await revalidateWithTag("categories");
+    await revalidateWithTag("sitemap");
     await revalidate("/templates");
     await revalidate("/");
+    await revalidate("/sitemap.xml");
 
     return createAPIResponse(template, {
       message: "Template created successfully",

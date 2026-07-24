@@ -36,8 +36,10 @@ async function deleteAdminBlog(
       await revalidate(`/blog/${blog.slug}`);
     }
     await revalidateWithTag("blogs");
+    await revalidateWithTag("sitemap");
     await revalidate("/blog");
     await revalidate("/");
+    await revalidate("/sitemap.xml");
 
     return createAPIResponse(blog,
       {
@@ -91,8 +93,10 @@ async function updateAdminBlog(
       await revalidate(`/blog/${body.slug}`);
     }
     await revalidateWithTag("blogs");
+    await revalidateWithTag("sitemap");
     await revalidate("/blog");
     await revalidate("/");
+    await revalidate("/sitemap.xml");
 
     return createAPIResponse(
       {

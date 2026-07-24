@@ -7,7 +7,7 @@ import {
   createErrorResponse,
   withAPIMiddleware,
 } from "@/lib/utils/api-helpers";
-import { revalidateWithTag } from "@/actions/revalidateTag";
+import revalidate, { revalidateWithTag } from "@/actions/revalidateTag";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -73,6 +73,8 @@ async function updateCategory(request: NextRequest, { params }: RouteParams) {
     }
 
     await revalidateWithTag("categories");
+    await revalidateWithTag("sitemap");
+    await revalidate("/sitemap.xml");
     
     return createAPIResponse(category, {
       message: "Category updated successfully",
@@ -115,6 +117,8 @@ async function deleteCategory(request: NextRequest, { params }: RouteParams) {
     }
 
     await revalidateWithTag("categories");
+    await revalidateWithTag("sitemap");
+    await revalidate("/sitemap.xml");
     
     return createAPIResponse(null, {
       message: "Category deleted successfully",

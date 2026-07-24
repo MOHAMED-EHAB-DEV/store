@@ -38,7 +38,10 @@ async function bulkUpdateBlogs(req: NextRequest) {
       { $set: updates },
     );
 
+    await revalidateWithTag("blogs");
+    await revalidateWithTag("sitemap");
     await revalidate("/blog");
+    await revalidate("/sitemap.xml");
     for (const blog of blogsToUpdate) {
       if (blog.slug) await revalidateWithTag(`blog-${blog.slug}`);
       await revalidateWithTag(`blog-${blog._id}`);

@@ -45,9 +45,12 @@ async function deleteAdminTemplate(
       await revalidate(`/templates/${template.slug}`);
     }
     await revalidateWithTag("everyTemplate");
+    await revalidateWithTag("templates");
     await revalidateWithTag("categories");
+    await revalidateWithTag("sitemap");
     await revalidate("/templates");
     await revalidate("/");
+    await revalidate("/sitemap.xml");
 
     return createAPIResponse(null, {
       message: "Template deleted successfully",
@@ -178,9 +181,12 @@ async function updateAdminTemplate(
       await revalidate(`/templates/${body.slug}`);
     }
     await revalidateWithTag("everyTemplate");
+    await revalidateWithTag("templates");
     await revalidateWithTag("categories");
+    await revalidateWithTag("sitemap");
     await revalidate("/templates");
     await revalidate("/");
+    await revalidate("/sitemap.xml");
 
     return createAPIResponse(template, {
       message: "Template updated successfully",
@@ -244,6 +250,9 @@ async function disableTemplate(
     }); // soft delete
 
     revalidate(`template-${id}`);
+    await revalidateWithTag("templates");
+    await revalidateWithTag("sitemap");
+    await revalidate("/sitemap.xml");
 
     return createAPIResponse(
       {},

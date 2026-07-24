@@ -1,44 +1,42 @@
 import { MetadataRoute } from "next";
-import { connectToDatabase } from "@/lib/database";
-import Template from "@/lib/models/Template";
-import Blog from "@/lib/models/Blog";
-import Category from "@/lib/models/Category";
 
-export const revalidate = 2 * 60 * 60;
-
-const getTemplates = async () => {
+const getTemplates = async (baseUrl: string) => {
   try {
-    await connectToDatabase();
-    const templates = await Template.find({ isActive: true })
-      .select("slug _id updatedAt")
-      .lean();
-    return templates;
+    const res = await fetch(
+      `${baseUrl}/api/template/search?includedFields=updatedAt&limit=1000`,
+      { next: { tags: ["sitemap", "templates"], revalidate: 2 * 60 * 60 } }
+    );
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data || [];
   } catch (error) {
     console.error("Error fetching templates for sitemap:", error);
     return [];
   }
 };
 
-const getBlogs = async () => {
+const getBlogs = async (baseUrl: string) => {
   try {
-    await connectToDatabase();
-    const blogs = await Blog.find()
-      .select("slug updatedAt")
-      .lean();
-    return blogs;
+    const res = await fetch(`${baseUrl}/api/blogs?limit=1000`, {
+      next: { tags: ["sitemap", "blogs"], revalidate: 2 * 60 * 60 },
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data || [];
   } catch (error) {
     console.error("Error fetching blogs for sitemap:", error);
     return [];
   }
 };
 
-const getCategories = async () => {
+const getCategories = async (baseUrl: string) => {
   try {
-    await connectToDatabase();
-    const categories = await Category.find({ isActive: true })
-      .select("slug updatedAt")
-      .lean();
-    return categories;
+    const res = await fetch(`${baseUrl}/api/categories`, {
+      next: { tags: ["sitemap", "categories"], revalidate: 2 * 60 * 60 },
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data || [];
   } catch (error) {
     console.error("Error fetching categories for sitemap:", error);
     return [];
@@ -105,15 +103,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const templates = await getTemplates();
+  const templates = await getTemplates(baseUrl);
   const templatePages = templates.map((template: any) => ({
     url: `${baseUrl}/templates/${template.slug}`,
-    lastModified: template.updatedAt || new Date(),
+    lastModified: template.updatedAt ? new Date(template.updatedAt) : new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
 
-  const blogs = await getBlogs();
+  const blogs = await getBlogs(baseUrl);
   const blogPages = blogs.map((blog: any) => ({
     url: `${baseUrl}/blog/${blog.slug}`,
     lastModified: blog.updatedAt ? new Date(blog.updatedAt) : new Date(),
@@ -121,7 +119,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const categories = await getCategories();
+  const categories = await getCategories(baseUrl);
   const categoryPages = categories.map((category: any) => ({
     url: `${baseUrl}/templates/category/${category.slug}`,
     lastModified: category.updatedAt ? new Date(category.updatedAt) : new Date(),

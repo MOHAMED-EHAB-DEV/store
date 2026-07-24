@@ -1,3 +1,5 @@
+export const runtime = "experimental-edge";
+
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
@@ -166,8 +168,6 @@ export async function proxy(req: NextRequest) {
   addSecurityHeaders(response);
   return response;
 }
-
-export const runtime = "experimental-edge";
 
 export const config = {
   matcher: [

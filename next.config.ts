@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const isProduction = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
   poweredByHeader: false,
   compress: true,
   typescript: {
@@ -95,22 +94,11 @@ const nextConfig: NextConfig = {
       "zustand",
       "react-day-picker",
     ],
-    // optimizeCss: true,
+    optimizeCss: true,
     esmExternals: true,
     proxyClientMaxBodySize: "100mb",
   },
-  serverExternalPackages: [
-    "shiki",
-    "mongoose",
-    "mongodb",
-    "bcryptjs",
-    "cloudinary",
-    "googleapis",
-    "jose",
-  ],
-  images: {
-    unoptimized: true,
-  },
+  serverExternalPackages: ["shiki", "mongoose", "mongodb", "bcryptjs", "cloudinary", "googleapis", "jose", "sharp"],
   logging: {
     browserToTerminal: true,
   },

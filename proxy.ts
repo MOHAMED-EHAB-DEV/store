@@ -1,5 +1,3 @@
-export const runtime = "experimental-edge";
-
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
@@ -66,9 +64,24 @@ function isApiRoute(pathname: string) {
   return pathname.startsWith("/api");
 }
 
-export async function middleware(req: NextRequest) {
+function isAuthRoute(pathname: string) {
+  return (
+    pathname.startsWith("/api/user/login") ||
+    pathname.startsWith("/api/user/register")
+  );
+}
+
+function isAdminApiRoute(pathname: string) {
+  return pathname.startsWith("/api/admin");
+}
+
+export async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const token = req.cookies.get("token")?.value;
+  const clientIP =
+    req.headers.get("x-forwarded-for") ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
 
   // 1. Early return for internal paths
   if (
@@ -157,6 +170,16 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     {
+      /*
+       * Match all request paths except for the ones starting with:
+       * - _next/static (static files)
+       * - _next/image (image optimization files)
+       * - mhd/images (image optimization files)
+       * - _static (shared static files)
+       * - favicon.ico, sitemap.xml, robots.txt, manifest.json, sw.js (metadata files)
+       * - assets, Icons, images, Videos (custom static folders)
+       * - Common image/video/font extensions
+       */
       source:
         "/((?!api/|_next/static|_next/image|mhd/images|_static|favicon.ico|sitemap.xml|robots.txt|manifest.json|sw.js|assets/|Icons/|images/|Videos/|Logo.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|webm|ogg|mp3|wav|flac|aac|woff2?|eot|ttf|otf)$).*)",
       missing: [
@@ -164,6 +187,7 @@ export const config = {
         { type: "header", key: "purpose", value: "prefetch" },
       ],
     },
+    // Explicitly include API routes for rate limiting
     "/api/:path*",
   ],
 };

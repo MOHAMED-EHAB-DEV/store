@@ -5,22 +5,59 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeSlug from "rehype-slug";
-import rehypeRaw from "rehype-raw";
 import { visit } from "unist-util-visit";
+import { createHighlighter } from "shiki";
+import rehypeRaw from "rehype-raw";
 import { anyImgUrl } from "./utils/image";
 
+/**
+ * Server-side Markdown -> HTML with shiki highlighting and copy button functionality
+ *
+ * Notes:
+ * - Multiple Shiki themes are registered. The `themeMap` controls which theme is used per language.
+ * - We post-process the Shiki HTML to ensure it receives Tailwind-friendly classes so the background/copy button etc. look right.
+ * - Client copy script appended to HTML is robust (runs immediately and on DOMContentLoaded).
+ */
+
+/* ----------------------------- Shiki Highlighter ---------------------------- */
 let cachedHighlighter: any = (globalThis as any).shikiHighlighter || null;
 
 export async function createHighlighterSafe() {
-  if (typeof window !== "undefined") return null;
-  if (typeof process !== "undefined" && process?.env?.NEXT_RUNTIME === "edge") return null;
-  if ((globalThis as any).shikiHighlighter) return (globalThis as any).shikiHighlighter;
+  // guard: don't run in browser
+  if (typeof window !== "undefined") {
+    console.warn("[shiki] skipping: running in browser.");
+    return null;
+  }
+
+  // guard for Edge runtime (Shiki doesn't run in Edge)
+  if (typeof process !== "undefined" && process?.env?.NEXT_RUNTIME === "edge") {
+    console.warn(
+      "[shiki] skipping: detected Edge runtime (NEXT_RUNTIME=edge).",
+    );
+    return null;
+  }
+
+  if ((globalThis as any).shikiHighlighter) {
+    cachedHighlighter = (globalThis as any).shikiHighlighter;
+    return cachedHighlighter;
+  }
+
   if (cachedHighlighter) return cachedHighlighter;
 
   try {
-    const { createHighlighter } = await import("shiki");
     cachedHighlighter = await createHighlighter({
-      themes: ["github-dark", "github-light"],
+      // Use only bundled theme names (or replace material-default -> material-theme)
+      themes: [
+        "github-dark",
+        "github-light",
+        "nord",
+        "dracula",
+        "material-theme",
+        "monokai",
+        "min-dark",
+        "min-light",
+        "dark-plus",
+      ],
       langs: [
         "ts",
         "tsx",
@@ -29,9 +66,17 @@ export async function createHighlighterSafe() {
         "json",
         "markdown",
         "bash",
+        "shell",
         "css",
         "html",
         "python",
+        "yaml",
+        "toml",
+        "dockerfile",
+        "php",
+        "go",
+        "c",
+        "cpp",
       ],
     });
 

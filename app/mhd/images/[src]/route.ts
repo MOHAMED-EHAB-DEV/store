@@ -5,7 +5,8 @@ import crypto from "crypto";
 
 let sharp: any = null;
 try {
-  sharp = require("sharp");
+  const nodeRequire = eval("require");
+  sharp = nodeRequire("sharp");
 } catch {
   // sharp native C++ addon unavailable in Cloudflare Workers / Edge environment
 }

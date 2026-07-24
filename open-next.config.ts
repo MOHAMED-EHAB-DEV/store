@@ -1,14 +1,3 @@
-import cache from "@opennextjs/cloudflare/kv-cache";
-import { defineCloudflareConfig } from "@opennextjs/cloudflare/config";
+import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
-export default defineCloudflareConfig({
-  incrementalCache: cache,
-  middleware: {
-    external: true,
-    override: {
-      wrapper: "cloudflare-edge",
-      converter: "edge",
-      proxyExternalRequest: "fetch",
-    },
-  },
-});
+export default defineCloudflareConfig();

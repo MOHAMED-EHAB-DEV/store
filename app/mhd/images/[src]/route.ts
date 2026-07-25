@@ -90,38 +90,60 @@ function makeETag(buf: Buffer): string {
   return `"${crypto.createHash("sha256").update(buf).digest("hex").slice(0, 32)}"`;
 }
 
-type ValidationResult = { ok: true; url: URL } | { ok: false; reason: string };
+type ValidationResult =
+  | { ok: true; url: URL; isRelative: boolean; relativePath?: string }
+  | { ok: false; reason: string };
 
-function validateSource(src: string): ValidationResult {
+function validateSource(src: string, baseUrl?: string): ValidationResult {
   let url: URL;
-  try {
-    url = new URL(src);
-  } catch {
-    return { ok: false, reason: "Malformed URL" };
-  }
+  let isRelative = false;
+  let relativePath = "";
 
-  if (url.protocol !== "http:" && url.protocol !== "https:") {
-    return { ok: false, reason: "Only http/https allowed" };
-  }
+  if (src.startsWith("/") || !/^https?:\/\//i.test(src)) {
+    relativePath = src.startsWith("/") ? src : `/${src}`;
+    const normalized = path.normalize(relativePath).replace(/\\/g, "/");
+    if (normalized.includes("..")) {
+      return { ok: false, reason: "Invalid relative path traversal" };
+    }
+    try {
+      url = new URL(relativePath, baseUrl || "http://localhost");
+      isRelative = true;
+    } catch {
+      return { ok: false, reason: "Malformed relative path" };
+    }
+  } else {
+    try {
+      url = new URL(src);
+    } catch {
+      return { ok: false, reason: "Malformed URL" };
+    }
 
-  const host = url.hostname.toLowerCase();
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return { ok: false, reason: "Only http/https allowed" };
+    }
 
-  for (const re of PRIVATE_HOST_RE) {
-    if (re.test(host)) {
-      return { ok: false, reason: "Private or reserved host blocked" };
+    const host = url.hostname.toLowerCase();
+
+    for (const re of PRIVATE_HOST_RE) {
+      if (re.test(host)) {
+        return { ok: false, reason: "Private or reserved host blocked" };
+      }
+    }
+
+    if (ALLOWED_HOSTS && !ALLOWED_HOSTS.has(host)) {
+      return { ok: false, reason: `Host "${host}" is not in the allowlist` };
     }
   }
 
-  if (ALLOWED_HOSTS && !ALLOWED_HOSTS.has(host)) {
-    return { ok: false, reason: `Host "${host}" is not in the allowlist` };
-  }
-
-  return { ok: true, url };
+  return { ok: true, url, isRelative, relativePath };
 }
 
 function sanitizeBasename(src: string): string {
   try {
-    const url = new URL(src);
+    const url =
+      src.startsWith("/") || !/^https?:\/\//i.test(src)
+        ? new URL(src.startsWith("/") ? src : `/${src}`, "http://localhost")
+        : new URL(src);
     const base = path.basename(url.pathname).replace(/\.[^.]+$/, "");
     const clean = base.replace(/[^a-zA-Z0-9-]/g, "_");
     return clean.slice(0, 50) || "img";
@@ -319,7 +341,7 @@ async function processingImage(
   const quality = parseIntParam(searchParams.get("q"), DEFAULT_QUALITY, 1, 100);
   const serveOriginal = searchParams.get("original") === "true";
 
-  const validation = validateSource(src);
+  const validation = validateSource(src, req.url);
   if (!validation.ok) {
     return new NextResponse(`Invalid source: ${validation.reason}`, {
       status: 400,
@@ -350,56 +372,68 @@ async function processingImage(
   let inputBuffer = await readCachedSmart(src, width, quality, true);
 
   if (!inputBuffer) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-    let response: Response;
-    try {
-      response = await fetch(src, { signal: controller.signal });
-    } catch (err: any) {
-      if (err?.name === "AbortError") {
-        return new NextResponse("Upstream timeout", { status: 504 });
+    if (validation.isRelative && validation.relativePath) {
+      const publicFilePath = path.join(process.cwd(), "public", validation.relativePath);
+      try {
+        inputBuffer = await fs.readFile(publicFilePath);
+      } catch {
+        // Fall back to fetch below if disk read fails
       }
-      throw err;
-    } finally {
-      clearTimeout(timeoutId);
     }
 
-    if (!response.ok) {
-      return new NextResponse(`Upstream error: ${response.statusText}`, {
-        status: response.status,
-      });
+    if (!inputBuffer) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+      const fetchTarget = validation.isRelative ? validation.url.toString() : src;
+      let response: Response;
+      try {
+        response = await fetch(fetchTarget, { signal: controller.signal });
+      } catch (err: any) {
+        if (err?.name === "AbortError") {
+          return new NextResponse("Upstream timeout", { status: 504 });
+        }
+        throw err;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+      if (!response.ok) {
+        return new NextResponse(`Upstream error: ${response.statusText}`, {
+          status: response.status,
+        });
+      }
+
+      const contentType = response.headers.get("content-type") ?? "";
+      if (!contentType.startsWith("image/") && !contentType.includes("svg")) {
+        return new NextResponse(
+          `Source URL did not return an image (got: ${contentType})`,
+          { status: 422 },
+        );
+      }
+
+      const contentLength = response.headers.get("content-length");
+      if (contentLength && parseInt(contentLength, 10) > MAX_SOURCE_BYTES) {
+        return new NextResponse("Source image exceeds size limit", {
+          status: 413,
+        });
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+
+      if (arrayBuffer.byteLength === 0) {
+        return new NextResponse("Empty response from upstream", { status: 502 });
+      }
+      if (arrayBuffer.byteLength > MAX_SOURCE_BYTES) {
+        return new NextResponse("Source image exceeds size limit", {
+          status: 413,
+        });
+      }
+
+      inputBuffer = Buffer.from(arrayBuffer);
     }
 
-    const contentType = response.headers.get("content-type") ?? "";
-    if (!contentType.startsWith("image/")) {
-      return new NextResponse(
-        `Source URL did not return an image (got: ${contentType})`,
-        { status: 422 },
-      );
-    }
-
-    const contentLength = response.headers.get("content-length");
-    if (contentLength && parseInt(contentLength, 10) > MAX_SOURCE_BYTES) {
-      return new NextResponse("Source image exceeds size limit", {
-        status: 413,
-      });
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-
-    if (arrayBuffer.byteLength === 0) {
-      return new NextResponse("Empty response from upstream", { status: 502 });
-    }
-    if (arrayBuffer.byteLength > MAX_SOURCE_BYTES) {
-      return new NextResponse("Source image exceeds size limit", {
-        status: 413,
-      });
-    }
-
-    inputBuffer = Buffer.from(arrayBuffer);
-
-    const origMime = contentType || "application/octet-stream";
+    const origMime = "application/octet-stream";
     await writeCachedSmart(src, width, quality, inputBuffer, origMime, true);
 
     if (serveOriginal) {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "../globals.css";
 import { Roboto, Parastoo } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
@@ -153,6 +154,49 @@ export default async function RootLayout({
             "https://www.linkedin.com/in/1-mohammed",
           ]}
         />
+        <Script id="chunk-error-reload" strategy="beforeInteractive">{`
+          (function () {
+            var RELOAD_KEY = '__chunk_reload__';
+            function isChunkError(err) {
+              if (!err) return false;
+              var msg = typeof err === 'string' ? err : (err.message || String(err));
+              if (typeof msg !== 'string') return false;
+              return (
+                msg.indexOf('ChunkLoadError') !== -1 ||
+                msg.indexOf('Loading chunk') !== -1 ||
+                msg.indexOf("Cannot read properties of undefined (reading 'call')") !== -1 ||
+                msg.indexOf('Unexpected token') !== -1 ||
+                msg.indexOf('Failed to fetch dynamically imported module') !== -1 ||
+                msg.indexOf('Failed to load module') !== -1 ||
+                msg.indexOf('failed to fetch asset') !== -1 ||
+                msg.indexOf('Turbopack') !== -1 ||
+                msg.indexOf('turbopack') !== -1
+              );
+            }
+            function triggerReload() {
+              if (!sessionStorage.getItem(RELOAD_KEY)) {
+                sessionStorage.setItem(RELOAD_KEY, '1');
+                window.location.reload();
+              } else {
+                sessionStorage.removeItem(RELOAD_KEY);
+              }
+            }
+            window.addEventListener('error', function (e) {
+              var isScriptError = e && e.target && (e.target.tagName === 'SCRIPT' || e.target.nodeName === 'SCRIPT');
+              if (isChunkError(e && e.message) || isScriptError) {
+                triggerReload();
+              }
+            }, true);
+            window.addEventListener('unhandledrejection', function (e) {
+              var reason = e && e.reason;
+              var msg = reason && (reason.message || String(reason));
+              if (isChunkError(msg)) {
+                e.preventDefault();
+                triggerReload();
+              }
+            });
+          })();
+        `}</Script>
       </body>
     </html>
   );

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { sonnerToast } from "@/components/ui/sonner";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
 import { Input } from "@/components/ui/input";
@@ -299,8 +299,9 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                 {thumbnailUrl ? (
                     <div className="relative">
                         <Image
-                            src={thumbnailUrl.startsWith("blob:") ? thumbnailUrl : anyImgUrl(thumbnailUrl)}
+                            src={thumbnailUrl}
                             alt="Thumbnail"
+                            loader={createImageProxyLoader(false)}
                             className="rounded-lg object-contain w-full max-h-64"
                             unoptimized
                             width={800}

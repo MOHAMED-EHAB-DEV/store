@@ -5,7 +5,7 @@ import { Badge } from "../ui/badge";
 import { Framer } from "@/components/ui/svgs/icons/Framer";
 import { Layers } from "@/components/ui/svgs/icons/Layers";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { featuresBusinessSales } from "@/constants/features";
 import { VerticalMarquee } from "@/components/ui/marquee";
 import { gsap } from "gsap";
@@ -198,8 +198,9 @@ const FramerFeatures = () => {
               className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6 feature-video"
               style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
-              <Image unoptimized
-                src={anyImgUrl("/assets/Icons/cover.jpg", { width: 1200, original: true })}
+              <Image
+                src="/assets/Icons/cover.jpg"
+                loader={createImageProxyLoader(true)}
                 alt="cover"
                 fill
                 className="absolute inset-0 object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
@@ -224,15 +225,17 @@ const FramerFeatures = () => {
             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
           >
             <div className="w-full flex items-center justify-center relative">
-              <Image unoptimized
-                src={anyImgUrl("/assets/Icons/publish.webp", { width: 300, original: true })}
+              <Image
+                src="/assets/Icons/publish.webp"
+                loader={createImageProxyLoader(true)}
                 alt="publish"
                 width={150}
                 height={150}
                 className="w-auto h-auto"
               />
-              <Image unoptimized
-                src={anyImgUrl("/assets/Icons/smCursor.avif", { width: 50, original: true })}
+              <Image
+                src="/assets/Icons/smCursor.avif"
+                loader={createImageProxyLoader(true)}
                 alt="cursor"
                 width={25}
                 height={25}

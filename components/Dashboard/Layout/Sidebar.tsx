@@ -13,7 +13,7 @@ import Logo from "@/components/ui/Logo";
 import { DashboardSidebarLinks } from "@/constants/navigation";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -113,7 +113,9 @@ const Sidebar = ({ user }: { user: IUser }) => {
                 }}
                 loading={isLoading && loadingLink === link}
                 className={`w-full h-10 cursor-pointer transition-all px-5 py-3 rounded-md flex gap-3 items-center justify-start ${
-                  path === link ? "bg-white/10" : "hover:bg-white/10 bg-transparent"
+                  path === link
+                    ? "bg-white/10"
+                    : "hover:bg-white/10 bg-transparent"
                 }`}
               >
                 {isLoading && loadingLink === link ? (
@@ -121,7 +123,9 @@ const Sidebar = ({ user }: { user: IUser }) => {
                 ) : (
                   <Icon className="w-5 h-5 text-white" />
                 )}
-                <span className={`text-white text-sm ${path === link ? "font-bold" : ""}`}>
+                <span
+                  className={`text-white text-sm ${path === link ? "font-bold" : ""}`}
+                >
                   {text}
                 </span>
               </Button>
@@ -135,14 +139,9 @@ const Sidebar = ({ user }: { user: IUser }) => {
             <DropdownMenuTrigger className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
               <div className="w-7 h-7 flex items-center justify-center">
                 <Image
-                  unoptimized
-                  src={anyImgUrl(
-                    user?.avatar === ""
-                      ? "/assets/Icons/profile.svg"
-                      : (user?.avatar as string),
-                    { width: 60, quality: 85, original: user?.avatar ? false : true }
-                  )}
-                  alt={`${user?.name} Profile`}
+                  src={user?.avatar || "/assets/Icons/profile.svg"}
+                  loader={createImageProxyLoader(!user?.avatar)}
+                  alt={`${user?.name || "User"} Profile`}
                   width={30}
                   height={30}
                   className="p-px rounded-full transition-all duration-500 w-full h-full border hover:border-white"

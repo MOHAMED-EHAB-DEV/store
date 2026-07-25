@@ -3,7 +3,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { Modal, ModalContent } from "@/components/ui/Modal";
 
 interface MessageBubbleProps {
@@ -140,8 +140,9 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
         onClick={() => setOpen(true)}
         className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20 cursor-pointer"
       >
-        <Image unoptimized
-          src={anyImgUrl(url, { width: 200, quality: 80 })}
+        <Image
+          src={url}
+          loader={createImageProxyLoader(false)}
           alt={`Attachment ${index + 1}`}
           fill
           className="object-cover pointer-events-none"
@@ -156,8 +157,9 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
             className="relative w-[90vw] h-[80vh] sm:w-[80vw] sm:h-[80vh]"
             onClick={() => setOpen(false)}
           >
-            <Image unoptimized
-              src={anyImgUrl(url, { width: 1200, quality: 90 })}
+            <Image
+              src={url}
+              loader={createImageProxyLoader(true)}
               alt={`Attachment ${index + 1}`}
               fill
               className="object-contain"

@@ -8,207 +8,293 @@ import { History } from "@/components/ui/svgs/icons/History";
 import { MousePointer2 } from "@/components/ui/svgs/icons/MousePointer2";
 import { useMemo } from "react";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 
 interface Visitor {
-    _id: string;
-    visitorId: string;
-    firstVisit: string;
-    lastVisit: string;
-    userAgent?: string;
-    ipHash?: string;
-    pathHistory: {
-        path: string;
-        timestamp: string;
-    }[];
-    visitCount: number;
-    userId?: any;
+  _id: string;
+  visitorId: string;
+  firstVisit: string;
+  lastVisit: string;
+  userAgent?: string;
+  ipHash?: string;
+  pathHistory: {
+    path: string;
+    timestamp: string;
+  }[];
+  visitCount: number;
+  userId?: any;
 }
 
 interface AdminVisitorDetailsClientProps {
-    visitor: Visitor;
-    analytics?: any[];
+  visitor: Visitor;
+  analytics?: any[];
 }
 
 export default function AdminVisitorDetailsClient({
-    visitor,
-    analytics,
+  visitor,
+  analytics,
 }: AdminVisitorDetailsClientProps) {
-    const aggregatedMetrics = useMemo(() => {
-        if (!analytics) return {};
-        
-        const pageStats: Record<string, Record<string, { total: number, count: number, ratings: Record<string, number> }>> = {};
-        
-        analytics.forEach((record: any) => {
-            record.pages?.forEach((page: any) => {
-                if (!pageStats[page.path]) {
-                    pageStats[page.path] = {};
-                }
-                page.metrics?.forEach((metric: any) => {
-                    if (!pageStats[page.path][metric.name]) {
-                        pageStats[page.path][metric.name] = { total: 0, count: 0, ratings: { good: 0, 'needs-improvement': 0, poor: 0 } };
-                    }
-                    pageStats[page.path][metric.name].total += metric.value;
-                    pageStats[page.path][metric.name].count += 1;
-                    pageStats[page.path][metric.name].ratings[metric.rating] = (pageStats[page.path][metric.name].ratings[metric.rating] || 0) + 1;
-                });
-            });
+  const aggregatedMetrics = useMemo(() => {
+    if (!analytics) return {};
+
+    const pageStats: Record<
+      string,
+      Record<
+        string,
+        { total: number; count: number; ratings: Record<string, number> }
+      >
+    > = {};
+
+    analytics.forEach((record: any) => {
+      record.pages?.forEach((page: any) => {
+        if (!pageStats[page.path]) {
+          pageStats[page.path] = {};
+        }
+        page.metrics?.forEach((metric: any) => {
+          if (!pageStats[page.path][metric.name]) {
+            pageStats[page.path][metric.name] = {
+              total: 0,
+              count: 0,
+              ratings: { good: 0, "needs-improvement": 0, poor: 0 },
+            };
+          }
+          pageStats[page.path][metric.name].total += metric.value;
+          pageStats[page.path][metric.name].count += 1;
+          pageStats[page.path][metric.name].ratings[metric.rating] =
+            (pageStats[page.path][metric.name].ratings[metric.rating] || 0) + 1;
         });
+      });
+    });
 
-        const result: Record<string, any[]> = {};
-        Object.keys(pageStats).forEach(path => {
-            result[path] = Object.keys(pageStats[path]).map(metricName => {
-                const stat = pageStats[path][metricName];
-                let bestRating = 'good';
-                let maxCount = 0;
-                Object.entries(stat.ratings).forEach(([rating, count]) => {
-                    if ((count as number) > maxCount) {
-                        maxCount = count as number;
-                        bestRating = rating;
-                    }
-                });
-                return {
-                    name: metricName,
-                    value: stat.total / stat.count,
-                    rating: bestRating
-                };
-            });
+    const result: Record<string, any[]> = {};
+    Object.keys(pageStats).forEach((path) => {
+      result[path] = Object.keys(pageStats[path]).map((metricName) => {
+        const stat = pageStats[path][metricName];
+        let bestRating = "good";
+        let maxCount = 0;
+        Object.entries(stat.ratings).forEach(([rating, count]) => {
+          if ((count as number) > maxCount) {
+            maxCount = count as number;
+            bestRating = rating;
+          }
         });
+        return {
+          name: metricName,
+          value: stat.total / stat.count,
+          rating: bestRating,
+        };
+      });
+    });
 
-        return result;
-    }, [analytics]);
+    return result;
+  }, [analytics]);
 
-    return (
-        <div className="p-6 space-y-8 animate-in fade-in duration-500">
-            <PageHeader
-                title={`Visitor: ${visitor.visitorId.substring(0, 8)}...`}
-                description="Analyze visitor behavior and path history"
-                breadcrumbs={[
-                    { label: "Dashboard", href: "/admin" },
-                    { label: "Analytics", href: "/admin/analytics" },
-                    { label: "Visitor Details" },
-                ]}
-            />
+  return (
+    <div className="p-6 space-y-8 animate-in fade-in duration-500">
+      <PageHeader
+        title={`Visitor: ${visitor.visitorId.substring(0, 8)}...`}
+        description="Analyze visitor behavior and path history"
+        breadcrumbs={[
+          { label: "Dashboard", href: "/admin" },
+          { label: "Analytics", href: "/admin/analytics" },
+          { label: "Visitor Details" },
+        ]}
+      />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Stats & Overview */}
-                <div className="lg:col-span-1 space-y-6">
-                    <div className="p-6 bg-white/5 border border-white/5 rounded-2xl space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                                <Globe className="w-6 h-6 text-blue-400" />
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-bold text-white tracking-tight">Visitor Overview</h3>
-                                <p className="text-xs text-muted-foreground font-mono truncate max-w-[180px]">{visitor.visitorId}</p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center py-2 border-b border-white/5">
-                                <span className="text-xs text-gray-500 uppercase tracking-wider">Total Visits</span>
-                                <span className="text-lg font-black text-blue-400">{visitor.visitCount}</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-white/5">
-                                <span className="text-xs text-gray-500 uppercase tracking-wider">First Seen</span>
-                                <span className="text-xs text-gray-300">{new Date(visitor.firstVisit).toLocaleString()}</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-white/5">
-                                <span className="text-xs text-gray-500 uppercase tracking-wider">Last Activity</span>
-                                <span className="text-xs text-gray-300">{new Date(visitor.lastVisit).toLocaleString()}</span>
-                            </div>
-                        </div>
-
-                        <div className="pt-2">
-                             <p className="text-[10px] text-gray-500 uppercase mb-2 font-bold tracking-widest">Device / Browser</p>
-                             <div className="p-3 bg-black/20 rounded-xl border border-white/5 text-[10px] font-mono text-gray-400 leading-relaxed italic">
-                                {visitor.userAgent || 'Unknown User Agent'}
-                             </div>
-                        </div>
-
-                        {visitor.userId && (
-                            <div className="pt-4 mt-4 border-t border-white/5">
-                                 <p className="text-[10px] text-gray-500 uppercase mb-3 font-bold tracking-widest">Authenticated As</p>
-                                 <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10">
-                                    {visitor.userId.avatar ? (
-                                        <Image src={anyImgUrl(visitor.userId.avatar)} alt={visitor.userId.name} className="w-10 h-10 rounded-full object-cover border border-blue-500/20" unoptimized width={40} height={40} />
-                                    ) : (
-                                        <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/20">
-                                            <span className="text-blue-400 font-bold uppercase">{visitor.userId.name?.charAt(0) || '?'}</span>
-                                        </div>
-                                    )}
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-bold text-white">{visitor.userId.name}</span>
-                                        <span className="text-xs text-blue-400">{visitor.userId.email}</span>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <Badge variant="outline" className="text-[9px] uppercase tracking-wider py-0 px-1 border-white/10 bg-white/5">
-                                                {visitor.userId.role}
-                                            </Badge>
-                                            <span className="text-[9px] text-gray-500">Joined {new Date(visitor.userId.createdAt).toLocaleDateString()}</span>
-                                        </div>
-                                    </div>
-                                 </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Journey / Path History */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="p-6 bg-white/5 border border-white/5 rounded-2xl">
-                        <div className="flex items-center gap-3 mb-8">
-                            <History className="w-5 h-5 text-purple-400" />
-                            <h3 className="text-xl font-bold text-white tracking-tight">User Journey</h3>
-                            <Badge variant="outline" className="ml-auto bg-purple-500/10 text-purple-400 border-purple-500/20">
-                                {visitor.pathHistory.length} Steps
-                            </Badge>
-                        </div>
-
-                        <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-purple-500/50 before:via-blue-500/20 before:to-transparent">
-                            {visitor.pathHistory.slice().reverse().map((item, index) => {
-                                const pageMetrics = aggregatedMetrics[item.path] || [];
-                                return (
-                                <div key={index} className="relative flex items-center justify-between gap-6 pl-12 group">
-                                    <div className="absolute left-0 grid place-content-center w-10 h-10 rounded-full border-4 border-[#0a0a0a] bg-gray-900 group-hover:scale-110 transition-transform duration-300">
-                                        {index === 0 ? (
-                                            <MousePointer2 className="w-4 h-4 text-purple-400" />
-                                        ) : (
-                                            <div className="w-2 h-2 rounded-full bg-gray-600" />
-                                        )}
-                                    </div>
-                                    <div className="flex-1 p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/[0.07] transition-all cursor-default group-hover:border-white/10">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors">
-                                                {item.path === '/' ? 'Home Page' : item.path.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || item.path}
-                                            </span>
-                                            <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-mono uppercase tracking-tighter">
-                                                <Clock className="w-3 h-3" />
-                                                {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                                            </span>
-                                        </div>
-                                        <p className="text-[10px] text-muted-foreground tracking-tighter font-mono mb-2">{item.path}</p>
-                                        
-                                        {pageMetrics.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-white/5">
-                                                {pageMetrics.map((metric: any) => (
-                                                    <div key={metric.name} className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/40 border ${
-                                                        metric.rating === 'good' ? 'border-green-500/20 text-green-400' : 
-                                                        metric.rating === 'needs-improvement' ? 'border-yellow-500/20 text-yellow-400' : 
-                                                        'border-red-500/20 text-red-400'
-                                                    }`}>
-                                                        <span className="text-[9px] font-bold uppercase tracking-wider">{metric.name}</span>
-                                                        <span className="text-[10px] font-mono">{metric.value.toFixed(1)}{metric.name === 'CLS' ? '' : 'ms'}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )})}
-                        </div>
-                    </div>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Stats & Overview */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="p-6 bg-white/5 border border-white/5 rounded-2xl space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
+                <Globe className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white tracking-tight">
+                  Visitor Overview
+                </h3>
+                <p className="text-xs text-muted-foreground font-mono truncate max-w-[180px]">
+                  {visitor.visitorId}
+                </p>
+              </div>
             </div>
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
+                <span className="text-xs text-gray-500 uppercase tracking-wider">
+                  Total Visits
+                </span>
+                <span className="text-lg font-black text-blue-400">
+                  {visitor.visitCount}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
+                <span className="text-xs text-gray-500 uppercase tracking-wider">
+                  First Seen
+                </span>
+                <span className="text-xs text-gray-300">
+                  {new Date(visitor.firstVisit).toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-white/5">
+                <span className="text-xs text-gray-500 uppercase tracking-wider">
+                  Last Activity
+                </span>
+                <span className="text-xs text-gray-300">
+                  {new Date(visitor.lastVisit).toLocaleString()}
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <p className="text-[10px] text-gray-500 uppercase mb-2 font-bold tracking-widest">
+                Device / Browser
+              </p>
+              <div className="p-3 bg-black/20 rounded-xl border border-white/5 text-[10px] font-mono text-gray-400 leading-relaxed italic">
+                {visitor.userAgent || "Unknown User Agent"}
+              </div>
+            </div>
+
+            {visitor.userId && (
+              <div className="pt-4 mt-4 border-t border-white/5">
+                <p className="text-[10px] text-gray-500 uppercase mb-3 font-bold tracking-widest">
+                  Authenticated As
+                </p>
+                <div className="flex items-center gap-3 p-3 bg-blue-500/5 rounded-xl border border-blue-500/10">
+                  {visitor.userId.avatar ? (
+                    <Image
+                      loader={createImageProxyLoader(false)}
+                      src={visitor.userId.avatar}
+                      alt={visitor.userId.name}
+                      className="w-10 h-10 rounded-full object-cover border border-blue-500/20"
+                      width={40}
+                      height={40}
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/20">
+                      <span className="text-blue-400 font-bold uppercase">
+                        {visitor.userId.name?.charAt(0) || "?"}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-white">
+                      {visitor.userId.name}
+                    </span>
+                    <span className="text-xs text-blue-400">
+                      {visitor.userId.email}
+                    </span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge
+                        variant="outline"
+                        className="text-[9px] uppercase tracking-wider py-0 px-1 border-white/10 bg-white/5"
+                      >
+                        {visitor.userId.role}
+                      </Badge>
+                      <span className="text-[9px] text-gray-500">
+                        Joined{" "}
+                        {new Date(
+                          visitor.userId.createdAt,
+                        ).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-    );
+
+        {/* Journey / Path History */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="p-6 bg-white/5 border border-white/5 rounded-2xl">
+            <div className="flex items-center gap-3 mb-8">
+              <History className="w-5 h-5 text-purple-400" />
+              <h3 className="text-xl font-bold text-white tracking-tight">
+                User Journey
+              </h3>
+              <Badge
+                variant="outline"
+                className="ml-auto bg-purple-500/10 text-purple-400 border-purple-500/20"
+              >
+                {visitor.pathHistory.length} Steps
+              </Badge>
+            </div>
+
+            <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-purple-500/50 before:via-blue-500/20 before:to-transparent">
+              {visitor.pathHistory
+                .slice()
+                .reverse()
+                .map((item, index) => {
+                  const pageMetrics = aggregatedMetrics[item.path] || [];
+                  return (
+                    <div
+                      key={index}
+                      className="relative flex items-center justify-between gap-6 pl-12 group"
+                    >
+                      <div className="absolute left-0 grid place-content-center w-10 h-10 rounded-full border-4 border-[#0a0a0a] bg-gray-900 group-hover:scale-110 transition-transform duration-300">
+                        {index === 0 ? (
+                          <MousePointer2 className="w-4 h-4 text-purple-400" />
+                        ) : (
+                          <div className="w-2 h-2 rounded-full bg-gray-600" />
+                        )}
+                      </div>
+                      <div className="flex-1 p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/[0.07] transition-all cursor-default group-hover:border-white/10">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors">
+                            {item.path === "/"
+                              ? "Home Page"
+                              : item.path
+                                  .split("/")
+                                  .filter(Boolean)
+                                  .pop()
+                                  ?.replace(/-/g, " ") || item.path}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-mono uppercase tracking-tighter">
+                            <Clock className="w-3 h-3" />
+                            {new Date(item.timestamp).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground tracking-tighter font-mono mb-2">
+                          {item.path}
+                        </p>
+
+                        {pageMetrics.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-white/5">
+                            {pageMetrics.map((metric: any) => (
+                              <div
+                                key={metric.name}
+                                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/40 border ${
+                                  metric.rating === "good"
+                                    ? "border-green-500/20 text-green-400"
+                                    : metric.rating === "needs-improvement"
+                                      ? "border-yellow-500/20 text-yellow-400"
+                                      : "border-red-500/20 text-red-400"
+                                }`}
+                              >
+                                <span className="text-[9px] font-bold uppercase tracking-wider">
+                                  {metric.name}
+                                </span>
+                                <span className="text-[10px] font-mono">
+                                  {metric.value.toFixed(1)}
+                                  {metric.name === "CLS" ? "" : "ms"}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -8,7 +8,7 @@ import rehypeSlug from "rehype-slug";
 import { visit } from "unist-util-visit";
 import { createHighlighter } from "shiki";
 import rehypeRaw from "rehype-raw";
-import { anyImgUrl } from "./utils/image";
+import { createImageProxyLoader } from "./utils/image";
 
 /**
  * Server-side Markdown -> HTML with shiki highlighting and copy button functionality
@@ -367,18 +367,26 @@ function rehypeAddClasses() {
 
       switch (node.tagName) {
         case "h1":
-          addClass("text-2xl md:text-4xl font-bold my-6 leading-tight break-words");
+          addClass(
+            "text-2xl md:text-4xl font-bold my-6 leading-tight break-words",
+          );
           break;
         case "h2":
-          addClass("text-xl md:text-3xl font-semibold my-5 leading-snug break-words");
+          addClass(
+            "text-xl md:text-3xl font-semibold my-5 leading-snug break-words",
+          );
           break;
         case "h3":
-          addClass("text-lg md:text-2xl font-semibold my-4 leading-snug break-words");
+          addClass(
+            "text-lg md:text-2xl font-semibold my-4 leading-snug break-words",
+          );
           break;
         case "h4":
         case "h5":
         case "h6":
-          addClass("text-base md:text-xl font-semibold my-3 leading-snug break-words");
+          addClass(
+            "text-base md:text-xl font-semibold my-3 leading-snug break-words",
+          );
           break;
         case "p":
           addClass("leading-relaxed mb-6 text-base md:text-lg break-words");
@@ -386,27 +394,52 @@ function rehypeAddClasses() {
         case "a":
           node.properties.target = "_blank";
           node.properties.rel = "noopener noreferrer";
-          
+
           // Extract text content for better accessibility tags
-          const textNode = (node.children || []).find((c: any) => c.type === "text");
-          const linkText = textNode ? textNode.value : (node.properties.href || "link");
-          
-          if (!node.properties.title) node.properties.title = `Visit ${linkText}`;
-          if (!node.properties["aria-label"]) node.properties["aria-label"] = `Link to ${linkText}`;
+          const textNode = (node.children || []).find(
+            (c: any) => c.type === "text",
+          );
+          const linkText = textNode
+            ? textNode.value
+            : node.properties.href || "link";
+
+          if (!node.properties.title)
+            node.properties.title = `Visit ${linkText}`;
+          if (!node.properties["aria-label"])
+            node.properties["aria-label"] = `Link to ${linkText}`;
 
           addClass(
             "text-purple-400 hover:text-purple-300 hover:underline transition-colors duration-200 break-words",
           );
           break;
-        case "img":
+        case "img": {
+          const imgSrc = node.properties.src as string;
+          if (imgSrc) {
+            const getProxyUrl = (w: number) =>
+              createImageProxyLoader(false)({
+                src: imgSrc,
+                width: w,
+                quality: 80,
+              });
+
+            const widths = [380, 640, 750, 828, 1080, 1200];
+            node.properties.src = getProxyUrl(800);
+            node.properties.srcset = widths
+              .map((w) => `${getProxyUrl(w)} ${w}w`)
+              .join(", ");
+            if (!node.properties.sizes) {
+              node.properties.sizes =
+                "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px";
+            }
+          }
           if (!node.properties.loading) node.properties.loading = "lazy";
+          if (!node.properties.decoding) node.properties.decoding = "async";
           if (!node.properties.alt) node.properties.alt = "Blog Image";
-          if (node.properties.src) node.properties.src = anyImgUrl(node.properties.src, {
-            width: node.properties.width || 800,
-            quality: 80,
-          });
-          addClass("rounded-lg shadow-lg my-6 mx-auto max-w-full h-auto border border-gray-800 object-cover");
+          addClass(
+            "rounded-lg shadow-lg my-6 mx-auto max-w-full h-auto border border-gray-800 object-cover",
+          );
           break;
+        }
         case "iframe":
         case "video":
           addClass("w-full aspect-video rounded-lg my-6 max-w-full");

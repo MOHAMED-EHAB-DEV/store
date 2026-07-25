@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Star } from "@/components/ui/svgs/icons/Star";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { FC } from "react";
 
 interface TestimonialItemProps {
@@ -37,8 +37,9 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
           {/* Avatar with gradient ring */}
           <div className="relative w-14 h-14 rounded-full p-[2px] bg-linear-to-r from-yellow-400 via-orange-400 to-pink-500 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
             <div className="w-full h-full rounded-full overflow-hidden bg-black">
-              <Image unoptimized 
-                src={anyImgUrl(avatar, { width: 60, quality: 80 })} 
+              <Image 
+                src={avatar} 
+                loader={createImageProxyLoader(false)}
                 alt={name} 
                 width={56} 
                 height={56} 

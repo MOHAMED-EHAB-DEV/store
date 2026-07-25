@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useMemo, useRef } from 'react';
 import { Star } from "@/components/ui/svgs/icons/Star";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { cn } from "@/lib/utils";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -83,8 +83,9 @@ export function VerticalMarquee(
             >
                 {marqueeItems.map(({iconPath, text}, i) => (
                     <span key={i} className="flex items-center w-full shrink-0">
-                        <Image unoptimized
-                            src={anyImgUrl(iconPath, { width: 48, quality: 80 })}
+                        <Image
+                            src={iconPath}
+                            loader={createImageProxyLoader(false)}
                             alt=""
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
                             width={28}
@@ -132,8 +133,9 @@ export default function HorizontialMarquee(
                                 <div
                                     className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold me-4"
                                 >
-                                    <Image unoptimized
-                                        src={anyImgUrl(testimonial.avatar, { width: 60, quality: 80 })}
+                                    <Image
+                                        src={testimonial.avatar}
+                                        loader={createImageProxyLoader(false)}
                                         alt="Testimonials"
                                         width={58}
                                         height={58}

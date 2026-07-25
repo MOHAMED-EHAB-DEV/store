@@ -3,33 +3,24 @@
  *
  * The full encoded source URL is used as the route segment.
  *
- * @param src     The source image URL
- * @param options Optimization options (width, quality)
+ * @param original if true, returns the original image URL
  * @returns The proxied image URL
  */
-export const anyImgUrl = (
-  src: string,
-  options: { width?: number; quality?: number; original?: boolean } = {},
-): string => {
-  if (!src) return "";
+import { ImageLoaderProps } from "next/image";
 
-  const baseUrl = "/mhd/images";
-  const params = new URLSearchParams();
+export const createImageProxyLoader =
+  (original = false) =>
+  ({ src, width, quality }: ImageLoaderProps): string => {
+    if (!src) return "";
+    if (src.startsWith("data:") || src.startsWith("blob:")) return src;
 
-  if (options.width) params.set("w", options.width.toString());
-  if (options.quality) params.set("q", options.quality.toString());
-  if (options.original) params.set("original", "true");
+    const params = new URLSearchParams();
+    if (width) params.set("w", width.toString());
+    if (quality) params.set("q", quality.toString());
+    if (original) params.set("original", "true");
 
-  const queryString = params.toString();
-  const suffix = queryString ? `?${queryString}` : "";
+    const queryString = params.toString();
+    const encodedSrc = encodeURIComponent(src);
 
-  // Handle relative paths — make them absolute for the proxy to fetch
-  let absoluteSrc = src;
-  if (src.startsWith("/")) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    absoluteSrc = `${appUrl}${src}`;
-  }
-
-  // Default: encode the full source URL as the path segment
-  return `${baseUrl}/${encodeURIComponent(absoluteSrc)}${suffix}`;
-};
+    return `/mhd/images/${encodedSrc}${queryString ? `?${queryString}` : ""}`;
+  };

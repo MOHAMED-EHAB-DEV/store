@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import { Zap } from "@/components/ui/svgs/icons/Zap";
@@ -123,10 +123,10 @@ export default function PerformanceDetailClient({
           <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
             {visitorInfo?.userId?.avatar ? (
               <Image
-                src={anyImgUrl(visitorInfo.userId.avatar)}
+                src={visitorInfo.userId.avatar}
+                loader={createImageProxyLoader(false)}
                 alt="Avatar"
                 className="w-12 h-12 rounded-full object-cover"
-                unoptimized
                 width={48}
                 height={48}
               />

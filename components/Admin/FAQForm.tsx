@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "@/components/ui/svgs/icons/Loader2";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { Select, SelectItem } from "@/components/ui/select";
 
 interface FAQFormProps {
@@ -204,14 +204,8 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
             <div className="relative w-full max-w-lg">
               <Image
                 unoptimized
-                src={
-                  coverImage.startsWith("data:")
-                    ? coverImage
-                    : anyImgUrl(coverImage || "", {
-                        width: 600,
-                        original: true,
-                      })
-                }
+                src={coverImage}
+                loader={createImageProxyLoader(false)}
                 alt={formData?.question || "Cover image"}
                 width={600}
                 height={300}

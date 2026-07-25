@@ -6,7 +6,7 @@ import { Star } from "@/components/ui/svgs/icons/Star";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
 import { Edit } from "@/components/ui/svgs/icons/Edit";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { formatCount } from "@/lib/utils";
 import RatingDistribution from "@/components/singleTemplate/Reviews/RatingDistribution";
 import AddReview from "@/components/Dialogs/AddReview";
@@ -311,11 +311,9 @@ const ReviewsContainer = ({
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-2">
                   {review.user.avatar && (
-                    <Image unoptimized
-                      src={anyImgUrl(review.user.avatar, {
-                        width: 64,
-                        quality: 80,
-                      })}
+                    <Image
+                      src={review.user.avatar}
+                      loader={createImageProxyLoader(false)}
                       alt={review.user.name}
                       className="w-8 h-8 rounded-full"
                       width={32}

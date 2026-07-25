@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -20,11 +20,10 @@ const Template = ({
   template: any; // Using any to support both ITemplate and IPopulatedTemplate
   mode?: "store" | "dashboard";
 }) => {
-  const lowResUrl = useMemo(() => anyImgUrl(template.thumbnail, { width: 800, quality: 100 }), [template.thumbnail]);
-  const highResUrl = useMemo(() => anyImgUrl(template.thumbnail, {
-    width: 800,
-    original: true
-  }), [template.thumbnail]);
+  const highResUrl = useMemo(
+    () => createImageProxyLoader(true)({ src: template.thumbnail, width: 800 }),
+    [template.thumbnail]
+  );
   
   const [highResLoaded, setHighResLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
@@ -98,9 +97,12 @@ const Template = ({
             setIsHovering(true);
             if (videoRef.current) {
               videoRef.current.currentTime = 0;
-              videoRef.current
-                .play()
-                .catch((e) => console.log("Video play error:", e));
+              const p = videoRef.current.play();
+              if (p !== undefined) {
+                p.catch((e) => {
+                  if (e.name !== "AbortError") console.log("Video play error:", e);
+                });
+              }
             }
           }
         }}
@@ -115,16 +117,19 @@ const Template = ({
           }
         }}
       >
-        <Image unoptimized
-          src={lowResUrl}
+        <Image
+          src={template.thumbnail}
+          loader={createImageProxyLoader(false)}
           alt={template.title}
           width={400}
           height={288}
+          quality={100}
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="w-full h-full object-contain block"
         />
-        <Image unoptimized
-          src={highResUrl}
+        <Image
+          src={template.thumbnail}
+          loader={createImageProxyLoader(true)}
           alt={template.title}
           width={400}
           height={288}

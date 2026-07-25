@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 
 export default function TemplateThumbnail({
   thumbnail,
@@ -15,8 +15,7 @@ export default function TemplateThumbnail({
   demoVideo?: string;
   description?: string;
 }) {
-  const lowResUrl = anyImgUrl(thumbnail, { width: 1200, quality: 100 });
-  const highResUrl = anyImgUrl(thumbnail, { width: 1200, original: true });
+  const highResUrl = createImageProxyLoader(true)({ src: thumbnail, width: 1200 });
   const [highResLoaded, setHighResLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
@@ -74,11 +73,13 @@ export default function TemplateThumbnail({
       }}
     >
       {/* Low-res base image that establishes natural height and aspect ratio */}
-      <Image unoptimized
-        src={lowResUrl}
+      <Image
+        src={thumbnail}
+        loader={createImageProxyLoader(false)}
         alt={title}
         width={1200}
         height={575}
+        quality={100}
         sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
         className="w-full h-auto rounded-xl block"
         fetchPriority="high"
@@ -88,8 +89,9 @@ export default function TemplateThumbnail({
       />
 
       {/* High-res overlay image that fades in when fully loaded */}
-      <Image unoptimized
-        src={highResUrl}
+      <Image
+        src={thumbnail}
+        loader={createImageProxyLoader(true)}
         alt={title}
         width={1200}
         height={575}

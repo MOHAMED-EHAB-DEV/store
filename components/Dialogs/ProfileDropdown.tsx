@@ -5,7 +5,7 @@ import {
   useState,
 } from "react";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { Settings } from "@/components/ui/svgs/icons/Settings";
 import { Login } from "../ui/svgs/icons/Login";
 import { LogOut } from "@/components/ui/svgs/icons/LogOut";
@@ -60,12 +60,10 @@ const ProfileDropdown = ({
         aria-label="Open account menu"
         className="items-center w-10 h-10 outline-none justify-center cursor-pointer p-0 bg-transparent border-none rounded-full"
       >
-        <Image unoptimized
-          src={anyImgUrl(
-            user?.avatar ? user.avatar : "/assets/Icons/profile.svg",
-            { width: 100, quality: 95, original: user?.avatar ? false : true },
-          )}
-          alt={`${user?.name || ""} Profile`}
+        <Image
+          src={user?.avatar || "/assets/Icons/profile.svg"}
+          loader={createImageProxyLoader(!user?.avatar)}
+          alt={`${user?.name || "Guest"} Profile`}
           width={50}
           height={50}
           className="p-px rounded-full w-full h-full hover:scale-105 transition-transform"
@@ -80,47 +78,27 @@ const ProfileDropdown = ({
       >
         <div className="p-6 flex flex-col gap-2 max-h-[85vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-4 border-b-[0.5px] border-white/15 pb-3">
-            {user ? (
-              <div className="flex items-center gap-4">
-                <Image unoptimized
-                  src={anyImgUrl(
-                    user.avatar ? user.avatar : "/assets/Icons/profile.svg",
-                    {
-                      width: 60,
-                      quality: 85,
-                      original: user?.avatar ? false : true,
-                    },
-                  )}
-                  alt={`${user.name} Profile`}
-                  width={40}
-                  height={40}
-                  className="p-px rounded-full w-10 h-10"
-                />
-                <div className="flex flex-col">
-                  <h1 className="text-white font-bold text-lg">{user.name}</h1>
+            <div className="flex items-center gap-4">
+              <Image
+                src={user?.avatar || "/assets/Icons/profile.svg"}
+                loader={createImageProxyLoader(!user?.avatar)}
+                alt={`${user?.name || "Account"} Profile`}
+                width={40}
+                height={40}
+                quality={85}
+                className="p-px rounded-full w-10 h-10"
+              />
+              <div className="flex flex-col">
+                <h1 className="text-white font-bold text-lg">
+                  {user?.name || "Account"}
+                </h1>
+                {user?.email && (
                   <p className="text-secondary font-medium text-sm">
                     {user.email}
                   </p>
-                </div>
+                )}
               </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <Image unoptimized
-                  src={anyImgUrl("/assets/Icons/profile.svg", {
-                    width: 60,
-                    quality: 85,
-                    original: true,
-                  })}
-                  alt={`Profile`}
-                  width={40}
-                  height={40}
-                  className="p-px rounded-full w-10 h-10"
-                />
-                <div className="flex flex-col">
-                  <h1 className="text-white font-bold text-lg">Account</h1>
-                </div>
-              </div>
-            )}
+            </div>
 
             <button
               className="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95 border-none outline-none bg-transparent cursor-pointer"

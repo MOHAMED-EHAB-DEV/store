@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import {
   Select,
   SelectItem,
@@ -254,13 +254,12 @@ export default function PurchasedTemplatesClient({
               className="flex items-center gap-4 p-4 hover:bg-white/5 transition-colors"
             >
               <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                <Image unoptimized
-                  src={anyImgUrl(template.thumbnail || "/placeholder.png", {
-                    width: 200,
-                    quality: 80,
-                  })}
+                <Image
+                  src={template.thumbnail}
+                  loader={createImageProxyLoader(false)}
                   alt={template.title}
                   fill
+                  quality={100}
                   className="object-cover"
                 />
               </div>

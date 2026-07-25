@@ -14,7 +14,6 @@ const CACHE_BASE = IS_VERCEL
   : path.join(process.cwd(), ".cache", "images");
 const ORIGINALS_DIR = path.join(CACHE_BASE, "originals");
 const PROCESSED_DIR = path.join(CACHE_BASE, "processed");
-const UPLOADS_DIR = path.join(CACHE_BASE, "uploads");
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const FETCH_TIMEOUT_MS = 10_000; // 10 s
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024; // 20 MB
@@ -64,7 +63,6 @@ function ensureCacheDirs(): Promise<boolean> {
     try {
       await fs.mkdir(ORIGINALS_DIR, { recursive: true });
       await fs.mkdir(PROCESSED_DIR, { recursive: true });
-      await fs.mkdir(UPLOADS_DIR, { recursive: true });
       return true;
     } catch (err) {
       console.error("[Image Proxy] Cannot create cache dirs:", err);
@@ -463,50 +461,4 @@ async function proxyImage(
   }
 }
 
-async function handleFileUpload(req: NextRequest): Promise<NextResponse> {
-  try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File | null;
-    if (!file) {
-      return NextResponse.json({ error: "No file provided in form-data field 'file'" }, { status: 400 });
-    }
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const ext = path.extname(file.name) || ".bin";
-    const filename = `${crypto.randomUUID()}${ext}`;
-    const storageKey = `uploads/${filename}`;
-    const contentType = file.type || "application/octet-stream";
-
-    if (HAS_SUPABASE) {
-      const publicUrl = await uploadToSupabase(storageKey, buffer, contentType);
-      if (publicUrl) {
-        return NextResponse.json({
-          ok: true,
-          storage: "supabase",
-          url: publicUrl,
-          path: storageKey,
-        });
-      }
-    }
-
-    // Fallback to local /tmp upload
-    await ensureCacheDirs();
-    const localUploadPath = path.join(UPLOADS_DIR, filename);
-    await fs.writeFile(localUploadPath, buffer);
-
-    return NextResponse.json({
-      ok: true,
-      storage: "local-tmp",
-      url: `/mhd/images/uploads_${filename}?original=true`,
-      path: localUploadPath,
-    });
-  } catch (err: any) {
-    console.error("[Image Proxy] Upload error:", err);
-    return NextResponse.json({ error: err.message || "Upload failed" }, { status: 500 });
-  }
-}
-
 export const GET = withAPIMiddleware(proxyImage);
-export const POST = withAPIMiddleware(handleFileUpload);

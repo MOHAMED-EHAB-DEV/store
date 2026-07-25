@@ -10,8 +10,7 @@ import {
   DropzoneEmptyState,
 } from "@/components/ui/dropzone";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
-import Loader from "@/components/ui/Loader";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -166,15 +165,12 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
           {image ? (
             <div className="relative w-full max-w-lg">
               <Image
-                unoptimized
-                src={
-                  image.startsWith("data:")
-                    ? image
-                    : anyImgUrl(image || "", { width: 600, original: true })
-                }
+                loader={createImageProxyLoader(false)}
+                src={image}
                 alt={formData?.title || "Cover image"}
                 width={600}
                 height={300}
+                quality={100}
                 className="rounded-lg object-cover w-full max-h-48"
               />
               <Button

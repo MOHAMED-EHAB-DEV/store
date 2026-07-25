@@ -13,7 +13,7 @@ import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { History } from "@/components/ui/svgs/icons/History";
 import { Pagination } from "@/components/ui/pagination";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 
 interface AdminAnalyticsClientProps {
   data: {
@@ -196,7 +196,14 @@ export default function AdminAnalyticsClient({
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         {visitor.user?.avatar ? (
-                          <Image src={anyImgUrl(visitor.user.avatar)} alt={visitor.user.name} className="w-8 h-8 rounded-full object-cover" unoptimized width={32} height={32} />
+                          <Image
+                            src={visitor.user.avatar}
+                            alt={visitor.user.name}
+                            loader={createImageProxyLoader(false)}
+                            className="w-8 h-8 rounded-full object-cover"
+                            width={32}
+                            height={32}
+                          />
                         ) : (
                           <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
                             <Users className="w-4 h-4 text-blue-400" />

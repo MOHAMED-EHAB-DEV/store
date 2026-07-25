@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useRef, ChangeEvent, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import { sonnerToast } from "@/components/ui/sonner";
-import { isBase64Image } from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
 import { useRouter } from "next/navigation";
 import { User } from "@/components/ui/svgs/icons/User";
@@ -137,13 +136,15 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
             <DropzoneEmptyState />
             <DropzoneContent>
               {image && (
-                <Image unoptimized
+                <Image
                   src={
                     filePreview
                       ? filePreview
-                      : anyImgUrl(image, { width: 120, quality: 85 })
+                      : (image as string)
                   }
+                  loader={createImageProxyLoader(false)}
                   alt={user?.name}
+                  quality={100}
                   width={32}
                   height={32}
                   className="w-full h-full object-contain rounded-full"

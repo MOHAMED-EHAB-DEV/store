@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 
 const WhyME = () => {
   return (
@@ -30,15 +30,8 @@ const WhyME = () => {
       </div>
       <div className="flex items-center justify-center w-full md:w-1/4">
         <Image
-          unoptimized
-          src={anyImgUrl(
-            "https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp",
-            {
-              width: 400,
-              quality: 85,
-              // original: true,
-            },
-          )}
+          loader={createImageProxyLoader(false)}
+          src="https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp"
           alt="Cursor Icon"
           width={330}
           height={330}

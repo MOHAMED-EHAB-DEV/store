@@ -6,7 +6,7 @@ import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import { buildMetadata } from "@/lib/seo";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -67,11 +67,12 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
       >
         {blog.coverImage ? (
           <Image
-            unoptimized
-            src={anyImgUrl(blog.coverImage, { width: 800, quality: 100 })}
+            loader={createImageProxyLoader(true)}
+            src={blog.coverImage}
             alt={blog.title}
             width={800}
             height={400}
+            quality={100}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             preload={featured}
             fetchPriority={featured ? "high" : undefined}

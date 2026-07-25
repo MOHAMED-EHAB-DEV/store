@@ -2,7 +2,7 @@ import "@/app/markdown.css";
 import type { Metadata } from "next";
 import { truncateDescription } from "@/lib/seo";
 import { notFound } from "next/navigation";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 import ViewTracker from "@/components/Blog/ViewTracker";
 import BlogHeader from "@/components/singlePost/BlogHeader";
 import BlogContent from "@/components/singlePost/BlogContent";
@@ -149,7 +149,12 @@ const Page = async ({ params }: PageProps) => {
     "@type": "Article",
     headline: blog.title,
     image: blog.coverImage
-      ? [anyImgUrl(blog.coverImage, { width: 1200, original: true })]
+      ? [
+          createImageProxyLoader(true)({
+            src: blog.coverImage,
+            width: 1200,
+          }),
+        ]
       : [],
     datePublished: blog.createdAt,
     dateModified: (blog as any).updatedAt || blog.createdAt,

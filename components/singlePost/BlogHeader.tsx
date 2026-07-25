@@ -4,7 +4,7 @@ import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { formatDate } from "@/lib/utils";
-import { anyImgUrl } from "@/lib/utils/image";
+import { createImageProxyLoader } from "@/lib/utils/image";
 
 interface BlogHeaderProps {
   blog: {
@@ -21,8 +21,8 @@ export default function BlogHeader({ blog }: BlogHeaderProps) {
       <div className="absolute inset-0 bg-gray-950">
         {blog.coverImage && (
           <Image
-            unoptimized
-            src={anyImgUrl(blog.coverImage, { width: 1200, quality: 85 })}
+            src={blog.coverImage}
+            loader={createImageProxyLoader(false)}
             alt={blog.title}
             width={1200}
             height={600}

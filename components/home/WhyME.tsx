@@ -12,7 +12,9 @@ const WhyME = () => {
           Stop stressing over your business website.
         </h2>
         <p className="text-secondary text-base md:text-lg">
-          Building from scratch takes months. Start with a premium template today — and if you need it tailored to your brand, backend, or business logic, I&apos;ll build that part too, in days not months.
+          Building from scratch takes months. Start with a premium template
+          today — and if you need it tailored to your brand, backend, or
+          business logic, I&apos;ll build that part too, in days not months.
         </p>
         <ul className="text-secondary text-base md:text-lg list-d built to engage and convertisc pl-5 space-y-1">
           <li>
@@ -27,12 +29,16 @@ const WhyME = () => {
         </span>
       </div>
       <div className="flex items-center justify-center w-full md:w-1/4">
-        <Image unoptimized
-          src={anyImgUrl("https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp", {
-            width: 400,
-            quality: 85
-            // original: true,
-          })}
+        <Image
+          unoptimized
+          src={anyImgUrl(
+            "https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp",
+            {
+              width: 400,
+              quality: 85,
+              // original: true,
+            },
+          )}
           alt="Cursor Icon"
           width={330}
           height={330}

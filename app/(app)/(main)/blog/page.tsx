@@ -36,10 +36,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const getData = async () => {
   try {
-    const response = await fetch(`${APP_URL}/api/blogs`,{
-      method: 'GET',
-      next: { revalidate: 60 * 60 * 24 * 7, tags: ["blogs"] }
-    })
+    const response = await fetch(`${APP_URL}/api/blogs`, {
+      method: "GET",
+      next: { revalidate: 60 * 60 * 24 * 7, tags: ["blogs"] },
+    });
 
     if (!response.ok) return [];
     const data = await response.json();
@@ -50,7 +50,6 @@ const getData = async () => {
     return [];
   }
 };
-
 
 interface BlogCardProps {
   blog: BlogPost;
@@ -67,8 +66,9 @@ const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
         className={`relative overflow-hidden ${featured ? "h-64 md:h-full" : "h-48"} w-full bg-gray-800`}
       >
         {blog.coverImage ? (
-          <Image unoptimized
-            src={anyImgUrl(blog.coverImage, { width: 800, quality: 80 })}
+          <Image
+            unoptimized
+            src={anyImgUrl(blog.coverImage, { width: 800, quality: 100 })}
             alt={blog.title}
             width={800}
             height={400}

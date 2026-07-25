@@ -121,9 +121,27 @@ export function GlobalStoreInitializer() {
       }
     };
 
+    const syncGuestLoves = () => {
+      runWhenIdle(() => {
+        try {
+          const lovedBlogsStr = localStorage.getItem("loved_blogs");
+          if (!lovedBlogsStr) return;
+          const blogIds = JSON.parse(lovedBlogsStr);
+          if (!Array.isArray(blogIds) || blogIds.length === 0) return;
+
+          fetch("/api/blogs/sync-loves", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ blogIds }),
+          }).catch(() => {});
+        } catch {}
+      }, 1000);
+    };
+
     fetchUser().then(() => {
       fetchFavorites();
       fetchPurchasedTemplates();
+      syncGuestLoves();
     });
   }, [reloadTrigger, setUser, setPurchasedTemplates, setFavoriteTemplates]);
 

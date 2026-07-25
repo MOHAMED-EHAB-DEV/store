@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useOptimistic, startTransition } from "react";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { cn } from "@/lib/utils";
 
@@ -10,9 +10,17 @@ interface LoveButtonProps {
 }
 
 export default function LoveButton({ blogId, initialLoves }: LoveButtonProps) {
-  const [loves, setLoves] = useState(initialLoves);
-  const [hasLoved, setHasLoved] = useState(false);
+  const [stateLoves, setStateLoves] = useState(initialLoves);
+  const [stateHasLoved, setStateHasLoved] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const [{ loves, hasLoved }, setOptimisticLove] = useOptimistic(
+    { loves: stateLoves, hasLoved: stateHasLoved },
+    (current, newHasLoved: boolean) => ({
+      hasLoved: newHasLoved,
+      loves: Math.max(0, current.loves + (newHasLoved ? 1 : -1)),
+    })
+  );
 
   useEffect(() => {
     // Check localStorage on mount
@@ -21,7 +29,7 @@ export default function LoveButton({ blogId, initialLoves }: LoveButtonProps) {
       if (lovedBlogsStr) {
         const lovedBlogs = JSON.parse(lovedBlogsStr);
         if (Array.isArray(lovedBlogs) && lovedBlogs.includes(blogId)) {
-          setHasLoved(true);
+          setStateHasLoved(true);
         }
       }
     } catch (e) {
@@ -29,48 +37,55 @@ export default function LoveButton({ blogId, initialLoves }: LoveButtonProps) {
     }
   }, [blogId]);
 
-  const toggleLove = async () => {
-    const newHasLoved = !hasLoved;
-    const increment = newHasLoved ? 1 : -1;
+  const toggleLove = () => {
+    const nextHasLoved = !hasLoved;
 
-    // Optimistic update
-    setHasLoved(newHasLoved);
-    setLoves((prev) => Math.max(0, prev + increment));
-    
-    if (newHasLoved) {
+    if (nextHasLoved) {
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 1000);
     }
 
-    try {
-      const lovedBlogsStr = localStorage.getItem("loved_blogs");
-      let lovedBlogs = lovedBlogsStr ? JSON.parse(lovedBlogsStr) : [];
-      if (!Array.isArray(lovedBlogs)) lovedBlogs = [];
+    startTransition(async () => {
+      setOptimisticLove(nextHasLoved);
 
-      if (newHasLoved) {
-        if (!lovedBlogs.includes(blogId)) lovedBlogs.push(blogId);
-      } else {
-        lovedBlogs = lovedBlogs.filter((id: string) => id !== blogId);
-      }
-      localStorage.setItem("loved_blogs", JSON.stringify(lovedBlogs));
+      try {
+        // Call API
+        const action = nextHasLoved ? "love" : "unlove";
+        const res = await fetch(`/api/blogs/${blogId}/love`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action }),
+        });
 
-      // Call API
-      const action = newHasLoved ? "love" : "unlove";
-      const res = await fetch(`/api/blogs/${blogId}/love`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.success && typeof data.data?.loves === 'number') {
-          setLoves(data.data.loves);
+        if (!res.ok) {
+          throw new Error(`Server returned ${res.status}`);
         }
+
+        const data = await res.json();
+
+        // Update localStorage on success
+        const lovedBlogsStr = localStorage.getItem("loved_blogs");
+        let lovedBlogs = lovedBlogsStr ? JSON.parse(lovedBlogsStr) : [];
+        if (!Array.isArray(lovedBlogs)) lovedBlogs = [];
+
+        if (nextHasLoved) {
+          if (!lovedBlogs.includes(blogId)) lovedBlogs.push(blogId);
+        } else {
+          lovedBlogs = lovedBlogs.filter((id: string) => id !== blogId);
+        }
+        localStorage.setItem("loved_blogs", JSON.stringify(lovedBlogs));
+
+        // Commit real state
+        if (data.success && typeof data.data?.loves === "number") {
+          setStateLoves(data.data.loves);
+        } else {
+          setStateLoves((prev) => Math.max(0, prev + (nextHasLoved ? 1 : -1)));
+        }
+        setStateHasLoved(nextHasLoved);
+      } catch (error) {
+        console.error("Failed to toggle love:", error);
       }
-    } catch (error) {
-      console.error("Failed to toggle love:", error);
-    }
+    });
   };
 
   return (

@@ -20,10 +20,10 @@ const Template = ({
   template: any; // Using any to support both ITemplate and IPopulatedTemplate
   mode?: "store" | "dashboard";
 }) => {
-  const lowResUrl = useMemo(() => anyImgUrl(template.thumbnail, { width: 400, quality: 100 }), [template.thumbnail]);
+  const lowResUrl = useMemo(() => anyImgUrl(template.thumbnail, { width: 800, quality: 100 }), [template.thumbnail]);
   const highResUrl = useMemo(() => anyImgUrl(template.thumbnail, {
     width: 800,
-    quality: 85,
+    original: true
   }), [template.thumbnail]);
   
   const [highResLoaded, setHighResLoaded] = useState(false);

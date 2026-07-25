@@ -9,7 +9,8 @@ import BlogContent from "@/components/singlePost/BlogContent";
 import BlogSidebar from "@/components/singlePost/BlogSidebar";
 import FloatingToolbar from "@/components/singlePost/FloatingToolbar";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://mhd-store.vercel.app";
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL || "http://mhd-store.vercel.app";
 
 interface BlogPost {
   _id: string;
@@ -148,7 +149,7 @@ const Page = async ({ params }: PageProps) => {
     "@type": "Article",
     headline: blog.title,
     image: blog.coverImage
-      ? [anyImgUrl(blog.coverImage, { width: 1200, quality: 85 })]
+      ? [anyImgUrl(blog.coverImage, { width: 1200, original: true })]
       : [],
     datePublished: blog.createdAt,
     dateModified: (blog as any).updatedAt || blog.createdAt,
@@ -176,10 +177,10 @@ const Page = async ({ params }: PageProps) => {
           <BlogSidebar otherPosts={otherPosts} />
         </div>
       </main>
-      
-      <FloatingToolbar 
-        blogId={blog._id} 
-        initialLoves={blog.loves || 0} 
+
+      <FloatingToolbar
+        blogId={blog._id}
+        initialLoves={blog.loves || 0}
         title={blog.title}
         url={`${APP_URL}/blog/${blog.slug || id}`}
       />

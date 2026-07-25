@@ -1,9 +1,13 @@
 "use client";
 
-import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 
 const WhyME = () => {
-  const cursorImg = "https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp";
+  const { imgProps } = getImageProps({
+    src: "https://res.cloudinary.com/ju8d58lo/image/upload/v1783873413/cursor_bu7iuh.webp",
+    sizes: "(min-width: 768px) 25vw, 50vw",
+    defaultWidth: 330,
+  });
 
   return (
     <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28 relative">
@@ -31,9 +35,7 @@ const WhyME = () => {
       </div>
       <div className="flex items-center justify-center w-full md:w-1/4">
         <img
-          src={getImageProxyUrl(cursorImg, 330, 80)}
-          srcSet={getImageSrcSet(cursorImg, [160, 240, 330, 480, 640], 80)}
-          sizes="(min-width: 768px) 25vw, 50vw"
+          {...imgProps}
           alt="Cursor Icon"
           width={330}
           height={330}

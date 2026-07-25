@@ -66,14 +66,15 @@ export const getImageSrcSet = (
 };
 
 /**
- * Returns attributes for a zero-JS native <img> element along with preload link props.
+ * Returns attributes for a native <img> element along with preload link props.
  */
-export const getZeroJSImageProps = (params: {
+export const getImageProps = (params: {
   src: string;
   widths?: number[];
   sizes?: string;
   quality?: number;
   defaultWidth?: number;
+  original?: boolean;
 }) => {
   const {
     src,
@@ -81,10 +82,11 @@ export const getZeroJSImageProps = (params: {
     sizes = "100vw",
     quality = 80,
     defaultWidth = 1024,
+    original = false,
   } = params;
 
   const srcSet = getImageSrcSet(src, widths, quality);
-  const fallbackUrl = getImageProxyUrl(src, defaultWidth, quality);
+  const fallbackUrl = getImageProxyUrl(src, defaultWidth, quality, original);
 
   return {
     imgProps: {
@@ -102,4 +104,6 @@ export const getZeroJSImageProps = (params: {
     },
   };
 };
+
+export const getZeroJSImageProps = getImageProps;
 

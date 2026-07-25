@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Share2 } from "@/components/ui/svgs/icons/Share2";
 import { formatDate } from "@/lib/utils";
-import { getImageProxyUrl } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 
 interface BlogPost {
   _id: string;
@@ -34,7 +34,11 @@ export default function BlogSidebar({ otherPosts }: BlogSidebarProps) {
               <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-800 shrink-0">
                 {post.coverImage ? (
                   <img
-                    src={getImageProxyUrl(post.coverImage, 160, 80)}
+                    {...getImageProps({
+                      src: post.coverImage,
+                      sizes: "80px",
+                      defaultWidth: 160,
+                    }).imgProps}
                     alt={post.title}
                     width={80}
                     height={80}

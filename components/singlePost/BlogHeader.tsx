@@ -5,7 +5,7 @@ import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { formatDate } from "@/lib/utils";
-import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 
 interface BlogHeaderProps {
   blog: {
@@ -17,14 +17,20 @@ interface BlogHeaderProps {
 }
 
 export default function BlogHeader({ blog }: BlogHeaderProps) {
+  const { imgProps } = blog.coverImage
+    ? getImageProps({
+        src: blog.coverImage,
+        sizes: "100vw",
+        defaultWidth: 1200,
+      })
+    : { imgProps: null };
+
   return (
     <div className="relative w-full max-w-7xl mx-auto h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden lg:rounded-3xl">
       <div className="absolute inset-0 bg-gray-950">
-        {blog.coverImage && (
+        {imgProps && (
           <img
-            src={getImageProxyUrl(blog.coverImage, 1200, 80)}
-            srcSet={getImageSrcSet(blog.coverImage, [640, 768, 1024, 1280, 1536, 1920], 80)}
-            sizes="100vw"
+            {...imgProps}
             alt={blog.title}
             width={1200}
             height={600}

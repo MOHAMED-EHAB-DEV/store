@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: var(--font-roboto), system-ui, -apple-system, sans-serif;
+  --font-paras: var(--font-paras);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -241,6 +243,7 @@
   body {
     overflow-x: hidden;
     line-height: var(--leading-normal);
+    font-family: var(--font-roboto), system-ui, -apple-system, sans-serif;
   }
 
   /* Fix browser autofill background */

@@ -2,7 +2,7 @@ import localFont from 'next/font/local';
 
 export const Roboto = localFont({
     src: '../public/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.woff2',
-    variable: '--roboto',
+    variable: '--font-roboto',
     display: "swap",
     preload: true,
     fallback: ['system-ui', '-apple-system', 'sans-serif'],

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -93,24 +93,37 @@ const Template = ({
           }
         }}
       >
-        <img
-          src={getImageProxyUrl(template.thumbnail, 400, 80)}
-          srcSet={getImageSrcSet(template.thumbnail, [320, 400, 640, 768, 1024], 80)}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          alt={template.title}
-          width={400}
-          height={288}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          className="w-full h-full object-contain block"
-        />
+        {(() => {
+          const thumbProps = getImageProps({
+            src: template.thumbnail,
+            sizes: "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
+            defaultWidth: 400,
+          });
+          return (
+            <>
+              <link {...thumbProps.preloadProps} />
+              <img
+                {...thumbProps.imgProps}
+                alt={template.title}
+                width={400}
+                height={288}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="w-full h-full object-contain block"
+              />
+            </>
+          );
+        })()}
 
         {loadHighRes && (
           <img
-            src={getImageProxyUrl(template.thumbnail, 800, 80, true)}
-            srcSet={getImageSrcSet(template.thumbnail, [400, 640, 800, 1024, 1280], 80)}
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            {...getImageProps({
+              src: template.thumbnail,
+              sizes: "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw",
+              defaultWidth: 800,
+              original: true,
+            }).imgProps}
             alt={template.title}
             width={400}
             height={288}

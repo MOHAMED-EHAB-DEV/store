@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 
 export default function TemplateThumbnail({
   thumbnail,
@@ -29,51 +29,60 @@ export default function TemplateThumbnail({
     return () => clearTimeout(timer);
   }, [thumbnail]);
 
+  const baseImageProps = getImageProps({
+    src: thumbnail,
+    sizes: "(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px",
+    defaultWidth: 600,
+  });
+
   return (
-    <div
-      className="relative w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl overflow-hidden shadow-lg"
-      onMouseEnter={() => {
-        if (demoVideo) {
-          setIsHovering(true);
-          if (videoRef.current) {
-            videoRef.current.currentTime = 0;
-            videoRef.current
-              .play()
-              .catch((e) => console.log("Video play error:", e));
+    <>
+      <link {...baseImageProps.preloadProps} />
+      <div
+        className="relative w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] rounded-xl overflow-hidden shadow-lg"
+        onMouseEnter={() => {
+          if (demoVideo) {
+            setIsHovering(true);
+            if (videoRef.current) {
+              videoRef.current.currentTime = 0;
+              videoRef.current
+                .play()
+                .catch((e) => console.log("Video play error:", e));
+            }
           }
-        }
-      }}
-      onMouseLeave={() => {
-        if (demoVideo) {
-          setIsHovering(false);
-          setVideoReady(false);
-          if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
+        }}
+        onMouseLeave={() => {
+          if (demoVideo) {
+            setIsHovering(false);
+            setVideoReady(false);
+            if (videoRef.current) {
+              videoRef.current.pause();
+              videoRef.current.currentTime = 0;
+            }
           }
-        }
-      }}
-    >
-      {/* Low-res base image that establishes natural height and aspect ratio */}
-      <img
-        src={getImageProxyUrl(thumbnail, 600, 80)}
-        srcSet={getImageSrcSet(thumbnail, [400, 500, 600, 800, 1024, 1200], 80)}
-        sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
-        alt={title}
-        width={1200}
-        height={575}
-        loading="eager"
-        fetchPriority="high"
-        decoding="async"
-        className="w-full h-auto rounded-xl block"
-      />
+        }}
+      >
+        {/* Low-res base image that establishes natural height and aspect ratio */}
+        <img
+          {...baseImageProps.imgProps}
+          alt={title}
+          width={1200}
+          height={575}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className="w-full h-auto rounded-xl block"
+        />
 
       {/* High-res overlay image that fades in 3.5s after page load */}
       {loadHighRes && (
         <img
-          src={getImageProxyUrl(thumbnail, 1200, 80, true)}
-          srcSet={getImageSrcSet(thumbnail, [600, 800, 1024, 1200, 1536], 80)}
-          sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
+          {...getImageProps({
+            src: thumbnail,
+            sizes: "(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px",
+            defaultWidth: 1200,
+            original: true,
+          }).imgProps}
           alt={title}
           width={1200}
           height={575}
@@ -121,5 +130,6 @@ export default function TemplateThumbnail({
         </video>
       )}
     </div>
+    </>
   );
 }

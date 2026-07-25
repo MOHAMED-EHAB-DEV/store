@@ -6,7 +6,7 @@ import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
-import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 
 export interface BlogPost {
   _id: string;
@@ -29,6 +29,14 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
     ? "(max-width: 768px) 100vw, 50vw"
     : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px";
 
+  const { imgProps } = blog.coverImage
+    ? getImageProps({
+        src: blog.coverImage,
+        sizes,
+        defaultWidth: 800,
+      })
+    : { imgProps: null };
+
   return (
     <Link
       href={`/blog/${blog.slug || blog._id}`}
@@ -37,11 +45,9 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
       <div
         className={`relative overflow-hidden ${featured ? "h-64 md:h-full" : "h-48"} w-full bg-gray-800`}
       >
-        {blog.coverImage ? (
+        {imgProps ? (
           <img
-            src={getImageProxyUrl(blog.coverImage, 800, 80)}
-            srcSet={getImageSrcSet(blog.coverImage, [320, 480, 640, 800, 1024], 80)}
-            sizes={sizes}
+            {...imgProps}
             alt={blog.title}
             width={800}
             height={400}

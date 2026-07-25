@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { Framer } from "@/components/ui/svgs/icons/Framer";
 import { Layers } from "@/components/ui/svgs/icons/Layers";
-import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 import { featuresBusinessSales } from "@/constants/features";
 import { VerticalMarquee } from "@/components/ui/marquee";
 import { gsap } from "gsap";
@@ -198,9 +198,11 @@ const FramerFeatures = () => {
               style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
               <img
-                src={getImageProxyUrl("/assets/Icons/cover.jpg", 600, 80)}
-                srcSet={getImageSrcSet("/assets/Icons/cover.jpg", [320, 480, 600, 768, 1024], 80)}
-                sizes="(max-width: 768px) 100vw, 600px"
+                {...getImageProps({
+                  src: "/assets/Icons/cover.jpg",
+                  sizes: "(max-width: 768px) 100vw, 600px",
+                  defaultWidth: 600,
+                }).imgProps}
                 alt="cover"
                 loading="lazy"
                 decoding="async"
@@ -227,7 +229,11 @@ const FramerFeatures = () => {
           >
             <div className="w-full flex items-center justify-center relative">
               <img
-                src={getImageProxyUrl("/assets/Icons/publish.webp", 150, 80)}
+                {...getImageProps({
+                  src: "/assets/Icons/publish.webp",
+                  sizes: "150px",
+                  defaultWidth: 150,
+                }).imgProps}
                 alt="publish"
                 width={150}
                 height={150}
@@ -236,7 +242,11 @@ const FramerFeatures = () => {
                 className="w-auto h-auto"
               />
               <img
-                src={getImageProxyUrl("/assets/Icons/smCursor.avif", 25, 80)}
+                {...getImageProps({
+                  src: "/assets/Icons/smCursor.avif",
+                  sizes: "25px",
+                  defaultWidth: 25,
+                }).imgProps}
                 alt="cursor"
                 width={25}
                 height={25}

@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from 'react';
 import { Star } from "@/components/ui/svgs/icons/Star";
-import { getImageProxyUrl } from "@/lib/utils/image";
+import { getImageProps } from "@/lib/utils/image";
 import { cn } from "@/lib/utils";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -83,7 +83,11 @@ export function VerticalMarquee(
                 {marqueeItems.map(({iconPath, text}, i) => (
                     <span key={i} className="flex items-center w-full shrink-0">
                         <img
-                            src={getImageProxyUrl(iconPath, 56, 80)}
+                            {...getImageProps({
+                              src: iconPath,
+                              sizes: "28px",
+                              defaultWidth: 56,
+                            }).imgProps}
                             alt=""
                             className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
                             width={28}
@@ -134,7 +138,11 @@ export default function HorizontialMarquee(
                                     className="w16 relative  bg-linear-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center text-black font-bold me-4"
                                 >
                                     <img
-                                        src={getImageProxyUrl(testimonial.avatar, 116, 80)}
+                                        {...getImageProps({
+                                          src: testimonial.avatar,
+                                          sizes: "58px",
+                                          defaultWidth: 116,
+                                        }).imgProps}
                                         alt="Testimonials"
                                         width={58}
                                         height={58}

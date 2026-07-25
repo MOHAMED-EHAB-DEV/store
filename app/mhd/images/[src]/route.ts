@@ -462,7 +462,7 @@ async function processingImage(
     pipeline = pipeline.resize(width, null, { fit: "inside" });
   }
 
-  const effectiveQuality = Math.min(quality || DEFAULT_QUALITY, 85);
+  const effectiveQuality = Math.min(quality || DEFAULT_QUALITY, 90);
   const outputBuffer = await pipeline.webp({ quality: effectiveQuality }).toBuffer();
   const tag = makeETag(outputBuffer);
 

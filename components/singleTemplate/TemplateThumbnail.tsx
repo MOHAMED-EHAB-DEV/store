@@ -15,7 +15,7 @@ export default function TemplateThumbnail({
   demoVideo?: string;
   description?: string;
 }) {
-  const highResUrl = createImageProxyLoader(true)({ src: thumbnail, width: 1200 });
+  const [loadHighRes, setLoadHighRes] = useState(false);
   const [highResLoaded, setHighResLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
@@ -23,29 +23,12 @@ export default function TemplateThumbnail({
 
   useEffect(() => {
     setHighResLoaded(false);
-
-    const loadHighRes = () => {
-      const run = () => {
-        const img = new window.Image();
-        img.src = highResUrl;
-        img.onload = () => {
-          setHighResLoaded(true);
-        };
-      };
-      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-        window.requestIdleCallback(run);
-      } else {
-        setTimeout(run, 200);
-      }
-    };
-
-    if (document.readyState === "complete") {
-      loadHighRes();
-    } else {
-      window.addEventListener("load", loadHighRes);
-      return () => window.removeEventListener("load", loadHighRes);
-    }
-  }, [highResUrl]);
+    setLoadHighRes(false);
+    const timer = setTimeout(() => {
+      setLoadHighRes(true);
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, [thumbnail]);
 
   return (
     <div
@@ -79,7 +62,7 @@ export default function TemplateThumbnail({
         alt={title}
         width={1200}
         height={575}
-        quality={100}
+        quality={80}
         sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
         className="w-full h-auto rounded-xl block"
         fetchPriority="high"
@@ -88,18 +71,21 @@ export default function TemplateThumbnail({
         blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
       />
 
-      {/* High-res overlay image that fades in when fully loaded */}
-      <Image
-        src={thumbnail}
-        loader={createImageProxyLoader(true)}
-        alt={title}
-        width={1200}
-        height={575}
-        sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
-        className={`absolute inset-0 w-full h-full rounded-xl transition-opacity duration-500 ease-in-out ${
-          highResLoaded ? "opacity-100" : "opacity-0"
-        }`}
-      />
+      {/* High-res overlay image that fades in 3.5s after page load */}
+      {loadHighRes && (
+        <Image
+          src={thumbnail}
+          loader={createImageProxyLoader(true)}
+          alt={title}
+          width={1200}
+          height={575}
+          sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
+          onLoad={() => setHighResLoaded(true)}
+          className={`absolute inset-0 w-full h-full rounded-xl transition-opacity duration-700 ease-in-out ${
+            highResLoaded ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      )}
 
       {/* Loading shimmer */}
       {demoVideo && isHovering && !videoReady && (
@@ -127,7 +113,7 @@ export default function TemplateThumbnail({
         >
           <meta itemProp="name" content={`${title} demo video`} />
           <meta itemProp="description" content={description || title} />
-          <meta itemProp="thumbnailUrl" content={highResUrl} />
+          <meta itemProp="thumbnailUrl" content={thumbnail} />
           <meta
             itemProp="uploadDate"
             content={new Date().toISOString()}

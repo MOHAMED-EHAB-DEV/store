@@ -159,9 +159,10 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
           >
             <Image
               src={url}
-              loader={createImageProxyLoader(true)}
+              loader={createImageProxyLoader(false)}
               alt={`Attachment ${index + 1}`}
               fill
+              sizes="90vw"
               className="object-contain"
             />
           </div>

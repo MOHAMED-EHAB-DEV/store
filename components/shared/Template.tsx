@@ -20,41 +20,18 @@ const Template = ({
   template: any; // Using any to support both ITemplate and IPopulatedTemplate
   mode?: "store" | "dashboard";
 }) => {
-  const highResUrl = useMemo(
-    () => createImageProxyLoader(true)({ src: template.thumbnail, width: 800 }),
-    [template.thumbnail]
-  );
-  
-  const [highResLoaded, setHighResLoaded] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const [loadHighRes, setLoadHighRes] = useState(false);
+  const [highResLoaded, setHighResLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    setHighResLoaded(false);
-
-    const loadHighRes = () => {
-      const run = () => {
-        const img = new window.Image();
-        img.src = highResUrl;
-        img.onload = () => {
-          setHighResLoaded(true);
-        };
-      };
-      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-        window.requestIdleCallback(run);
-      } else {
-        setTimeout(run, 200);
-      }
-    };
-
-    if (document.readyState === "complete") {
-      loadHighRes();
-    } else {
-      window.addEventListener("load", loadHighRes);
-      return () => window.removeEventListener("load", loadHighRes);
-    }
-  }, [highResUrl]);
+    const timer = setTimeout(() => {
+      setLoadHighRes(true);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Link
@@ -123,21 +100,25 @@ const Template = ({
           alt={template.title}
           width={400}
           height={288}
-          quality={100}
+          quality={80}
           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="w-full h-full object-contain block"
         />
-        <Image
-          src={template.thumbnail}
-          loader={createImageProxyLoader(true)}
-          alt={template.title}
-          width={400}
-          height={288}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out ${
-            highResLoaded ? "opacity-100" : "opacity-0"
-          }`}
-        />
+
+        {loadHighRes && (
+          <Image
+            src={template.thumbnail}
+            loader={createImageProxyLoader(true)}
+            alt={template.title}
+            width={400}
+            height={288}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            onLoad={() => setHighResLoaded(true)}
+            className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
+              highResLoaded ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        )}
 
         {/* Loading shimmer */}
         {template.demoVideo && isHovering && !videoReady && (
@@ -165,7 +146,7 @@ const Template = ({
           >
             <meta itemProp="name" content={`${template.title} demo video`} />
             <meta itemProp="description" content={template.description} />
-            <meta itemProp="thumbnailUrl" content={highResUrl} />
+            <meta itemProp="thumbnailUrl" content={template.thumbnail} />
             <meta
               itemProp="uploadDate"
               content={

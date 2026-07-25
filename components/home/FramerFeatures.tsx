@@ -200,9 +200,10 @@ const FramerFeatures = () => {
             >
               <Image
                 src="/assets/Icons/cover.jpg"
-                loader={createImageProxyLoader(true)}
+                loader={createImageProxyLoader(false)}
                 alt="cover"
                 fill
+                sizes="(max-width: 768px) 100vw, 600px"
                 className="absolute inset-0 object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
@@ -227,7 +228,7 @@ const FramerFeatures = () => {
             <div className="w-full flex items-center justify-center relative">
               <Image
                 src="/assets/Icons/publish.webp"
-                loader={createImageProxyLoader(true)}
+                loader={createImageProxyLoader(false)}
                 alt="publish"
                 width={150}
                 height={150}
@@ -235,7 +236,7 @@ const FramerFeatures = () => {
               />
               <Image
                 src="/assets/Icons/smCursor.avif"
-                loader={createImageProxyLoader(true)}
+                loader={createImageProxyLoader(false)}
                 alt="cursor"
                 width={25}
                 height={25}

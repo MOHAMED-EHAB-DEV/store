@@ -259,7 +259,7 @@ export default function PurchasedTemplatesClient({
                   loader={createImageProxyLoader(false)}
                   alt={template.title}
                   fill
-                  quality={100}
+                  quality={80}
                   className="object-cover"
                 />
               </div>

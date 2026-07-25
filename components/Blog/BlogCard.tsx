@@ -36,12 +36,13 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
       >
         {blog.coverImage ? (
           <Image
-            loader={createImageProxyLoader(true)}
+            loader={createImageProxyLoader(false)}
             src={blog.coverImage}
             alt={blog.title}
             width={800}
             height={400}
-            quality={100}
+            quality={80}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             preload={featured}
             fetchPriority={featured ? "high" : undefined}

@@ -18,7 +18,7 @@ const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const FETCH_TIMEOUT_MS = 10_000; // 10 s
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024; // 20 MB
 const MAX_PIXEL_COUNT = 40_000_000; // ~6700 × 6000
-const DEFAULT_QUALITY = 90;
+const DEFAULT_QUALITY = 80;
 const MAX_WIDTH = 2000;
 
 // Supabase Configuration & Helper
@@ -462,7 +462,8 @@ async function processingImage(
     pipeline = pipeline.resize(width, null, { fit: "inside" });
   }
 
-  const outputBuffer = await pipeline.webp({ quality }).toBuffer();
+  const effectiveQuality = Math.min(quality || DEFAULT_QUALITY, 85);
+  const outputBuffer = await pipeline.webp({ quality: effectiveQuality }).toBuffer();
   const tag = makeETag(outputBuffer);
 
   await writeCachedSmart(src, width, quality, outputBuffer, "image/webp", false);

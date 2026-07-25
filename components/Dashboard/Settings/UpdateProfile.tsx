@@ -22,7 +22,7 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
   const [error, setError] = useState(false);
   const [image, setImage] = useState(
     user?.avatar === ""
-      ? "/assets/Icons/profile.svg"
+      ? "https://res.cloudinary.com/ju8d58lo/image/upload/v1784997453/profile_zwcsy4.svg"
       : (user?.avatar as string),
   );
   const [name, setName] = useState(user?.name);
@@ -137,11 +137,7 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
             <DropzoneContent>
               {image && (
                 <Image
-                  src={
-                    filePreview
-                      ? filePreview
-                      : (image as string)
-                  }
+                  src={filePreview ? filePreview : (image as string)}
                   loader={createImageProxyLoader(false)}
                   alt={user?.name}
                   quality={100}
@@ -174,7 +170,8 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
         onChange={(e) => setName(e.target.value! as string)}
         startContent={<User className="w-5 h-5 text-gray-400" />}
         classNames={{
-            inputWrapper: "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent"
+          inputWrapper:
+            "bg-white/5 border-white/10 rounded-lg backdrop-blur-sm focus-within:ring-2 focus-within:ring-gold focus-within:border-transparent",
         }}
       />
 

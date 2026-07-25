@@ -139,7 +139,10 @@ const Sidebar = ({ user }: { user: IUser }) => {
             <DropdownMenuTrigger className="px-3 py-2 hover:bg-white/10 outline-none border-none flex items-center justify-center gap-3 rounded-lg transition-all duration-400 cursor-pointer">
               <div className="w-7 h-7 flex items-center justify-center">
                 <Image
-                  src={user?.avatar || "/assets/Icons/profile.svg"}
+                  src={
+                    user?.avatar ||
+                    "https://res.cloudinary.com/ju8d58lo/image/upload/v1784997453/profile_zwcsy4.svg"
+                  }
                   loader={createImageProxyLoader(!user?.avatar)}
                   alt={`${user?.name || "User"} Profile`}
                   width={30}

@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  MouseEvent as ReactMouseEvent,
-  useState,
-} from "react";
+import { MouseEvent as ReactMouseEvent, useState } from "react";
 import Image from "next/image";
 import { createImageProxyLoader } from "@/lib/utils/image";
 import { Settings } from "@/components/ui/svgs/icons/Settings";
@@ -61,7 +58,10 @@ const ProfileDropdown = ({
         className="items-center w-10 h-10 outline-none justify-center cursor-pointer p-0 bg-transparent border-none rounded-full"
       >
         <Image
-          src={user?.avatar || "/assets/Icons/profile.svg"}
+          src={
+            user?.avatar ||
+            "https://res.cloudinary.com/ju8d58lo/image/upload/v1784997453/profile_zwcsy4.svg"
+          }
           loader={createImageProxyLoader(!user?.avatar)}
           alt={`${user?.name || "Guest"} Profile`}
           width={50}
@@ -80,7 +80,10 @@ const ProfileDropdown = ({
           <div className="flex justify-between items-center mb-4 border-b-[0.5px] border-white/15 pb-3">
             <div className="flex items-center gap-4">
               <Image
-                src={user?.avatar || "/assets/Icons/profile.svg"}
+                src={
+                  user?.avatar ||
+                  "https://res.cloudinary.com/ju8d58lo/image/upload/v1784997453/profile_zwcsy4.svg"
+                }
                 loader={createImageProxyLoader(!user?.avatar)}
                 alt={`${user?.name || "Account"} Profile`}
                 width={40}

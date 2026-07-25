@@ -14,12 +14,24 @@ const CACHE_BASE = IS_VERCEL
   : path.join(process.cwd(), ".cache", "images");
 const ORIGINALS_DIR = path.join(CACHE_BASE, "originals");
 const PROCESSED_DIR = path.join(CACHE_BASE, "processed");
+const UPLOADS_DIR = path.join(CACHE_BASE, "uploads");
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const FETCH_TIMEOUT_MS = 10_000; // 10 s
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024; // 20 MB
 const MAX_PIXEL_COUNT = 40_000_000; // ~6700 × 6000
 const DEFAULT_QUALITY = 90;
 const MAX_WIDTH = 2000;
+
+// Supabase Configuration & Helper
+const SUPABASE_URL = (
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  ""
+).replace(/\/$/, "");
+const SUPABASE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+  "";
+const SUPABASE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET;
+const HAS_SUPABASE = !!(SUPABASE_URL && SUPABASE_KEY);
 
 const ALLOWED_HOSTS: ReadonlySet<string> | null = (() => {
   const extra =
@@ -52,6 +64,7 @@ function ensureCacheDirs(): Promise<boolean> {
     try {
       await fs.mkdir(ORIGINALS_DIR, { recursive: true });
       await fs.mkdir(PROCESSED_DIR, { recursive: true });
+      await fs.mkdir(UPLOADS_DIR, { recursive: true });
       return true;
     } catch (err) {
       console.error("[Image Proxy] Cannot create cache dirs:", err);
@@ -135,6 +148,67 @@ function processedCachePath(
   return path.join(PROCESSED_DIR, `${name}_${hash}_w${width}_q${quality}.webp`);
 }
 
+function supabaseObjectKey(
+  src: string,
+  width: number,
+  quality: number,
+  isOriginal = false,
+): string {
+  const name = sanitizeBasename(src);
+  if (isOriginal) {
+    const hash = sha256(src).slice(0, 12);
+    return `originals/${name}_${hash}.bin`;
+  }
+  const hash = sha256(`${src}:w${width}:q${quality}`).slice(0, 12);
+  return `processed/${name}_${hash}_w${width}_q${quality}.webp`;
+}
+
+// Supabase Storage REST helpers
+async function fetchFromSupabase(key: string): Promise<Buffer | null> {
+  if (!HAS_SUPABASE) return null;
+  try {
+    const url = `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${key}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${SUPABASE_KEY}` },
+    });
+    if (!res.ok) return null;
+    const ab = await res.arrayBuffer();
+    return Buffer.from(ab);
+  } catch (err) {
+    console.warn("[Image Proxy] Supabase fetch error:", err);
+    return null;
+  }
+}
+
+async function uploadToSupabase(
+  key: string,
+  data: Buffer,
+  contentType: string,
+): Promise<string | null> {
+  if (!HAS_SUPABASE) return null;
+  try {
+    const url = `${SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${key}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": contentType,
+        "x-upsert": "true",
+      },
+      body: new Uint8Array(data),
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      console.warn(`[Image Proxy] Supabase upload error (${res.status}):`, txt);
+      return null;
+    }
+    return `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${key}`;
+  } catch (err) {
+    console.warn("[Image Proxy] Supabase upload exception:", err);
+    return null;
+  }
+}
+
 async function readCached(filePath: string): Promise<Buffer | null> {
   try {
     const stats = await fs.stat(filePath);
@@ -162,8 +236,45 @@ async function tryCacheWrite(filePath: string, data: Buffer): Promise<void> {
   try {
     await atomicWrite(filePath, data);
   } catch (err) {
-    console.warn("[Image Proxy] Cache write failed:", filePath, err);
+    console.warn("[Image Proxy] Local cache write failed:", filePath, err);
   }
+}
+
+async function readCachedSmart(
+  src: string,
+  width: number,
+  quality: number,
+  isOriginal = false,
+): Promise<Buffer | null> {
+  if (HAS_SUPABASE) {
+    const key = supabaseObjectKey(src, width, quality, isOriginal);
+    const buf = await fetchFromSupabase(key);
+    if (buf && buf.byteLength > 0) return buf;
+  }
+  const localPath = isOriginal
+    ? originalCachePath(src)
+    : processedCachePath(src, width, quality);
+  return await readCached(localPath);
+}
+
+async function writeCachedSmart(
+  src: string,
+  width: number,
+  quality: number,
+  data: Buffer,
+  contentType = "image/webp",
+  isOriginal = false,
+): Promise<void> {
+  if (HAS_SUPABASE) {
+    const key = supabaseObjectKey(src, width, quality, isOriginal);
+    uploadToSupabase(key, data, contentType).catch((err) =>
+      console.warn("[Image Proxy] Background Supabase cache error:", err),
+    );
+  }
+  const localPath = isOriginal
+    ? originalCachePath(src)
+    : processedCachePath(src, width, quality);
+  tryCacheWrite(localPath, data).catch(() => {});
 }
 
 function imageResponse(
@@ -179,6 +290,7 @@ function imageResponse(
       "Cache-Control": "public, max-age=604800, s-maxage=31536000, immutable",
       ETag: etagValue,
       "X-Cache": cacheStatus,
+      "X-Storage-Backend": HAS_SUPABASE ? "supabase" : "local-tmp",
     },
   });
 }
@@ -216,21 +328,20 @@ async function processingImage(
     });
   }
 
-  const oPath = originalCachePath(src);
-
   if (serveOriginal) {
-    const originalBuf = await readCached(oPath);
+    const originalBuf = await readCachedSmart(src, width, quality, true);
     if (originalBuf) {
       const tag = makeETag(originalBuf);
       if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
-      const meta = await sharp(originalBuf).metadata();
-      const mime = meta.format === "svg" ? "image/svg+xml" : meta.format ? `image/${meta.format}` : "application/octet-stream";
+      const meta = await sharp(originalBuf).metadata().catch(() => null);
+      const mime = meta?.format === "svg" ? "image/svg+xml" : meta?.format ? `image/${meta.format}` : "application/octet-stream";
       return imageResponse(originalBuf, tag, "HIT", mime);
     }
   }
 
-  const pPath = processedCachePath(src, width, quality);
-  const cached = !serveOriginal ? await readCached(pPath) : null;
+  const cached = !serveOriginal
+    ? await readCachedSmart(src, width, quality, false)
+    : null;
 
   if (cached) {
     const tag = makeETag(cached);
@@ -238,7 +349,7 @@ async function processingImage(
       return notModifiedResponse(tag);
     return imageResponse(cached, tag, "HIT");
   }
-  let inputBuffer = await readCached(oPath);
+  let inputBuffer = await readCachedSmart(src, width, quality, true);
 
   if (!inputBuffer) {
     const controller = new AbortController();
@@ -290,13 +401,14 @@ async function processingImage(
 
     inputBuffer = Buffer.from(arrayBuffer);
 
-    await tryCacheWrite(oPath, inputBuffer);
+    const origMime = contentType || "application/octet-stream";
+    await writeCachedSmart(src, width, quality, inputBuffer, origMime, true);
 
     if (serveOriginal) {
       const tag = makeETag(inputBuffer);
       if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
-      const meta = await sharp(inputBuffer).metadata();
-      const mime = meta.format === "svg" ? "image/svg+xml" : meta.format ? `image/${meta.format}` : "application/octet-stream";
+      const meta = await sharp(inputBuffer).metadata().catch(() => null);
+      const mime = meta?.format === "svg" ? "image/svg+xml" : meta?.format ? `image/${meta.format}` : "application/octet-stream";
       return imageResponse(inputBuffer, tag, "MISS", mime);
     }
   }
@@ -321,7 +433,7 @@ async function processingImage(
   const outputBuffer = await pipeline.webp({ quality }).toBuffer();
   const tag = makeETag(outputBuffer);
 
-  await tryCacheWrite(pPath, outputBuffer);
+  await writeCachedSmart(src, width, quality, outputBuffer, "image/webp", false);
 
   if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
 
@@ -351,4 +463,50 @@ async function proxyImage(
   }
 }
 
+async function handleFileUpload(req: NextRequest): Promise<NextResponse> {
+  try {
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
+    if (!file) {
+      return NextResponse.json({ error: "No file provided in form-data field 'file'" }, { status: 400 });
+    }
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const ext = path.extname(file.name) || ".bin";
+    const filename = `${crypto.randomUUID()}${ext}`;
+    const storageKey = `uploads/${filename}`;
+    const contentType = file.type || "application/octet-stream";
+
+    if (HAS_SUPABASE) {
+      const publicUrl = await uploadToSupabase(storageKey, buffer, contentType);
+      if (publicUrl) {
+        return NextResponse.json({
+          ok: true,
+          storage: "supabase",
+          url: publicUrl,
+          path: storageKey,
+        });
+      }
+    }
+
+    // Fallback to local /tmp upload
+    await ensureCacheDirs();
+    const localUploadPath = path.join(UPLOADS_DIR, filename);
+    await fs.writeFile(localUploadPath, buffer);
+
+    return NextResponse.json({
+      ok: true,
+      storage: "local-tmp",
+      url: `/mhd/images/uploads_${filename}?original=true`,
+      path: localUploadPath,
+    });
+  } catch (err: any) {
+    console.error("[Image Proxy] Upload error:", err);
+    return NextResponse.json({ error: err.message || "Upload failed" }, { status: 500 });
+  }
+}
+
 export const GET = withAPIMiddleware(proxyImage);
+export const POST = withAPIMiddleware(handleFileUpload);

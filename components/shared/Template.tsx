@@ -4,9 +4,8 @@ import { useState, useEffect, useRef, memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { createImageProxyLoader } from "@/lib/utils/image";
+import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 
 const DynamicFavoriteButton = dynamic(() => import("./FavoriteButton"), { ssr: false });
@@ -94,26 +93,30 @@ const Template = ({
           }
         }}
       >
-        <Image
-          src={template.thumbnail}
-          loader={createImageProxyLoader(false)}
+        <img
+          src={getImageProxyUrl(template.thumbnail, 400, 80)}
+          srcSet={getImageSrcSet(template.thumbnail, [320, 400, 640, 768, 1024], 80)}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt={template.title}
           width={400}
           height={288}
-          quality={80}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-contain block"
         />
 
         {loadHighRes && (
-          <Image
-            src={template.thumbnail}
-            loader={createImageProxyLoader(true)}
+          <img
+            src={getImageProxyUrl(template.thumbnail, 800, 80, true)}
+            srcSet={getImageSrcSet(template.thumbnail, [400, 640, 800, 1024, 1280], 80)}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             alt={template.title}
             width={400}
             height={288}
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             onLoad={() => setHighResLoaded(true)}
+            loading="lazy"
+            decoding="async"
             className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
               highResLoaded ? "opacity-100" : "opacity-0"
             }`}

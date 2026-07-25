@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { createImageProxyLoader } from "@/lib/utils/image";
+import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
 
 export default function TemplateThumbnail({
   thumbnail,
@@ -56,31 +55,31 @@ export default function TemplateThumbnail({
       }}
     >
       {/* Low-res base image that establishes natural height and aspect ratio */}
-      <Image
-        src={thumbnail}
-        loader={createImageProxyLoader(false)}
+      <img
+        src={getImageProxyUrl(thumbnail, 600, 80)}
+        srcSet={getImageSrcSet(thumbnail, [400, 500, 600, 800, 1024, 1200], 80)}
+        sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
         alt={title}
         width={1200}
         height={575}
-        quality={80}
-        sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
-        className="w-full h-auto rounded-xl block"
+        loading="eager"
         fetchPriority="high"
-        preload={true}
-        placeholder="blur"
-        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+        decoding="async"
+        className="w-full h-auto rounded-xl block"
       />
 
       {/* High-res overlay image that fades in 3.5s after page load */}
       {loadHighRes && (
-        <Image
-          src={thumbnail}
-          loader={createImageProxyLoader(true)}
+        <img
+          src={getImageProxyUrl(thumbnail, 1200, 80, true)}
+          srcSet={getImageSrcSet(thumbnail, [600, 800, 1024, 1200, 1536], 80)}
+          sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
           alt={title}
           width={1200}
           height={575}
-          sizes="(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px"
           onLoad={() => setHighResLoaded(true)}
+          loading="lazy"
+          decoding="async"
           className={`absolute inset-0 w-full h-full rounded-xl transition-opacity duration-700 ease-in-out ${
             highResLoaded ? "opacity-100" : "opacity-0"
           }`}

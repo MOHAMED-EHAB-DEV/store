@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Share2 } from "@/components/ui/svgs/icons/Share2";
 import { formatDate } from "@/lib/utils";
-import { createImageProxyLoader } from "@/lib/utils/image";
+import { getImageProxyUrl } from "@/lib/utils/image";
 
 interface BlogPost {
   _id: string;
@@ -34,12 +33,13 @@ export default function BlogSidebar({ otherPosts }: BlogSidebarProps) {
             >
               <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-800 shrink-0">
                 {post.coverImage ? (
-                  <Image
-                    src={post.coverImage}
-                    loader={createImageProxyLoader(false)}
+                  <img
+                    src={getImageProxyUrl(post.coverImage, 160, 80)}
                     alt={post.title}
-                    width={100}
-                    height={100}
+                    width={80}
+                    height={80}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 ) : (

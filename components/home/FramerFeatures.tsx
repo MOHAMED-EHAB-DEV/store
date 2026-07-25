@@ -4,8 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { Framer } from "@/components/ui/svgs/icons/Framer";
 import { Layers } from "@/components/ui/svgs/icons/Layers";
-import Image from "next/image";
-import { createImageProxyLoader } from "@/lib/utils/image";
+import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
 import { featuresBusinessSales } from "@/constants/features";
 import { VerticalMarquee } from "@/components/ui/marquee";
 import { gsap } from "gsap";
@@ -198,13 +197,14 @@ const FramerFeatures = () => {
               className="relative flex flex-col justify-end gap-4 border rounded-lg w-full md:w-1/2 h-[50dvh] overflow-hidden bg-dark p-6 feature-video"
               style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
-              <Image
-                src="/assets/Icons/cover.jpg"
-                loader={createImageProxyLoader(false)}
-                alt="cover"
-                fill
+              <img
+                src={getImageProxyUrl("/assets/Icons/cover.jpg", 600, 80)}
+                srcSet={getImageSrcSet("/assets/Icons/cover.jpg", [320, 480, 600, 768, 1024], 80)}
                 sizes="(max-width: 768px) 100vw, 600px"
-                className="absolute inset-0 object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
+                alt="cover"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
               <div className="relative z-10">
@@ -226,20 +226,22 @@ const FramerFeatures = () => {
             style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
           >
             <div className="w-full flex items-center justify-center relative">
-              <Image
-                src="/assets/Icons/publish.webp"
-                loader={createImageProxyLoader(false)}
+              <img
+                src={getImageProxyUrl("/assets/Icons/publish.webp", 150, 80)}
                 alt="publish"
                 width={150}
                 height={150}
+                loading="lazy"
+                decoding="async"
                 className="w-auto h-auto"
               />
-              <Image
-                src="/assets/Icons/smCursor.avif"
-                loader={createImageProxyLoader(false)}
+              <img
+                src={getImageProxyUrl("/assets/Icons/smCursor.avif", 25, 80)}
                 alt="cursor"
                 width={25}
                 height={25}
+                loading="lazy"
+                decoding="async"
                 className="absolute bottom-0 end-24 w-auto h-auto"
               />
             </div>

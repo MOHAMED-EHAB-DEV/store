@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { formatDate } from "@/lib/utils";
-import { createImageProxyLoader } from "@/lib/utils/image";
+import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
 
 interface BlogHeaderProps {
   blog: {
@@ -22,14 +21,16 @@ export default function BlogHeader({ blog }: BlogHeaderProps) {
     <div className="relative w-full max-w-7xl mx-auto h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden lg:rounded-3xl">
       <div className="absolute inset-0 bg-gray-950">
         {blog.coverImage && (
-          <Image
-            src={blog.coverImage}
-            loader={createImageProxyLoader(false)}
+          <img
+            src={getImageProxyUrl(blog.coverImage, 1200, 80)}
+            srcSet={getImageSrcSet(blog.coverImage, [640, 768, 1024, 1280, 1536, 1920], 80)}
+            sizes="100vw"
             alt={blog.title}
             width={1200}
             height={600}
+            loading="eager"
+            decoding="async"
             className="w-full h-full object-cover rounded-md opacity-40 blur-sm scale-105"
-            priority
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-transparent rounded-md" />

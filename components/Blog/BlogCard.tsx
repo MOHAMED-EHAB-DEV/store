@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { formatDate } from "@/lib/utils";
 import { Calendar } from "@/components/ui/svgs/icons/Calendar";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import { BookOpen } from "@/components/ui/svgs/icons/BookOpen";
-import { createImageProxyLoader } from "@/lib/utils/image";
+import { getImageProxyUrl, getImageSrcSet } from "@/lib/utils/image";
 
 export interface BlogPost {
   _id: string;
@@ -26,6 +25,10 @@ interface BlogCardProps {
 }
 
 export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
+  const sizes = featured
+    ? "(max-width: 768px) 100vw, 50vw"
+    : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px";
+
   return (
     <Link
       href={`/blog/${blog.slug || blog._id}`}
@@ -35,17 +38,16 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
         className={`relative overflow-hidden ${featured ? "h-64 md:h-full" : "h-48"} w-full bg-gray-800`}
       >
         {blog.coverImage ? (
-          <Image
-            loader={createImageProxyLoader(false)}
-            src={blog.coverImage}
+          <img
+            src={getImageProxyUrl(blog.coverImage, 800, 80)}
+            srcSet={getImageSrcSet(blog.coverImage, [320, 480, 640, 800, 1024], 80)}
+            sizes={sizes}
             alt={blog.title}
             width={800}
             height={400}
-            quality={80}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
+            loading={featured ? "eager" : "lazy"}
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            preload={featured}
-            fetchPriority={featured ? "high" : undefined}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">

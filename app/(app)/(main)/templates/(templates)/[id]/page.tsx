@@ -5,6 +5,8 @@ import { ITemplate } from "@/lib/validations/template";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MarkdownCopyHandler from "@/components/Markdown/MarkdownCopyHandler";
+import { truncateDescription } from "@/lib/seo";
+import { getZeroJSImageProps } from "@/lib/utils/image";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -77,8 +79,6 @@ const getSimilarTemplates = async (
     };
   }
 };
-
-import { truncateDescription } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -193,8 +193,19 @@ const Page = async ({ params }: PageProps) => {
     ],
   };
 
+  const templatePreload = template.thumbnail
+    ? getZeroJSImageProps({
+        src: template.thumbnail,
+        widths: [400, 500, 600, 800, 1024, 1200],
+        sizes: "(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px",
+        quality: 80,
+        defaultWidth: 600,
+      })
+    : null;
+
   return (
     <>
+      {templatePreload && <link {...templatePreload.preloadProps} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

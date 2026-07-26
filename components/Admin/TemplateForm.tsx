@@ -16,6 +16,7 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useFormGuard, hasFormValues } from "@/hooks/useFormGuard";
 
 interface TemplateFormProps {
     initialData?: any;
@@ -26,6 +27,8 @@ interface TemplateFormProps {
 export default function TemplateForm({ initialData, isEdit = false, categories = [] }: TemplateFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
+
     const [formData, setFormData] = useState({
         title: initialData?.title || "",
         description: initialData?.description || "",
@@ -37,6 +40,8 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
         type: initialData?.type || "coded",
         isActive: initialData?.isActive ?? true,
     });
+
+    const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, hasFormValues(formData));
     const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(initialData?.thumbnail);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
@@ -47,6 +52,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
     const [templateFile, setTemplateFile] = useState<File | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setIsDirty(true);
         const { name, value, type } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -56,6 +62,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
     const handleThumbnail = (files: File[]) => {
         if (files.length > 0) {
+            setIsDirty(true);
             setThumbnailFile(files[0]);
             setThumbnailUrl(URL.createObjectURL(files[0]));
         }
@@ -63,6 +70,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
     const handleDemoVideo = (files: File[]) => {
         if (files.length > 0) {
+            setIsDirty(true);
             setDemoVideoFile(files[0]);
             setDemoVideoUrl(URL.createObjectURL(files[0]));
         }
@@ -70,6 +78,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
     const handleFile = (files: File[]) => {
         if (files.length > 0) {
+            setIsDirty(true);
             setTemplateFile(files[0]);
             setFileKeyStr(files[0].name);
         }
@@ -78,8 +87,8 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.title.trim() || !formData.description.trim() || (!thumbnailUrl && !thumbnailFile)) {
-            sonnerToast.error("Title, description, and thumbnail are required");
+        if (!formData.title.trim() || !formData.description.trim() || (!thumbnailUrl && !thumbnailFile) || (!fileKeyStr && !templateFile)) {
+            sonnerToast.error("Title, description, thumbnail, and file are required");
             return;
         }
 
@@ -138,6 +147,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
             }
 
             sonnerToast.success(isEdit ? "Template updated successfully" : "Template created successfully");
+            setIsSubmitted(true);
             router.push("/admin/templates");
             router.refresh();
         } catch (error: any) {
@@ -374,7 +384,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
 
             {/* Template File */}
             <div className="glass rounded-xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-white">Template File (Optional)</h3>
+                <h3 className="text-lg font-semibold text-white">Template File</h3>
                 <p className="text-sm text-muted-foreground">Upload template files (zip, etc.)</p>
 
                 {fileKeyStr ? (
@@ -422,6 +432,7 @@ export default function TemplateForm({ initialData, isEdit = false, categories =
                     Cancel
                 </Button>
             </div>
+            <GuardDialog />
         </form>
     );
 }

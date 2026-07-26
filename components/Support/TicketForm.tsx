@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectItem } from "@/components/ui/select";
+import { useFormGuard } from "@/hooks/useFormGuard";
 
 interface TicketFormProps {
   onSuccess?: () => void;
@@ -30,6 +31,8 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
   const [description, setDescription] = useState(searchParams?.get("message") || "");
   const [category, setCategory] = useState(searchParams?.get("category") || "general");
   const [priority, setPriority] = useState("medium");
+  const [isDirty, setIsDirty] = useState(false);
+  const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, Boolean(subject.trim() || description.trim()));
 
   useEffect(() => {
     const ticket = sessionStorage.getItem("ticket");
@@ -73,6 +76,7 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
       }
 
       toast.success("Ticket created successfully");
+      setIsSubmitted(true);
       onSuccess?.();
       router.push(`/dashboard/support/${data.data._id}`);
     } catch (error: any) {
@@ -89,7 +93,10 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
         label="Subject"
         type="text"
         value={subject}
-        onChange={(e) => setSubject(e.target.value)}
+        onChange={(e) => {
+          setSubject(e.target.value);
+          setIsDirty(true);
+        }}
         placeholder="Brief summary of your issue"
         maxLength={200}
         isRequired
@@ -105,7 +112,10 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
             label="Category"
             labelPlacement="outside"
             selectedKeys={category ? [category] : []}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setIsDirty(true);
+            }}
             placeholder="Select category"
             classNames={{
               trigger: "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
@@ -125,7 +135,10 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
             label="Priority"
             labelPlacement="outside"
             selectedKeys={priority ? [priority] : []}
-            onChange={(e) => setPriority(e.target.value)}
+            onChange={(e) => {
+              setPriority(e.target.value);
+              setIsDirty(true);
+            }}
             placeholder="Select priority"
             classNames={{
               trigger: "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
@@ -147,7 +160,10 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
           label="Description"
           isRequired
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setIsDirty(true);
+          }}
           placeholder="Please describe your issue in detail..."
           rows={6}
           classNames={{
@@ -165,6 +181,7 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
       >
         {isSubmitting ? "Creating Ticket..." : "Create Support Ticket"}
       </Button>
+      <GuardDialog />
     </form>
   );
 }

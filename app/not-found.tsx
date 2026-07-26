@@ -70,7 +70,7 @@ export default function NotFound() {
     }, []);
 
     return (
-        <div className="relative min-h-screen min-w-screen flex flex-col items-center justify-center bg-[#050505] overflow-hidden px-4">
+        <div className="relative min-h-screen min-w-screen flex flex-col items-center justify-center bg-[#050505] overflow-hidden px-4 font-roboto">
             <title>Page Not Found | MHD Store Premium Templates</title>
             {/* Background ambient light */}
             <div 

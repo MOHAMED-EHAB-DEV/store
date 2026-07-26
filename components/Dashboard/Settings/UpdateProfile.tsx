@@ -15,6 +15,7 @@ import {
   DropzoneEmptyState,
 } from "@/components/ui/dropzone";
 import { IUser } from "@/lib/validations/user";
+import { useFormGuard } from "@/hooks/useFormGuard";
 
 const UpdateProfile = ({ user }: { user: IUser }) => {
   const [files, setFiles] = useState<File[]>([]);
@@ -29,9 +30,16 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [filePreview, setFilePreview] = useState<string | undefined>();
+  const [isDirty, setIsDirty] = useState(false);
+
+  const { GuardDialog, setIsSubmitted } = useFormGuard(
+    isDirty,
+    Boolean(name?.trim() || files.length > 0)
+  );
 
   const handleImage = async (files: File[]) => {
     if (files && files.length > 0 && files[0]) {
+      setIsDirty(true);
       const file = files[0];
       const fileBase64 = await fileToBase64(file);
       setFiles([file]);
@@ -104,6 +112,7 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
       setFiles([]);
 
       sonnerToast.success("Profile updated successfully!");
+      setIsSubmitted(true);
       router.refresh();
       return response;
     } catch (err) {
@@ -167,7 +176,10 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
         name="name"
         placeholder="Enter your name"
         value={name}
-        onChange={(e) => setName(e.target.value! as string)}
+        onChange={(e) => {
+          setName(e.target.value! as string);
+          setIsDirty(true);
+        }}
         startContent={<User className="w-5 h-5 text-gray-400" />}
         classNames={{
           inputWrapper:
@@ -183,6 +195,7 @@ const UpdateProfile = ({ user }: { user: IUser }) => {
       >
         {isLoading ? "Updating Profile" : "Update Profile"}
       </button>
+      <GuardDialog />
     </form>
   );
 };

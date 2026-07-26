@@ -206,7 +206,7 @@ async function createAdminTemplate(req: NextRequest) {
       message: "Template created successfully",
     });
   } catch (err: any) {
-    if (err && typeof err === "object" && "digest" in err) throw err;
+    console.log(err);
     return createErrorResponse("Something went wrong", 500, {
       req: req,
       error: err,

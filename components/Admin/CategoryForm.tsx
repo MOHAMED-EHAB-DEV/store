@@ -7,6 +7,7 @@ import { CATEGORY_ICONS } from "@/components/ui/svgs/CategoriesIcons";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useFormGuard, hasFormValues } from "@/hooks/useFormGuard";
 
 interface CategoryFormProps {
     initialData?: any;
@@ -17,6 +18,8 @@ interface CategoryFormProps {
 export default function CategoryForm({ initialData, isEdit = false, parentCategories = [] }: CategoryFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
+
     const [formData, setFormData] = useState({
         name: initialData?.name || "",
         description: initialData?.description || "",
@@ -27,7 +30,10 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
         icon: initialData?.icon || "",
     });
 
+    const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, hasFormValues(formData));
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        setIsDirty(true);
         const { name, value, type } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -78,6 +84,7 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
             }
 
             sonnerToast.success(isEdit ? "Category updated successfully" : "Category created successfully");
+            setIsSubmitted(true);
             router.push("/admin/categories");
             router.refresh();
         } catch (error: any) {
@@ -209,6 +216,7 @@ export default function CategoryForm({ initialData, isEdit = false, parentCatego
                     Cancel
                 </button>
             </div>
+            <GuardDialog />
         </form>
     );
 }

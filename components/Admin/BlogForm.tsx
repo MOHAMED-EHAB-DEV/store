@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useFormGuard, hasFormValues } from "@/hooks/useFormGuard";
 
 interface BlogFormProps {
   initialData?: any;
@@ -24,6 +25,8 @@ interface BlogFormProps {
 const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     slug: initialData?.slug || "",
@@ -32,6 +35,8 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
     tags: initialData?.tags ? initialData.tags.join(", ") : "",
     isPublished: initialData?.isPublished || false,
   });
+
+  const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, hasFormValues(formData));
   const [image, setImage] = useState<string | undefined>(
     initialData?.coverImage,
   );
@@ -40,6 +45,7 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    setIsDirty(true);
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -92,6 +98,7 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
         sonnerToast.success(
           `Blog post ${isEdit ? "updated" : "created"} successfully`,
         );
+        setIsSubmitted(true);
         router.push("/admin/blogs");
         router.refresh();
       } else {
@@ -244,6 +251,7 @@ const BlogForm = ({ initialData, isEdit = false }: BlogFormProps) => {
           {isEdit ? "Update Post" : "Create Post"}
         </Button>
       </div>
+      <GuardDialog />
     </form>
   );
 };

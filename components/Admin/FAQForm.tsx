@@ -17,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "@/components/ui/svgs/icons/Loader2";
 import { createImageProxyLoader } from "@/lib/utils/image";
 import { Select, SelectItem } from "@/components/ui/select";
+import { useFormGuard, hasFormValues } from "@/hooks/useFormGuard";
 
 interface FAQFormProps {
   initialData?: any;
@@ -26,6 +27,8 @@ interface FAQFormProps {
 export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+
   const [formData, setFormData] = useState({
     question: initialData?.question || "",
     answer: initialData?.answer || "",
@@ -33,6 +36,8 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
     order: initialData?.order || 0,
     isPublished: initialData?.isPublished ?? true,
   });
+
+  const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, hasFormValues(formData));
   const [coverImage, setCoverImage] = useState<string | undefined>(
     initialData?.coverImage,
   );
@@ -52,6 +57,7 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    setIsDirty(true);
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -101,6 +107,7 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
       sonnerToast.success(
         isEdit ? "FAQ updated successfully" : "FAQ created successfully",
       );
+      setIsSubmitted(true);
       router.push("/admin/faqs");
       router.refresh();
     } catch (error: any) {
@@ -257,6 +264,7 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
           {isEdit ? "Update FAQ" : "Create FAQ"}
         </Button>
       </div>
+      <GuardDialog />
     </form>
   );
 }

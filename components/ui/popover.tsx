@@ -123,7 +123,7 @@ function PopoverContent({
       data-state={context.isOpen ? "open" : "closed"}
       data-lenis-prevent="true"
       className={cn(
-        "bg-popover text-popover-foreground z-50 w-72 rounded-md border p-4 shadow-md outline-none",
+        "bg-[#18181b] text-white z-50 w-72 rounded-2xl border border-white/10 p-3 shadow-2xl outline-none",
         className
       )}
       {...props}

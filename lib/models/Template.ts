@@ -209,10 +209,19 @@ TemplateSchema.statics.searchTemplates = function (
   const searchTerms = search ? search.trim().split(/\s+/) : [];
 
   if (search) {
+    const trimmed = search.trim();
     matchStage.$or = [
-      { title: { $regex: search.trim(), $options: "i" } },
+      { title: { $regex: trimmed, $options: "i" } },
+      { description: { $regex: trimmed, $options: "i" } },
+      { tags: { $elemMatch: { $regex: trimmed, $options: "i" } } },
       ...searchTerms.map((term) => ({
         title: { $regex: term, $options: "i" },
+      })),
+      ...searchTerms.map((term) => ({
+        description: { $regex: term, $options: "i" },
+      })),
+      ...searchTerms.map((term) => ({
+        tags: { $elemMatch: { $regex: term, $options: "i" } },
       })),
     ];
   }
@@ -281,42 +290,127 @@ TemplateSchema.statics.searchTemplates = function (
                         options: "i",
                       },
                     },
-                    10,
+                    1,
+                    0,
+                  ],
+                },
+                {
+                  $cond: [
+                    {
+                      $regexMatch: {
+                        input: { $ifNull: ["$description", ""] },
+                        regex: search.trim(),
+                        options: "i",
+                      },
+                    },
+                    0.8,
+                    0,
+                  ],
+                },
+                {
+                  $cond: [
+                    {
+                      $gt: [
+                        {
+                          $size: {
+                            $filter: {
+                              input: { $ifNull: ["$tags", []] },
+                              as: "t",
+                              cond: {
+                                $regexMatch: {
+                                  input: "$$t",
+                                  regex: search.trim(),
+                                  options: "i",
+                                },
+                              },
+                            },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                    0.5,
                     0,
                   ],
                 },
               ]
             : []),
-          ...(searchTerms.length > 0
-            ? searchTerms.map((term) => ({
-                $cond: [
-                  {
-                    $regexMatch: {
-                      input: { $ifNull: ["$title", ""] },
-                      regex: term,
-                      options: "i",
+          ...(searchTerms.length > 1
+            ? searchTerms.flatMap((term) => [
+                {
+                  $cond: [
+                    {
+                      $regexMatch: {
+                        input: { $ifNull: ["$title", ""] },
+                        regex: term,
+                        options: "i",
+                      },
                     },
-                  },
-                  5,
-                  0,
-                ],
-              }))
+                    1,
+                    0,
+                  ],
+                },
+                {
+                  $cond: [
+                    {
+                      $regexMatch: {
+                        input: { $ifNull: ["$description", ""] },
+                        regex: term,
+                        options: "i",
+                      },
+                    },
+                    0.8,
+                    0,
+                  ],
+                },
+                {
+                  $cond: [
+                    {
+                      $gt: [
+                        {
+                          $size: {
+                            $filter: {
+                              input: { $ifNull: ["$tags", []] },
+                              as: "t",
+                              cond: {
+                                $regexMatch: {
+                                  input: "$$t",
+                                  regex: term,
+                                  options: "i",
+                                },
+                              },
+                            },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                    0.5,
+                    0,
+                  ],
+                },
+              ])
             : []),
           ...(tags.length > 0
             ? [
                 {
-                  $size: {
-                    $setIntersection: [
-                      {
-                        $map: {
-                          input: { $ifNull: ["$tags", []] },
-                          as: "t",
-                          in: { $toLower: "$$t" },
-                        },
+                  $multiply: [
+                    0.5,
+                    {
+                      $size: {
+                        $setIntersection: [
+                          {
+                            $map: {
+                              input: { $ifNull: ["$tags", []] },
+                              as: "t",
+                              in: { $toLower: "$$t" },
+                            },
+                          },
+                          tags.map((t) => t.toLowerCase()),
+                        ],
                       },
-                      tags.map((t) => t.toLowerCase()),
-                    ],
-                  },
+                    },
+                  ],
                 },
               ]
             : []),

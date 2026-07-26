@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import { useFloating } from "@/hooks/use-floating";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
+import { Check } from "@/components/ui/svgs/icons/Check";
 
 const flattenChildren = (children: React.ReactNode): React.ReactElement<any>[] => {
   const result: React.ReactElement<any>[] = [];
@@ -401,7 +402,7 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
       }}
       data-state={context.isOpen ? "open" : "closed"}
       className={cn(
-        "z-50 min-w-32 max-w-[calc(100vw-2rem)] sm:max-w-sm md:max-w-md rounded-xl border border-white/10 bg-[#15161b] text-white p-1 shadow-md transition-opacity duration-200 max-h-96",
+        "z-50 min-w-32 max-w-[calc(100vw-2rem)] sm:max-w-sm md:max-w-md rounded-2xl border border-white/10 bg-[#18181b] text-white p-1.5 shadow-2xl transition-opacity duration-200 max-h-96",
         context.isOpen
           ? "opacity-100 visible"
           : "opacity-0 invisible pointer-events-none",
@@ -488,13 +489,13 @@ export function SelectItem({
       data-selected={isSelected ? "true" : "false"}
       data-focus={isFocused ? "true" : "false"}
       className={cn(
-        "flex w-full items-center gap-2 rounded-lg py-1.5 px-2 text-sm outline-none select-none transition-colors",
+        "flex w-full items-center gap-2.5 rounded-xl py-2 px-3 text-sm outline-none select-none transition-colors",
         isDisabled
           ? "opacity-50 cursor-not-allowed pointer-events-none"
           : "cursor-pointer",
-        isSelected ? "bg-white/10 text-white" : "text-white/80",
-        isFocused && !isSelected && !isDisabled
-          ? "bg-white/10"
+        isSelected ? "text-white font-medium" : "text-white/80",
+        isFocused && !isDisabled
+          ? "bg-white/10 text-white"
           : !isDisabled && "hover:bg-white/10 hover:text-white",
         className,
       )}
@@ -532,19 +533,7 @@ export function SelectItem({
         </div>
       )}
       {isSelected && (
-        <svg
-          className="w-4 h-4 text-white shrink-0"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
+        <Check className="w-4 h-4 text-white shrink-0 ms-auto" />
       )}
     </div>
   );

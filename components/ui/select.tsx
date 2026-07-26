@@ -401,7 +401,7 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
       }}
       data-state={context.isOpen ? "open" : "closed"}
       className={cn(
-        "z-50 min-w-32 rounded-xl border border-white/10 bg-[#15161b] text-white p-1 shadow-md transition-opacity duration-200 max-h-96",
+        "z-50 min-w-32 max-w-[calc(100vw-2rem)] sm:max-w-sm md:max-w-md rounded-xl border border-white/10 bg-[#15161b] text-white p-1 shadow-md transition-opacity duration-200 max-h-96",
         context.isOpen
           ? "opacity-100 visible"
           : "opacity-0 invisible pointer-events-none",

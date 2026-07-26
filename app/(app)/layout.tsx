@@ -94,7 +94,7 @@ export default async function RootLayout({
       <head></head>
       <body
         className={cn(
-          "antialiased bg-primary text-white font-sans",
+          "antialiased bg-primary text-white font-roboto",
           Roboto.variable,
           Parastoo.variable,
         )}

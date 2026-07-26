@@ -13,6 +13,9 @@ export interface IErrorLog extends Document {
   userAgent?: string;
   ip?: string;
   timestamp: Date;
+  resolved: boolean;
+  resolvedAt?: Date;
+  notes?: string;
 }
 
 const ErrorLogSchema: Schema = new Schema(
@@ -29,6 +32,9 @@ const ErrorLogSchema: Schema = new Schema(
     userAgent: { type: String },
     ip: { type: String },
     timestamp: { type: Date, default: Date.now, index: true },
+    resolved: { type: Boolean, default: false },
+    resolvedAt: { type: Date },
+    notes: { type: String, default: "" },
   },
   { timestamps: true }
 );
@@ -37,6 +43,7 @@ const ErrorLogSchema: Schema = new Schema(
 ErrorLogSchema.index({ timestamp: -1 });
 ErrorLogSchema.index({ route: 1 });
 ErrorLogSchema.index({ status: 1 });
+ErrorLogSchema.index({ resolved: 1 });
 
 const ErrorLog: Model<IErrorLog> =
   mongoose.models.ErrorLog || mongoose.model<IErrorLog>("ErrorLog", ErrorLogSchema);

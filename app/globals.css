@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-roboto), system-ui, -apple-system, sans-serif;
   --font-paras: var(--font-paras);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -36,8 +36,6 @@
   --color-warning-foreground: #ffffff;
   --color-info: #3b82f6;
   --color-info-foreground: #ffffff;
-
-  --font-paras: var(--font-paras);
 
   /* Typography Scale */
   --text-xs: 0.75rem;

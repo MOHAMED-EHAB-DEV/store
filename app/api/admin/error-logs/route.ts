@@ -22,11 +22,19 @@ async function getErrorLogs(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
     const method = searchParams.get("method");
+    const route = searchParams.get("route");
+    const userId = searchParams.get("userId");
+    const resolved = searchParams.get("resolved");
     const search = searchParams.get("search");
 
     const query: any = {};
     if (status) query.status = parseInt(status);
     if (method) query.method = method;
+    if (route) query.route = route;
+    if (userId) query.userId = userId;
+    if (resolved === "true") query.resolved = true;
+    if (resolved === "false") query.resolved = { $ne: true };
+
     if (search) {
       query.$or = [
         { message: { $regex: search, $options: "i" } },
@@ -35,7 +43,7 @@ async function getErrorLogs(req: NextRequest) {
       ];
     }
 
-    const [logs, total] = await Promise.all([
+    const [logs, total, distinctMethods, distinctRoutes, distinctStatuses] = await Promise.all([
       ErrorLog.find(query)
         .sort({ timestamp: -1 })
         .skip(skip)
@@ -43,17 +51,30 @@ async function getErrorLogs(req: NextRequest) {
         .populate("userId", "name email avatar")
         .lean(),
       ErrorLog.countDocuments(query),
+      ErrorLog.distinct("method"),
+      ErrorLog.distinct("route"),
+      ErrorLog.distinct("status"),
     ]);
 
-    return createAPIResponse(logs, {
-      message: "Error logs fetched successfully",
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
+    return createAPIResponse(
+      {
+        logs,
+        filterOptions: {
+          methods: distinctMethods.filter(Boolean),
+          routes: distinctRoutes.filter(Boolean),
+          statuses: distinctStatuses.filter((s) => s !== null && s !== undefined),
+        },
       },
-    });
+      {
+        message: "Error logs fetched successfully",
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      }
+    );
   } catch (error: any) {
     return createErrorResponse("Something went wrong", 500, {
       req,

@@ -45,9 +45,10 @@ export default function BlogHeader({ blog }: BlogHeaderProps) {
       <div className="relative z-10 container mx-auto px-4 max-w-4xl text-center space-y-6">
         <Link
           href="/blog"
+          aria-label="Back to all blog posts"
           className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-4 text-sm font-medium uppercase tracking-wider backdrop-blur-sm bg-gray-900/30 px-4 py-2 rounded-full border border-gray-800"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
+          <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" /> Back to Blog
         </Link>
 
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight drop-shadow-2xl">
@@ -56,11 +57,11 @@ export default function BlogHeader({ blog }: BlogHeaderProps) {
 
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm md:text-base text-gray-300">
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-purple-400" />
+            <Calendar className="w-4 h-4 text-purple-400" aria-hidden="true" />
             <span>{formatDate(blog.createdAt)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-purple-400" />
+            <Clock className="w-4 h-4 text-purple-400" aria-hidden="true" />
             <span>
               {Math.max(
                 1,

@@ -29,6 +29,7 @@ export default function BlogSidebar({ otherPosts }: BlogSidebarProps) {
             <Link
               key={post._id}
               href={`/blog/${post.slug || post._id}`}
+              aria-label={`Read recent post: ${post.title}`}
               className="group flex gap-4 items-start"
             >
               <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-800 shrink-0">
@@ -47,8 +48,8 @@ export default function BlogSidebar({ otherPosts }: BlogSidebarProps) {
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">
-                    <Share2 className="w-6 h-6" />
+                  <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600" aria-hidden="true">
+                    <Share2 className="w-6 h-6" aria-hidden="true" />
                   </div>
                 )}
               </div>
@@ -69,7 +70,7 @@ export default function BlogSidebar({ otherPosts }: BlogSidebarProps) {
       </div>
 
       <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-900/20 to-pink-900/10 border border-purple-500/20 text-center relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl" />
+        <div aria-hidden="true" className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl" />
         <h3 className="text-xl font-bold text-white mb-2 relative z-10">
           Join the Conversation
         </h3>

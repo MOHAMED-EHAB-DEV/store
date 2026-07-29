@@ -35,6 +35,7 @@ const Template = ({
   return (
     <Link
       href={`/templates/${template.slug}`}
+      aria-label={`View details for ${template.title} template`}
       onClick={() =>
         sendGTMEvent({
           event: "template_card_click",

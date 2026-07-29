@@ -17,7 +17,11 @@ export default function FavoriteButton({ template }: { template: ITemplate }) {
       className={`absolute top-4 right-4 ${
         isFavorite ? "bg-pink-100" : "bg-white/75"
       } transition hover:bg-white/90 cursor-pointer z-20 rounded-full p-2 shadow-md`}
-      aria-label="Toggle Favorite"
+      aria-label={
+        isFavorite
+          ? `Remove ${template?.title || "template"} from favorites`
+          : `Add ${template?.title || "template"} to favorites`
+      }
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -33,6 +37,7 @@ export default function FavoriteButton({ template }: { template: ITemplate }) {
       <Heart
         className={`size-5 ${isFavorite ? "text-pink-500" : "text-gray-400"}`}
         isActive={isFavorite}
+        aria-hidden="true"
       />
     </Button>
   );

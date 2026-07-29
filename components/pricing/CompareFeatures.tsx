@@ -46,9 +46,9 @@ const CompareFeatures = () => {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="mb-24">
+    <section ref={containerRef} className="mb-24" aria-labelledby="compare-features-title">
       <div className="feature-header text-center mb-12">
-        <h2 className="text-3xl font-bold mb-4">Compare Features</h2>
+        <h2 id="compare-features-title" className="text-3xl font-bold mb-4">Compare Features</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
           Not sure which option is right for you? See exactly what's included in our premium templates versus a custom web app build.
         </p>
@@ -70,9 +70,9 @@ const CompareFeatures = () => {
                 <td className="p-6 text-center border-l border-gray-800/50">
                   {typeof feature.template === "boolean" ? (
                     feature.template ? (
-                      <Check className="w-5 h-5 text-gray-400 mx-auto" />
+                      <Check className="w-5 h-5 text-gray-400 mx-auto" aria-label={`${feature.name} included in Template`} />
                     ) : (
-                      <X className="w-5 h-5 text-gray-600 mx-auto" />
+                      <X className="w-5 h-5 text-gray-600 mx-auto" aria-label={`${feature.name} not included in Template`} />
                     )
                   ) : (
                     <span className="text-sm text-gray-400">{feature.template}</span>
@@ -81,9 +81,9 @@ const CompareFeatures = () => {
                 <td className="p-6 text-center border-l border-gray-800/50">
                   {typeof feature.custom === "boolean" ? (
                     feature.custom ? (
-                      <Check className="w-5 h-5 text-purple-400 mx-auto" />
+                      <Check className="w-5 h-5 text-purple-400 mx-auto" aria-label={`${feature.name} included in Custom Dev`} />
                     ) : (
-                      <X className="w-5 h-5 text-gray-600 mx-auto" />
+                      <X className="w-5 h-5 text-gray-600 mx-auto" aria-label={`${feature.name} not included in Custom Dev`} />
                     )
                   ) : (
                     <span className="text-sm font-medium text-purple-400">{feature.custom}</span>
@@ -94,7 +94,7 @@ const CompareFeatures = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -40,6 +40,7 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
   return (
     <Link
       href={`/blog/${blog.slug || blog._id}`}
+      aria-label={`Read article: ${blog.title}`}
       className={`group relative overflow-hidden rounded-2xl border border-gray-800 bg-gray-900/40 hover:bg-gray-900/60 transition-all duration-300 hover:border-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/10 flex flex-col ${featured ? "md:grid md:grid-cols-2 md:gap-8" : ""}`}
     >
       <div
@@ -56,11 +57,11 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-            <BookOpen className="w-12 h-12 text-gray-700 group-hover:text-purple-500/50 transition-colors" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center" aria-hidden="true">
+            <BookOpen className="w-12 h-12 text-gray-700 group-hover:text-purple-500/50 transition-colors" aria-hidden="true" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 to-transparent" />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-gray-950/80 to-transparent" />
       </div>
 
       <div
@@ -68,12 +69,12 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
       >
         <div className="flex items-center gap-4 text-xs text-gray-400 mb-4 font-medium tracking-wide uppercase">
           <div className="flex items-center gap-1.5 bg-gray-800/50 px-2 py-1 rounded-full border border-gray-700/50">
-            <Calendar className="w-3 h-3 text-purple-400" />
+            <Calendar className="w-3 h-3 text-purple-400" aria-hidden="true" />
             <span>{formatDate(blog.createdAt)}</span>
           </div>
           {blog.readTime && (
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3 h-3 text-gray-500" />
+              <Clock className="w-3 h-3 text-gray-500" aria-hidden="true" />
               <span>{blog.readTime} min read</span>
             </div>
           )}
@@ -90,7 +91,7 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
         </p>
 
         <div className="mt-auto flex items-center text-purple-400 font-semibold text-sm group-hover:translate-x-1 transition-transform">
-          Read Article <ArrowRight className="w-4 h-4 ml-2" />
+          Read Article <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
         </div>
       </div>
     </Link>

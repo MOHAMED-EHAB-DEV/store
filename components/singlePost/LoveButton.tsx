@@ -106,12 +106,14 @@ export default function LoveButton({ blogId, initialLoves }: LoveButtonProps) {
           isAnimating && "animate-ping absolute opacity-75",
           !hasLoved && "group-hover:scale-110"
         )}
+        aria-hidden="true"
       />
       <Heart
         className={cn(
           "w-5 h-5 transition-transform duration-300 absolute left-4",
           hasLoved ? "fill-pink-500 stroke-pink-500 scale-100" : "scale-0 opacity-0"
         )}
+        aria-hidden="true"
       />
       <span className="font-semibold text-sm select-none relative z-10 pl-5">{loves}</span>
     </button>

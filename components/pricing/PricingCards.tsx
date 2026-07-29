@@ -31,7 +31,8 @@ const PricingCards = () => {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-24">
+    <section ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-24" aria-labelledby="pricing-plans-heading">
+      <h2 id="pricing-plans-heading" className="sr-only">Pricing Plans</h2>
       {/* Template Card */}
       <div className="pricing-card">
         <SpotlightCard className="flex flex-col h-full bg-gray-900/40 border border-gray-800 rounded-3xl p-8 backdrop-blur-sm">
@@ -63,6 +64,7 @@ const PricingCards = () => {
           </ul>
           <Link 
             href="/templates"
+            aria-label="Browse templates - starting from $49"
             className="w-full rounded-xl py-3.5 px-4 text-center font-semibold text-white bg-gray-800 hover:bg-gray-700 transition-colors border border-gray-700 block"
           >
             Browse Templates
@@ -107,13 +109,14 @@ const PricingCards = () => {
           </ul>
           <Link 
             href="/custom-development"
+            aria-label="Request custom build - starting from $599"
             className="w-full rounded-xl py-3.5 px-4 text-center font-bold text-black bg-white hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)] flex items-center justify-center gap-2 relative z-10"
           >
             Request Custom Build <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </SpotlightCard>
       </div>
-    </div>
+    </section>
   );
 };
 

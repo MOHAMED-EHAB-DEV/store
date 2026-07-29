@@ -54,6 +54,7 @@ const Template = async ({
                   <Link
                     href={`/templates?tags=${tag}`}
                     key={idx}
+                    aria-label={`View templates tagged with ${tag}`}
                     className="py-1 px-2 bg-white/20 hover:bg-white/30 transition-colors rounded-md text-xs sm:text-sm text-white/80 break-words"
                   >
                     #{tag}
@@ -73,6 +74,7 @@ const Template = async ({
                 <Link
                   href={`/templates/${cat.name.toLowerCase()}`}
                   key={cat._id}
+                  aria-label={`View ${cat.name} templates`}
                   className="py-1 px-2 bg-white/20 hover:bg-white/30 transition-colors rounded-md text-xs sm:text-sm text-white/80 break-words"
                 >
                   {cat.name}
@@ -125,9 +127,10 @@ const Template = async ({
             <Link
               href={template.demoLink}
               target="_blank"
+              aria-label={`Open live demo for ${template.title}`}
               className="px-5 py-2.5 sm:py-3 w-full border border-white/20 rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition text-sm sm:text-base"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4" aria-hidden="true" />
               Live Demo
             </Link>
             {/* <Link
@@ -165,8 +168,8 @@ const Template = async ({
       />
 
       {similarTemplates && similarTemplates.length > 0 && (
-        <div className="flex w-full flex-col items-center justify-center gap-8">
-          <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center">
+        <section aria-labelledby="similar-templates-heading" className="flex w-full flex-col items-center justify-center gap-8">
+          <h2 id="similar-templates-heading" className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-center">
             You might also like
           </h2>
 
@@ -178,7 +181,7 @@ const Template = async ({
               />
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );

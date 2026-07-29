@@ -134,6 +134,7 @@ const Pricing = () => {
                     : 'bg-neutral-800 text-white hover:bg-neutral-700'
                     }`}
                   href={tier.ctaLink}
+                  aria-label={`${tier.cta} - ${tier.name} plan (${tier.price})`}
                   onClick={() => sendGTMEvent({ 
                     event: "pricing_plan_select", 
                     plan_name: tier.name 

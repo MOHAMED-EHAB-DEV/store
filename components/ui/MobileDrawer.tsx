@@ -16,11 +16,13 @@ const MobileDrawer = () => {
   return (
     <div className="relative md:hidden block ms-2 self-end">
       <button
-        aria-label="Menu Button"
+        aria-label="Open main navigation menu"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
         className="p-3 bg-transparent hover:bg-white/10 rounded-full transition-colors duration-200 active:scale-95 border-none outline-none cursor-pointer"
         onClick={openDrawer}
       >
-        <Menu className="w-6 h-6 text-white" />
+        <Menu className="w-6 h-6 text-white" aria-hidden="true" />
       </button>
 
       <Drawer
@@ -35,13 +37,14 @@ const MobileDrawer = () => {
             onClick={closeDrawer}
             aria-label="Close navigation menu"
           >
-            <X className="w-6 h-6 text-white" />
+            <X className="w-6 h-6 text-white" aria-hidden="true" />
           </button>
           <ul className="flex flex-col gap-2 list-none p-0 m-0">
             {NavigationLinks.map(({ id, link, text }) => (
               <li key={id}>
                 <Link
                   href={link}
+                  aria-label={`Navigate to ${text} page`}
                   className="block text-white hover:text-secondary hover:bg-white/10 text-xl font-medium p-4 rounded-lg transition-all duration-200 active:scale-95 outline-none focus:ring-2 focus:ring-white/20"
                   onClick={closeDrawer}
                 >

@@ -30,7 +30,7 @@ export default function StoreTemplateDetails({ template }: { template: ITemplate
       {/* Rating */}
       {template?.reviewCount && template?.reviewCount > 0 ? (
         <div className="flex items-center gap-2 mb-4">
-          <div className="flex items-center">
+          <div className="flex items-center" aria-hidden="true">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
@@ -39,6 +39,7 @@ export default function StoreTemplateDetails({ template }: { template: ITemplate
                     ? "text-yellow-400 fill-current"
                     : "text-gray-600"
                 }`}
+                aria-hidden="true"
               />
             ))}
           </div>
@@ -67,7 +68,7 @@ export default function StoreTemplateDetails({ template }: { template: ITemplate
 
         {/* Action Buttons */}
         <Button
-          aria-label="Live Demo"
+          aria-label={`Live demo for ${template.title}`}
           rel="noopener noreferrer"
           onClick={(e) => {
             e.preventDefault();
@@ -81,7 +82,7 @@ export default function StoreTemplateDetails({ template }: { template: ITemplate
           }}
           className="px-4 cursor-pointer bg-transparent py-3 w-fit h-fit border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors duration-200"
         >
-          <ExternalLink className="w-5 h-5" />
+          <ExternalLink className="w-5 h-5" aria-hidden="true" />
         </Button>
       </div>
     </div>

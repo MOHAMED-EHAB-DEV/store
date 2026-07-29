@@ -80,6 +80,7 @@ export default function HomeFAQ() {
                             <div className="pt-4 home-faq-btn">
                                 <Link 
                                     href="/faqs"
+                                    aria-label="View all FAQs page"
                                     className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]"
                                 >
                                     View All FAQs

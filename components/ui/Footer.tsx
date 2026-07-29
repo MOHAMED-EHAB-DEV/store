@@ -28,22 +28,23 @@ const Footer = () => {
                   href={social.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={social.name}
+                  aria-label={`Follow on ${social.name}`}
                   className="text-secondary hover:text-white transition"
                 >
-                  <social.Icon />
+                  <social.Icon aria-hidden="true" />
                 </a>
               ))}
             </div>
             <BackToTop />
           </div>
-          <div>
+          <nav aria-label="Footer Navigation">
             <h3 className="text-lg font-semibold mb-4">Navigation</h3>
             <ul className="flex flex-col gap-2">
               {FooterLinks.map(({ id, text, link }) => (
                 <li key={id}>
                   <Link
                     href={link}
+                    aria-label={`${text} page footer link`}
                     className="text-secondary hover:text-white transition"
                   >
                     {text}
@@ -51,13 +52,14 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
-          <div>
+          </nav>
+          <nav aria-label="Footer Legal">
             <h3 className="text-lg font-semibold mb-4">Legal</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link
                   href="/terms-of-service"
+                  aria-label="Terms of Service page link"
                   className="text-secondary hover:text-white transition"
                 >
                   Terms of Service
@@ -66,13 +68,14 @@ const Footer = () => {
               <li>
                 <Link
                   href="/privacy-policy"
+                  aria-label="Privacy Policy page link"
                   className="text-secondary hover:text-white transition"
                 >
                   Privacy Policy
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800 text-center text-secondary">
           <p>

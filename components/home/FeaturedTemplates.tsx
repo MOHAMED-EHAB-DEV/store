@@ -67,6 +67,7 @@ const FeaturedTemplates = async () => {
         <div className="text-center mt-16">
           <Link
             href="/templates"
+            aria-label="View all templates page"
             className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
           >
             <span className="relative z-10">View All Templates</span>

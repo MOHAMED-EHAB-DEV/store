@@ -288,8 +288,8 @@ export default function PurchasedTemplatesClient({
                   className="text-white hover:bg-white/10"
                   asChild
                 >
-                  <Link href={`/templates/${template.slug}`}>
-                    <Eye className="w-4 h-4 mr-2" />
+                  <Link href={`/templates/${template.slug}`} aria-label={`View ${template.title} template`}>
+                    <Eye className="w-4 h-4 mr-2" aria-hidden="true" />
                     View
                   </Link>
                 </Button>
@@ -299,7 +299,7 @@ export default function PurchasedTemplatesClient({
                   asChild
                 >
                   <Button size="sm" className="bg-primary hover:bg-primary/90">
-                    <Download className="w-4 h-4 mr-2" />
+                    <Download className="w-4 h-4 mr-2" aria-hidden="true" />
                     Download
                   </Button>
                 </DownloadBtn>

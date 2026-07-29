@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { headers } from "next/headers";
 import "./globals.css";
 import { Roboto, Parastoo } from "@/lib/fonts";
 import { Toaster } from "@/components/ui/sonner";
@@ -90,8 +89,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const nonce = (await headers()).get("x-nonce") || undefined;
-
   return (
     <html lang="en">
       <head></head>
@@ -157,7 +154,7 @@ export default async function RootLayout({
             "https://www.linkedin.com/in/1-mohammed",
           ]}
         />
-        <Script id="chunk-error-reload" strategy="beforeInteractive" nonce={nonce}>{`
+        <Script id="chunk-error-reload" strategy="beforeInteractive">{`
           (function () {
             var RELOAD_KEY = '__chunk_reload__';
             function isChunkError(err) {

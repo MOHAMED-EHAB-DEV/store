@@ -28,7 +28,9 @@ function getCspDirectives() {
 
 function addSecurityHeaders(response: NextResponse) {
   response.headers.delete("X-Powered-By");
-  response.headers.set("Content-Security-Policy", getCspDirectives());
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set("Content-Security-Policy", getCspDirectives());
+  }
 
   response.headers.set("X-Frame-Options", "SAMEORIGIN");
   response.headers.set("X-Content-Type-Options", "nosniff");

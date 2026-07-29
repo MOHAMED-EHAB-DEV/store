@@ -29,6 +29,7 @@ import { Download as DownloadIcon } from "@/components/ui/svgs/icons/Download";
 import { AlertCircle as AlertCircleIcon } from "@/components/ui/svgs/icons/AlertCircle";
 import { Analytics as AnalyticsIcon } from "@/components/ui/svgs/icons/Analytics";
 import { Zap as ZapIcon } from "@/components/ui/svgs/icons/Zap";
+import { Chat as ChatIcon } from "@/components/ui/svgs/icons/Chat";
 
 export const DashboardSidebarLinks = [
   { Icon: LayoutDashboardIcon, text: "Dashboard", link: "/dashboard" },
@@ -47,6 +48,7 @@ export const AdminSidebarLinks = [
   { Icon: DownloadIcon, text: "Downloads", link: "/admin/download-logs" },
   { Icon: AlertCircleIcon, text: "Error Logs", link: "/admin/error-logs" },
   { Icon: AnalyticsIcon, text: "Analytics", link: "/admin/analytics" },
+  { Icon: ChatIcon, text: "AI Messages", link: "/admin/messages/ai" },
   { Icon: HeadsetIcon, text: "Support", link: "/admin/support" },
   { Icon: ZapIcon, text: "Performance", link: "/admin/performance" },
 ] as const;

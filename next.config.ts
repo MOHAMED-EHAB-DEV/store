@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    qualities: [75, 80, 85, 90, 95, 100],
+    qualities: [50, 75, 80, 85, 90, 95, 100],
   },
   async headers() {
     const cspDirectives = [

@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ReactLenis, type LenisRef } from "lenis/react";
 import { isLowHardware } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const ConciergeWidget = dynamic(() => import("@/components/ai/ConciergeWidget"), {
+  ssr: false,
+});
 
 export default function GlobalLenisProvider({
   children,
@@ -44,6 +49,7 @@ export default function GlobalLenisProvider({
   return (
     <ReactLenis root options={{ autoRaf: false, syncTouch: false }} ref={lenisRef}>
       {children}
+      <ConciergeWidget />
     </ReactLenis>
   );
 }

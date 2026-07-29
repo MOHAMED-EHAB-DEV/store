@@ -377,6 +377,7 @@ export default function ChatInput({
               <button
                 type="button"
                 onClick={() => removeFile(i)}
+                aria-label={`Remove file ${i + 1}`}
                 className="absolute top-0.5 right-0.5 bg-black/50 hover:bg-black/80 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <svg
@@ -388,6 +389,7 @@ export default function ChatInput({
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
@@ -404,8 +406,8 @@ export default function ChatInput({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isSending || isUploading || files.length >= 4}
+          aria-label="Attach files"
           className="shrink-0 h-10 w-10 mb-1 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted-foreground hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Attach files"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -416,6 +418,7 @@ export default function ChatInput({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
           </svg>
@@ -437,6 +440,7 @@ export default function ChatInput({
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             placeholder={placeholder}
+            aria-label="Message"
             disabled={disabled || isSending || isUploading}
             rows={1}
             className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all disabled:opacity-50"
@@ -451,6 +455,7 @@ export default function ChatInput({
             isSending ||
             isUploading
           }
+          aria-label={isSending || isUploading ? "Sending..." : "Send message"}
           className="shrink-0 h-10 w-10 mb-1 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white transition-all hover:opacity-90 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
         >
           {isSending || isUploading ? (

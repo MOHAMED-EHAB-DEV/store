@@ -24,6 +24,7 @@ export default function FAQHero({ searchQuery, onSearchChange }: FAQHeroProps) {
                     placeholder="Search for questions..."
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
+                    aria-label="Search frequently asked questions"
                     startContent={
                         <svg
                             className="h-5 w-5 text-purple-500"

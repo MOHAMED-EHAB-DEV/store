@@ -162,8 +162,8 @@ const Templates = ({
       {/* ── Search bar ──────────────────────────────────────── */}
       <div className="relative flex items-center w-full">
         {/* Search icon */}
-        <span className="absolute start-3.5 z-10 text-white/40 pointer-events-none">
-          <Search className="w-4 h-4" />
+        <span className="absolute start-3.5 z-10 text-white/40 pointer-events-none" aria-hidden="true">
+          <Search className="w-4 h-4" aria-hidden="true" />
         </span>
 
         <input
@@ -171,6 +171,7 @@ const Templates = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search templates by name, description or tags…"
+          aria-label="Search templates"
           className={cn(
             "w-full h-12 ps-10 pe-14 rounded-xl text-sm text-white placeholder-white/30",
             "bg-white/[0.04] border border-white/[0.08] outline-none",
@@ -188,7 +189,8 @@ const Templates = ({
           <button
             type="button"
             onClick={() => setMobileFiltersOpen((v) => !v)}
-            title="Toggle filters"
+            aria-label={mobileFiltersOpen ? "Close filters" : "Open filters"}
+            aria-expanded={mobileFiltersOpen}
             className={cn(
               "lg:hidden relative flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200",
               mobileFiltersOpen
@@ -196,10 +198,10 @@ const Templates = ({
                 : "text-white/40 hover:text-white/80 hover:bg-white/10",
             )}
           >
-            <SlidersIcon className="w-4 h-4" />
+            <SlidersIcon className="w-4 h-4" aria-hidden="true" />
             {/* Active-filter indicator dot */}
             {hasFilterActive && (
-              <span className="absolute top-1 end-1 w-1.5 h-1.5 rounded-full bg-[var(--gold,#c9a84c)]" />
+              <span aria-hidden="true" className="absolute top-1 end-1 w-1.5 h-1.5 rounded-full bg-[var(--gold,#c9a84c)]" />
             )}
           </button>
         </div>
@@ -243,8 +245,8 @@ const Templates = ({
           </div>
         ) : (
           <div className="flex flex-col items-center text-center py-12">
-            <div className="w-32 h-32 mb-4">
-              <Search className="w-full h-full text-gray-400 opacity-60" />
+            <div className="w-32 h-32 mb-4" aria-hidden="true">
+              <Search className="w-full h-full text-gray-400 opacity-60" aria-hidden="true" />
             </div>
             <h3 className="text-lg font-semibold text-white/90 mb-2">
               No templates found

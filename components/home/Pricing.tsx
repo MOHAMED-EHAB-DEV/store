@@ -76,11 +76,11 @@ const Pricing = () => {
   ];
 
   return (
-    <section className="w-full py-6 text-white relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-pink-600/10 rounded-full blur-[120px] pointer-events-none" />
+    <section className="w-full py-6 text-white relative overflow-hidden" aria-labelledby="pricing-title">
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-pink-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12 pricing-header">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-paras">Simple, transparent pricing</h2>
+          <h2 id="pricing-title" className="text-3xl font-bold tracking-tighter sm:text-5xl font-paras">Simple, transparent pricing</h2>
           <p className="max-w-[900px] text-neutral-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
             Choose the plan that fits your needs. No hidden fees.
           </p>
@@ -120,6 +120,7 @@ const Pricing = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="h-4 w-4 text-white"
+                        aria-hidden="true"
                       >
                         <polyline points="20 6 9 17 4 12" />
                       </svg>

@@ -78,8 +78,9 @@ const Hero = () => {
         <div
           ref={badgeRef}
           className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8"
+          aria-hidden="true"
         >
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true" />
           <span className="text-sm font-medium">
             <span ref={scoreRef} className="text-green-400 font-bold">
               0
@@ -110,9 +111,10 @@ const Hero = () => {
 
         <button
           onClick={scrollToForm}
+          aria-label="Start your custom project — scroll to application form"
           className="relative group transition-transform duration-300 hover:scale-105"
         >
-          <div className="absolute -inset-1 rounded-full bg-[linear-gradient(to_right,#a855f7,#ec4899,#ef4444,#eab308,#3b82f6,#06b6d4)] blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+          <div aria-hidden="true" className="absolute -inset-1 rounded-full bg-[linear-gradient(to_right,#a855f7,#ec4899,#ef4444,#eab308,#3b82f6,#06b6d4)] blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
           <div className="relative px-8 py-4 bg-white text-black font-bold rounded-full text-lg">
             Start Your Project
           </div>

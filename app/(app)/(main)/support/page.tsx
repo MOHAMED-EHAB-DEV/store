@@ -36,12 +36,12 @@ export default function SupportPage() {
     return (
         <div className="w-full">
             {/* Hero Section */}
-            <section className="relative py-36 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-pink-900/20" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-3xl" />
+            <section className="relative py-36 overflow-hidden" aria-labelledby="support-hero-title">
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-pink-900/20" />
+                <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/10 rounded-full blur-3xl" />
 
                 <div className="relative max-w-4xl mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+                    <h1 id="support-hero-title" className="text-4xl md:text-6xl font-bold text-white mb-6">
                         How Can We{" "}
                         <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
                             Help You?
@@ -63,7 +63,7 @@ export default function SupportPage() {
                                 key={index}
                                 className="flex items-start gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
                             >
-                                <div className="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
+                                <div aria-hidden="true" className="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
                                     <feature.Icon />
                                 </div>
                                 <div>
@@ -97,7 +97,7 @@ export default function SupportPage() {
                                 <h3 className="text-lg font-semibold text-white">Categories We Cover</h3>
                                 {SUPPORT_CATEGORIES.map((cat, index) => (
                                     <div key={index} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                                        <div className="w-2 h-2 rounded-full bg-purple-500" />
+                                        <div aria-hidden="true" className="w-2 h-2 rounded-full bg-purple-500" />
                                         <div>
                                             <p className="font-medium text-white text-sm">{cat.label}</p>
                                             <p className="text-xs text-muted-foreground">{cat.description}</p>

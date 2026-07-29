@@ -206,8 +206,9 @@ const HowItWorks = () => {
       <section
         className="w-full h-[100dvh] relative z-10 overflow-hidden"
         ref={containerRef}
+        aria-labelledby="howitworks-heading"
       >
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
         {/* Header */}
         <div className="absolute top-16 left-0 w-full text-center z-20 pointer-events-none">
           <div className="flex flex-col items-center justify-center gap-4 mb-10">
@@ -218,7 +219,7 @@ const HowItWorks = () => {
               How it works
               <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
             </Badge> */}
-            <h2 className="text-3xl md:text-5xl font-bold font-paras text-white">
+            <h2 id="howitworks-heading" className="text-3xl md:text-5xl font-bold font-paras text-white">
               {SplitText("From")}{" "}
               <span className="relative">
                 {SplitText("Purchase")}
@@ -242,7 +243,7 @@ const HowItWorks = () => {
 
         {/* Track */}
         <div className="absolute top-[26%] md:top-[30%] left-1/2 -translate-x-1/2 w-[88vw] max-w-[920px]">
-          <svg viewBox="0 0 900 190" className="w-full h-auto overflow-visible">
+          <svg viewBox="0 0 900 190" className="w-full h-auto overflow-visible" aria-hidden="true">
             <path
               d={MAIN_LINE_D}
               stroke="#2a2b33"

@@ -42,6 +42,8 @@ export default function CategoryCarousel({
                     {/* All Category Pill */}
                     <button
                         onClick={() => onCategorySelect(null)}
+                        aria-pressed={selectedCategory === null}
+                        aria-label="Show all questions"
                         className={`flex-[0_0_auto] px-6 py-2.5 rounded-full font-medium transition-all duration-300 border backdrop-blur-sm ${
                             selectedCategory === null 
                             ? "bg-purple-600 text-white border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
@@ -56,13 +58,15 @@ export default function CategoryCarousel({
                         <button
                             key={category.id}
                             onClick={() => onCategorySelect(category.id === selectedCategory ? null : category.id)}
+                            aria-pressed={selectedCategory === category.id}
+                            aria-label={`Filter by ${category.name}`}
                             className={`flex-[0_0_auto] px-6 py-2.5 rounded-full font-medium transition-all duration-300 border backdrop-blur-sm flex items-center gap-2 ${
                                 selectedCategory === category.id 
                                 ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-transparent shadow-[0_0_15px_rgba(168,85,247,0.4)]" 
                                 : "bg-gray-900/50 text-gray-400 border-gray-800 hover:bg-gray-800 hover:text-white"
                             }`}
                         >
-                            <span>{category.icon}</span>
+                            <span aria-hidden="true">{category.icon}</span>
                             <span>{category.name}</span>
                         </button>
                     ))}
@@ -70,8 +74,8 @@ export default function CategoryCarousel({
             </div>
 
             {/* Gradient masks for smooth edge fading (Mobile Only) */}
-            <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-[#0A0A0B] to-transparent pointer-events-none md:hidden" />
-            <div className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-[#0A0A0B] to-transparent pointer-events-none md:hidden" />
+            <div aria-hidden="true" className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-[#0A0A0B] to-transparent pointer-events-none md:hidden" />
+            <div aria-hidden="true" className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-[#0A0A0B] to-transparent pointer-events-none md:hidden" />
         </div>
     );
 }

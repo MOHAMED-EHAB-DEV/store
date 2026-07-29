@@ -238,10 +238,13 @@ export default function ConciergeWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Open AI Concierge chat"
+          aria-expanded={false}
+          aria-haspopup="dialog"
           className="relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-fuchsia-600 to-pink-500 text-white shadow-2xl hover:scale-105 transition-all duration-300 group cursor-pointer border border-white/20"
         >
-          <div className="absolute inset-0 rounded-full bg-purple-600/30 blur-md group-hover:blur-lg transition-all" />
-          <Chat className="w-6 h-6 relative z-10" />
+          <div aria-hidden="true" className="absolute inset-0 rounded-full bg-purple-600/30 blur-md group-hover:blur-lg transition-all" />
+          <Chat className="w-6 h-6 relative z-10" aria-hidden="true" />
         </button>
       )}
 
@@ -262,14 +265,15 @@ export default function ConciergeWidget() {
             </div>
             <button
               onClick={handleClose}
+              aria-label="Close chat"
               className="p-1.5 hover:bg-neutral-800 rounded-lg text-neutral-400 hover:text-white transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
 
           {/* Messages Window */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-950 scrollbar-thin">
+          <div role="log" aria-live="polite" aria-label="Chat messages" className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-950 scrollbar-thin">
             {messages.map((msg, index) => (
               <div key={index} className="space-y-2" data-lenis-prevent>
                 <div
@@ -398,7 +402,7 @@ export default function ConciergeWidget() {
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-neutral-900 border border-neutral-800 text-neutral-400 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
+                  <Loader2 className="w-4 h-4 animate-spin text-purple-500" aria-hidden="true" />
                   <span>Thinking...</span>
                 </div>
               </div>
@@ -410,18 +414,21 @@ export default function ConciergeWidget() {
           <div className="px-4 py-2 border-t border-neutral-900 bg-neutral-950 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
             <button
               onClick={() => handleSuggestionClick("Search for portfolio templates")}
+              aria-label="Search for portfolio templates"
               className="text-[11px] bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-2.5 py-1 rounded-full border border-neutral-800 transition-colors cursor-pointer"
             >
               🔍 Portfolios
             </button>
             <button
               onClick={() => handleSuggestionClick("Tell me about custom Next.js development slots")}
+              aria-label="Ask about custom Next.js development slots"
               className="text-[11px] bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-2.5 py-1 rounded-full border border-neutral-800 transition-colors cursor-pointer"
             >
               🚀 Custom Dev Slots
             </button>
             <button
               onClick={() => handleSuggestionClick("How can I contact Mohammed Ehab?")}
+              aria-label="Ask how to contact Mohammed Ehab"
               className="text-[11px] bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-2.5 py-1 rounded-full border border-neutral-800 transition-colors cursor-pointer"
             >
               📞 Contact Ehab
@@ -431,7 +438,7 @@ export default function ConciergeWidget() {
           {/* Spam warnings display */}
           {warning && (
             <div className="px-4 py-2 bg-red-950/20 border-t border-red-900/30 text-red-400 text-xs flex items-center gap-2 animate-in slide-in-from-bottom-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" aria-hidden="true" />
               <span>{warning}</span>
             </div>
           )}
@@ -449,15 +456,17 @@ export default function ConciergeWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={isBanned ? "Chat disabled..." : "Ask the Concierge..."}
+              aria-label="Message to AI Concierge"
               disabled={loading || isBanned}
               className="flex-1 bg-neutral-900 text-white placeholder-neutral-500 rounded-xl px-4 py-2.5 text-sm focus:border focus:border-purple-600 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <button
               type="submit"
               disabled={loading || isBanned || !input.trim()}
+              aria-label="Send message"
               className="h-10 w-10 flex items-center justify-center rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
           </form>
 

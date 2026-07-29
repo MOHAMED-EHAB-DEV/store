@@ -68,12 +68,12 @@ export default function FAQMasonryCard({
   return (
     <div className={`rounded-3xl p-6 md:p-8 ${variant.bg} border ${variant.border} backdrop-blur-md shadow-lg transition-all duration-300 ${variant.hoverBorder} hover:shadow-2xl group relative overflow-hidden h-full flex flex-col`}>
       {/* Subtle gradient glow effect on hover */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${variant.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
+      <div aria-hidden="true" className={`absolute inset-0 bg-gradient-to-br ${variant.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
 
       <div className="relative z-10 flex flex-col h-full">
         <div className="mb-5 flex flex-wrap items-center gap-2">
           {categoryIcon && (
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-800/80 border border-gray-700 text-sm shadow-inner">
+            <span aria-hidden="true" className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-800/80 border border-gray-700 text-sm shadow-inner">
               {categoryIcon}
             </span>
           )}

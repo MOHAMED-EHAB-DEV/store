@@ -104,6 +104,7 @@ function CategoryCard({ category, isHero, index }: { category: ICategory; isHero
       className={`category-card group relative flex flex-col justify-between p-6 rounded-3xl bg-card/40 backdrop-blur-md border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] overflow-hidden transition-colors ${
         isHero ? "md:col-span-2" : ""
       }`}
+      aria-label={`Go to ${category.name} templates`}
     >
       <div
         ref={spotlightRef}
@@ -117,8 +118,8 @@ function CategoryCard({ category, isHero, index }: { category: ICategory; isHero
       <div className="relative z-10 flex flex-col h-full justify-between gap-10">
         <div className="flex items-start justify-between">
           <div ref={iconWrapRef} className="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 shadow-inner border border-white/5">
-            <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-md" />
-            <div className="relative z-10 svg-gradient-accent w-7 h-7">
+            <div aria-hidden="true" className="absolute inset-0 rounded-2xl bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-md" />
+            <div className="relative z-10 svg-gradient-accent w-7 h-7" aria-hidden="true">
               <Icon className="w-full h-full" />
             </div>
           </div>
@@ -146,9 +147,10 @@ function CategoryCard({ category, isHero, index }: { category: ICategory; isHero
 
       <div 
         ref={arrowRef}
+        aria-hidden="true"
         className="absolute bottom-6 right-6 z-10 opacity-0 -translate-x-4 text-purple-400"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M5 12h14"></path>
           <path d="m12 5 7 7-7 7"></path>
         </svg>

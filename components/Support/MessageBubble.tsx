@@ -138,6 +138,7 @@ function ImageAttachment({ url, index }: { url: string; index: number }) {
     <>
       <button
         onClick={() => setOpen(true)}
+        aria-label={`View attachment ${index + 1}`}
         className="relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 hover:opacity-80 transition-opacity bg-black/20 cursor-pointer"
       >
         <Image

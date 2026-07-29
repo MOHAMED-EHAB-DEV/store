@@ -58,9 +58,9 @@ export default function HomeFAQ() {
     };
 
     return (
-        <section ref={containerRef} className="w-full relative overflow-hidden">
+        <section ref={containerRef} className="w-full relative overflow-hidden" aria-labelledby="home-faq-title">
             {/* Background ambient glow */}
-            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
             
             <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
@@ -71,7 +71,7 @@ export default function HomeFAQ() {
                             <span className="inline-block py-1 px-3 rounded-full bg-purple-500/10 text-purple-400 text-sm font-semibold border border-purple-500/20 home-faq-title">
                                 Support & Questions
                             </span>
-                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white home-faq-title leading-[1.1]">
+                            <h2 id="home-faq-title" className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white home-faq-title leading-[1.1]">
                                 Got <br className="hidden lg:block"/> Questions?
                             </h2>
                             <p className="text-lg text-gray-400 max-w-md home-faq-desc">
@@ -99,17 +99,23 @@ export default function HomeFAQ() {
                                         className="home-faq-item border-b border-gray-800 group"
                                     >
                                         <button 
+                                            id={`home-faq-btn-${faq.id}`}
                                             onClick={() => toggleOpen(index)}
+                                            aria-expanded={isOpen}
+                                            aria-controls={`home-faq-ans-${faq.id}`}
                                             className="w-full flex items-center justify-between py-6 md:py-8 text-left transition-colors focus:outline-none"
                                         >
                                             <h3 className={`text-xl md:text-2xl font-semibold pr-8 transition-colors duration-300 ${isOpen ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>
                                                 {faq.question}
                                             </h3>
-                                            <div className={`flex-shrink-0 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${isOpen ? 'border-purple-500 bg-purple-500/10 text-purple-400 rotate-45' : 'border-gray-800 text-gray-500 group-hover:border-gray-600'}`}>
-                                                <Plus className="w-5 h-5" />
+                                            <div aria-hidden="true" className={`flex-shrink-0 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-300 ${isOpen ? 'border-purple-500 bg-purple-500/10 text-purple-400 rotate-45' : 'border-gray-800 text-gray-500 group-hover:border-gray-600'}`}>
+                                                <Plus className="w-5 h-5" aria-hidden="true" />
                                             </div>
                                         </button>
                                         <div 
+                                            id={`home-faq-ans-${faq.id}`}
+                                            role="region"
+                                            aria-labelledby={`home-faq-btn-${faq.id}`}
                                             className={`overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'max-h-96 opacity-100 mb-8' : 'max-h-0 opacity-0 mb-0'}`}
                                         >
                                             <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl">

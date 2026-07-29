@@ -10,10 +10,10 @@ const WhyME = () => {
   });
 
   return (
-    <div className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28 relative">
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none" />
+    <section className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28 relative" aria-labelledby="whyme-title">
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
       <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2 relative z-10">
-        <h2 className="md:text-4xl font-bold text-2xl font-paras">
+        <h2 id="whyme-title" className="md:text-4xl font-bold text-2xl font-paras">
           Stop stressing over your business website.
         </h2>
         <p className="text-secondary text-base md:text-lg">
@@ -36,7 +36,7 @@ const WhyME = () => {
       <div className="flex items-center justify-center w-full md:w-1/4">
         <img
           {...imgProps}
-          alt="Cursor Icon"
+          alt="Cursor Illustration"
           width={330}
           height={330}
           loading="lazy"
@@ -44,7 +44,7 @@ const WhyME = () => {
           className="w-1/2 md:w-full"
         />
       </div>
-    </div>
+    </section>
   );
 };
 

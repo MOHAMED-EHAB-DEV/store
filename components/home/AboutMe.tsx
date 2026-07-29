@@ -40,14 +40,14 @@ const AboutMe = () => {
     });
   }, []);
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4 items-center justify-center relative">
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />
+    <section className="w-full max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4 items-center justify-center relative" aria-labelledby="aboutme-title">
+      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
       <div className="text-center mb-16 about-header relative z-10">
         <Badge className="mb-4 transition-shadow duration-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.6)] bg-linear-to-r from-green-500 to-teal-500 text-white border-none px-4 py-2">
-          <Sparkles className="w-4 h-4 mr-2" />
+          <Sparkles className="w-4 h-4 mr-2" aria-hidden="true" />
           Proof of Skill
         </Badge>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-6 font-paras">
+        <h2 id="aboutme-title" className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-6 font-paras">
           Your{" "}
           <span className="bg-linear-to-r from-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
             Technical Partner
@@ -218,7 +218,7 @@ const AboutMe = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

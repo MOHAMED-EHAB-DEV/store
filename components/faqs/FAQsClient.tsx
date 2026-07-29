@@ -8,6 +8,7 @@ import CTA from "@/components/shared/CTA";
 import { FAQ_CATEGORIES } from "@/constants/faqs";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 interface FAQ {
     id: string;
@@ -54,20 +55,23 @@ export default function FAQsClient({ faqs }: FAQsClientProps) {
         return result;
     }, [searchQuery, selectedCategory, faqs]);
 
+    const triggersRef = useRef<ScrollTrigger[]>([]);
+
     useGSAP(() => {
+        // Clean up previous triggers created by this component
+        triggersRef.current.forEach(t => t.kill());
+        triggersRef.current = [];
+
         if (gridRef.current) {
             const cards = gsap.utils.toArray('.faq-card') as HTMLElement[];
-            
-            // Clean up existing triggers before creating new ones when filtering
-            ScrollTrigger.getAll().forEach(t => t.kill());
 
             if (cards.length > 0) {
                 // Initialize cards as invisible
                 gsap.set(cards, { opacity: 0, y: 30, scale: 0.95 });
 
-                ScrollTrigger.batch(cards, {
-                    onEnter: (batch) => {
-                        gsap.to(batch, {
+                const batch = ScrollTrigger.batch(cards, {
+                    onEnter: (b) => {
+                        gsap.to(b, {
                             opacity: 1,
                             y: 0,
                             scale: 1,
@@ -80,11 +84,13 @@ export default function FAQsClient({ faqs }: FAQsClientProps) {
                     start: "top 85%",
                     once: true // Animate once
                 });
+                triggersRef.current = batch;
             }
         }
 
         return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
+            triggersRef.current.forEach(t => t.kill());
+            triggersRef.current = [];
         };
     }, { dependencies: [selectedCategory, searchQuery], scope: gridRef });
 

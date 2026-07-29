@@ -432,6 +432,8 @@ function rehypeAddClasses() {
                 "(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px";
             }
           }
+          if (!node.properties.width) node.properties.width = 800;
+          if (!node.properties.height) node.properties.height = 450;
           if (!node.properties.loading) node.properties.loading = "lazy";
           if (!node.properties.decoding) node.properties.decoding = "async";
           if (!node.properties.alt) node.properties.alt = "Blog Image";

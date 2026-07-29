@@ -39,6 +39,8 @@ export default function robots(): MetadataRoute.Robots {
           "/blog",
           "/blog/*",
           "/support",
+          "/login",
+          "/register"
         ],
         disallow: ["/api/", "/admin/", "/dashboard/", "/user/", "/favorites/"],
       },

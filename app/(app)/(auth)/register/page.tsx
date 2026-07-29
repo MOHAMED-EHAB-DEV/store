@@ -8,7 +8,6 @@ export const metadata = buildMetadata({
   title: "Register | MHD Store Premium Templates",
   description: "Create an account to purchase and download premium Next.js templates.",
   path: "/register",
-  noIndex: true,
   screenshotName: "register",
 });
 

@@ -53,6 +53,7 @@ export const BlogCard = ({ blog, featured = false }: BlogCardProps) => {
             width={800}
             height={400}
             loading={featured ? "eager" : "lazy"}
+            fetchPriority={featured ? "high" : "auto"}
             decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />

@@ -13,9 +13,9 @@ export default function StoreTemplateDetails({ template }: { template: ITemplate
     <div className="p-6 relative z-10">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h3 className="text-xl font-bold text-white mb-1">
+          <h2 className="text-xl font-bold text-white mb-1">
             {template.title}
-          </h3>
+          </h2>
           <p className="text-gray-300 text-sm">
             {template.description?.slice(0, 100)}...
           </p>

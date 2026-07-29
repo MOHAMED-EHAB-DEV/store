@@ -36,6 +36,7 @@ export default function BlogHeader({ blog }: BlogHeaderProps) {
             height={600}
             loading="eager"
             decoding="async"
+            fetchPriority="high"
             className="w-full h-full object-cover rounded-md opacity-40 blur-sm scale-105"
           />
         )}

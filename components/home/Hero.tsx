@@ -34,14 +34,11 @@ const Hero = () => {
     <section
       className="relative flex items-center justify-center gap-3 min-h-screen pb-4 pt-24 md:pt-36 h-full w-full"
       aria-labelledby="hero-title"
-      role="banner"
     >
       <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">
         <Badge
           variant="secondary"
           className="hero-badge relative bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white border border-yellow-500/50 rounded-full px-6 py-3 font-semibold overflow-hidden hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] transition-all duration-500 group"
-          role="status"
-          aria-label="Featured announcement: Unleash Your Creativity"
         >
           <Star className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" aria-hidden="true" />
           <span className="relative z-10">Unleash Your Creativity</span>
@@ -78,6 +75,7 @@ const Hero = () => {
           <Link
             className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
             href="/templates"
+            aria-label="Explore templates page"
             onClick={() => sendGTMEvent({ event: "hero_cta_click" })}
           >
             <span className="relative z-10 flex items-center gap-2">
@@ -90,6 +88,7 @@ const Hero = () => {
           <Link
             className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
             href="/custom-development"
+            aria-label="Work with me custom development page"
           >
             <span className="relative z-10 flex items-center gap-2">
               Work with me

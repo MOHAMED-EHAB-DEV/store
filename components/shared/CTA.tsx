@@ -37,12 +37,12 @@ const CTA = ({ hideFaqButton = false }: StandardCTAProps) => {
   }, { scope: containerRef });
 
   return (
-    <div ref={containerRef} className="rounded-3xl p-8 md:p-12 border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-950/50 text-center relative overflow-hidden backdrop-blur-sm">
-      <div className="cta-bg-shape absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl" />
-      <div className="cta-bg-shape absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+    <section ref={containerRef} className="rounded-3xl p-8 md:p-12 border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-950/50 text-center relative overflow-hidden backdrop-blur-sm" aria-labelledby="shared-cta-title">
+      <div aria-hidden="true" className="cta-bg-shape absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl" />
+      <div aria-hidden="true" className="cta-bg-shape absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
       
       <div className="cta-content">
-        <h2 className="text-3xl font-bold mb-4 relative z-10 text-white">Still have questions?</h2>
+        <h2 id="shared-cta-title" className="text-3xl font-bold mb-4 relative z-10 text-white">Still have questions?</h2>
         <p className="text-gray-400 mb-8 max-w-xl mx-auto relative z-10">
           Our support team is here to help you choose the right template or discuss your custom Next.js development needs.
         </p>
@@ -51,6 +51,7 @@ const CTA = ({ hideFaqButton = false }: StandardCTAProps) => {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
         <Link 
           href="/support"
+          aria-label="Contact Support page"
           className="cta-button w-full sm:w-auto px-8 py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition-colors inline-block"
         >
           Contact Support
@@ -58,13 +59,14 @@ const CTA = ({ hideFaqButton = false }: StandardCTAProps) => {
         {!hideFaqButton && (
           <Link 
             href="/faqs"
+            aria-label="Read FAQs page"
             className="cta-button w-full sm:w-auto px-8 py-3 rounded-xl bg-gray-800 text-white font-semibold hover:bg-gray-700 transition-colors border border-gray-700 inline-block"
           >
             Read FAQs
           </Link>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

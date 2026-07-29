@@ -8,7 +8,6 @@ export const metadata = buildMetadata({
   title: "Login | MHD Store Premium Templates",
   description: "Sign in to your MHD Store account to access your premium templates.",
   path: "/login",
-  noIndex: true,
   screenshotName: "login",
 });
 

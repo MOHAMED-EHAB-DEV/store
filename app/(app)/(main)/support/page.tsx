@@ -67,7 +67,7 @@ export default function SupportPage() {
                                     <feature.Icon />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-white mb-1">{feature.title}</h3>
+                                    <div className="font-semibold text-white mb-1">{feature.title}</div>
                                     <p className="text-sm text-muted-foreground">{feature.description}</p>
                                 </div>
                             </div>

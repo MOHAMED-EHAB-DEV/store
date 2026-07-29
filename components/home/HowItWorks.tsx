@@ -310,34 +310,34 @@ const HowItWorks = () => {
 
           {/* Node labels — positioned as % of the 900-wide viewBox */}
           <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-400 -translate-x-1/2"
+            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
             style={{ left: "8.9%", top: "90%" }}
           >
             Buy
           </div>
           <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-400 -translate-x-1/2"
+            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
             style={{ left: "29.4%", top: "90%" }}
           >
             Download
           </div>
           <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-400 -translate-x-1/2"
+            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
             style={{ left: "50%", top: "90%" }}
           >
             Setup
           </div>
           <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-400 -translate-x-1/2 text-center"
+            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2 text-center"
             style={{ left: "70.6%", top: "90%" }}
           >
             Customize
-            <span className="block text-[10px] font-medium italic text-gray-500 mt-0.5 uppercase tracking-wide">
+            <span className="block text-[10px] font-medium italic text-gray-400 mt-0.5 uppercase tracking-wide">
               optional
             </span>
           </div>
           <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-400 -translate-x-1/2"
+            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
             style={{ left: "91.1%", top: "90%" }}
           >
             Launch

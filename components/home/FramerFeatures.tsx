@@ -180,7 +180,15 @@ const FramerFeatures = () => {
                 loop
                 autoPlay
                 className="absolute top-0 start-0 w-full h-full object-cover"
-              />
+              >
+                <track
+                  src="data:text/vtt,WEBVTT"
+                  kind="captions"
+                  srcLang="en"
+                  label="English"
+                  default
+                />
+              </video>
               <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10"></div>
               <div className="relative z-20 flex h-1/2 md:h-full justify-center md:justify-end w-full flex-col gap-1">
                 <h2 className="text-white font-medium text-base md:text-2xl">

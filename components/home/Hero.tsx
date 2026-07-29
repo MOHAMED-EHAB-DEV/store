@@ -41,15 +41,15 @@ const Hero = () => {
           variant="secondary"
           className="hero-badge relative bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white border border-yellow-500/50 rounded-full px-6 py-3 font-semibold overflow-hidden hover:shadow-[0_0_30px_rgba(255,215,0,0.8)] transition-all duration-500 group"
           role="status"
-          aria-label="Featured announcement"
+          aria-label="Featured announcement: Unleash Your Creativity"
         >
-          <Star className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" />
+          <Star className="w-4 h-4 mr-2 inline-block group-hover:rotate-12 transition-transform duration-300" aria-hidden="true" />
           <span className="relative z-10">Unleash Your Creativity</span>
-          <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent animate-shine" />
+          <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent animate-shine" aria-hidden="true" />
         </Badge>
 
         <div className="flex flex-col gap-4 items-center justify-center w-full">
-          <h1 className="font-bold header text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-white leading-none tracking-tighter px-2 sm:px-0">
+          <h1 id="hero-title" className="font-bold header text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-white leading-none tracking-tighter px-2 sm:px-0">
             Premium Templates to{" "}
             <span className="relative">
               Elevate
@@ -62,7 +62,6 @@ const Hero = () => {
           </h1>
           <p
             className="text-base md:text-lg header lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
-            aria-label="Hero Description"
           >
             Smart templates. Clean design. Built to help you move fast and look
             great doing it.
@@ -78,20 +77,18 @@ const Hero = () => {
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-3 px-4 sm:px-0">
           <Link
             className="hero-btn group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border-none px-8 py-4 rounded-full text-white font-semibold text-lg shadow-lg bg-white/5 hover:bg-white/10 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-primary"
-            aria-label="Browse"
             href="/templates"
             onClick={() => sendGTMEvent({ event: "hero_cta_click" })}
           >
             <span className="relative z-10 flex items-center gap-2">
               Explore Templates
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
             </span>
-            <div className="absolute inset-0 bg-linear-to-r from-purple-400 via-blue-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-r from-purple-400 via-blue-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
           </Link>
 
           <Link
             className="group relative outline-none cursor-pointer will-change-transform transition-all duration-500 border border-white/20 hover:border-white/40 bg-transparent hover:bg-white/5 px-8 py-4 rounded-full text-white font-semibold text-lg backdrop-blur-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
-            aria-label="Work with me"
             href="/custom-development"
           >
             <span className="relative z-10 flex items-center gap-2">

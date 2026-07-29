@@ -90,16 +90,26 @@ export function GlobalStoreInitializer() {
     const fetchUser = async () => {
       try {
         const res = await fetch("/api/user");
+        if (!res.ok) {
+          setUser(null);
+          return null;
+        }
         const data = await res.json();
         setUser(data.user);
+        return data.user;
       } catch (error) {
         setUser(null);
+        return null;
       }
     };
 
     const fetchPurchasedTemplates = async () => {
       try {
         const res = await fetch(`/api/user/templates?idsOnly=true`);
+        if (!res.ok) {
+          setPurchasedTemplates([]);
+          return;
+        }
         const data = await res.json();
         if (data.success) {
           setPurchasedTemplates(data.data);
@@ -112,6 +122,10 @@ export function GlobalStoreInitializer() {
     const fetchFavorites = async () => {
       try {
         const res = await fetch(`/api/user/favorites`);
+        if (!res.ok) {
+          setFavoriteTemplates([]);
+          return;
+        }
         const data = await res.json();
         if (data.success) {
           setFavoriteTemplates(data.data.map((template: any) => template));
@@ -138,9 +152,11 @@ export function GlobalStoreInitializer() {
       }, 1000);
     };
 
-    fetchUser().then(() => {
-      fetchFavorites();
-      fetchPurchasedTemplates();
+    fetchUser().then((currentUser) => {
+      if (currentUser) {
+        fetchFavorites();
+        fetchPurchasedTemplates();
+      }
       syncGuestLoves();
     });
   }, [reloadTrigger, setUser, setPurchasedTemplates, setFavoriteTemplates]);
@@ -162,6 +178,10 @@ export function GlobalStoreInitializer() {
         reconnection: true,
         reconnectionAttempts: 10,
         reconnectionDelay: 2000,
+      });
+
+      socket.on("connect_error", () => {
+        // Silent fail connection error
       });
 
       socket.on("connect", () => {

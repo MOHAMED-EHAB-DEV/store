@@ -172,6 +172,13 @@ const Template = ({
               }
               suppressHydrationWarning
             />
+            <track
+              src="data:text/vtt,WEBVTT"
+              kind="captions"
+              srcLang="en"
+              label="English"
+              default
+            />
           </video>
         )}
       </div>

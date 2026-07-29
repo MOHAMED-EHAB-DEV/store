@@ -127,6 +127,13 @@ export default function TemplateThumbnail({
             content={new Date().toISOString()}
             suppressHydrationWarning
           />
+          <track
+            src="data:text/vtt,WEBVTT"
+            kind="captions"
+            srcLang="en"
+            label="English"
+            default
+          />
         </video>
       )}
     </div>

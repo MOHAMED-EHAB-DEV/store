@@ -164,7 +164,7 @@ function processedCachePath(
   quality: number,
 ): string {
   const name = sanitizeBasename(src);
-  const hash = sha256(`${src}:w${width}:q${quality}`).slice(0, 12);
+  const hash = sha256(src).slice(0, 12);
   return path.join(PROCESSED_DIR, `${name}_${hash}_w${width}_q${quality}.webp`);
 }
 
@@ -175,11 +175,10 @@ function supabaseObjectKey(
   isOriginal = false,
 ): string {
   const name = sanitizeBasename(src);
+  const hash = sha256(src).slice(0, 12);
   if (isOriginal) {
-    const hash = sha256(src).slice(0, 12);
     return `originals/${name}_${hash}.bin`;
   }
-  const hash = sha256(`${src}:w${width}:q${quality}`).slice(0, 12);
   return `processed/${name}_${hash}_w${width}_q${quality}.webp`;
 }
 

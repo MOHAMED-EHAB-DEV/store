@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-function getCspDirectives(nonce?: string) {
+function getCspDirectives() {
   const directives = [
     "default-src 'self'",
-    nonce
-      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com`
-      : "script-src 'self' 'unsafe-eval' https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com",
-    nonce
-      ? `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com https://tagmanager.google.com`
-      : "style-src 'self' https://fonts.googleapis.com https://tagmanager.google.com",
+    "script-src 'self' 'unsafe-eval' https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
     "img-src 'self' blob: data: https://res.cloudinary.com https://www.googletagmanager.com https://www.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "connect-src 'self' https://medo-store-store.hf.space wss://medo-store-store.hf.space ws://medo-store-store.hf.space https://medo-store-store.hf.space:7860 ws://medo-store-store.hf.space:7860 wss://medo-store-store.hf.space:7860 https://api.cloudinary.com https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.google.com",
@@ -30,9 +26,9 @@ function getCspDirectives(nonce?: string) {
   return directives.join("; ");
 }
 
-function addSecurityHeaders(response: NextResponse, nonce?: string) {
+function addSecurityHeaders(response: NextResponse) {
   response.headers.delete("X-Powered-By");
-  response.headers.set("Content-Security-Policy", getCspDirectives(nonce));
+  response.headers.set("Content-Security-Policy", getCspDirectives());
 
   response.headers.set("X-Frame-Options", "SAMEORIGIN");
   response.headers.set("X-Content-Type-Options", "nosniff");
@@ -169,17 +165,8 @@ export async function proxy(req: NextRequest) {
       return reLogin();
   }
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", getCspDirectives(nonce));
-
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-  addSecurityHeaders(response, nonce);
+  const response = NextResponse.next();
+  addSecurityHeaders(response);
   return response;
 }
 

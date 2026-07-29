@@ -12,11 +12,34 @@ const nextConfig: NextConfig = {
     qualities: [50, 75, 80, 85, 90, 95, 100],
   },
   async headers() {
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' https://www.googletagmanager.com https://tagmanager.google.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://tagmanager.google.com",
+      "img-src 'self' blob: data: https://res.cloudinary.com https://www.googletagmanager.com https://www.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "connect-src 'self' https://medo-store-store.hf.space wss://medo-store-store.hf.space ws://medo-store-store.hf.space https://medo-store-store.hf.space:7860 ws://medo-store-store.hf.space:7860 wss://medo-store-store.hf.space:7860 https://api.cloudinary.com https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net https://www.google.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "frame-src 'self' https:",
+      "media-src 'self' blob: https://res.cloudinary.com",
+      "manifest-src 'self'",
+      "worker-src 'self' blob:",
+      "child-src 'self' blob:",
+      ...(isProduction ? ["upgrade-insecure-requests"] : []),
+    ].join("; ");
+
     return [
       {
         // Apply to all routes
         source: "/(.*)",
         headers: [
+          {
+            key: "Content-Security-Policy",
+            value: csp,
+          },
           {
             key: "X-Frame-Options",
             value: "SAMEORIGIN",

@@ -218,8 +218,7 @@ const Templates = ({
         }
         minPrice={minPrice}
         maxPrice={maxPrice}
-        onMinPriceChange={(val) => updateFilters({ minPrice: String(val) })}
-        onMaxPriceChange={(val) => updateFilters({ maxPrice: String(val) })}
+        onPriceChange={(min, max) => updateFilters({ minPrice: String(min), maxPrice: String(max) })}
         minRating={minRating}
         onMinRatingChange={(val) => updateFilters({ minRating: String(val) })}
         sortedBy={sortedBy}

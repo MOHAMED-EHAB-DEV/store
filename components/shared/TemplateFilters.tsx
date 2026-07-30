@@ -33,8 +33,7 @@ export interface TemplateFiltersProps {
 
   minPrice: number;
   maxPrice: number;
-  onMinPriceChange: (val: number) => void;
-  onMaxPriceChange: (val: number) => void;
+  onPriceChange: (min: number, max: number) => void;
 
   minRating: number;
   onMinRatingChange: (val: number) => void;
@@ -52,11 +51,11 @@ export interface TemplateFiltersProps {
 /* ─── Constants ─────────────────────────────────────────────── */
 
 const SORT_OPTIONS: { value: SortValue; label: string; icon: string }[] = [
-  { value: "popular",   label: "Most Popular",   icon: "🔥" },
-  { value: "recent",    label: "Newest",          icon: "🆕" },
-  { value: "rating",    label: "Highest Rating",  icon: "⭐" },
-  { value: "price",     label: "Price",           icon: "💲" },
-  { value: "downloads", label: "Most Downloads",  icon: "⬇️" },
+  { value: "popular", label: "Most Popular", icon: "🔥" },
+  { value: "recent", label: "Newest", icon: "🆕" },
+  { value: "rating", label: "Highest Rating", icon: "⭐" },
+  { value: "price", label: "Price", icon: "💲" },
+  { value: "downloads", label: "Most Downloads", icon: "⬇️" },
 ];
 
 /* ─── Sub-components ─────────────────────────────────────────── */
@@ -69,7 +68,11 @@ const FilterLabel = ({ children }: { children: React.ReactNode }) => (
 );
 
 /** Inline X badge that clears a specific filter on click */
-const ClearBadge = ({ onClick }: { onClick: (e: React.MouseEvent) => void }) => (
+const ClearBadge = ({
+  onClick,
+}: {
+  onClick: (e: React.MouseEvent) => void;
+}) => (
   <span
     role="button"
     tabIndex={0}
@@ -106,8 +109,13 @@ const CategoriesFilter = ({
                 <ClearBadge
                   onClick={(e) => {
                     e.stopPropagation();
-                    onCategoriesChange(categories.map((c) => ({ ...c, selected: false })));
-                    sendGTMEvent({ event: "filter_clear", filter_type: "category" });
+                    onCategoriesChange(
+                      categories.map((c) => ({ ...c, selected: false })),
+                    );
+                    sendGTMEvent({
+                      event: "filter_clear",
+                      filter_type: "category",
+                    });
                   }}
                 />
               )}
@@ -144,7 +152,9 @@ const CategoriesFilter = ({
                 )}
               >
                 <span className="truncate">{cat.name}</span>
-                {cat.selected && <Check className="w-4 h-4 text-white shrink-0 ms-auto" />}
+                {cat.selected && (
+                  <Check className="w-4 h-4 text-white shrink-0 ms-auto" />
+                )}
               </div>
             ))}
           </div>
@@ -158,36 +168,35 @@ const CategoriesFilter = ({
 const PriceFilter = ({
   minPrice,
   maxPrice,
-  onMinPriceChange,
-  onMaxPriceChange,
-}: Pick<TemplateFiltersProps, "minPrice" | "maxPrice" | "onMinPriceChange" | "onMaxPriceChange">) => {
+  onPriceChange,
+}: Pick<TemplateFiltersProps, "minPrice" | "maxPrice" | "onPriceChange">) => {
   const hasPrice = minPrice > 0 || maxPrice > 0;
+  const [data, setData] = useState({
+    min: minPrice,
+    max: maxPrice,
+  });
+  const [open, setOpen] = useState(false);
 
-  const handleChange = (type: "min" | "max", raw: string) => {
-    let num = Number(raw);
-    if (isNaN(num) || num < 0) num = 0;
-
-    if (type === "min") {
-      if (num > maxPrice && maxPrice !== 0)
-        return sonnerToast.error("Min. Price must be less than Max. Price");
-      onMinPriceChange(num);
-    } else {
-      if (num < minPrice && num !== 0)
-        return sonnerToast.error("Max. Price must be more than Min. Price");
-      onMaxPriceChange(num);
-    }
+  const handleChange = (data: any) => {
+    let min = Number(data?.min) || 0;
+    let max = Number(data?.max) || 0;
+    if (isNaN(min) || min < 0) min = 0;
+    if (isNaN(max) || max < 0) max = 0;
+    if (min > max && max !== 0)
+      return sonnerToast.error("Min. Price must be less than Max. Price");
+    onPriceChange(min, max);
+    setOpen(false);
   };
 
   const clearPrice = () => {
-    onMinPriceChange(0);
-    onMaxPriceChange(0);
+    onPriceChange(0, 0);
     sendGTMEvent({ event: "filter_clear", filter_type: "price" });
   };
 
   return (
     <div className="flex flex-col">
       <FilterLabel>Price Range</FilterLabel>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -200,7 +209,12 @@ const PriceFilter = ({
             </span>
             <div className="flex items-center gap-1 shrink-0">
               {hasPrice && (
-                <ClearBadge onClick={(e) => { e.stopPropagation(); clearPrice(); }} />
+                <ClearBadge
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    clearPrice();
+                  }}
+                />
               )}
               <ChevronDown className="w-3.5 h-3.5 text-white/50" />
             </div>
@@ -209,26 +223,46 @@ const PriceFilter = ({
         <PopoverContent className="w-72 p-4 bg-[#18181b] border-white/10 rounded-2xl">
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
-              <span className="text-white/80 text-sm font-medium">Price Range</span>
-              <button
-                type="button"
-                onClick={clearPrice}
-                className="text-xs text-white/40 hover:text-white/70 transition-colors"
-              >
-                Reset
-              </button>
+              <span className="text-white/80 text-sm font-medium">
+                Price Range
+              </span>
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  type="button"
+                  onClick={() => setData({ min: 0, max: 0 })}
+                  size="sm"
+                  className="bg-transparent hover:bg-white/10 text-white/40 hover:text-white/70 transition-colors"
+                >
+                  Reset
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => handleChange(data)}
+                  className="transition-colors"
+                  size="sm"
+                  variant="info"
+                >
+                  Apply
+                </Button>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex-1">
                 <Input
                   label="Min ($)"
                   type="number"
-                  value={minPrice || ""}
-                  onChange={(e) => handleChange("min", e.target.value)}
+                  value={data.min}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      min: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                   classNames={{
                     label: "text-xs text-white/50 uppercase tracking-wider",
-                    inputWrapper: "bg-white/5 border-white/10 text-white focus-within:ring-[var(--gold,#c9a84c)]",
+                    inputWrapper:
+                      "bg-white/5 border-white/10 text-white focus-within:ring-[var(--gold,#c9a84c)]",
                   }}
                 />
               </div>
@@ -237,12 +271,18 @@ const PriceFilter = ({
                 <Input
                   label="Max ($)"
                   type="number"
-                  value={maxPrice || ""}
-                  onChange={(e) => handleChange("max", e.target.value)}
+                  value={data.max}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      max: Number(e.target.value),
+                    }))
+                  }
                   placeholder="Any"
                   classNames={{
                     label: "text-xs text-white/50 uppercase tracking-wider",
-                    inputWrapper: "bg-white/5 border-white/10 text-white focus-within:ring-[var(--gold,#c9a84c)]",
+                    inputWrapper:
+                      "bg-white/5 border-white/10 text-white focus-within:ring-[var(--gold,#c9a84c)]",
                   }}
                 />
               </div>
@@ -264,7 +304,10 @@ const RatingFilter = ({
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={cn("w-3 h-3", i < count ? "text-yellow-400 fill-yellow-400" : "text-white/20")}
+          className={cn(
+            "w-3 h-3",
+            i < count ? "text-yellow-400 fill-yellow-400" : "text-white/20",
+          )}
         />
       ))}
     </div>
@@ -295,7 +338,10 @@ const RatingFilter = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     onMinRatingChange(0);
-                    sendGTMEvent({ event: "filter_clear", filter_type: "rating" });
+                    sendGTMEvent({
+                      event: "filter_clear",
+                      filter_type: "rating",
+                    });
                   }}
                 />
               )}
@@ -310,7 +356,11 @@ const RatingFilter = ({
               type="button"
               onClick={() => {
                 onMinRatingChange(0);
-                sendGTMEvent({ event: "filter_change", filter_type: "rating", filter_value: 0 });
+                sendGTMEvent({
+                  event: "filter_change",
+                  filter_type: "rating",
+                  filter_value: 0,
+                });
               }}
               className={cn(
                 "flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors",
@@ -320,7 +370,9 @@ const RatingFilter = ({
               )}
             >
               All Ratings
-              {minRating === 0 && <Check className="w-4 h-4 text-white shrink-0 ms-auto" />}
+              {minRating === 0 && (
+                <Check className="w-4 h-4 text-white shrink-0 ms-auto" />
+              )}
             </button>
 
             {/* 4★, 3★, 2★, 1★ & up */}
@@ -330,7 +382,11 @@ const RatingFilter = ({
                 type="button"
                 onClick={() => {
                   onMinRatingChange(rating);
-                  sendGTMEvent({ event: "filter_change", filter_type: "rating", filter_value: rating });
+                  sendGTMEvent({
+                    event: "filter_change",
+                    filter_type: "rating",
+                    filter_value: rating,
+                  });
                 }}
                 className={cn(
                   "flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors",
@@ -343,7 +399,9 @@ const RatingFilter = ({
                   <StarRow count={rating} />
                   <span>& up</span>
                 </div>
-                {minRating === rating && <Check className="w-4 h-4 text-white shrink-0 ms-auto" />}
+                {minRating === rating && (
+                  <Check className="w-4 h-4 text-white shrink-0 ms-auto" />
+                )}
               </button>
             ))}
           </div>
@@ -383,7 +441,10 @@ const SortFilter = ({
                   key={option.value}
                   onSelect={() => {
                     onSortChange(option.value);
-                    sendGTMEvent({ event: "sort_change", sort_value: option.value });
+                    sendGTMEvent({
+                      event: "sort_change",
+                      sort_value: option.value,
+                    });
                   }}
                   className="cursor-pointer flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl text-white/80 aria-selected:bg-white/10 aria-selected:text-white"
                 >
@@ -413,9 +474,13 @@ const FilterGrid = ({
   hideCategoryFilter,
   categories,
   onCategoriesChange,
-  minPrice, maxPrice, onMinPriceChange, onMaxPriceChange,
-  minRating, onMinRatingChange,
-  sortedBy, onSortChange,
+  minPrice,
+  maxPrice,
+  onPriceChange,
+  minRating,
+  onMinRatingChange,
+  sortedBy,
+  onSortChange,
 }: Omit<TemplateFiltersProps, "mobileOpen" | "onMobileOpenChange">) => {
   return (
     <div className="flex flex-col gap-4">
@@ -426,15 +491,20 @@ const FilterGrid = ({
         )}
       >
         {!hideCategoryFilter && (
-          <CategoriesFilter categories={categories} onCategoriesChange={onCategoriesChange} />
+          <CategoriesFilter
+            categories={categories}
+            onCategoriesChange={onCategoriesChange}
+          />
         )}
         <PriceFilter
           minPrice={minPrice}
           maxPrice={maxPrice}
-          onMinPriceChange={onMinPriceChange}
-          onMaxPriceChange={onMaxPriceChange}
+          onPriceChange={onPriceChange}
         />
-        <RatingFilter minRating={minRating} onMinRatingChange={onMinRatingChange} />
+        <RatingFilter
+          minRating={minRating}
+          onMinRatingChange={onMinRatingChange}
+        />
         <SortFilter sortedBy={sortedBy} onSortChange={onSortChange} />
       </div>
     </div>
@@ -468,7 +538,9 @@ const TemplateFilters = (props: TemplateFiltersProps) => {
       <div
         className={cn(
           "lg:hidden overflow-hidden transition-all duration-300 ease-in-out",
-          mobileOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none",
+          mobileOpen
+            ? "max-h-[600px] opacity-100"
+            : "max-h-0 opacity-0 pointer-events-none",
         )}
       >
         <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm p-5">
@@ -510,8 +582,7 @@ const TemplateFilters = (props: TemplateFiltersProps) => {
               {props.maxPrice > 0 ? `$${props.maxPrice}` : "Any"}
               <button
                 onClick={() => {
-                  props.onMinPriceChange(0);
-                  props.onMaxPriceChange(0);
+                  props.onPriceChange(0, 0);
                 }}
                 className="hover:text-white transition-colors"
               >

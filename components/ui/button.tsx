@@ -34,10 +34,15 @@ const buttonVariants = cva(
         "gradient-info": "bg-[image:var(--gradient-info)] text-white hover:opacity-90 transition-opacity focus-visible:ring-cyan-500/20",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        default: "h-9 sm:h-10 px-3.5 sm:px-4 py-2 text-xs sm:text-sm gap-2 has-[>svg]:px-3",
+        xs: "h-7 text-xs px-2.5 rounded-md gap-1 [&_svg:not([class*='size-'])]:size-3.5 has-[>svg]:px-2",
+        sm: "h-8 sm:h-9 text-xs sm:text-sm rounded-md gap-1.5 px-3 [&_svg:not([class*='size-'])]:size-3.5 sm:[&_svg:not([class*='size-'])]:size-4 has-[>svg]:px-2.5",
+        lg: "h-10 sm:h-11 text-sm sm:text-base rounded-md px-5 sm:px-6 gap-2.5 [&_svg:not([class*='size-'])]:size-4 sm:[&_svg:not([class*='size-'])]:size-5 has-[>svg]:px-4",
+        xl: "h-11 sm:h-12 text-base sm:text-lg rounded-lg px-6 sm:px-8 gap-3 [&_svg:not([class*='size-'])]:size-5 sm:[&_svg:not([class*='size-'])]:size-6 has-[>svg]:px-5",
+        icon: "size-9 sm:size-10 rounded-md",
+        "icon-xs": "size-7 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-sm": "size-8 sm:size-9 rounded-md [&_svg:not([class*='size-'])]:size-3.5 sm:[&_svg:not([class*='size-'])]:size-4",
+        "icon-lg": "size-10 sm:size-11 rounded-md [&_svg:not([class*='size-'])]:size-5",
       },
     },
     defaultVariants: {
@@ -49,7 +54,7 @@ const buttonVariants = cva(
 
 type ButtonVariants = {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "gold" | "glass" | "success" | "warning" | "info" | "dark" | "accent" | "gradient-primary" | "gradient-secondary" | "gradient-success" | "gradient-warning" | "gradient-danger" | "gradient-info";
-  size?: "default" | "sm" | "lg" | "icon";
+  size?: "default" | "xs" | "sm" | "lg" | "xl" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
 };
 
 const buttonVariantsFunction = buttonVariants as unknown as (props?: ButtonVariants & { className?: string }) => string;

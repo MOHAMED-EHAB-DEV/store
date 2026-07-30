@@ -72,30 +72,11 @@ export default function ConciergeWidget() {
     }
     setChatId(storedChatId);
 
-    let storedVisitorId = localStorage.getItem("mhd_visitor_id");
-    if (!storedVisitorId) {
-      storedVisitorId = `visitor_${Math.random().toString(36).substring(2, 11)}`;
-      localStorage.setItem("mhd_visitor_id", storedVisitorId);
+    const storedVisitorId = localStorage.getItem("_vid");
+    if (storedVisitorId) {
+      setVisitorId(storedVisitorId);
     }
-    setVisitorId(storedVisitorId);
   }, []);
-
-  // Load chat history on mount
-  useEffect(() => {
-    if (!chatId) return;
-    const fetchHistory = async () => {
-      try {
-        const res = await fetch(`/api/chat?chatId=${chatId}`);
-        const data = await res.json();
-        if (data.success && data.messages && data.messages.length > 0) {
-          setMessages(data.messages);
-        }
-      } catch (e) {
-        // Safe fail
-      }
-    };
-    fetchHistory();
-  }, [chatId]);
 
   // Auto scroll to bottom
   useEffect(() => {

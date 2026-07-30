@@ -1,37 +1,45 @@
 "use client";
 
+import { useRef } from "react";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { ArrowRight } from "@/components/ui/svgs/icons/ArrowRight";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-// import TrustSignals from '@/components/ui/TrustSignals';
 import { sendGTMEvent } from "@next/third-parties/google";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { SplitText } from "gsap/SplitText";
 
 const Hero = () => {
-  useGSAP(() => {
-    const splitHeader = SplitText.create(".header", {
-      type: "words",
-      mask: "words",
-    });
+  const containerRef = useRef<HTMLDivElement>(null);
 
-    gsap.set(".header", { opacity: 1 });
+  useGSAP(
+    () => {
+      if (!containerRef.current) return;
+      const words = containerRef.current.querySelectorAll(".hero-word");
 
-    gsap.from(splitHeader.words, {
-      duration: 1.5,
-      y: 80,
-      autoAlpha: 0,
-      opacity: 0,
-      stagger: 0.08,
-      filter: "blur(6px)",
-      ease: "power2.out",
-    });
-  }, []);
+      gsap.fromTo(
+        words,
+        {
+          opacity: 0,
+          y: 40,
+          filter: "blur(6px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1,
+          stagger: 0.05,
+          ease: "power2.out",
+        }
+      );
+    },
+    { scope: containerRef }
+  );
 
   return (
     <section
+      ref={containerRef}
       className="relative flex items-center justify-center gap-3 min-h-screen pb-4 pt-24 md:pt-36 h-full w-full"
       aria-labelledby="hero-title"
     >
@@ -46,27 +54,45 @@ const Hero = () => {
         </Badge>
 
         <div className="flex flex-col gap-4 items-center justify-center w-full">
-          <h1 id="hero-title" className="font-bold header text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-white leading-none tracking-tighter px-2 sm:px-0">
-            Premium Templates to{" "}
-            <span className="relative">
+          <h1 id="hero-title" className="font-bold text-3xl md:text-5xl lg:text-7xl xl:text-8xl w-full md:w-3/4 text-center font-paras text-white leading-none tracking-tighter px-2 sm:px-0">
+            <span className="hero-word inline-block">Premium</span>{" "}
+            <span className="hero-word inline-block">Templates</span>{" "}
+            <span className="hero-word inline-block">to</span>{" "}
+            <span className="hero-word inline-block relative">
               Elevate
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
               />
             </span>{" "}
-            Your Projects
+            <span className="hero-word inline-block">Your</span>{" "}
+            <span className="hero-word inline-block">Projects</span>
           </h1>
-          <p
-            className="text-base md:text-lg header lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0"
-          >
-            Smart templates. Clean design. Built to help you move fast and look
-            great doing it.
-            {/* <span className="block mt-3 text-base md:text-lg text-secondary font-normal">
-              Join 10,000+ developers who trust our templates
-            </span> */}
+          <p className="text-base md:text-lg lg:text-2xl w-full md:w-1/2 lg:w-2/5 font-medium text-center font-paras text-medium-contrast leading-relaxed px-4 sm:px-2 md:px-0">
+            <span className="hero-word inline-block">Smart</span>{" "}
+            <span className="hero-word inline-block">templates.</span>{" "}
+            <span className="hero-word inline-block">Clean</span>{" "}
+            <span className="hero-word inline-block">design.</span>{" "}
+            <span className="hero-word inline-block">Built</span>{" "}
+            <span className="hero-word inline-block">to</span>{" "}
+            <span className="hero-word inline-block">help</span>{" "}
+            <span className="hero-word inline-block">you</span>{" "}
+            <span className="hero-word inline-block">move</span>{" "}
+            <span className="hero-word inline-block">fast</span>{" "}
+            <span className="hero-word inline-block">and</span>{" "}
+            <span className="hero-word inline-block">look</span>{" "}
+            <span className="hero-word inline-block">great</span>{" "}
+            <span className="hero-word inline-block">doing</span>{" "}
+            <span className="hero-word inline-block">it.</span>
             <span className="block mt-2 text-purple-300 text-base md:text-lg">
-              Need it further customized? I build that too.
+              <span className="hero-word inline-block">Need</span>{" "}
+              <span className="hero-word inline-block">it</span>{" "}
+              <span className="hero-word inline-block">further</span>{" "}
+              <span className="hero-word inline-block">customized?</span>{" "}
+              <span className="hero-word inline-block">I</span>{" "}
+              <span className="hero-word inline-block">build</span>{" "}
+              <span className="hero-word inline-block">that</span>{" "}
+              <span className="hero-word inline-block">too.</span>
             </span>
           </p>
         </div>
@@ -95,11 +121,6 @@ const Hero = () => {
             </span>
           </Link>
         </div>
-
-        {/* Trust Signals */}
-        {/* <div className="mt-4 w-full max-w-4xl">
-                    <TrustSignals variant="horizontal" className="justify-center"/>
-                </div> */}
       </div>
     </section>
   );

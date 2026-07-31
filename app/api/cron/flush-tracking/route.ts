@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Visitor from "@/lib/models/Visitor";
 import { redis } from "@/lib/redis";

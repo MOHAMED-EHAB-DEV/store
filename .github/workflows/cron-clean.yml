@@ -1,0 +1,17 @@
+name: Clean Stale Analytics Data
+
+on:
+  schedule:
+    # Runs at 00:00 on the 1st of every month
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  clean-analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean Stale Analytics Data
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.CRON_URL }}/api/cron/clean-analytics"

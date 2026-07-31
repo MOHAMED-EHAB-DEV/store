@@ -29,6 +29,7 @@ import { Download as DownloadIcon } from "@/components/ui/svgs/icons/Download";
 import { AlertCircle as AlertCircleIcon } from "@/components/ui/svgs/icons/AlertCircle";
 import { Analytics as AnalyticsIcon } from "@/components/ui/svgs/icons/Analytics";
 import { Zap as ZapIcon } from "@/components/ui/svgs/icons/Zap";
+import { Activity as ActivityIcon } from "@/components/ui/svgs/icons/Activity";
 import { Chat as ChatIcon } from "@/components/ui/svgs/icons/Chat";
 
 export const DashboardSidebarLinks = [
@@ -51,4 +52,5 @@ export const AdminSidebarLinks = [
   { Icon: ChatIcon, text: "AI Messages", link: "/admin/messages/ai" },
   { Icon: HeadsetIcon, text: "Support", link: "/admin/support" },
   { Icon: ZapIcon, text: "Performance", link: "/admin/performance" },
+  { Icon: ActivityIcon, text: "API Metrics", link: "/admin/api-metrics" },
 ] as const;

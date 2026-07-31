@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/database";
-import Visitor from "@/lib/models/Visitor";
+import { cookies } from "next/headers";
 import crypto from "crypto";
 import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
-import { authenticateUser } from "@/lib/auth";
+import { verifyToken } from "@/lib/auth";
+import { redis } from "@/lib/redis";
 
 async function track(req: NextRequest) {
   try {
@@ -17,50 +17,42 @@ async function track(req: NextRequest) {
       });
     }
 
-    // Fire-and-forget DB update – keeps response ultra fast
-    const dbWork = (async () => {
-      await connectToDatabase();
-      const user = await authenticateUser(true, true, false, true).catch(() => null);
-
-      const userAgent = req.headers.get("user-agent") || "unknown";
-      const ip =
-        req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
-      const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
-
-      const updateData: any = {
-        $set: { lastVisit: new Date(), userAgent, ipHash },
-        $inc: { visitCount: 1 },
-        $push: {
-          pathHistory: {
-            $each: [{ path: path ?? "/", timestamp: new Date() }],
-            $slice: -20, // Keep last 20 page views per visitor
-          },
-        },
-      };
-
-      if (user && user._id) {
-        updateData.$set.userId = user._id;
+    // Extract user ID from JWT cookie without hitting DB
+    let userId: string | undefined;
+    try {
+      const cookieStore = await cookies();
+      const token = cookieStore.get("token")?.value;
+      if (token) {
+        const decoded = await verifyToken(token);
+        if (decoded?.userId) userId = decoded.userId;
       }
+    } catch {
+      // Ignore token verification errors
+    }
 
-      // Upsert: creates or updates in a single atomic DB call
-      await Visitor.findOneAndUpdate(
-        { visitorId },
-        updateData,
-        { upsert: true },
-      );
-    })();
+    const userAgent = req.headers.get("user-agent") || "unknown";
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
+    const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
 
-    // Don't await – respond immediately and let DB write happen in background
-    dbWork.catch((err) => console.error("[Analytics] DB error:", err));
+    // Push tracking event to Redis buffer for QStash batch processing
+    await redis.rpush(
+      "analytics:track:buffer",
+      JSON.stringify({
+        visitorId,
+        path: path ?? "/",
+        userAgent,
+        ipHash,
+        userId,
+        timestamp: new Date().toISOString(),
+      })
+    );
 
     return createAPIResponse({});
   } catch (error) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("[Analytics] track error:", error);
-    // Always return 200 – analytics must NEVER break the user experience
     return NextResponse.json({ success: false });
   }
 }
 
 export const POST = withAPIMiddleware(track);
-

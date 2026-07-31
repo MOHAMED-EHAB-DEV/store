@@ -99,7 +99,7 @@ const Sidebar = ({ user }: { user: IUser }) => {
             <h1 className="text-white font-bold text-2xl">Admin</h1>
           </div>
 
-          <div className="flex flex-col gap-1 md:mt-14 mt-10">
+          <div className="flex flex-col gap-1 md:mt-14 mt-10 overflow-x-hidden">
             {AdminSidebarLinks.map(({ Icon, text, link }, idx) => (
               <Button
                 key={idx}

@@ -1,14 +1,35 @@
-name: Monthly Cron Job
+name: Scheduled Cron Jobs
 
 on:
   schedule:
-    - cron: '0 12 1,15,30 * *' # Runs at 12:00 UTC on the 1st of every month
-  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+    # Runs every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
-  cron:
+  run-crons:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Cron API
+      - name: Flush Visitor Tracking Buffer
         run: |
-          curl -X POST "${{ secrets.CRON_URL }}?secret=${{ secrets.CRON_SECRET }}"
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.CRON_URL }}/api/cron/flush-tracking"
+
+      - name: Flush Web Vitals Buffer
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.CRON_URL }}/api/cron/flush-vitals"
+
+      - name: Flush API Metrics Buffer
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.CRON_URL }}/api/cron/flush-metrics"
+
+      - name: Clean Stale Analytics Data
+        run: |
+          curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.CRON_URL }}/api/cron/clean-analytics"

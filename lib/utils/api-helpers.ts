@@ -3,127 +3,82 @@ import { headers } from "next/headers";
 import ErrorLog from "../models/ErrorLog";
 import { authenticateUser } from "@/lib/auth";
 import { connectToDatabase } from "../database";
+import { redis } from "@/lib/redis";
 
-// Response caching utility
-interface CacheEntry {
-  data: any;
-  timestamp: number;
-  ttl: number;
-}
-
+// Response caching utility backed by Upstash Redis
 class APICache {
-  private static cache = new Map<string, CacheEntry>();
-  private static readonly maxSize = 1000;
-  private static readonly defaultTTL = 5 * 60 * 1000; // 5 minutes
+  private static readonly defaultTTL = 5 * 60 * 1000; // 5 minutes in ms
 
-  static get(key: string): any | null {
-    const entry = this.cache.get(key);
-    if (!entry) return null;
-
-    if (Date.now() - entry.timestamp > entry.ttl) {
-      this.cache.delete(key);
+  static async get(key: string): Promise<any | null> {
+    try {
+      const val = await redis.get("cache:" + key);
+      return val ?? null;
+    } catch (error) {
       return null;
     }
-
-    return entry.data;
   }
 
-  static set(key: string, data: any, ttl: number = this.defaultTTL): void {
-    // LRU behavior
-    if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey as string);
+  static async set(key: string, data: any, ttl: number = this.defaultTTL): Promise<void> {
+    try {
+      const ttlSeconds = Math.max(1, Math.floor(ttl / 1000));
+      await redis.set("cache:" + key, data, { ex: ttlSeconds });
+    } catch (error) {
+      // Silent failure fallback
     }
-
-    this.cache.set(key, {
-      data,
-      timestamp: Date.now(),
-      ttl,
-    });
   }
 
-  static invalidate(pattern?: string): void {
-    if (!pattern) {
-      this.cache.clear();
-      return;
-    }
-
-    const regex = new RegExp(pattern);
-    for (const [key] of this.cache.entries()) {
-      if (regex.test(key)) {
-        this.cache.delete(key);
+  static async invalidate(pattern?: string): Promise<void> {
+    try {
+      if (!pattern) {
+        const keys = await redis.keys("cache:*");
+        if (keys.length > 0) {
+          await redis.del(...keys);
+        }
+        return;
       }
-    }
-  }
-
-  static getStats() {
-    const now = Date.now();
-    let valid = 0;
-    let expired = 0;
-
-    for (const entry of this.cache.values()) {
-      if (now - entry.timestamp <= entry.ttl) {
-        valid++;
-      } else {
-        expired++;
+      const keys = await redis.keys("cache:*" + pattern + "*");
+      if (keys.length > 0) {
+        await redis.del(...keys);
       }
+    } catch (error) {
+      // Silent failure
     }
-
-    return { total: this.cache.size, valid, expired };
   }
 }
 
-// Rate limiting utility
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
-
+// Rate limiting utility backed by Upstash Redis
 class RateLimiter {
-  private static attempts = new Map<string, RateLimitEntry>();
-  private static readonly cleanupInterval = setInterval(() => {
-    const now = Date.now();
-    for (const [key, entry] of this.attempts.entries()) {
-      if (now > entry.resetTime) {
-        this.attempts.delete(key);
-      }
-    }
-  }, 60 * 1000); // Cleanup every minute
-
-  static check(
+  static async check(
     identifier: string,
     maxRequests: number = 100,
     windowMs: number = 15 * 60 * 1000, // 15 minutes
-  ): { allowed: boolean; remaining: number; resetTime: number } {
+  ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
     const now = Date.now();
-    const entry = this.attempts.get(identifier);
 
-    if (!entry || now > entry.resetTime) {
-      this.attempts.set(identifier, {
-        count: 1,
-        resetTime: now + windowMs,
-      });
-      return {
-        allowed: true,
-        remaining: maxRequests - 1,
-        resetTime: now + windowMs,
-      };
+    // Bypass rate limiting in development mode
+    if (process.env.NODE_ENV === "development") {
+      return { allowed: true, remaining: maxRequests, resetTime: now + windowMs };
     }
 
-    if (entry.count >= maxRequests) {
-      return {
-        allowed: false,
-        remaining: 0,
-        resetTime: entry.resetTime,
-      };
-    }
+    const key = `rl:${identifier}`;
+    const windowSec = Math.max(1, Math.floor(windowMs / 1000));
 
-    entry.count++;
-    return {
-      allowed: true,
-      remaining: maxRequests - entry.count,
-      resetTime: entry.resetTime,
-    };
+    try {
+      const count = await redis.incr(key);
+      if (count === 1) {
+        await redis.expire(key, windowSec);
+      }
+
+      const pttl = await redis.pttl(key);
+      const resetTime = now + (pttl > 0 ? pttl : windowMs);
+      const allowed = count <= maxRequests;
+      const remaining = Math.max(0, maxRequests - count);
+
+      return { allowed, remaining, resetTime };
+    } catch (error) {
+      // Fallback: allow request if Redis is temporarily unreachable
+      return { allowed: true, remaining: maxRequests - 1, resetTime: now + windowMs };
+    }
   }
 }
 
@@ -164,7 +119,7 @@ export function validateSort(
   };
 }
 
-// Performance monitoring utility
+// Performance monitoring utility buffered in Redis
 interface PerformanceMetrics {
   route: string;
   method: string;
@@ -176,9 +131,6 @@ interface PerformanceMetrics {
 }
 
 class PerformanceMonitor {
-  private static metrics: PerformanceMetrics[] = [];
-  private static readonly maxMetrics = 1000;
-
   static startTimer(route: string, method: string) {
     return {
       route,
@@ -192,21 +144,23 @@ class PerformanceMonitor {
     statusCode: number,
     options: { cacheHit?: boolean; rateLimited?: boolean } = {},
   ) {
-    const duration = Date.now() - timer.startTime;
+    // Bypass performance monitoring in development mode
+    if (process.env.NODE_ENV === "development") {
+      return;
+    }
 
-    this.metrics.push({
+    const duration = Date.now() - timer.startTime;
+    const metric: PerformanceMetrics = {
       route: timer.route,
       method: timer.method,
       duration,
       statusCode,
       timestamp: Date.now(),
       ...options,
-    });
+    };
 
-    // Keep only recent metrics
-    if (this.metrics.length > this.maxMetrics) {
-      this.metrics = this.metrics.slice(-this.maxMetrics);
-    }
+    // Buffer to Redis asynchronously for QStash batch processing
+    redis.rpush("metrics:api:buffer", JSON.stringify(metric)).catch(() => {});
 
     // Log slow requests
     if (duration > 1000) {
@@ -214,33 +168,6 @@ class PerformanceMonitor {
         `🐌 Slow API request: ${timer.method} ${timer.route} - ${duration}ms`,
       );
     }
-  }
-
-  static getStats(minutes: number = 5) {
-    const cutoff = Date.now() - minutes * 60 * 1000;
-    const recentMetrics = this.metrics.filter((m) => m.timestamp > cutoff);
-
-    if (recentMetrics.length === 0) {
-      return { totalRequests: 0, averageResponseTime: 0, errorRate: 0 };
-    }
-
-    const totalRequests = recentMetrics.length;
-    const averageResponseTime =
-      recentMetrics.reduce((sum, m) => sum + m.duration, 0) / totalRequests;
-    const errorRequests = recentMetrics.filter(
-      (m) => m.statusCode >= 400,
-    ).length;
-    const errorRate = (errorRequests / totalRequests) * 100;
-    const cacheHitRate =
-      (recentMetrics.filter((m) => m.cacheHit).length / totalRequests) * 100;
-
-    return {
-      totalRequests,
-      averageResponseTime: Math.round(averageResponseTime),
-      errorRate: Math.round(errorRate * 100) / 100,
-      cacheHitRate: Math.round(cacheHitRate * 100) / 100,
-      slowRequests: recentMetrics.filter((m) => m.duration > 1000).length,
-    };
   }
 }
 
@@ -324,7 +251,6 @@ export function createErrorResponse(
       await errorLog.save();
     } catch (logErr) {
       // Silent Failure
-      // console.error("Critical error in logging logic:", logErr);
     }
   })();
 
@@ -366,7 +292,7 @@ export function withAPIMiddleware(
           req.headers.get("x-forwarded-for") ||
           req.headers.get("x-real-ip") ||
           "unknown";
-        const rateLimitResult = RateLimiter.check(
+        const rateLimitResult = await RateLimiter.check(
           clientIP,
           options.rateLimit.maxRequests,
           options.rateLimit.windowMs,
@@ -384,16 +310,16 @@ export function withAPIMiddleware(
         }
 
         // Add rate limit headers
-        const headers = new Headers();
-        headers.set(
+        const responseHeaders = new Headers();
+        responseHeaders.set(
           "X-RateLimit-Limit",
           options.rateLimit.maxRequests.toString(),
         );
-        headers.set(
+        responseHeaders.set(
           "X-RateLimit-Remaining",
           rateLimitResult.remaining.toString(),
         );
-        headers.set("X-RateLimit-Reset", rateLimitResult.resetTime.toString());
+        responseHeaders.set("X-RateLimit-Reset", rateLimitResult.resetTime.toString());
       }
 
       // Caching for GET requests
@@ -402,7 +328,7 @@ export function withAPIMiddleware(
           ? options.cache.keyGenerator(req)
           : req.nextUrl.pathname + req.nextUrl.search;
 
-        const cachedData = APICache.get(cacheKey);
+        const cachedData = await APICache.get(cacheKey);
         if (cachedData) {
           cacheHit = true;
           const response = NextResponse.json(cachedData);
@@ -426,6 +352,7 @@ export function withAPIMiddleware(
           return response;
         }
       }
+
       // Execute handler
       const response = await handler(req, context);
 
@@ -437,7 +364,7 @@ export function withAPIMiddleware(
 
         try {
           const responseData = await response.clone().json();
-          APICache.set(cacheKey, responseData, options.cache.ttl);
+          await APICache.set(cacheKey, responseData, options.cache.ttl);
           response.headers.set("X-Cache", "MISS");
           response.headers.set(
             "Cache-Control",
@@ -445,7 +372,6 @@ export function withAPIMiddleware(
           );
         } catch (error) {
           // Silent Failure
-          // console.warn("Failed to cache response:", error);
         }
       }
 
@@ -461,7 +387,6 @@ export function withAPIMiddleware(
 
       return response;
     } catch (error) {
-      // console.error("API middleware error:", error);
       const response = createErrorResponse("Internal server error", 500);
       PerformanceMonitor.endTimer(timer, 500);
       return response;

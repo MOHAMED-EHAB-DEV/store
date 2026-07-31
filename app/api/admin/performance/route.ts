@@ -35,7 +35,6 @@ async function getPerformanceStats(req: NextRequest) {
     ] = await Promise.all([
       // 1. Global average for each metric
       Analytics.aggregate([
-        { $match: { createdAt: { $gte: last30d } } },
         { $unwind: "$pages" },
         { $unwind: "$pages.metrics" },
         {
@@ -49,7 +48,6 @@ async function getPerformanceStats(req: NextRequest) {
 
       // 2. Rating distributions (good vs poor)
       Analytics.aggregate([
-        { $match: { createdAt: { $gte: last30d } } },
         { $unwind: "$pages" },
         { $unwind: "$pages.metrics" },
         {
@@ -75,15 +73,19 @@ async function getPerformanceStats(req: NextRequest) {
         }
       ]),
 
-      // 3. Daily trends (for charts)
+      // 3. Daily trends (grouping by date of metric update)
       Analytics.aggregate([
-        { $match: { createdAt: { $gte: last30d } } },
         { $unwind: "$pages" },
         { $unwind: "$pages.metrics" },
         {
           $group: {
             _id: {
-              date: "$date",
+              date: {
+                $dateToString: {
+                  format: "%Y-%m-%d",
+                  date: { $ifNull: ["$pages.metrics.updatedAt", "$updatedAt"] }
+                }
+              },
               name: "$pages.metrics.name"
             },
             average: { $avg: "$pages.metrics.value" }
@@ -94,7 +96,6 @@ async function getPerformanceStats(req: NextRequest) {
 
       // 4. Slowest pages (Top 10 paths by highest LCP)
       Analytics.aggregate([
-        { $match: { createdAt: { $gte: last30d } } },
         { $unwind: "$pages" },
         { $unwind: "$pages.metrics" },
         { $match: { "pages.metrics.name": "LCP" } },
@@ -105,14 +106,13 @@ async function getPerformanceStats(req: NextRequest) {
             count: { $sum: 1 }
           }
         },
-        { $match: { count: { $gte: 2 } } }, // only pages with at least 2 visits
         { $sort: { averageLCP: -1 } },
         { $limit: 10 }
       ]),
 
       // 5. Recent sessions
       Analytics.find({})
-        .sort({ createdAt: -1 })
+        .sort({ updatedAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
@@ -123,8 +123,9 @@ async function getPerformanceStats(req: NextRequest) {
 
     // Format the daily trends into a more consumable format for the frontend chart
     const formattedTrends: Record<string, { date: string; value: number }[]> = {};
-    
+
     dailyTrends.forEach((t) => {
+      if (!t._id?.date || !t._id?.name) return;
       if (!formattedTrends[t._id.name]) {
         formattedTrends[t._id.name] = [];
       }

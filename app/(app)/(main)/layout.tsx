@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
-import GlobalLenisProvider from "@/components/home/GlobalLenisProvider";
+import MainProvider from "./MainProvider";
 
 export default function RootLayout({
   children,
@@ -9,7 +9,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <GlobalLenisProvider>
+    <MainProvider>
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
 
@@ -22,7 +22,7 @@ export default function RootLayout({
 
         <Footer />
       </div>
-    </GlobalLenisProvider>
+    </MainProvider>
   );
 }
 

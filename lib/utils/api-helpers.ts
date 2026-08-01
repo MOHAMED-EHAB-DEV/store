@@ -224,8 +224,8 @@ class PerformanceMonitor {
         const newEntry = {
           duration,
           statusCode,
-          cacheHit: !!options.cacheHit,
-          rateLimited: !!options.rateLimited,
+          cacheHit: options.cacheHit ?? false,
+          rateLimited: options.rateLimited ?? false,
           timestamp: new Date(),
         };
 

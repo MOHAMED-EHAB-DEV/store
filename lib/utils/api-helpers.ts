@@ -82,14 +82,6 @@ interface RateLimitEntry {
 
 class RateLimiter {
   private static attempts = new Map<string, RateLimitEntry>();
-  private static readonly cleanupInterval = setInterval(() => {
-    const now = Date.now();
-    for (const [key, entry] of this.attempts.entries()) {
-      if (now > entry.resetTime) {
-        this.attempts.delete(key);
-      }
-    }
-  }, 60 * 1000); // Cleanup every minute
 
   static check(
     identifier: string,
@@ -97,6 +89,11 @@ class RateLimiter {
     windowMs: number = 15 * 60 * 1000, // 15 minutes
   ): { allowed: boolean; remaining: number; resetTime: number } {
     const now = Date.now();
+    if (this.attempts.size > 500) {
+      for (const [k, v] of this.attempts.entries()) {
+        if (now > v.resetTime) this.attempts.delete(k);
+      }
+    }
     const entry = this.attempts.get(identifier);
 
     if (!entry || now > entry.resetTime) {
@@ -220,7 +217,6 @@ class PerformanceMonitor {
     after(async () => {
       try {
         await connectToDatabase();
-        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const newEntry = {
           duration,
           statusCode,
@@ -229,9 +225,12 @@ class PerformanceMonitor {
           timestamp: new Date(),
         };
 
-        let doc = await APIMetrics.findOne({ route: timer.route, method: timer.method });
-        if (!doc) {
-          doc = new APIMetrics({
+        const existing = await APIMetrics.findOne({ route: timer.route, method: timer.method })
+          .select({ metrics: { $slice: -499 } })
+          .lean();
+
+        if (!existing) {
+          await APIMetrics.create({
             route: timer.route,
             method: timer.method,
             metrics: [newEntry],
@@ -242,22 +241,23 @@ class PerformanceMonitor {
             lastUpdated: new Date(),
           });
         } else {
-          const combined = [...doc.metrics, newEntry].filter(
-            (m) => new Date(m.timestamp) >= thirtyDaysAgo
+          const slicedMetrics = [...(existing.metrics || []), newEntry];
+          const sumDur = slicedMetrics.reduce((sum, m) => sum + m.duration, 0);
+          const avgDuration = Math.round(sumDur / slicedMetrics.length);
+
+          await APIMetrics.updateOne(
+            { _id: existing._id },
+            {
+              $push: { metrics: { $each: [newEntry], $slice: -500 } },
+              $inc: {
+                totalRequests: 1,
+                errorCount: statusCode >= 400 ? 1 : 0,
+                cacheHitCount: options.cacheHit ? 1 : 0,
+              },
+              $set: { avgDuration, lastUpdated: new Date() },
+            }
           );
-          const sliced = combined.slice(-500);
-          const totalReq = sliced.length;
-          const sumDur = sliced.reduce((sum, m) => sum + m.duration, 0);
-
-          doc.metrics = sliced;
-          doc.totalRequests = totalReq;
-          doc.avgDuration = totalReq > 0 ? Math.round(sumDur / totalReq) : 0;
-          doc.errorCount = sliced.filter((m) => m.statusCode >= 400).length;
-          doc.cacheHitCount = sliced.filter((m) => m.cacheHit).length;
-          doc.lastUpdated = new Date();
         }
-
-        await doc.save();
       } catch (err) {
         // Silent failure for metrics logging
       }
@@ -336,7 +336,17 @@ export function createErrorResponse(
 ): NextResponse {
   const { details, req, error, operation, visitorId } = options;
 
-  (async () => {
+  const routePath = req?.nextUrl.pathname;
+  const reqMethod = req?.method;
+  const errorMessage =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : message;
+  const errorStack = error instanceof Error ? error.stack : undefined;
+
+  after(async () => {
     try {
       const headerList = await headers();
       const userAgent = headerList?.get("user-agent") || undefined;
@@ -351,15 +361,10 @@ export function createErrorResponse(
       const user = await authenticateUser(true, true);
 
       const errorLog = new ErrorLog({
-        message:
-          error instanceof Error
-            ? error.message
-            : typeof error === "string"
-              ? error
-              : message,
-        stack: error instanceof Error ? error.stack : undefined,
-        route: req?.nextUrl.pathname,
-        method: req?.method,
+        message: errorMessage,
+        stack: errorStack,
+        route: routePath,
+        method: reqMethod,
         status: statusCode,
         operation,
         userId: user?._id || undefined,
@@ -374,7 +379,7 @@ export function createErrorResponse(
       // Silent Failure
       // console.error("Critical error in logging logic:", logErr);
     }
-  })();
+  });
 
   return NextResponse.json(
     {

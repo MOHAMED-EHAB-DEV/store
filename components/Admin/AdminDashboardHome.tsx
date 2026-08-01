@@ -1,3 +1,5 @@
+"use client";
+
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import dynamic from "next/dynamic";
@@ -9,7 +11,8 @@ import { TrendingUp } from "@/components/ui/svgs/icons/TrendingUp";
 import type { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
 
 const ChartCard = dynamic(
-  () => import("@/components/Dashboard/shared/ChartCard")
+  () => import("@/components/Dashboard/shared/ChartCard"),
+  { ssr: false }
 );
 
 interface AdminDashboardHomeProps {

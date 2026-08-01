@@ -1,12 +1,10 @@
-"use client";
-
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Logo from "@/components/ui/Logo";
 import { socialImgs } from "@/constants/assets";
 import { FooterLinks } from "@/constants/navigation";
 
-const BackToTop = dynamic(() => import("@/components/ui/BackToTop"), { ssr: false });
+const BackToTop = dynamic(() => import("@/components/ui/BackToTop"));
 
 const Footer = () => {
   return (

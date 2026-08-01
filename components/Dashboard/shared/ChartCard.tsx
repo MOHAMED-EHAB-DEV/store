@@ -1,5 +1,3 @@
-"use client";
-
 import { AreaClosed, LinePath, Bar } from "@visx/shape";
 import { curveMonotoneX } from "@visx/curve";
 import { GridRows, GridColumns } from "@visx/grid";
@@ -39,23 +37,6 @@ export default function ChartCard({
     showAxes = false,
 }: ChartCardProps) {
     const displaySubtitle = subtitle || subTitle;
-    const width = 600; // Will be responsive via parent container
-    const margin = { top: 20, right: 20, bottom: showAxes ? 40 : 20, left: showAxes ? 50 : 20 };
-
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    // Scales
-    const xScale = scaleTime({
-        domain: [Math.min(...data.map((d) => new Date(d.date)?.getTime() ?? 0)), Math.max(...data.map((d) => new Date(d.date)?.getTime() ?? 0))],
-        range: [0, innerWidth],
-    });
-
-    const yScale = scaleLinear({
-        domain: [0, Math.max(...data.map((d) => d.value)) * 1.1],
-        range: [innerHeight, 0],
-        nice: true,
-    });
 
     if (data.length === 0) {
         return (
@@ -72,6 +53,26 @@ export default function ChartCard({
             </div>
         );
     }
+
+    const width = 600; // Will be responsive via parent container
+    const margin = { top: 20, right: 20, bottom: showAxes ? 40 : 20, left: showAxes ? 50 : 20 };
+
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    const timestamps = data.map((d) => new Date(d.date)?.getTime() ?? 0);
+
+    // Scales
+    const xScale = scaleTime({
+        domain: [Math.min(...timestamps), Math.max(...timestamps)],
+        range: [0, innerWidth],
+    });
+
+    const yScale = scaleLinear({
+        domain: [0, Math.max(...data.map((d) => d.value)) * 1.1],
+        range: [innerHeight, 0],
+        nice: true,
+    });
 
     return (
         <div className="glass rounded-xl p-6">

@@ -27,27 +27,34 @@ export default function GlobalLenisProvider({
   const lenisRef = useRef<LenisRef>(null);
   const [mounted, setMounted] = useState(false);
   const [shouldEnable, setShouldEnable] = useState(true);
-  const [customDriverActive, setCustomDriverActive] = useState(false);
+  const customDriverRef = useRef(false);
+
+  // Stable callback ref to mutate state without triggering React re-renders
+  const setCustomDriverActive = useRef((active: boolean) => {
+    customDriverRef.current = active;
+  }).current;
 
   useEffect(() => {
     setMounted(true);
     setShouldEnable(!isLowHardware());
   }, []);
 
-  // Standard RAF loop active ONLY when GSAP initializer is NOT active
+  // RAF loop checks mutable ref directly — 0 React re-renders
   useEffect(() => {
-    if (!shouldEnable || !mounted || customDriverActive) return;
+    if (!shouldEnable || !mounted) return;
 
     let frameId: number;
 
     function update(time: number) {
-      lenisRef.current?.lenis?.raf(time);
+      if (!customDriverRef.current) {
+        lenisRef.current?.lenis?.raf(time);
+      }
       frameId = requestAnimationFrame(update);
     }
 
     frameId = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frameId);
-  }, [shouldEnable, mounted, customDriverActive]);
+  }, [shouldEnable, mounted]);
 
   if (mounted && !shouldEnable) {
     return <>{children}</>;

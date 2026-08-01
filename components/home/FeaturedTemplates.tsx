@@ -20,10 +20,19 @@ const FeaturedTemplates = async () => {
   const templates: ITemplate[] = await getTemplates();
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 relative" aria-labelledby="featured-templates-title">
+    <section
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-6 relative"
+      aria-labelledby="featured-templates-title"
+    >
       {/* Section Background */}
-      <div className="absolute inset-0 bg-linear-to-br from-card/30 via-transparent to-card/20 rounded-3xl" aria-hidden="true" />
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
+      <div
+        className="absolute inset-0 bg-linear-to-br from-card/30 via-transparent to-card/20 rounded-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"
+        aria-hidden="true"
+      />
       <div className="relative z-10">
         {/* Section Header */}
         <div className="text-center mb-20">
@@ -31,7 +40,10 @@ const FeaturedTemplates = async () => {
             <Star className="w-5 h-5 mr-2 animate-pulse" />
             Featured Templates
           </Badge> */}
-          <h2 id="featured-templates-title" className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-8 font-paras leading-none tracking-tight">
+          <h2
+            id="featured-templates-title"
+            className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-8 font-paras leading-none tracking-tight"
+          >
             {SplitText("Handpicked ")}
             <span className="relative">
               {SplitText("Premium")}
@@ -42,9 +54,10 @@ const FeaturedTemplates = async () => {
             </span>
             {SplitText(" Templates")}
           </h2>
-          <p className="text-medium-contrast header opacity-0 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
-            Discover our most popular and highest-rated templates, crafted with
-            attention to detail and optimized for performance.
+          <p className="text-medium-contrast text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
+            {SplitText(
+              "Discover our most popular and highest-rated templates, crafted with attention to detail and optimized for performance.",
+            )}
           </p>
         </div>
 
@@ -58,7 +71,11 @@ const FeaturedTemplates = async () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 lg:gap-12">
             {templates.map((template, idx) => (
-              <TemplateComponent template={template} mode="store" key={template._id} />
+              <TemplateComponent
+                template={template}
+                mode="store"
+                key={template._id}
+              />
             ))}
           </div>
         )}
@@ -71,7 +88,10 @@ const FeaturedTemplates = async () => {
             className="group relative inline-flex items-center justify-center bg-linear-to-r from-purple-500 via-pink-500 to-cyan-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-1"
           >
             <span className="relative z-10">View All Templates</span>
-            <div aria-hidden="true" className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300"
+            />
           </Link>
         </div>
       </div>

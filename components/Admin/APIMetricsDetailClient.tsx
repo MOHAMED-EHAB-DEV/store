@@ -1,15 +1,19 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import ChartCard, { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import { Activity } from "@/components/ui/svgs/icons/Activity";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Zap } from "@/components/ui/svgs/icons/Zap";
 import { AlertCircle } from "@/components/ui/svgs/icons/AlertCircle";
 import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface APIMetricsDetailClientProps {
   data: {
@@ -37,18 +41,34 @@ interface APIMetricsDetailClientProps {
 }
 
 export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsDetailClientProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleBack = () => {
+    startTransition(() => {
+      router.push("/admin/api-metrics");
+    });
+  };
+
   if (!data) {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
-        <Link
-          href="/admin/api-metrics"
-          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleBack}
+          disabled={isPending}
+          className="gap-2 text-gray-400 hover:text-white ps-0"
         >
           <ArrowLeft className="w-4 h-4" /> Back to API Metrics
-        </Link>
+        </Button>
         <PageHeader
           title="Route Performance Detail"
           description={`Could not find performance metrics for ${routeParam || "specified route"}.`}
+        />
+        <EmptyState
+          title="Route Not Found"
+          description={`No telemetry data recorded for "${routeParam || "specified route"}".`}
         />
       </div>
     );
@@ -132,26 +152,25 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8">
+    <div className={cn("p-6 max-w-7xl mx-auto space-y-8 transition-opacity duration-200", isPending && "opacity-50 pointer-events-none")}>
       {/* Back Button */}
-      <Link
-        href="/admin/api-metrics"
-        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleBack}
+        disabled={isPending}
+        className="gap-2 text-gray-400 hover:text-white ps-0"
       >
         <ArrowLeft className="w-4 h-4" /> Back to API Metrics
-      </Link>
+      </Button>
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span
-              className={`px-3 py-1 rounded-md text-xs font-bold border ${getMethodBadgeClass(
-                method
-              )}`}
-            >
+            <Badge variant="outline" className={getMethodBadgeClass(method)}>
               {method}
-            </span>
+            </Badge>
             <h1 className="text-2xl font-bold text-white font-mono">{route}</h1>
           </div>
           <p className="text-sm text-gray-400">
@@ -199,13 +218,9 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
               return (
                 <div key={item.status} className="space-y-1">
                   <div className="flex justify-between items-center text-sm">
-                    <span
-                      className={`px-2 py-0.5 rounded text-xs font-mono font-bold border ${getStatusBadgeClass(
-                        statusNum
-                      )}`}
-                    >
+                    <Badge variant="outline" className={getStatusBadgeClass(statusNum)}>
                       {item.status}
-                    </span>
+                    </Badge>
                     <span className="text-gray-300 font-mono text-xs">
                       {item.count.toLocaleString()} ({pct}%)
                     </span>
@@ -264,8 +279,11 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
             <tbody className="divide-y divide-white/5 font-mono text-xs">
               {recentTraces.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-gray-400">
-                    No recent request trace logs.
+                  <td colSpan={5} className="py-8">
+                    <EmptyState
+                      title="No recent request traces"
+                      description="No request execution logs found in Redis buffer for this route."
+                    />
                   </td>
                 </tr>
               ) : (
@@ -275,27 +293,29 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
                       {new Date(trace.timestamp).toLocaleString()}
                     </td>
                     <td className="py-3 px-6 text-center">
-                      <span
-                        className={`px-2 py-0.5 rounded font-bold border ${getStatusBadgeClass(
-                          trace.statusCode
-                        )}`}
-                      >
+                      <Badge variant="outline" className={getStatusBadgeClass(trace.statusCode)}>
                         {trace.statusCode}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="py-3 px-6 text-center text-white">
                       {trace.duration} ms
                     </td>
                     <td className="py-3 px-6 text-center">
                       {trace.cacheHit ? (
-                        <span className="text-emerald-400 font-semibold">HIT</span>
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+                          HIT
+                        </Badge>
                       ) : (
-                        <span className="text-gray-500">MISS</span>
+                        <Badge variant="outline" className="bg-gray-500/10 text-gray-400 border-gray-500/30">
+                          MISS
+                        </Badge>
                       )}
                     </td>
                     <td className="py-3 px-6 text-center">
                       {trace.rateLimited ? (
-                        <span className="text-rose-400 font-bold">YES</span>
+                        <Badge variant="destructive">
+                          YES
+                        </Badge>
                       ) : (
                         <span className="text-gray-500">NO</span>
                       )}
@@ -310,3 +330,4 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
     </div>
   );
 }
+

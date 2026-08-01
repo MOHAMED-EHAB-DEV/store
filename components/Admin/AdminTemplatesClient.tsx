@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
@@ -20,6 +20,7 @@ import { ICategory } from "@/lib/validations/category";
 import { ITemplate } from "@/lib/validations/template";
 import Link from "next/link";
 import { Trash2 } from "@/components/ui/svgs/icons/Trash2";
+import { cn } from "@/lib/utils";
 
 interface AdminTemplatesClientProps {
     initialData: ITemplate[];
@@ -44,6 +45,7 @@ export default function AdminTemplatesClient({
     const router = useRouter();
     const pathname = usePathname();
     const queryParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -87,7 +89,9 @@ export default function AdminTemplatesClient({
             }
         });
         if (!updates.page) params.set("page", "1");
-        router.push(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        });
     };
 
     const handleDelete = async () => {
@@ -135,7 +139,6 @@ export default function AdminTemplatesClient({
     };
 
     const handleBulkDelete = async () => {
-
         setIsDeleting(true);
         try {
             const response = await fetch("/api/admin/templates/bulk-delete", {
@@ -349,7 +352,7 @@ export default function AdminTemplatesClient({
                 ))}
             </div>
 
-            <div className="space-y-6">
+            <div className={cn("space-y-6 transition-opacity duration-200", isPending && "opacity-50 pointer-events-none")}>
                 <SearchFilterBar
                     searchPlaceholder="Search templates..."
                     onSearchChange={(val) => updateQuery({ search: val })}

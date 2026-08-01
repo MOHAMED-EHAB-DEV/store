@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
@@ -11,6 +11,7 @@ import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Activity } from "@/components/ui/svgs/icons/Activity";
 import { History } from "@/components/ui/svgs/icons/History";
 import { Pagination } from "@/components/ui/pagination";
+import { cn } from "@/lib/utils";
 
 interface PerformanceClientProps {
   data: {
@@ -32,6 +33,7 @@ export default function PerformanceClient({ data }: PerformanceClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   if (!data) {
     return (
@@ -49,7 +51,9 @@ export default function PerformanceClient({ data }: PerformanceClientProps) {
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   };
 
   // Helper to extract a specific metric's average

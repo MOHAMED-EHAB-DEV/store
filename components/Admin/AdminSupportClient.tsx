@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import DataTable, { Column } from "@/components/Dashboard/shared/DataTable";
@@ -50,6 +50,7 @@ export default function AdminSupportClient({
     const router = useRouter();
     const pathname = usePathname();
     const queryParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -87,7 +88,9 @@ export default function AdminSupportClient({
             }
         });
         if (!updates.page) params.set("page", "1");
-        router.push(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        });
     };
 
     const handleBulkDelete = async () => {

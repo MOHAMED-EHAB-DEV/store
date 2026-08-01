@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, memo } from "react";
+import { useEffect, memo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
@@ -14,7 +14,7 @@ if (typeof window !== "undefined") {
 const GSAPInitializer = memo(function GSAPInitializer() {
   const lenis = useLenis(ScrollTrigger.update);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!lenis) return;
 
     // Tell GlobalLenisProvider to stop running its own RAF loop

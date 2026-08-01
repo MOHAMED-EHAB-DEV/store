@@ -22,13 +22,12 @@ const DEFAULT_QUALITY = 80;
 const MAX_WIDTH = 2000;
 
 // Supabase Configuration & Helper
-const SUPABASE_URL = (
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  ""
-).replace(/\/$/, "");
-const SUPABASE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-  "";
+const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(
+  /\/$/,
+  "",
+);
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+("");
 const SUPABASE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET;
 const HAS_SUPABASE = !!(SUPABASE_URL && SUPABASE_KEY);
 
@@ -351,9 +350,17 @@ async function processingImage(
     const originalBuf = await readCachedSmart(src, width, quality, true);
     if (originalBuf) {
       const tag = makeETag(originalBuf);
-      if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
-      const meta = await sharp(originalBuf).metadata().catch(() => null);
-      const mime = meta?.format === "svg" ? "image/svg+xml" : meta?.format ? `image/${meta.format}` : "application/octet-stream";
+      if (req.headers.get("if-none-match") === tag)
+        return notModifiedResponse(tag);
+      const meta = await sharp(originalBuf)
+        .metadata()
+        .catch(() => null);
+      const mime =
+        meta?.format === "svg"
+          ? "image/svg+xml"
+          : meta?.format
+            ? `image/${meta.format}`
+            : "application/octet-stream";
       return imageResponse(originalBuf, tag, "HIT", mime);
     }
   }
@@ -372,7 +379,11 @@ async function processingImage(
 
   if (!inputBuffer) {
     if (validation.isRelative && validation.relativePath) {
-      const publicFilePath = path.join(process.cwd(), "public", validation.relativePath);
+      const publicFilePath = path.join(
+        process.cwd(),
+        "public",
+        validation.relativePath,
+      );
       try {
         inputBuffer = await fs.readFile(publicFilePath);
       } catch {
@@ -384,7 +395,9 @@ async function processingImage(
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-      const fetchTarget = validation.isRelative ? validation.url.toString() : src;
+      const fetchTarget = validation.isRelative
+        ? validation.url.toString()
+        : src;
       let response: Response;
       try {
         response = await fetch(fetchTarget, { signal: controller.signal });
@@ -421,7 +434,9 @@ async function processingImage(
       const arrayBuffer = await response.arrayBuffer();
 
       if (arrayBuffer.byteLength === 0) {
-        return new NextResponse("Empty response from upstream", { status: 502 });
+        return new NextResponse("Empty response from upstream", {
+          status: 502,
+        });
       }
       if (arrayBuffer.byteLength > MAX_SOURCE_BYTES) {
         return new NextResponse("Source image exceeds size limit", {
@@ -437,9 +452,17 @@ async function processingImage(
 
     if (serveOriginal) {
       const tag = makeETag(inputBuffer);
-      if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
-      const meta = await sharp(inputBuffer).metadata().catch(() => null);
-      const mime = meta?.format === "svg" ? "image/svg+xml" : meta?.format ? `image/${meta.format}` : "application/octet-stream";
+      if (req.headers.get("if-none-match") === tag)
+        return notModifiedResponse(tag);
+      const meta = await sharp(inputBuffer)
+        .metadata()
+        .catch(() => null);
+      const mime =
+        meta?.format === "svg"
+          ? "image/svg+xml"
+          : meta?.format
+            ? `image/${meta.format}`
+            : "application/octet-stream";
       return imageResponse(inputBuffer, tag, "MISS", mime);
     }
   }
@@ -462,10 +485,19 @@ async function processingImage(
   }
 
   const effectiveQuality = Math.min(quality || DEFAULT_QUALITY, 90);
-  const outputBuffer = await pipeline.webp({ quality: effectiveQuality }).toBuffer();
+  const outputBuffer = await pipeline
+    .webp({ quality: effectiveQuality })
+    .toBuffer();
   const tag = makeETag(outputBuffer);
 
-  await writeCachedSmart(src, width, quality, outputBuffer, "image/webp", false);
+  await writeCachedSmart(
+    src,
+    width,
+    quality,
+    outputBuffer,
+    "image/webp",
+    false,
+  );
 
   if (req.headers.get("if-none-match") === tag) return notModifiedResponse(tag);
 
@@ -495,4 +527,6 @@ async function proxyImage(
   }
 }
 
-export const GET = withAPIMiddleware(proxyImage);
+export const GET = withAPIMiddleware(proxyImage, {
+  disableRateLimit: true,
+});

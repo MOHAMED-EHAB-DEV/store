@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import StatCard from "@/components/Dashboard/shared/StatCard";
@@ -43,6 +43,7 @@ export default function AdminFAQsClient({
     const router = useRouter();
     const pathname = usePathname();
     const queryParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
     const [loading, setLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -87,7 +88,9 @@ export default function AdminFAQsClient({
         });
         // Reset to page 1 on search/filter change
         if (!updates.page) params.set("page", "1");
-        router.push(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        });
     };
 
     const handleDelete = async () => {

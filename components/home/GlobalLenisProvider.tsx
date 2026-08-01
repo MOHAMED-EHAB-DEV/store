@@ -15,9 +15,11 @@ export default function GlobalLenisProvider({
   children: React.ReactNode;
 }) {
   const lenisRef = useRef<LenisRef>(null);
-  const [shouldEnable, setShouldEnable] = useState<boolean | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [shouldEnable, setShouldEnable] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
     setShouldEnable(!isLowHardware());
   }, []);
 
@@ -42,15 +44,16 @@ export default function GlobalLenisProvider({
     return () => cancelAnimationFrame(frame);
   }, [shouldEnable]);
 
-  if (shouldEnable === false) {
+  if (mounted && !shouldEnable) {
     return <>{children}</>;
   }
 
   return (
     <ReactLenis root options={{ autoRaf: false, syncTouch: false }} ref={lenisRef}>
       {children}
-      <ConciergeWidget />
+      {mounted && <ConciergeWidget />}
     </ReactLenis>
   );
 }
+
 

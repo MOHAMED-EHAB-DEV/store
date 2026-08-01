@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
@@ -14,6 +15,7 @@ import { History } from "@/components/ui/svgs/icons/History";
 import { Pagination } from "@/components/ui/pagination";
 import Image from "next/image";
 import { createImageProxyLoader } from "@/lib/utils/image";
+import { cn } from "@/lib/utils";
 
 interface AdminAnalyticsClientProps {
   data: {
@@ -38,6 +40,7 @@ export default function AdminAnalyticsClient({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   if (!stats) {
     return (
@@ -53,7 +56,9 @@ export default function AdminAnalyticsClient({
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   };
 
   // Calculate percentage changes or trends if needed. For now, we can just show static trends since we don't have historical comparison data.

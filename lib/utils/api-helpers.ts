@@ -55,8 +55,8 @@ class RateLimiter {
   ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
     const now = Date.now();
 
-    // Bypass rate limiting in development mode
-    if (process.env.NODE_ENV === "development") {
+    // Bypass rate limiting in development mode or if disabled via env
+    if (process.env.NODE_ENV === "development" || process.env.DISABLE_RATE_LIMITING === "true") {
       return { allowed: true, remaining: maxRequests, resetTime: now + windowMs };
     }
 
@@ -269,7 +269,8 @@ export function createErrorResponse(
 export function withAPIMiddleware(
   handler: (req: NextRequest, context?: any) => Promise<NextResponse>,
   options: {
-    rateLimit?: { maxRequests: number; windowMs: number };
+    rateLimit?: { maxRequests: number; windowMs: number; disabled?: boolean } | false;
+    disableRateLimit?: boolean;
     cache?: { ttl: number; keyGenerator?: (req: NextRequest) => string };
     auth?: boolean;
     validate?: (req: NextRequest) => Promise<boolean>;
@@ -287,7 +288,13 @@ export function withAPIMiddleware(
 
     try {
       // Rate limiting
-      if (options.rateLimit) {
+      const isRateLimitDisabled =
+        options.rateLimit === false ||
+        options.disableRateLimit === true ||
+        (typeof options.rateLimit === "object" && options.rateLimit.disabled === true) ||
+        process.env.DISABLE_RATE_LIMITING === "true";
+
+      if (options.rateLimit && !isRateLimitDisabled) {
         const clientIP =
           req.headers.get("x-forwarded-for") ||
           req.headers.get("x-real-ip") ||

@@ -15,6 +15,9 @@ export interface ChartDataPoint {
 
 interface ChartCardProps {
     title: string;
+    subtitle?: string;
+    subTitle?: string;
+    unit?: string;
     data: ChartDataPoint[];
     type?: "area" | "line" | "bar";
     gradient?: string;
@@ -25,6 +28,9 @@ interface ChartCardProps {
 
 export default function ChartCard({
     title,
+    subtitle,
+    subTitle,
+    unit,
     data,
     type = "area",
     gradient = "from-blue-500 to-cyan-500",
@@ -32,6 +38,7 @@ export default function ChartCard({
     showGrid = true,
     showAxes = false,
 }: ChartCardProps) {
+    const displaySubtitle = subtitle || subTitle;
     const width = 600; // Will be responsive via parent container
     const margin = { top: 20, right: 20, bottom: showAxes ? 40 : 20, left: showAxes ? 50 : 20 };
 
@@ -53,7 +60,12 @@ export default function ChartCard({
     if (data.length === 0) {
         return (
             <div className="glass rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+                <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-white">{title}</h3>
+                    {displaySubtitle && (
+                        <p className="text-xs text-muted-foreground mt-0.5">{displaySubtitle}</p>
+                    )}
+                </div>
                 <div className="flex items-center justify-center h-[200px] text-muted-foreground">
                     No data available
                 </div>
@@ -63,7 +75,12 @@ export default function ChartCard({
 
     return (
         <div className="glass rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+            <div className="mb-4">
+                <h3 className="text-lg font-semibold text-white">{title}</h3>
+                {displaySubtitle && (
+                    <p className="text-xs text-muted-foreground mt-0.5">{displaySubtitle}</p>
+                )}
+            </div>
             <div className="w-full overflow-x-auto">
                 <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`}>
                     <LinearGradient id={`gradient-${title}`} from="#3b82f6" to="#06b6d4" />

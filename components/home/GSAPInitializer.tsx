@@ -6,37 +6,52 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
+import { useLenisDriver } from "@/components/home/GlobalLenisProvider";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, TextPlugin, useGSAP);
+  ScrollTrigger.config({ limitCallbacks: true });
 }
 
 const GSAPInitializer = memo(function GSAPInitializer() {
-  const lenis = useLenis(ScrollTrigger.update);
+  const { setCustomDriverActive } = useLenisDriver();
+  const lenis = useLenis();
 
   useEffect(() => {
     if (!lenis) return;
 
-    // Tell GlobalLenisProvider to stop running its own RAF loop
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).gsapTickerEnabled = true;
+    // 1. Notify provider that GSAP is taking over RAF loop
+    setCustomDriverActive(true);
 
+    // 2. Direct ScrollTrigger update on Lenis scroll event
+    const onScroll = () => {
+      ScrollTrigger.update();
+    };
+    lenis.on("scroll", onScroll);
+
+    // 3. Drive Lenis RAF from GSAP ticker
     function update(time: number) {
       lenis?.raf(time * 1000);
     }
 
     gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
-    
-    // Force ScrollTrigger to recalculate positions now that the ticker is completely synced with GSAP
-    ScrollTrigger.refresh();
+
+    // Keep safe lag smoothing to avoid catch-up thrashing on heavy main thread loads
+    gsap.ticker.lagSmoothing(500, 33);
+
+    // Defer ScrollTrigger refresh so it does not block initial render / mount frame
+    const rafId = requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
 
     return () => {
+      cancelAnimationFrame(rafId);
+      lenis.off("scroll", onScroll);
       gsap.ticker.remove(update);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).gsapTickerEnabled = false;
+      // Re-enable standard Lenis RAF when navigating away from GSAP page
+      setCustomDriverActive(false);
     };
-  }, [lenis]);
+  }, [lenis, setCustomDriverActive]);
 
   return null;
 });

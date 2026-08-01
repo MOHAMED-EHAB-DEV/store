@@ -7,20 +7,34 @@ import CTA from "@/components/shared/CTA";
 
 export const metadata = buildMetadata({
   title: "Premium Templates & Custom Next.js Development Pricing | MHD Store",
-  description: "View pricing plans for premium React and Tailwind CSS web templates, and get a quote for our custom Next.js development services with limited slots.",
+  description:
+    "View pricing plans for premium React and Tailwind CSS web templates, and get a quote for our custom Next.js development services with limited slots.",
   path: "/pricing",
-  screenshotName: "pricing"
+  screenshotName: "pricing",
 });
 
 const Page = () => {
   return (
-    <main className="relative min-h-screen text-white overflow-hidden py-36 font-inter" role="main" id="main-content">
+    <main
+      className="relative min-h-screen text-white overflow-hidden py-36 font-inter"
+      role="main"
+      id="main-content"
+    >
       <GSAPInitializer />
-      
+
       {/* Background elements */}
-      <div className="fixed inset-0 bg-[#0A0A0B] -z-50 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-[0%] left-[10%] w-[30%] h-[30%] bg-purple-600/10 blur-[120px] rounded-full mix-blend-screen" aria-hidden="true" />
-        <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[40%] bg-pink-600/10 blur-[120px] rounded-full mix-blend-screen" aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-abyss -z-50 overflow-hidden pointer-events-none"
+        aria-hidden="true"
+      >
+        <div
+          className="absolute top-[0%] left-[10%] w-[30%] h-[30%] bg-purple-600/10 blur-[120px] rounded-full mix-blend-screen"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-[20%] right-[10%] w-[40%] h-[40%] bg-pink-600/10 blur-[120px] rounded-full mix-blend-screen"
+          aria-hidden="true"
+        />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 relative z-10">

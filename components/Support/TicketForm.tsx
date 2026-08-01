@@ -28,11 +28,18 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
   const { user } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subject, setSubject] = useState(searchParams?.get("subject") || "");
-  const [description, setDescription] = useState(searchParams?.get("message") || "");
-  const [category, setCategory] = useState(searchParams?.get("category") || "general");
+  const [description, setDescription] = useState(
+    searchParams?.get("message") || "",
+  );
+  const [category, setCategory] = useState(
+    searchParams?.get("category") || "general",
+  );
   const [priority, setPriority] = useState("medium");
   const [isDirty, setIsDirty] = useState(false);
-  const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, Boolean(subject.trim() || description.trim()));
+  const { GuardDialog, setIsSubmitted } = useFormGuard(
+    isDirty,
+    Boolean(subject.trim() || description.trim()),
+  );
 
   useEffect(() => {
     const ticket = sessionStorage.getItem("ticket");
@@ -101,7 +108,8 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
         maxLength={200}
         isRequired
         classNames={{
-          inputWrapper: "rounded-xl border border-white/10 bg-white/5 focus-within:ring-purple-500/50 focus-within:border-transparent"
+          inputWrapper:
+            "rounded-xl border border-white/10 bg-white/5 focus-within:ring-purple-500/50 focus-within:border-transparent",
         }}
       />
 
@@ -118,8 +126,9 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
             }}
             placeholder="Select category"
             classNames={{
-              trigger: "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
-              popoverContent: "bg-[#15161b] border-white/10 text-white"
+              trigger:
+                "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
+              popoverContent: "bg-surface-dark border-white/10 text-white",
             }}
           >
             {SUPPORT_CATEGORIES.map((cat) => (
@@ -141,8 +150,9 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
             }}
             placeholder="Select priority"
             classNames={{
-              trigger: "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
-              popoverContent: "bg-[#15161b] border-white/10 text-white"
+              trigger:
+                "w-full h-auto rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent",
+              popoverContent: "bg-surface-dark border-white/10 text-white",
             }}
           >
             {priorities.map((p) => (
@@ -168,7 +178,7 @@ export default function TicketForm({ onSuccess }: TicketFormProps) {
           rows={6}
           classNames={{
             inputWrapper: "rounded-xl",
-            input: "py-3"
+            input: "py-3",
           }}
         />
       </div>

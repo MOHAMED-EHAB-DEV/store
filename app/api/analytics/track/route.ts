@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { after, NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { connectToDatabase } from "@/lib/database";
+import Visitor from "@/lib/models/Visitor";
 import { createAPIResponse, createErrorResponse, withAPIMiddleware } from "@/lib/utils/api-helpers";
-import { verifyToken } from "@/lib/auth";
-import { redis } from "@/lib/redis";
 
 async function track(req: NextRequest) {
   try {
     const body = await req.json();
-    const { visitorId, path } = body;
+    const { visitorId, path, userId } = body;
 
     if (!visitorId || typeof visitorId !== "string") {
       return createErrorResponse("visitorId is required", 400, {
@@ -17,35 +16,38 @@ async function track(req: NextRequest) {
       });
     }
 
-    // Extract user ID from JWT cookie without hitting DB
-    let userId: string | undefined;
-    try {
-      const cookieStore = await cookies();
-      const token = cookieStore.get("token")?.value;
-      if (token) {
-        const decoded = await verifyToken(token);
-        if (decoded?.userId) userId = decoded.userId;
-      }
-    } catch {
-      // Ignore token verification errors
-    }
-
     const userAgent = req.headers.get("user-agent") || "unknown";
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "127.0.0.1";
     const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
+    const now = new Date();
 
-    // Push tracking event to Redis buffer for QStash batch processing
-    await redis.rpush(
-      "analytics:track:buffer",
-      JSON.stringify({
-        visitorId,
-        path: path ?? "/",
-        userAgent,
-        ipHash,
-        userId,
-        timestamp: new Date().toISOString(),
-      })
-    );
+    // Immediate MongoDB write after returning response
+    after(async () => {
+      try {
+        await connectToDatabase();
+        await Visitor.updateOne(
+          { visitorId },
+          {
+            $set: {
+              lastVisit: now,
+              userAgent,
+              ipHash,
+              ...(userId && { userId }),
+            },
+            $inc: { visitCount: 1 },
+            $push: {
+              pathHistory: {
+                $each: [{ path: path ?? "/", timestamp: now }],
+                $slice: -20,
+              },
+            },
+          },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.error("[Analytics] track DB write error:", err);
+      }
+    });
 
     return createAPIResponse({});
   } catch (error) {

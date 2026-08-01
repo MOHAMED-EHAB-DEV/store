@@ -232,7 +232,7 @@ export default function AdminVisitorDetailsClient({
                       key={index}
                       className="relative flex items-center justify-between gap-6 pl-12 group"
                     >
-                      <div className="absolute left-0 grid place-content-center w-10 h-10 rounded-full border-4 border-[#0a0a0a] bg-gray-900 group-hover:scale-110 transition-transform duration-300">
+                      <div className="absolute left-0 grid place-content-center w-10 h-10 rounded-full border-4 border-neutral-950 bg-gray-900 group-hover:scale-110 transition-transform duration-300">
                         {index === 0 ? (
                           <MousePointer2 className="w-4 h-4 text-purple-400" />
                         ) : (

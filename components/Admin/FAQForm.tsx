@@ -37,7 +37,10 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
     isPublished: initialData?.isPublished ?? true,
   });
 
-  const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, hasFormValues(formData));
+  const { GuardDialog, setIsSubmitted } = useFormGuard(
+    isDirty,
+    hasFormValues(formData),
+  );
   const [coverImage, setCoverImage] = useState<string | undefined>(
     initialData?.coverImage,
   );
@@ -145,7 +148,7 @@ export default function FAQForm({ initialData, isEdit = false }: FAQFormProps) {
             placeholder="Category"
             classNames={{
               trigger: "w-full",
-              popoverContent: "bg-[#15161b] border-white/10 text-white",
+              popoverContent: "bg-surface-dark border-white/10 text-white",
             }}
           >
             <SelectItem value="general">General</SelectItem>

@@ -45,7 +45,7 @@ export default function Error({
         <title>Error | MHD Store Premium Templates</title>
       </head>
       <body>
-        <main role="main" className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] text-white px-4 font-roboto">
+        <main role="main" className="min-h-screen flex flex-col items-center justify-center bg-neutral-950 text-white px-4 font-roboto">
           <div className="text-center max-w-xl w-full">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-red-500/10 rounded-full mb-8">
               <AlertCircle className="w-10 h-10 text-red-500" />

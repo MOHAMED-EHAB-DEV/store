@@ -35,12 +35,18 @@ const BlueprintCustomBuild = () => {
   );
 
   return (
-    <section className="w-full py-16 text-white relative z-20" aria-labelledby="blueprint-title">
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
+    <section
+      className="w-full py-16 text-white relative z-20"
+      aria-labelledby="blueprint-title"
+    >
+      <div
+        className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"
+        aria-hidden="true"
+      />
       <div className="container mx-auto px-4 md:px-6 max-w-6xl">
         <div
           ref={bandRef}
-          className="bg-[#15161b]/95 border border-purple-500/20 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden backdrop-blur-md shadow-2xl group"
+          className="bg-surface-dark/95 border border-purple-500/20 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden backdrop-blur-md shadow-2xl group"
         >
           {/* Grid Background Pattern */}
           <div
@@ -56,16 +62,34 @@ const BlueprintCustomBuild = () => {
           />
 
           {/* Corner Brackets */}
-          <div aria-hidden="true" className="absolute top-4 left-4 w-4 h-4 border-t border-l border-purple-500/40 hidden sm:block" />
-          <div aria-hidden="true" className="absolute top-4 right-4 w-4 h-4 border-t border-r border-purple-500/40 hidden sm:block" />
-          <div aria-hidden="true" className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-purple-500/40 hidden sm:block" />
-          <div aria-hidden="true" className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-purple-500/40 hidden sm:block" />
+          <div
+            aria-hidden="true"
+            className="absolute top-4 left-4 w-4 h-4 border-t border-l border-purple-500/40 hidden sm:block"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute top-4 right-4 w-4 h-4 border-t border-r border-purple-500/40 hidden sm:block"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-purple-500/40 hidden sm:block"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-purple-500/40 hidden sm:block"
+          />
 
           <div className="flex-1 relative z-10 text-center md:text-left">
-            <div aria-hidden="true" className="font-mono text-xs sm:text-sm text-purple-400/80 mb-3">
+            <div
+              aria-hidden="true"
+              className="font-mono text-xs sm:text-sm text-purple-400/80 mb-3"
+            >
               // spec: custom-build-module.tsx
             </div>
-            <h3 id="blueprint-title" className="text-3xl md:text-4xl font-bold font-paras text-white mb-4 tracking-tight">
+            <h3
+              id="blueprint-title"
+              className="text-3xl md:text-4xl font-bold font-paras text-white mb-4 tracking-tight"
+            >
               Need something custom?
             </h3>
             <p className="text-gray-400 text-lg max-w-2xl">
@@ -84,7 +108,10 @@ const BlueprintCustomBuild = () => {
               className="flex items-center gap-3 px-6 py-3 border border-purple-500/50 hover:bg-purple-500/10 text-purple-300 hover:text-purple-200 text-sm md:text-base font-mono font-medium rounded-lg transition-all duration-300 shadow-lg shadow-purple-500/5 hover:shadow-purple-500/15 group-hover:border-purple-500/80 focus:ring-2 focus:ring-purple-500 focus:outline-none"
             >
               Request a Custom Build
-              <ArrowRight className="w-4 h-4 md:w-5 md:h-5" aria-hidden="true" />
+              <ArrowRight
+                className="w-4 h-4 md:w-5 md:h-5"
+                aria-hidden="true"
+              />
             </Link>
           </div>
         </div>

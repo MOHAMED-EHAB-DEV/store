@@ -5,434 +5,495 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createImageProxyLoader } from "@/lib/utils/image";
 import { sonnerToast } from "@/components/ui/sonner";
-import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/ui/dropzone";
+import {
+  Dropzone,
+  DropzoneContent,
+  DropzoneEmptyState,
+} from "@/components/ui/dropzone";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import {
-    Select,
-    SelectItem,
-} from "@/components/ui/select";
+import { Select, SelectItem } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useFormGuard, hasFormValues } from "@/hooks/useFormGuard";
 
 interface TemplateFormProps {
-    initialData?: any;
-    isEdit?: boolean;
-    categories?: any[];
+  initialData?: any;
+  isEdit?: boolean;
+  categories?: any[];
 }
 
-export default function TemplateForm({ initialData, isEdit = false, categories = [] }: TemplateFormProps) {
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    const [isDirty, setIsDirty] = useState(false);
+export default function TemplateForm({
+  initialData,
+  isEdit = false,
+  categories = [],
+}: TemplateFormProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
-    const [formData, setFormData] = useState({
-        title: initialData?.title || "",
-        description: initialData?.description || "",
-        demoLink: initialData?.demoLink || "",
-        price: initialData?.price || 0,
-        content: initialData?.content || "",
-        categories: initialData?.categories?.map((c: any) => c._id || c) || [],
-        tags: initialData?.tags?.join(", ") || "",
-        type: initialData?.type || "coded",
-        isActive: initialData?.isActive ?? true,
-    });
+  const [formData, setFormData] = useState({
+    title: initialData?.title || "",
+    description: initialData?.description || "",
+    demoLink: initialData?.demoLink || "",
+    price: initialData?.price || 0,
+    content: initialData?.content || "",
+    categories: initialData?.categories?.map((c: any) => c._id || c) || [],
+    tags: initialData?.tags?.join(", ") || "",
+    type: initialData?.type || "coded",
+    isActive: initialData?.isActive ?? true,
+  });
 
-    const { GuardDialog, setIsSubmitted } = useFormGuard(isDirty, hasFormValues(formData));
-    const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(initialData?.thumbnail);
-    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const { GuardDialog, setIsSubmitted } = useFormGuard(
+    isDirty,
+    hasFormValues(formData),
+  );
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(
+    initialData?.thumbnail,
+  );
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
-    const [demoVideoUrl, setDemoVideoUrl] = useState<string | undefined>(initialData?.demoVideo);
-    const [demoVideoFile, setDemoVideoFile] = useState<File | null>(null);
+  const [demoVideoUrl, setDemoVideoUrl] = useState<string | undefined>(
+    initialData?.demoVideo,
+  );
+  const [demoVideoFile, setDemoVideoFile] = useState<File | null>(null);
 
-    const [fileKeyStr, setFileKeyStr] = useState<string | undefined>(initialData?.fileKey);
-    const [templateFile, setTemplateFile] = useState<File | null>(null);
+  const [fileKeyStr, setFileKeyStr] = useState<string | undefined>(
+    initialData?.fileKey,
+  );
+  const [templateFile, setTemplateFile] = useState<File | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setIsDirty(true);
-        const { name, value, type } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === "number" ? parseFloat(value) || 0 : value
-        }));
-    };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setIsDirty(true);
+    const { name, value, type } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? parseFloat(value) || 0 : value,
+    }));
+  };
 
-    const handleThumbnail = (files: File[]) => {
-        if (files.length > 0) {
-            setIsDirty(true);
-            setThumbnailFile(files[0]);
-            setThumbnailUrl(URL.createObjectURL(files[0]));
-        }
-    };
+  const handleThumbnail = (files: File[]) => {
+    if (files.length > 0) {
+      setIsDirty(true);
+      setThumbnailFile(files[0]);
+      setThumbnailUrl(URL.createObjectURL(files[0]));
+    }
+  };
 
-    const handleDemoVideo = (files: File[]) => {
-        if (files.length > 0) {
-            setIsDirty(true);
-            setDemoVideoFile(files[0]);
-            setDemoVideoUrl(URL.createObjectURL(files[0]));
-        }
-    };
+  const handleDemoVideo = (files: File[]) => {
+    if (files.length > 0) {
+      setIsDirty(true);
+      setDemoVideoFile(files[0]);
+      setDemoVideoUrl(URL.createObjectURL(files[0]));
+    }
+  };
 
-    const handleFile = (files: File[]) => {
-        if (files.length > 0) {
-            setIsDirty(true);
-            setTemplateFile(files[0]);
-            setFileKeyStr(files[0].name);
-        }
-    };
+  const handleFile = (files: File[]) => {
+    if (files.length > 0) {
+      setIsDirty(true);
+      setTemplateFile(files[0]);
+      setFileKeyStr(files[0].name);
+    }
+  };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        if (!formData.title.trim() || !formData.description.trim() || (!thumbnailUrl && !thumbnailFile) || (!fileKeyStr && !templateFile)) {
-            sonnerToast.error("Title, description, thumbnail, and file are required");
-            return;
-        }
+    if (
+      !formData.title.trim() ||
+      !formData.description.trim() ||
+      (!thumbnailUrl && !thumbnailFile) ||
+      (!fileKeyStr && !templateFile)
+    ) {
+      sonnerToast.error("Title, description, thumbnail, and file are required");
+      return;
+    }
 
-        setLoading(true);
+    setLoading(true);
 
-        try {
-            const submitData = new FormData();
-            
-            Object.entries(formData).forEach(([key, value]) => {
-                if (key === 'categories' || key === 'tags') return;
-                submitData.append(key, value.toString());
-            });
+    try {
+      const submitData = new FormData();
 
-            formData.categories.forEach((cat: string) => {
-                submitData.append('categories', cat);
-            });
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "categories" || key === "tags") return;
+        submitData.append(key, value.toString());
+      });
 
-            const tagsList = formData.tags.split(",").map((t: string) => t.trim()).filter(Boolean);
-            tagsList.forEach((tag: string) => {
-                submitData.append('tags', tag);
-            });
+      formData.categories.forEach((cat: string) => {
+        submitData.append("categories", cat);
+      });
 
-            if (thumbnailUrl && !thumbnailFile) {
-                submitData.append('thumbnailUrl', thumbnailUrl);
-            }
-            if (demoVideoUrl && !demoVideoFile) {
-                submitData.append('demoVideoUrl', demoVideoUrl);
-            }
-            if (fileKeyStr && !templateFile) {
-                submitData.append('fileKeyStr', fileKeyStr);
-            }
+      const tagsList = formData.tags
+        .split(",")
+        .map((t: string) => t.trim())
+        .filter(Boolean);
+      tagsList.forEach((tag: string) => {
+        submitData.append("tags", tag);
+      });
 
-            if (thumbnailFile) {
-                submitData.append('thumbnailFile', thumbnailFile);
-            }
-            if (demoVideoFile) {
-                submitData.append('demoVideoFile', demoVideoFile);
-            }
-            if (templateFile) {
-                submitData.append('templateFile', templateFile);
-            }
+      if (thumbnailUrl && !thumbnailFile) {
+        submitData.append("thumbnailUrl", thumbnailUrl);
+      }
+      if (demoVideoUrl && !demoVideoFile) {
+        submitData.append("demoVideoUrl", demoVideoUrl);
+      }
+      if (fileKeyStr && !templateFile) {
+        submitData.append("fileKeyStr", fileKeyStr);
+      }
 
-            const url = isEdit
-                ? `/api/admin/templates/${initialData._id}`
-                : "/api/admin/templates";
+      if (thumbnailFile) {
+        submitData.append("thumbnailFile", thumbnailFile);
+      }
+      if (demoVideoFile) {
+        submitData.append("demoVideoFile", demoVideoFile);
+      }
+      if (templateFile) {
+        submitData.append("templateFile", templateFile);
+      }
 
-            const response = await fetch(url, {
-                method: isEdit ? "PATCH" : "POST",
-                body: submitData,
-            });
+      const url = isEdit
+        ? `/api/admin/templates/${initialData._id}`
+        : "/api/admin/templates";
 
-            const data = await response.json();
+      const response = await fetch(url, {
+        method: isEdit ? "PATCH" : "POST",
+        body: submitData,
+      });
 
-            if (!data.success) {
-                throw new Error(data.message || "Failed to save template");
-            }
+      const data = await response.json();
 
-            sonnerToast.success(isEdit ? "Template updated successfully" : "Template created successfully");
-            setIsSubmitted(true);
-            router.push("/admin/templates");
-            router.refresh();
-        } catch (error: any) {
-            sonnerToast.error(error.message || "Failed to save template");
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (!data.success) {
+        throw new Error(data.message || "Failed to save template");
+      }
 
-    return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="glass rounded-xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-white">Template Details</h3>
+      sonnerToast.success(
+        isEdit
+          ? "Template updated successfully"
+          : "Template created successfully",
+      );
+      setIsSubmitted(true);
+      router.push("/admin/templates");
+      router.refresh();
+    } catch (error: any) {
+      sonnerToast.error(error.message || "Failed to save template");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                {/* Title */}
-                <div>
-                    <Input
-                        label="Title"
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        placeholder="Enter template title..."
-                        isRequired
-                    />
-                </div>
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="glass rounded-xl p-6 space-y-4">
+        <h3 className="text-lg font-semibold text-white">Template Details</h3>
 
-                {/* Description */}
-                <div>
-                    <Textarea
-                        label="Description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        placeholder="Enter template description..."
-                        rows={4}
-                        isRequired
-                    />
-                </div>
+        {/* Title */}
+        <div>
+          <Input
+            label="Title"
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Enter template title..."
+            isRequired
+          />
+        </div>
 
-                {/* Demo Link & Price */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <Input
-                            label="Demo Link"
-                            type="url"
-                            name="demoLink"
-                            value={formData.demoLink}
-                            onChange={handleChange}
-                            placeholder="https://..."
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            label="Price (USD)"
-                            type="number"
-                            name="price"
-                            value={formData.price}
-                            onChange={handleChange}
-                            min={0}
-                            step={0.01}
-                        />
-                    </div>
-                </div>
+        {/* Description */}
+        <div>
+          <Textarea
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Enter template description..."
+            rows={4}
+            isRequired
+          />
+        </div>
 
-                {/* Content */}
-                <div>
-                    <label className="block text-sm text-muted-foreground mb-1">Content/Features</label>
-                    <Textarea
-                        name="content"
-                        value={formData.content}
-                        onChange={handleChange}
-                        placeholder="Detailed content or features list..."
-                        rows={6}
-                    />
-                </div>
+        {/* Demo Link & Price */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <Input
+              label="Demo Link"
+              type="url"
+              name="demoLink"
+              value={formData.demoLink}
+              onChange={handleChange}
+              placeholder="https://..."
+            />
+          </div>
+          <div>
+            <Input
+              label="Price (USD)"
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              min={0}
+              step={0.01}
+            />
+          </div>
+        </div>
 
-                {/* Categories & Tags */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm text-muted-foreground mb-2">Categories</label>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                            {categories.map((cat: any) => {
-                                const isSelected = formData.categories.includes(cat._id);
-                                return (
-                                    <Badge
-                                        key={cat._id}
-                                        variant="outline"
-                                        className={cn(
-                                            "cursor-pointer transition-all",
-                                            isSelected
-                                                ? "bg-primary/20 text-white border-white"
-                                                : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white"
-                                        )}
-                                        onClick={() => {
-                                            const newCategories = isSelected
-                                                ? formData.categories.filter((id: string) => id !== cat._id)
-                                                : [...formData.categories, cat._id];
-                                            setFormData(prev => ({ ...prev, categories: newCategories }));
-                                        }}
-                                    >
-                                        {cat.name}
-                                    </Badge>
-                                );
-                            })}
-                        </div>
-                    </div>
-                    <div>
-                        <Input
-                            label="Tags (comma-separated)"
-                            type="text"
-                            name="tags"
-                            value={formData.tags}
-                            onChange={handleChange}
-                            placeholder="react, nextjs, modern"
-                        />
-                    </div>
-                </div>
+        {/* Content */}
+        <div>
+          <label className="block text-sm text-muted-foreground mb-1">
+            Content/Features
+          </label>
+          <Textarea
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            placeholder="Detailed content or features list..."
+            rows={6}
+          />
+        </div>
 
-                {/* Type */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm text-muted-foreground mb-1">Type</label>
-                        <Select
-                            selectedKeys={formData.type ? [formData.type] : []}
-                            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
-                            placeholder="Type"
-                            classNames={{
-                                trigger: "w-full",
-                                popoverContent: "bg-[#15161b] border-white/10 text-white"
-                            }}
-                        >
-                            <SelectItem value="framer">Framer</SelectItem>
-                            <SelectItem value="coded">Coded</SelectItem>
-                            <SelectItem value="figma">Figma</SelectItem>
-                        </Select>
-                    </div>
-                </div>
-
-                {/* Checkboxes */}
-                <div className="space-y-4 pt-4 border-t border-border/50">
-                    <div className="flex items-center space-x-2">
-                        <Checkbox
-                            id="isActive"
-                            checked={formData.isActive}
-                            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked as boolean }))}
-                        />
-                        <label htmlFor="isActive" className="text-sm text-muted-foreground cursor-pointer">
-                            Active (visible to users)
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            {/* Thumbnail */}
-            <div className="glass rounded-xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-white">Thumbnail *</h3>
-
-                {thumbnailUrl ? (
-                    <div className="relative">
-                        <Image
-                            src={thumbnailUrl}
-                            alt="Thumbnail"
-                            loader={createImageProxyLoader(false)}
-                            className="rounded-lg object-contain w-full max-h-64"
-                            unoptimized
-                            width={800}
-                            height={400}
-                        />
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => {
-                                setThumbnailUrl(undefined);
-                                setThumbnailFile(null);
-                            }}
-                            className="absolute top-2 right-2 rounded-full size-8"
-                        >
-                            ✕
-                        </Button>
-                    </div>
-                ) : (
-                    <Dropzone
-                        accept={{ "image/*": [".png", ".jpg", ".jpeg", ".webp"] }}
-                        maxSize={8 * 1024 * 1024}
-                        maxFiles={1}
-                        onDrop={handleThumbnail}
-                    >
-                        <DropzoneEmptyState />
-                        <DropzoneContent />
-                    </Dropzone>
-                )}
-            </div>
-
-            {/* Demo Video */}
-            <div className="glass rounded-xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-white">Demo Video (Optional)</h3>
-                <p className="text-sm text-muted-foreground">Upload a hover preview video for this template.</p>
-                {demoVideoUrl ? (
-                    <div className="relative group">
-                        <video
-                            src={demoVideoUrl}
-                            controls
-                            muted
-                            playsInline
-                            className="rounded-lg w-full max-h-64 object-contain bg-black relative z-10 pointer-events-auto"
-                        />
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            onClick={() => {
-                                setDemoVideoUrl(undefined);
-                                setDemoVideoFile(null);
-                            }}
-                            className="absolute top-2 right-2 rounded-full size-8 z-20 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        >
-                            ✕
-                        </Button>
-                    </div>
-                ) : (
-                    <Dropzone
-                        accept={{ "video/mp4": [".mp4"], "video/webm": [".webm"] }}
-                        maxSize={100 * 1024 * 1024}
-                        maxFiles={1}
-                        onDrop={handleDemoVideo}
-                    >
-                        <DropzoneEmptyState />
-                        <DropzoneContent />
-                    </Dropzone>
-                )}
-            </div>
-
-            {/* Template File */}
-            <div className="glass rounded-xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold text-white">Template File</h3>
-                <p className="text-sm text-muted-foreground">Upload template files (zip, etc.)</p>
-
-                {fileKeyStr ? (
-                    <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                        <p className="text-green-400 text-sm">File uploaded: {fileKeyStr}</p>
-                        <Button
-                            type="button"
-                            variant="link"
-                            onClick={() => {
-                                setFileKeyStr(undefined);
-                                setTemplateFile(null);
-                            }}
-                            className="mt-2 h-auto p-0 text-xs text-red-400 hover:underline hover:text-red-300"
-                        >
-                            Remove file
-                        </Button>
-                    </div>
-                ) : (
-                    <Dropzone
-                        accept={{ "application/zip": [".zip"], "application/x-rar-compressed": [".rar"] }}
-                        maxSize={50 * 1024 * 1024}
-                        maxFiles={1}
-                        onDrop={handleFile}
-                    >
-                        <DropzoneEmptyState />
-                        <DropzoneContent />
-                    </Dropzone>
-                )}
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-4">
-                <Button
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading ? "Saving..." : isEdit ? "Update Template" : "Create Template"}
-                </Button>
-                <Button
-                    type="button"
+        {/* Categories & Tags */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm text-muted-foreground mb-2">
+              Categories
+            </label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {categories.map((cat: any) => {
+                const isSelected = formData.categories.includes(cat._id);
+                return (
+                  <Badge
+                    key={cat._id}
                     variant="outline"
-                    onClick={() => router.back()}
-                    className="bg-white/5 border-white/10 text-white"
-                >
-                    Cancel
-                </Button>
+                    className={cn(
+                      "cursor-pointer transition-all",
+                      isSelected
+                        ? "bg-primary/20 text-white border-white"
+                        : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-white",
+                    )}
+                    onClick={() => {
+                      const newCategories = isSelected
+                        ? formData.categories.filter(
+                            (id: string) => id !== cat._id,
+                          )
+                        : [...formData.categories, cat._id];
+                      setFormData((prev) => ({
+                        ...prev,
+                        categories: newCategories,
+                      }));
+                    }}
+                  >
+                    {cat.name}
+                  </Badge>
+                );
+              })}
             </div>
-            <GuardDialog />
-        </form>
-    );
+          </div>
+          <div>
+            <Input
+              label="Tags (comma-separated)"
+              type="text"
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              placeholder="react, nextjs, modern"
+            />
+          </div>
+        </div>
+
+        {/* Type */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm text-muted-foreground mb-1">
+              Type
+            </label>
+            <Select
+              selectedKeys={formData.type ? [formData.type] : []}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, type: e.target.value }))
+              }
+              placeholder="Type"
+              classNames={{
+                trigger: "w-full",
+                popoverContent: "bg-surface-dark border-white/10 text-white",
+              }}
+            >
+              <SelectItem value="framer">Framer</SelectItem>
+              <SelectItem value="coded">Coded</SelectItem>
+              <SelectItem value="figma">Figma</SelectItem>
+            </Select>
+          </div>
+        </div>
+
+        {/* Checkboxes */}
+        <div className="space-y-4 pt-4 border-t border-border/50">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="isActive"
+              checked={formData.isActive}
+              onCheckedChange={(checked) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  isActive: checked as boolean,
+                }))
+              }
+            />
+            <label
+              htmlFor="isActive"
+              className="text-sm text-muted-foreground cursor-pointer"
+            >
+              Active (visible to users)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Thumbnail */}
+      <div className="glass rounded-xl p-6 space-y-4">
+        <h3 className="text-lg font-semibold text-white">Thumbnail *</h3>
+
+        {thumbnailUrl ? (
+          <div className="relative">
+            <Image
+              src={thumbnailUrl}
+              alt="Thumbnail"
+              loader={createImageProxyLoader(false)}
+              className="rounded-lg object-contain w-full max-h-64"
+              unoptimized
+              width={800}
+              height={400}
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => {
+                setThumbnailUrl(undefined);
+                setThumbnailFile(null);
+              }}
+              className="absolute top-2 right-2 rounded-full size-8"
+            >
+              ✕
+            </Button>
+          </div>
+        ) : (
+          <Dropzone
+            accept={{ "image/*": [".png", ".jpg", ".jpeg", ".webp"] }}
+            maxSize={8 * 1024 * 1024}
+            maxFiles={1}
+            onDrop={handleThumbnail}
+          >
+            <DropzoneEmptyState />
+            <DropzoneContent />
+          </Dropzone>
+        )}
+      </div>
+
+      {/* Demo Video */}
+      <div className="glass rounded-xl p-6 space-y-4">
+        <h3 className="text-lg font-semibold text-white">
+          Demo Video (Optional)
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Upload a hover preview video for this template.
+        </p>
+        {demoVideoUrl ? (
+          <div className="relative group">
+            <video
+              src={demoVideoUrl}
+              controls
+              muted
+              playsInline
+              className="rounded-lg w-full max-h-64 object-contain bg-black relative z-10 pointer-events-auto"
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => {
+                setDemoVideoUrl(undefined);
+                setDemoVideoFile(null);
+              }}
+              className="absolute top-2 right-2 rounded-full size-8 z-20 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              ✕
+            </Button>
+          </div>
+        ) : (
+          <Dropzone
+            accept={{ "video/mp4": [".mp4"], "video/webm": [".webm"] }}
+            maxSize={100 * 1024 * 1024}
+            maxFiles={1}
+            onDrop={handleDemoVideo}
+          >
+            <DropzoneEmptyState />
+            <DropzoneContent />
+          </Dropzone>
+        )}
+      </div>
+
+      {/* Template File */}
+      <div className="glass rounded-xl p-6 space-y-4">
+        <h3 className="text-lg font-semibold text-white">Template File</h3>
+        <p className="text-sm text-muted-foreground">
+          Upload template files (zip, etc.)
+        </p>
+
+        {fileKeyStr ? (
+          <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+            <p className="text-green-400 text-sm">
+              File uploaded: {fileKeyStr}
+            </p>
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => {
+                setFileKeyStr(undefined);
+                setTemplateFile(null);
+              }}
+              className="mt-2 h-auto p-0 text-xs text-red-400 hover:underline hover:text-red-300"
+            >
+              Remove file
+            </Button>
+          </div>
+        ) : (
+          <Dropzone
+            accept={{
+              "application/zip": [".zip"],
+              "application/x-rar-compressed": [".rar"],
+            }}
+            maxSize={50 * 1024 * 1024}
+            maxFiles={1}
+            onDrop={handleFile}
+          >
+            <DropzoneEmptyState />
+            <DropzoneContent />
+          </Dropzone>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex gap-4">
+        <Button type="submit" disabled={loading}>
+          {loading
+            ? "Saving..."
+            : isEdit
+              ? "Update Template"
+              : "Create Template"}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          className="bg-white/5 border-white/10 text-white"
+        >
+          Cancel
+        </Button>
+      </div>
+      <GuardDialog />
+    </form>
+  );
 }

@@ -123,7 +123,7 @@ const CategoriesFilter = ({
             </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-64 p-1.5 bg-[#18181b] border-white/10 rounded-2xl">
+        <PopoverContent className="w-64 p-1.5 bg-surface-elevated border-white/10 rounded-2xl">
           <div className="flex flex-col gap-0.5 max-h-60 overflow-y-auto">
             {categories.map((cat, idx) => (
               <div
@@ -220,7 +220,7 @@ const PriceFilter = ({
             </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-72 p-4 bg-[#18181b] border-white/10 rounded-2xl">
+        <PopoverContent className="w-72 p-4 bg-surface-elevated border-white/10 rounded-2xl">
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <span className="text-white/80 text-sm font-medium">
@@ -349,7 +349,7 @@ const RatingFilter = ({
             </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-56 p-1.5 bg-[#18181b] border-white/10 rounded-2xl">
+        <PopoverContent className="w-56 p-1.5 bg-surface-elevated border-white/10 rounded-2xl">
           <div className="flex flex-col gap-0.5">
             {/* "All ratings" option */}
             <button
@@ -433,7 +433,7 @@ const SortFilter = ({
             <ChevronDown className="w-3.5 h-3.5 text-white/50 shrink-0" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-56 p-1.5 bg-[#18181b] border-white/10 rounded-2xl">
+        <PopoverContent className="w-56 p-1.5 bg-surface-elevated border-white/10 rounded-2xl">
           <Command className="bg-transparent">
             <CommandGroup>
               {SORT_OPTIONS.map((option) => (

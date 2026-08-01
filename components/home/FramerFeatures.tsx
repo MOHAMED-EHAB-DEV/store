@@ -133,7 +133,7 @@ const FramerFeatures = () => {
                   <div
                     className={`${
                       isVisible ? "w-full md:w-[80%]" : "w-0"
-                    } h-6 bg-[#262626] absolute start-0 bottom-0 rounded-e-lg transition-all duration-900 ease-linear`}
+                    } h-6 bg-neutral-800 absolute start-0 bottom-0 rounded-e-lg transition-all duration-900 ease-linear`}
                   />
                 </div>
               </div>

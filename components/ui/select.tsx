@@ -6,7 +6,7 @@ import React, {
   useState,
   useRef,
   useEffect,
-  type HTMLAttributes
+  type HTMLAttributes,
 } from "react";
 import { createPortal } from "react-dom";
 import { useFloating } from "@/hooks/use-floating";
@@ -14,7 +14,9 @@ import { cn } from "@/lib/utils";
 import { ChevronDown } from "@/components/ui/svgs/icons/ChevronDown";
 import { Check } from "@/components/ui/svgs/icons/Check";
 
-const flattenChildren = (children: React.ReactNode): React.ReactElement<any>[] => {
+const flattenChildren = (
+  children: React.ReactNode,
+): React.ReactElement<any>[] => {
   const result: React.ReactElement<any>[] = [];
   const traverse = (child: React.ReactNode) => {
     if (Array.isArray(child)) {
@@ -22,7 +24,7 @@ const flattenChildren = (children: React.ReactNode): React.ReactElement<any>[] =
     } else if (React.isValidElement(child)) {
       if (child.type === React.Fragment) {
         const childProps = child.props as HTMLAttributes<HTMLDivElement>;
-        const {children} = childProps;
+        const { children } = childProps;
         traverse(children);
       } else {
         result.push(child);
@@ -58,7 +60,10 @@ type SelectContextType = {
 
 const SelectContext = createContext<SelectContextType | null>(null);
 
-export interface SelectProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface SelectProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onChange"
+> {
   label?: React.ReactNode;
   children?: React.ReactNode;
   classNames?: {
@@ -119,8 +124,8 @@ export function Select({
     defaultSelectedKeys === "all"
       ? "all"
       : defaultSelectedKeys !== undefined
-      ? new Set(defaultSelectedKeys)
-      : new Set()
+        ? new Set(defaultSelectedKeys)
+        : new Set(),
   );
   const [focusedIndex, setFocusedIndex] = useState(-1);
 
@@ -128,8 +133,8 @@ export function Select({
     selectedKeys === "all"
       ? "all"
       : selectedKeys !== undefined
-      ? new Set(selectedKeys)
-      : internalValue;
+        ? new Set(selectedKeys)
+        : internalValue;
   const triggerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -184,11 +189,17 @@ export function Select({
     }
   });
 
-  const displayString = displayValue.length > 0 ? (
-    <div className="flex gap-1 truncate items-center">
-        {displayValue.map((child, i) => <React.Fragment key={i}>{i > 0 ? ", " : ""}{child}</React.Fragment>)}
-    </div>
-  ) : null;
+  const displayString =
+    displayValue.length > 0 ? (
+      <div className="flex gap-1 truncate items-center">
+        {displayValue.map((child, i) => (
+          <React.Fragment key={i}>
+            {i > 0 ? ", " : ""}
+            {child}
+          </React.Fragment>
+        ))}
+      </div>
+    ) : null;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
@@ -289,7 +300,10 @@ export function Select({
           role="combobox"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
-          aria-label={props["aria-label"] || (typeof label === "string" ? label : "Select")}
+          aria-label={
+            props["aria-label"] ||
+            (typeof label === "string" ? label : "Select")
+          }
           onKeyDown={(e) => {
             if (!isDisabled) handleKeyDown(e);
           }}
@@ -368,7 +382,13 @@ export function Select({
   );
 }
 
-function SelectMenu({ children, classNames }: { children: React.ReactElement<any>[]; classNames: any }) {
+function SelectMenu({
+  children,
+  classNames,
+}: {
+  children: React.ReactElement<any>[];
+  classNames: any;
+}) {
   const context = useContext(SelectContext);
   const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -402,7 +422,7 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
       }}
       data-state={context.isOpen ? "open" : "closed"}
       className={cn(
-        "z-50 min-w-32 max-w-[calc(100vw-2rem)] sm:max-w-sm md:max-w-md rounded-2xl border border-white/10 bg-[#18181b] text-white p-1.5 shadow-2xl transition-opacity duration-200 max-h-96",
+        "z-50 min-w-32 max-w-[calc(100vw-2rem)] sm:max-w-sm md:max-w-md rounded-2xl border border-white/10 bg-surface-elevated text-white p-1.5 shadow-2xl transition-opacity duration-200 max-h-96",
         context.isOpen
           ? "opacity-100 visible"
           : "opacity-0 invisible pointer-events-none",
@@ -441,7 +461,10 @@ function SelectMenu({ children, classNames }: { children: React.ReactElement<any
   );
 }
 
-export interface SelectItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onClick"> {
+export interface SelectItemProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onClick"
+> {
   value?: string;
   index?: number;
   startContent?: React.ReactNode;
@@ -473,12 +496,21 @@ export function SelectItem({
   if (!context) throw new Error("SelectItem must be used within Select");
 
   const itemValue =
-    itemKey !== undefined ? itemKey : value !== undefined ? value : (props as React.HTMLAttributes<HTMLElement> & { key?: string | number }).key;
+    itemKey !== undefined
+      ? itemKey
+      : value !== undefined
+        ? value
+        : (
+            props as React.HTMLAttributes<HTMLElement> & {
+              key?: string | number;
+            }
+          ).key;
   const isSelected =
     context.value === "all" ||
     (context.value instanceof Set &&
       itemValue !== undefined &&
-      (context.value.has(itemValue as string) || context.value.has(String(itemValue))));
+      (context.value.has(itemValue as string) ||
+        context.value.has(String(itemValue))));
   const isFocused = context.focusedIndex === index;
 
   return (
@@ -532,10 +564,7 @@ export function SelectItem({
           {endContent}
         </div>
       )}
-      {isSelected && (
-        <Check className="w-4 h-4 text-white shrink-0 ms-auto" />
-      )}
+      {isSelected && <Check className="w-4 h-4 text-white shrink-0 ms-auto" />}
     </div>
   );
 }
-

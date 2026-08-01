@@ -1,43 +1,63 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { createPortal } from "react-dom"
-import { useFloating } from "@/hooks/use-floating"
-import { cn } from "@/lib/utils"
-import { Slot } from "@/components/ui/slot"
+import * as React from "react";
+import { createPortal } from "react-dom";
+import { useFloating } from "@/hooks/use-floating";
+import { cn } from "@/lib/utils";
+import { Slot } from "@/components/ui/slot";
 
 type PopoverContextType = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
   contentRef: React.RefObject<HTMLDivElement | null>;
-}
+};
 
-const PopoverContext = React.createContext<PopoverContextType | undefined>(undefined);
+const PopoverContext = React.createContext<PopoverContextType | undefined>(
+  undefined,
+);
 
-function Popover({ children, open, onOpenChange }: { children: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) {
+function Popover({
+  children,
+  open,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
   const isOpen = open !== undefined ? open : uncontrolledOpen;
-  
-  const setIsOpen = React.useCallback((newOpen: boolean) => {
-    if (open === undefined) setUncontrolledOpen(newOpen);
-    onOpenChange?.(newOpen);
-  }, [open, onOpenChange]);
+
+  const setIsOpen = React.useCallback(
+    (newOpen: boolean) => {
+      if (open === undefined) setUncontrolledOpen(newOpen);
+      onOpenChange?.(newOpen);
+    },
+    [open, onOpenChange],
+  );
 
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <PopoverContext.Provider value={{ isOpen, setIsOpen, triggerRef, contentRef }}>
+    <PopoverContext.Provider
+      value={{ isOpen, setIsOpen, triggerRef, contentRef }}
+    >
       {children}
     </PopoverContext.Provider>
-  )
+  );
 }
 
-function PopoverTrigger({ asChild, className, onClick, ...props }: React.HTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) {
+function PopoverTrigger({
+  asChild,
+  className,
+  onClick,
+  ...props
+}: React.HTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) {
   const context = React.useContext(PopoverContext);
   if (!context) throw new Error("PopoverTrigger must be used within Popover");
-  
+
   const Comp = asChild ? Slot : "button";
 
   return (
@@ -51,7 +71,7 @@ function PopoverTrigger({ asChild, className, onClick, ...props }: React.HTMLAtt
       data-state={context.isOpen ? "open" : "closed"}
       {...props}
     />
-  )
+  );
 }
 
 function PopoverContent({
@@ -60,7 +80,10 @@ function PopoverContent({
   sideOffset = 4,
   children,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { align?: "start" | "center" | "end"; sideOffset?: number; }) {
+}: React.HTMLAttributes<HTMLDivElement> & {
+  align?: "start" | "center" | "end";
+  sideOffset?: number;
+}) {
   const context = React.useContext(PopoverContext);
   if (!context) throw new Error("PopoverContent must be used within Popover");
 
@@ -116,26 +139,29 @@ function PopoverContent({
         top: "-9999px",
         left: "-9999px",
         opacity: visible ? 1 : 0,
-        transform: visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(-4px)",
-        transition: "opacity 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transform: visible
+          ? "scale(1) translateY(0)"
+          : "scale(0.97) translateY(-4px)",
+        transition:
+          "opacity 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         transformOrigin: "top center",
       }}
       data-state={context.isOpen ? "open" : "closed"}
       data-lenis-prevent="true"
       className={cn(
-        "bg-[#18181b] text-white z-50 w-72 rounded-2xl border border-white/10 p-3 shadow-2xl outline-none",
-        className
+        "bg-surface-elevated text-white z-50 w-72 rounded-2xl border border-white/10 p-3 shadow-2xl outline-none",
+        className,
       )}
       {...props}
     >
       {children}
     </div>,
-    document.body
-  )
+    document.body,
+  );
 }
 
 function PopoverAnchor(props: any) {
-  return <div {...props} />
+  return <div {...props} />;
 }
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor }
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };

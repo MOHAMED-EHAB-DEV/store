@@ -21,10 +21,10 @@ const TestimonialItem: FC<TestimonialItemProps> = ({
       <div
         className="flex flex-col justify-between items-center gap-5 w-80 h-fit 
         rounded-2xl p-6 
-        bg-linear-to-b from-[#0b0f1a]/95 to-[#111827]/95 backdrop-blur-lg
+        bg-linear-to-b from-[#0b0f1a]/95 to-gray-900/95 backdrop-blur-lg
         border border-white/10 shadow-lg shadow-purple-500/10
         hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-2 transition-all duration-500
-        group-hover:bg-linear-to-b group-hover:from-[#0b0f1a]/98 group-hover:to-[#111827]/98"
+        group-hover:bg-linear-to-b group-hover:from-[#0b0f1a]/98 group-hover:to-gray-900/98"
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'scale(1.05) translateY(-8px) rotateX(5deg)';
         }}

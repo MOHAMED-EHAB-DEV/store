@@ -263,7 +263,7 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
         <div className="p-6 border-b border-white/10">
           <h3 className="text-lg font-bold text-white">Recent Request Trace Logs</h3>
-          <p className="text-xs text-gray-400">Latest execution logs captured in Redis buffer.</p>
+          <p className="text-xs text-gray-400">Latest execution logs captured in IN-MEMORY MAPS.</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-start text-sm">
@@ -282,7 +282,7 @@ export default function APIMetricsDetailClient({ data, routeParam }: APIMetricsD
                   <td colSpan={5} className="py-8">
                     <EmptyState
                       title="No recent request traces"
-                      description="No request execution logs found in Redis buffer for this route."
+                      description="No request execution logs found in IN-MEMORY MAPS for this route."
                     />
                   </td>
                 </tr>

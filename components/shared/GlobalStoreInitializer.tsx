@@ -77,13 +77,13 @@ export function GlobalStoreInitializer() {
       fetch("/api/analytics/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitorId, path: pathname }),
+        body: JSON.stringify({ visitorId, path: pathname, userId: user?._id }),
         keepalive: true,
       }).catch(() => {});
     };
 
     return runWhenIdle(doTrack, 200);
-  }, [pathname, visitorId]);
+  }, [pathname, visitorId, user?._id]);
 
   // 3. Fetch User Data
   useEffect(() => {

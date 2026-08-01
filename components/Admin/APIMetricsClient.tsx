@@ -151,7 +151,7 @@ export default function APIMetricsClient({ data }: APIMetricsClientProps) {
     {
       label: "Cache Hit Rate",
       value: `${globalStats.cacheHitRate}%`,
-      subtext: "Vercel / Redis caching efficiency",
+      subtext: "Global MAP caching efficiency",
       icon: Zap,
       gradient: "from-cyan-500 to-blue-500",
     },
@@ -161,7 +161,7 @@ export default function APIMetricsClient({ data }: APIMetricsClientProps) {
     <div className="p-6 max-w-7xl mx-auto space-y-8">
       <PageHeader
         title="API Metrics & Monitoring"
-        description="Real-time performance stats, latency distribution, and route monitoring powered by Redis."
+        description="Real-time performance stats, latency distribution, and route monitoring powered by In-Memory MAPS."
       />
 
       {/* Overview Cards */}

@@ -1,5 +1,6 @@
-import { NextRequest } from "next/server";
-import { redis } from "@/lib/redis";
+import { after, NextRequest } from "next/server";
+import { connectToDatabase } from "@/lib/database";
+import Analytics from "@/lib/models/Analytics";
 import { createErrorResponse, createAPIResponse } from "@/lib/utils/api-helpers";
 
 export async function POST(req: NextRequest) {
@@ -19,19 +20,45 @@ export async function POST(req: NextRequest) {
     const cleanMetrics = metrics.map((m: any) => ({
       name: m.name,
       value: m.value,
-      rating: m.rating,
-      delta: m.delta,
+      rating: m.rating || "good",
+      delta: m.delta || 0,
+      updatedAt: new Date(),
     }));
 
-    // Buffer payload into Redis for QStash batch processing
-    await redis.rpush(
-      "analytics:vitals:buffer",
-      JSON.stringify({
-        visitorId,
-        path,
-        metrics: cleanMetrics,
-      })
-    );
+    // Immediate MongoDB write after returning response
+    after(async () => {
+      try {
+        await connectToDatabase();
+        let doc = await Analytics.findOne({ visitorId });
+        if (!doc) {
+          doc = new Analytics({ visitorId, pages: [] });
+        }
+
+        let page = doc.pages.find((p) => p.path === path);
+        if (!page) {
+          page = { path, metrics: [] };
+          doc.pages.push(page);
+        }
+
+        for (const newMetric of cleanMetrics) {
+          if (!newMetric.name || newMetric.value === undefined) continue;
+          const existingIndex = page.metrics.findIndex((m) => m.name === newMetric.name);
+          if (existingIndex >= 0) {
+            page.metrics[existingIndex] = newMetric;
+          } else {
+            page.metrics.push(newMetric);
+          }
+        }
+
+        if (page.metrics.length > 5) {
+          page.metrics = page.metrics.slice(-5);
+        }
+
+        await doc.save();
+      } catch (err) {
+        console.error("[Analytics] vitals DB write error:", err);
+      }
+    });
 
     return createAPIResponse({ success: true }, { message: "Metrics enqueued" });
   } catch (error) {

@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Modal,
-  ModalContent,
-} from "@/components/ui/Modal";
+import { Modal, ModalContent } from "@/components/ui/Modal";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -53,29 +50,43 @@ export const MicroCommitmentModal = ({
         gsap.fromTo(
           ".pill-item",
           { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, stagger: 0.08, ease: "power2.out", duration: 0.5 }
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.08,
+            ease: "power2.out",
+            duration: 0.5,
+          },
         );
       }
 
       if (step === 2) {
-        gsap.to(step1Ref.current, { xPercent: -100, opacity: 0, duration: 0.4 });
+        gsap.to(step1Ref.current, {
+          xPercent: -100,
+          opacity: 0,
+          duration: 0.4,
+        });
         gsap.fromTo(
           step2Ref.current,
           { xPercent: 100, opacity: 0 },
-          { xPercent: 0, opacity: 1, duration: 0.4 }
+          { xPercent: 0, opacity: 1, duration: 0.4 },
         );
       }
 
       if (step === 3) {
-        gsap.to(step2Ref.current, { xPercent: -100, opacity: 0, duration: 0.4 });
+        gsap.to(step2Ref.current, {
+          xPercent: -100,
+          opacity: 0,
+          duration: 0.4,
+        });
         gsap.fromTo(
           step3Ref.current,
           { scale: 0.8, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" }
+          { scale: 1, opacity: 1, duration: 0.5, ease: "elastic.out(1, 0.5)" },
         );
       }
     },
-    { dependencies: [step, open], scope: containerRef }
+    { dependencies: [step, open], scope: containerRef },
   );
 
   const handlePillClick = (pill: string) => {
@@ -123,7 +134,7 @@ export const MicroCommitmentModal = ({
 
   return (
     <Modal open={open} onOpenChange={handleClose}>
-      <ModalContent className="border border-white/10 outline-none focus:outline-none focus:border-none bg-[#15161b] text-white rounded-2xl max-w-md overflow-hidden p-0">
+      <ModalContent className="border border-white/10 outline-none focus:outline-none focus:border-none bg-surface-dark text-white rounded-2xl max-w-md overflow-hidden p-0">
         {/* Progress dots */}
         <div className="flex justify-center gap-2 pt-4">
           {[1, 2, 3].map((s) => (
@@ -140,7 +151,10 @@ export const MicroCommitmentModal = ({
           ))}
         </div>
 
-        <div ref={containerRef} className="relative w-full h-[340px] overflow-hidden">
+        <div
+          ref={containerRef}
+          className="relative w-full h-[340px] overflow-hidden"
+        >
           {/* STEP 1 */}
           <div
             ref={step1Ref}
@@ -247,7 +261,9 @@ export const MicroCommitmentModal = ({
             <p className="text-gray-400 text-sm mb-6">
               Your review will help other developers find this template.
               <br />
-              <span className="text-purple-400">Enjoy building something awesome!</span>
+              <span className="text-purple-400">
+                Enjoy building something awesome!
+              </span>
             </p>
             <button
               onClick={handleClose}

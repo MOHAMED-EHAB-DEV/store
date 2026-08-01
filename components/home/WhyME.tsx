@@ -41,7 +41,8 @@ const WhyME = () => {
           height={330}
           loading="lazy"
           decoding="async"
-          className="w-1/2 md:w-full"
+          className="w-full h-auto max-w-[330px]"
+          style={{ height: "auto" }}
         />
       </div>
     </section>

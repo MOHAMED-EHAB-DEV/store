@@ -112,6 +112,7 @@ const Template = ({
                 fetchPriority="high"
                 decoding="async"
                 className="w-full h-full object-contain block"
+                style={{ aspectRatio: "400 / 288" }}
               />
             </>
           );
@@ -134,6 +135,7 @@ const Template = ({
             className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
               highResLoaded ? "opacity-100" : "opacity-0"
             }`}
+            style={{ aspectRatio: "400 / 288" }}
           />
         )}
 

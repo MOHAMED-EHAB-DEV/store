@@ -358,7 +358,10 @@ export function createErrorResponse(
 
       await connectToDatabase();
 
-      const user = await authenticateUser(true, true);
+      let user;
+      try {
+        user = await authenticateUser(false, true);
+      } catch (e) {}
 
       const errorLog = new ErrorLog({
         message: errorMessage,

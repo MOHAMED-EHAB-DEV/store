@@ -25,7 +25,6 @@ async function getUserTickets(req: NextRequest) {
     }
 
     const tickets = await Ticket.find(query)
-      .populate("user", "name email")
       .limit(limit)
       .sort({ createdAt: -1 })
       .lean();

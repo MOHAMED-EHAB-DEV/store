@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 async function getDashboardData() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const cookieStore = await cookies();
@@ -20,8 +19,12 @@ async function getDashboardData() {
 
   try {
     const [templatesRes, ticketsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/user/templates`, { headers: { Cookie: cookieHeader } }),
-      fetch(`${baseUrl}/api/user/tickets`, { headers: { Cookie: cookieHeader } }),
+      fetch(`${baseUrl}/api/user/templates`, {
+        headers: { Cookie: cookieHeader },
+      }),
+      fetch(`${baseUrl}/api/user/tickets`, {
+        headers: { Cookie: cookieHeader },
+      }),
     ]);
 
     const templates = templatesRes.ok
@@ -34,10 +37,6 @@ async function getDashboardData() {
       tickets: tickets.data || [],
     };
   } catch (error: any) {
-    if (error && typeof error === 'object' && 'digest' in error) throw error;
-    if (error && typeof error === "object" && "digest" in error) {
-      throw error;
-    }
     console.error("Error fetching dashboard data:", error);
     return { templates: [], tickets: [] };
   }

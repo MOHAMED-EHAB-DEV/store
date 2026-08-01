@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
 import StatCard from "@/components/Dashboard/shared/StatCard";
-import ChartCard, { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+import dynamic from "next/dynamic";
 import EmptyState from "@/components/Dashboard/shared/EmptyState";
 import { Activity } from "@/components/ui/svgs/icons/Activity";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
@@ -14,6 +14,12 @@ import { ArrowLeft } from "@/components/ui/svgs/icons/ArrowLeft";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import type { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+
+const ChartCard = dynamic(
+  () => import("@/components/Dashboard/shared/ChartCard"),
+  { ssr: false }
+);
 
 interface APIMetricsDetailClientProps {
   data: {

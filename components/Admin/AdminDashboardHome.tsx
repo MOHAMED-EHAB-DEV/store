@@ -1,16 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
-import ChartCard, {
-  ChartDataPoint,
-} from "@/components/Dashboard/shared/ChartCard";
+import dynamic from "next/dynamic";
 import { Users } from "@/components/ui/svgs/icons/Users";
 import { Templates } from "@/components/ui/svgs/icons/Templates";
 import { Download } from "@/components/ui/svgs/icons/Download";
 import { Headset } from "@/components/ui/svgs/icons/Headset";
 import { TrendingUp } from "@/components/ui/svgs/icons/TrendingUp";
+import type { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+
+const ChartCard = dynamic(
+  () => import("@/components/Dashboard/shared/ChartCard"),
+  { ssr: false }
+);
 
 interface AdminDashboardHomeProps {
   data: {

@@ -154,7 +154,7 @@ export default async function RootLayout({
             "https://www.linkedin.com/in/1-mohammed",
           ]}
         />
-        <Script id="chunk-error-reload" strategy="beforeInteractive">{`
+        <Script id="chunk-error-reload" strategy="afterInteractive">{`
           (function () {
             var RELOAD_KEY = '__chunk_reload__';
             function isChunkError(err) {

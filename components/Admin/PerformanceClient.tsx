@@ -4,14 +4,19 @@ import React, { useMemo, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
-import ChartCard, { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+import dynamic from "next/dynamic";
 import { Zap } from "@/components/ui/svgs/icons/Zap";
 import { MousePointer } from "@/components/ui/svgs/icons/MousePointer";
 import { Clock } from "@/components/ui/svgs/icons/Clock";
 import { Activity } from "@/components/ui/svgs/icons/Activity";
 import { History } from "@/components/ui/svgs/icons/History";
 import { Pagination } from "@/components/ui/pagination";
-import { cn } from "@/lib/utils";
+import type { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+
+const ChartCard = dynamic(
+  () => import("@/components/Dashboard/shared/ChartCard"),
+  { ssr: false }
+);
 
 interface PerformanceClientProps {
   data: {

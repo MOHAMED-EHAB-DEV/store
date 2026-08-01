@@ -4,9 +4,7 @@ import { useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import StatCard from "@/components/Dashboard/shared/StatCard";
 import PageHeader from "@/components/Dashboard/shared/PageHeader";
-import ChartCard, {
-  ChartDataPoint,
-} from "@/components/Dashboard/shared/ChartCard";
+import dynamic from "next/dynamic";
 import { Users } from "@/components/ui/svgs/icons/Users";
 import { Target } from "@/components/ui/svgs/icons/Target";
 import { Globe } from "@/components/ui/svgs/icons/Globe";
@@ -15,7 +13,12 @@ import { History } from "@/components/ui/svgs/icons/History";
 import { Pagination } from "@/components/ui/pagination";
 import Image from "next/image";
 import { createImageProxyLoader } from "@/lib/utils/image";
-import { cn } from "@/lib/utils";
+import type { ChartDataPoint } from "@/components/Dashboard/shared/ChartCard";
+
+const ChartCard = dynamic(
+  () => import("@/components/Dashboard/shared/ChartCard"),
+  { ssr: false }
+);
 
 interface AdminAnalyticsClientProps {
   data: {

@@ -1,7 +1,10 @@
 import { after, NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import Analytics from "@/lib/models/Analytics";
-import { createErrorResponse, createAPIResponse } from "@/lib/utils/api-helpers";
+import {
+  createErrorResponse,
+  createAPIResponse,
+} from "@/lib/utils/api-helpers";
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,39 +32,59 @@ export async function POST(req: NextRequest) {
     after(async () => {
       try {
         await connectToDatabase();
-        let doc = await Analytics.findOne({ visitorId });
-        if (!doc) {
-          doc = new Analytics({ visitorId, pages: [] });
-        }
 
-        let page = doc.pages.find((p) => p.path === path);
-        if (!page) {
-          doc.pages.push({ path, metrics: [] });
-          page = doc.pages[doc.pages.length - 1];
-        }
+        // Ensure parent document exists
+        await Analytics.updateOne(
+          { visitorId },
+          { $setOnInsert: { visitorId, pages: [] } },
+          { upsert: true },
+        );
 
         for (const newMetric of cleanMetrics) {
           if (!newMetric.name || newMetric.value === undefined) continue;
-          const existingIndex = page.metrics.findIndex((m) => m.name === newMetric.name);
-          if (existingIndex >= 0) {
-            page.metrics[existingIndex] = newMetric;
-          } else {
-            page.metrics.push(newMetric);
+
+          // 1. Try to update existing metric in matching page
+          const updateResult = await Analytics.updateOne(
+            {
+              visitorId,
+              "pages.path": path,
+              "pages.metrics.name": newMetric.name,
+            },
+            {
+              $set: {
+                "pages.$[p].metrics.$[m]": newMetric,
+              },
+            },
+            {
+              arrayFilters: [{ "p.path": path }, { "m.name": newMetric.name }],
+            },
+          );
+
+          // 2. If metric didn't exist in page, push it to metrics array
+          if (updateResult.matchedCount === 0) {
+            const pagePushResult = await Analytics.updateOne(
+              { visitorId, "pages.path": path },
+              { $push: { "pages.$.metrics": newMetric } },
+            );
+
+            // 3. If page didn't exist, push new page with metric
+            if (pagePushResult.matchedCount === 0) {
+              await Analytics.updateOne(
+                { visitorId },
+                { $push: { pages: { path, metrics: [newMetric] } } },
+              );
+            }
           }
         }
-
-        if (page.metrics.length > 5) {
-          page.metrics = page.metrics.slice(-5);
-        }
-
-        doc.markModified("pages");
-        await doc.save();
       } catch (err) {
         console.error("[Analytics] vitals DB write error:", err);
       }
     });
 
-    return createAPIResponse({ success: true }, { message: "Metrics enqueued" });
+    return createAPIResponse(
+      { success: true },
+      { message: "Metrics enqueued" },
+    );
   } catch (error) {
     console.error("Error parsing vitals request:", error);
     return createErrorResponse("Internal server error", 500);

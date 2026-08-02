@@ -52,7 +52,8 @@ export default function ConciergeWidget() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      content: "Hello! I am your AI Customer Concierge. I can guide you to our premium design templates, custom Next.js engineering slots, or help you contact Mohammed Ehab. How can I help you today?",
+      content:
+        "Hello! I am your AI Customer Concierge. I can guide you to our premium design templates, custom Next.js engineering slots, or help you contact Mohammed Ehab. How can I help you today?",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -61,7 +62,24 @@ export default function ConciergeWidget() {
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(false);
 
+  const chatContainer = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: globalThis.MouseEvent) => {
+      if (
+        chatContainer.current &&
+        !chatContainer.current?.contains(e.target as Node)
+      )
+        handleClose();
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [chatContainer]);
 
   // Initialize chatId and visitorId
   useEffect(() => {
@@ -91,7 +109,10 @@ export default function ConciergeWidget() {
     setWarning(null);
 
     // Append user message
-    const newMessages = [...messages, { role: "user", content: text } as Message];
+    const newMessages = [
+      ...messages,
+      { role: "user", content: text } as Message,
+    ];
     setMessages(newMessages);
     setLoading(true);
 
@@ -135,7 +156,10 @@ export default function ConciergeWidget() {
         ]);
 
         // If action triggers template loading
-        if (data.action?.action === "template_list" || data.action?.action === "template_search") {
+        if (
+          data.action?.action === "template_list" ||
+          data.action?.action === "template_search"
+        ) {
           fetchTemplates(data.action);
         }
       } else {
@@ -155,10 +179,13 @@ export default function ConciergeWidget() {
       if (action) {
         if (action.query) params.set("search", action.query);
         if (action.type) params.set("type", action.type);
-        if (action.minPrice !== undefined) params.set("minPrice", action.minPrice.toString());
-        if (action.maxPrice !== undefined) params.set("maxPrice", action.maxPrice.toString());
+        if (action.minPrice !== undefined)
+          params.set("minPrice", action.minPrice.toString());
+        if (action.maxPrice !== undefined)
+          params.set("maxPrice", action.maxPrice.toString());
         if (action.category) params.set("categories", action.category);
-        if (action.minRating !== undefined) params.set("minRating", action.minRating.toString());
+        if (action.minRating !== undefined)
+          params.set("minRating", action.minRating.toString());
         if (action.sortBy) params.set("sortBy", action.sortBy);
       }
       params.set("limit", "3");
@@ -200,7 +227,7 @@ export default function ConciergeWidget() {
           className="text-purple-400 no-underline hover:text-purple-300 font-semibold transition-colors"
         >
           {text}
-        </Link>
+        </Link>,
       );
 
       lastIndex = linkRegex.lastIndex;
@@ -224,15 +251,20 @@ export default function ConciergeWidget() {
           aria-haspopup="dialog"
           className="relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-fuchsia-600 to-pink-500 text-white shadow-2xl hover:scale-105 transition-all duration-300 group cursor-pointer border border-white/20"
         >
-          <div aria-hidden="true" className="absolute inset-0 rounded-full bg-purple-600/30 blur-md group-hover:blur-lg transition-all" />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 rounded-full bg-purple-600/30 blur-md group-hover:blur-lg transition-all"
+          />
           <Chat className="w-6 h-6 relative z-10" aria-hidden="true" />
         </button>
       )}
 
       {/* Expanded Chat Drawer */}
       {(isOpen || isClosing) && (
-        <div className={`w-[380px] sm:w-[420px] h-[600px] flex flex-col bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden duration-300 ${isClosing ? "animate-out fade-out slide-out-to-bottom-5" : "animate-in fade-in slide-in-from-bottom-5"}`}>
-          
+        <div
+          ref={chatContainer}
+          className={`w-[380px] sm:w-[420px] h-[600px] flex flex-col bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden duration-300 ${isClosing ? "animate-out fade-out slide-out-to-bottom-5" : "animate-in fade-in slide-in-from-bottom-5"}`}
+        >
           {/* Header */}
           <div className="px-5 py-4 bg-gradient-to-r from-purple-950 via-neutral-900 to-neutral-950 border-b border-neutral-800 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -240,8 +272,12 @@ export default function ConciergeWidget() {
                 <Sparkles className="w-4 h-4 text-purple-400" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white tracking-wide">MHD AI Concierge</h3>
-                <span className="text-[10px] text-purple-400 font-mono tracking-wider uppercase">Active Assistant</span>
+                <h3 className="text-sm font-bold text-white tracking-wide">
+                  MHD AI Concierge
+                </h3>
+                <span className="text-[10px] text-purple-400 font-mono tracking-wider uppercase">
+                  Active Assistant
+                </span>
               </div>
             </div>
             <button
@@ -254,7 +290,12 @@ export default function ConciergeWidget() {
           </div>
 
           {/* Messages Window */}
-          <div role="log" aria-live="polite" aria-label="Chat messages" className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-950 scrollbar-thin">
+          <div
+            role="log"
+            aria-live="polite"
+            aria-label="Chat messages"
+            className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral-950 scrollbar-thin"
+          >
             {messages.map((msg, index) => (
               <div key={index} className="space-y-2" data-lenis-prevent>
                 <div
@@ -267,8 +308,8 @@ export default function ConciergeWidget() {
                       msg.role === "user"
                         ? "bg-purple-600 text-white rounded-tr-none"
                         : msg.role === "system"
-                        ? "bg-red-500/10 text-red-400 border border-red-500/20 w-full text-center"
-                        : "bg-neutral-900 text-neutral-200 border border-neutral-800 rounded-tl-none"
+                          ? "bg-red-500/10 text-red-400 border border-red-500/20 w-full text-center"
+                          : "bg-neutral-900 text-neutral-200 border border-neutral-800 rounded-tl-none"
                     }`}
                   >
                     {renderMessageContent(msg.content)}
@@ -278,7 +319,6 @@ export default function ConciergeWidget() {
                 {/* Structured UI Widgets Triggered by Actions */}
                 {msg.role === "model" && msg.action && (
                   <div className="pl-2 pr-6 py-2">
-                    
                     {/* Contact Card Action */}
                     {msg.action.action === "contact_info" && (
                       <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4 space-y-3 shadow-inner">
@@ -323,7 +363,8 @@ export default function ConciergeWidget() {
                     )}
 
                     {/* Template Search or List Action */}
-                    {(msg.action.action === "template_list" || msg.action.action === "template_search") && (
+                    {(msg.action.action === "template_list" ||
+                      msg.action.action === "template_search") && (
                       <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4 space-y-3 shadow-inner">
                         <h4 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
                           Matched Design Templates
@@ -354,7 +395,8 @@ export default function ConciergeWidget() {
                                     {tpl.title}
                                   </h5>
                                   <p className="text-[10px] text-neutral-400 font-mono capitalize">
-                                    {tpl.type} • ★ {tpl.averageRating.toFixed(1)}
+                                    {tpl.type} • ★{" "}
+                                    {tpl.averageRating.toFixed(1)}
                                   </p>
                                 </div>
                                 <div className="text-right">
@@ -368,9 +410,13 @@ export default function ConciergeWidget() {
                         ) : (
                           <p className="text-xs text-neutral-500 text-center py-2">
                             No templates match the request. View all on{" "}
-                            <a href="/templates" className="text-purple-400 underline">
+                            <a
+                              href="/templates"
+                              className="text-purple-400 underline"
+                            >
                               Templates Page
-                            </a>.
+                            </a>
+                            .
                           </p>
                         )}
                       </div>
@@ -383,7 +429,10 @@ export default function ConciergeWidget() {
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-neutral-900 border border-neutral-800 text-neutral-400 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin text-purple-500" aria-hidden="true" />
+                  <Loader2
+                    className="w-4 h-4 animate-spin text-purple-500"
+                    aria-hidden="true"
+                  />
                   <span>Thinking...</span>
                 </div>
               </div>
@@ -394,21 +443,29 @@ export default function ConciergeWidget() {
           {/* Quick Suggestions Chips */}
           <div className="px-4 py-2 border-t border-neutral-900 bg-neutral-950 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
             <button
-              onClick={() => handleSuggestionClick("Search for portfolio templates")}
+              onClick={() =>
+                handleSuggestionClick("Search for portfolio templates")
+              }
               aria-label="Search for portfolio templates"
               className="text-[11px] bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-2.5 py-1 rounded-full border border-neutral-800 transition-colors cursor-pointer"
             >
               🔍 Portfolios
             </button>
             <button
-              onClick={() => handleSuggestionClick("Tell me about custom Next.js development slots")}
+              onClick={() =>
+                handleSuggestionClick(
+                  "Tell me about custom Next.js development slots",
+                )
+              }
               aria-label="Ask about custom Next.js development slots"
               className="text-[11px] bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-2.5 py-1 rounded-full border border-neutral-800 transition-colors cursor-pointer"
             >
               🚀 Custom Dev Slots
             </button>
             <button
-              onClick={() => handleSuggestionClick("How can I contact Mohammed Ehab?")}
+              onClick={() =>
+                handleSuggestionClick("How can I contact Mohammed Ehab?")
+              }
               aria-label="Ask how to contact Mohammed Ehab"
               className="text-[11px] bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-2.5 py-1 rounded-full border border-neutral-800 transition-colors cursor-pointer"
             >
@@ -419,7 +476,10 @@ export default function ConciergeWidget() {
           {/* Spam warnings display */}
           {warning && (
             <div className="px-4 py-2 bg-red-950/20 border-t border-red-900/30 text-red-400 text-xs flex items-center gap-2 animate-in slide-in-from-bottom-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" aria-hidden="true" />
+              <AlertCircle
+                className="w-4 h-4 shrink-0 text-red-500"
+                aria-hidden="true"
+              />
               <span>{warning}</span>
             </div>
           )}
@@ -436,7 +496,9 @@ export default function ConciergeWidget() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={isBanned ? "Chat disabled..." : "Ask the Concierge..."}
+              placeholder={
+                isBanned ? "Chat disabled..." : "Ask the Concierge..."
+              }
               aria-label="Message to AI Concierge"
               disabled={loading || isBanned}
               className="flex-1 bg-neutral-900 text-white placeholder-neutral-500 rounded-xl px-4 py-2.5 text-sm focus:border focus:border-purple-600 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -450,7 +512,6 @@ export default function ConciergeWidget() {
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
           </form>
-
         </div>
       )}
     </div>

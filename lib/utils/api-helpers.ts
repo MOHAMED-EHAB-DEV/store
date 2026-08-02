@@ -225,7 +225,10 @@ class PerformanceMonitor {
           timestamp: new Date(),
         };
 
-        const existing = await APIMetrics.findOne({ route: timer.route, method: timer.method })
+        const existing = await APIMetrics.findOne({
+          route: timer.route,
+          method: timer.method,
+        })
           .select({ metrics: { $slice: -499 } })
           .lean();
 
@@ -255,7 +258,7 @@ class PerformanceMonitor {
                 cacheHitCount: options.cacheHit ? 1 : 0,
               },
               $set: { avgDuration, lastUpdated: new Date() },
-            }
+            },
           );
         }
       } catch (err) {
@@ -320,7 +323,13 @@ export function createAPIResponse<T>(
     timestamp: new Date().toISOString(),
   };
 
-  return NextResponse.json(response);
+  const res = NextResponse.json(response);
+  Object.defineProperty(res, "_responseData", {
+    value: data,
+    enumerable: false,
+    writable: false,
+  });
+  return res;
 }
 
 export function createErrorResponse(
@@ -492,15 +501,24 @@ export function withAPIMiddleware(
           : req.nextUrl.pathname + req.nextUrl.search;
 
         try {
-          const responseData = await response.clone().json();
-          APICache.set(cacheKey, responseData, options.cache.ttl);
+          const responseData = (response as any)._responseData;
+          if (responseData) {
+            APICache.set(cacheKey, responseData, options.cache.ttl);
+          } else {
+            try {
+              const data = await response.clone().json();
+              APICache.set(cacheKey, data, options.cache.ttl);
+            } catch (e) {
+              // Silent Failure - original response stream remains intact
+            }
+          }
+
           response.headers.set("X-Cache", "MISS");
           response.headers.set(
             "Cache-Control",
             `public, max-age=${Math.floor(options.cache.ttl / 1000)}`,
           );
         } catch (error) {
-          // Silent Failure
           // console.warn("Failed to cache response:", error);
         }
       }
@@ -513,7 +531,10 @@ export function withAPIMiddleware(
       // Add security headers
       response.headers.set("X-Content-Type-Options", "nosniff");
       response.headers.set("X-Frame-Options", "SAMEORIGIN");
-      response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+      response.headers.set(
+        "Strict-Transport-Security",
+        "max-age=63072000; includeSubDomains; preload",
+      );
 
       return response;
     } catch (error) {

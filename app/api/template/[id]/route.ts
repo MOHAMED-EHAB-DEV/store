@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { isValidObjectId } from "mongoose";
-import Review from "@/lib/models/Review";
 import { connectToDatabase } from "@/lib/database";
 import Template from "@/lib/models/Template";
 import {

@@ -36,8 +36,8 @@ export async function POST(req: NextRequest) {
 
         let page = doc.pages.find((p) => p.path === path);
         if (!page) {
-          page = { path, metrics: [] };
-          doc.pages.push(page);
+          doc.pages.push({ path, metrics: [] });
+          page = doc.pages[doc.pages.length - 1];
         }
 
         for (const newMetric of cleanMetrics) {
@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
           page.metrics = page.metrics.slice(-5);
         }
 
+        doc.markModified("pages");
         await doc.save();
       } catch (err) {
         console.error("[Analytics] vitals DB write error:", err);

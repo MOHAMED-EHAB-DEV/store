@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export const Spinner = ({ className } : { className: string }) => (
+export const Spinner = ({ className } : { className?: string }) => (
   <svg
     aria-hidden="true"
     className={cn("inline w-5 h-5 text-neutral-tertiary animate-spin fill-blue-500", className)}

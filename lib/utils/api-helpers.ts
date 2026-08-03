@@ -409,6 +409,7 @@ export function withAPIMiddleware(
   handler: (req: NextRequest, context?: any) => Promise<NextResponse>,
   options: {
     rateLimit?: { maxRequests: number; windowMs: number };
+    disableRateLimit?: boolean;
     cache?: { ttl: number; keyGenerator?: (req: NextRequest) => string };
     auth?: boolean;
     validate?: (req: NextRequest) => Promise<boolean>;
@@ -426,7 +427,7 @@ export function withAPIMiddleware(
 
     try {
       // Rate limiting
-      if (options.rateLimit) {
+      if (options.rateLimit && !options.disableRateLimit) {
         const clientIP =
           req.headers.get("x-forwarded-for") ||
           req.headers.get("x-real-ip") ||
@@ -491,6 +492,7 @@ export function withAPIMiddleware(
           return response;
         }
       }
+
       // Execute handler
       const response = await handler(req, context);
 
@@ -523,8 +525,13 @@ export function withAPIMiddleware(
         }
       }
 
+      const isCacheHit =
+        cacheHit ||
+        response.headers.get("X-Cache") === "HIT" ||
+        response.headers.get("x-cache") === "HIT";
+
       PerformanceMonitor.endTimer(timer, response.status, {
-        cacheHit,
+        cacheHit: isCacheHit,
         rateLimited,
       });
 

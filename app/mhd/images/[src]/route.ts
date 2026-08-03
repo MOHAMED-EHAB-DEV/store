@@ -319,6 +319,7 @@ function notModifiedResponse(etagValue: string): NextResponse {
     headers: {
       ETag: etagValue,
       "Cache-Control": "public, max-age=604800, s-maxage=31536000, immutable",
+      "X-Cache": "HIT",
     },
   });
 }

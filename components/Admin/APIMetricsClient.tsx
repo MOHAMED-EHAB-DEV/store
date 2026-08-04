@@ -286,7 +286,7 @@ export default function APIMetricsClient({ data }: APIMetricsClientProps) {
                           >
                             {item.method}
                           </Badge>
-                          <span className="font-mono text-white group-hover:text-blue-400 transition-colors font-medium">
+                          <span className="font-mono truncate max-w-48 text-white group-hover:text-blue-400 transition-colors font-medium">
                             {item.route}
                           </span>
                         </div>

@@ -1,4 +1,5 @@
 import Hero from "@/components/home/Hero";
+import StatsSection from "@/components/home/StatsSection";
 import WhyME from "@/components/home/WhyME";
 import FeaturedTemplates from "@/components/home/FeaturedTemplates";
 // import CategoriesSection from "@/components/home/CategoriesSection";
@@ -54,6 +55,8 @@ export default async function Home() {
         {/* <CustomBuildBand /> */}
         <HeroOrbs />
       </div>
+
+      <StatsSection />
 
       <FeaturedTemplates />
       <CategoriesSection />

@@ -209,7 +209,6 @@ const FramerFeatures = () => {
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover scale-[1.05] brightness-[0.75] saturate-[0.9]"
-                style={{ aspectRatio: "600 / 400" }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10"></div>
               <div className="relative z-10">
@@ -242,8 +241,7 @@ const FramerFeatures = () => {
                 height={150}
                 loading="lazy"
                 decoding="async"
-                className="w-auto h-auto aspect-square"
-                style={{ aspectRatio: "1 / 1" }}
+                className="w-auto h-auto"
               />
               <img
                 {...getImageProps({
@@ -256,8 +254,7 @@ const FramerFeatures = () => {
                 height={25}
                 loading="lazy"
                 decoding="async"
-                className="absolute bottom-0 end-24 w-auto h-auto aspect-square"
-                style={{ aspectRatio: "1 / 1" }}
+                className="absolute bottom-0 end-24 w-auto h-auto"
               />
             </div>
             <div className="flex flex-col gap-1">

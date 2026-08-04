@@ -68,7 +68,7 @@ export function GlobalStoreInitializer() {
 
   // 2. Track Analytics Paths
   useEffect(() => {
-    if (!visitorId || !pathname) return;
+    if (!visitorId || !pathname || process.env.NODE_ENV === "development") return;
 
     if (trackedPaths.current.has(pathname)) return;
     trackedPaths.current.add(pathname);
@@ -248,5 +248,6 @@ export function GlobalStoreInitializer() {
     setSocket,
   ]);
 
+  if (process.env.NODE_ENV === "development") return null;
   return <WebVitalsReporter />;
 }

@@ -196,6 +196,10 @@ async function downloadHandler(req: NextRequest): Promise<NextResponse> {
         statusCode,
         meta: { rangeRequested: Boolean(incomingRange) },
       });
+
+      const totalDownloads = await DownloadLog.countDocuments({});
+      const { broadcastStatUpdate } = await import("@/lib/socket-server-notifier");
+      broadcastStatUpdate("downloads", totalDownloads);
     } catch (err) {
       console.warn("Failed to persist DownloadLog:", err);
     }

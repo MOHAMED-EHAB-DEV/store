@@ -202,6 +202,10 @@ async function createAdminTemplate(req: NextRequest) {
     await revalidate("/");
     await revalidate("/sitemap.xml");
 
+    const totalTemplates = await Template.countDocuments({ isActive: { $ne: false } });
+    const { broadcastStatUpdate } = await import("@/lib/socket-server-notifier");
+    broadcastStatUpdate("templates", totalTemplates);
+
     return createAPIResponse(template, {
       message: "Template created successfully",
     });

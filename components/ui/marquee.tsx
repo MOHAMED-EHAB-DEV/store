@@ -89,12 +89,11 @@ export function VerticalMarquee(
                               defaultWidth: 56,
                             }).imgProps}
                             alt=""
-                            className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50 aspect-square"
+                            className="xl:size-12 md:size-10 size-7 md:p-2 p-1 rounded-full bg-white-50"
                             width={28}
                             height={28}
                             loading="lazy"
                             decoding="async"
-                            style={{ aspectRatio: "1 / 1" }}
                         />
                         <span
                             className="whitespace-nowrap w-full bg-primary px-3 py-2 rounded-full font-medium text-sm">
@@ -149,8 +148,6 @@ export default function HorizontialMarquee(
                                         height={58}
                                         loading="lazy"
                                         decoding="async"
-                                        className="aspect-square"
-                                        style={{ aspectRatio: "1 / 1" }}
                                     />
                                 </div>
                                 <div className="font-semibold text-sm text-white">

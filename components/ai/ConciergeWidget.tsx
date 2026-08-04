@@ -241,7 +241,7 @@ export default function ConciergeWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 end-6 z-50 font-inter">
+    <div className="fixed bottom-4 end-4 sm:bottom-6 sm:end-6 z-50">
       {/* Floating Action Button */}
       {!isOpen && (
         <button
@@ -263,7 +263,7 @@ export default function ConciergeWidget() {
       {(isOpen || isClosing) && (
         <div
           ref={chatContainer}
-          className={`w-[380px] sm:w-[420px] h-[600px] flex flex-col bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden duration-300 ${isClosing ? "animate-out fade-out slide-out-to-bottom-5" : "animate-in fade-in slide-in-from-bottom-5"}`}
+          className={`w-[calc(100vw-2rem)] sm:w-[420px] h-[600px] max-h-[calc(100vh-6rem)] flex flex-col bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden duration-300 ${isClosing ? "animate-out fade-out slide-out-to-bottom-5" : "animate-in fade-in slide-in-from-bottom-5"}`}
         >
           {/* Header */}
           <div className="px-5 py-4 bg-gradient-to-r from-purple-950 via-neutral-900 to-neutral-950 border-b border-neutral-800 flex items-center justify-between">
@@ -318,7 +318,7 @@ export default function ConciergeWidget() {
 
                 {/* Structured UI Widgets Triggered by Actions */}
                 {msg.role === "model" && msg.action && (
-                  <div className="pl-2 pr-6 py-2">
+                  <div className="ps-2 pe-6 py-2">
                     {/* Contact Card Action */}
                     {msg.action.action === "contact_info" && (
                       <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4 space-y-3 shadow-inner">
@@ -399,7 +399,7 @@ export default function ConciergeWidget() {
                                     {tpl.averageRating.toFixed(1)}
                                   </p>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-end">
                                   <p className="text-xs font-bold text-purple-400">
                                     ${tpl.price}
                                   </p>

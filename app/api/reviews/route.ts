@@ -69,6 +69,18 @@ async function createReview(req: NextRequest) {
     }
 
     await revalidate(`/templates/${templateId}`);
+
+    const ratingAgg = await Review.aggregate([
+      { $match: { isActive: { $ne: false } } },
+      { $group: { _id: null, avgRating: { $avg: "$rating" } } },
+    ]);
+    const avgRating =
+      ratingAgg.length > 0 && ratingAgg[0].avgRating
+        ? Math.round(ratingAgg[0].avgRating * 10) / 10
+        : 4.9;
+
+    const { broadcastStatUpdate } = await import("@/lib/socket-server-notifier");
+    broadcastStatUpdate("rating", avgRating);
     
     return NextResponse.json({ success: true, review }, { status: 201 });
   } catch (err: any) {

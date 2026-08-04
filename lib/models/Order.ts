@@ -3,7 +3,6 @@ import "./User";
 import "./Template";
 
 export interface IOrder extends Document {
-
   user: Types.ObjectId;
   templates: Types.ObjectId[];
   totalAmount: number;

@@ -20,6 +20,7 @@ export default function WebVitalsReporter() {
 
   // Send queued metrics to the server
   const flushQueue = () => {
+    if (process.env.NODE_ENV === "development") return;
     if (queue.current.length === 0 || isSending.current) return;
 
     isSending.current = true;
@@ -50,6 +51,8 @@ export default function WebVitalsReporter() {
   };
 
   useReportWebVitals((metric) => {
+    if (process.env.NODE_ENV === "development") return;
+
     // Standardize rating to map to our schema enum
     let rating = "good";
     if (metric.rating === "needs-improvement") rating = "needs-improvement";
@@ -68,6 +71,7 @@ export default function WebVitalsReporter() {
 
   // Flush remaining metrics on unmount (navigation)
   useEffect(() => {
+    if (process.env.NODE_ENV === "development") return;
     return () => {
       flushQueue();
     }

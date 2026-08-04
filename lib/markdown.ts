@@ -444,7 +444,7 @@ function rehypeAddClasses() {
         }
         case "iframe":
         case "video":
-          addClass("w-full aspect-video rounded-lg my-6 max-w-full");
+          addClass("w-full rounded-lg my-6 max-w-full");
           break;
         case "ul":
           addClass("list-disc pl-6 mb-4 space-y-2 break-words");

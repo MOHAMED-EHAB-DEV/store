@@ -62,7 +62,7 @@ export default function TemplateThumbnail({
           }
         }}
       >
-        {/* Low-res base image that establishes natural height and aspect ratio */}
+        {/* Low-res base image that establishes natural height */}
         <img
           {...baseImageProps.imgProps}
           alt={title}
@@ -72,7 +72,6 @@ export default function TemplateThumbnail({
           fetchPriority="high"
           decoding="async"
           className="w-full h-auto rounded-xl block"
-          style={{ aspectRatio: "1200 / 575" }}
         />
 
       {/* High-res overlay image that fades in 3.5s after page load */}
@@ -93,7 +92,6 @@ export default function TemplateThumbnail({
           className={`absolute inset-0 w-full h-full rounded-xl transition-opacity duration-700 ease-in-out ${
             highResLoaded ? "opacity-100" : "opacity-0"
           }`}
-          style={{ aspectRatio: "1200 / 575" }}
         />
       )}
 

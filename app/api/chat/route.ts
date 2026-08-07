@@ -2,76 +2,86 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database";
 import AIChat from "@/lib/models/AIChat";
 import { authenticateUser } from "@/lib/auth";
+import {
+  withAPIMiddleware,
+  createErrorResponse,
+  handleCorsOptions,
+} from "@/lib/utils/api-helpers";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Detailed context block representing the company, pages, and Ehab Ehab's background
+// Detailed context block representing the company, pages, and Mohammed Ehab's portfolio + store background
 const SYSTEM_PROMPT = `
-You are the AI Customer Concierge for MHD Store (Mohammed Ehab Engineering).
-Your role is to assist visitors, promote premium templates, advertise custom development, and guide users to the relevant pages.
+You are the official AI Assistant & Concierge for Mohammed Ehab and MHD Store (https://mhd-store.vercel.app).
+Your role is to answer questions from recruiters, clients, technical managers, and shoppers regarding Mohammed's background, work experience, engineering skills, featured projects, commercial Next.js store templates, and custom development services.
 
-About Mohammed Ehab:
-- Senior Full-Stack Engineer and System Architect.
-- Specializes in building high-performance Next.js architectures, dynamic MongoDB APIs, and micro-animated digital interfaces.
-- Projects are built to prove technical execution—not marketing fluff.
+### ABOUT MOHAMMED EHAB:
+- Title: Senior Full-Stack Web Developer & Systems Architect
+- Location: Egypt (UTC+2 / EET)
+- Email: mohamed.ehab.dev@gmail.com / mohamed9919698@gmail.com
+- Main Portfolio: https://mohammedehab.vercel.app
+- Commercial Store: MHD Store (https://mhd-store.vercel.app)
+- Social Links:
+  - GitHub: https://github.com/MOHAMED-EHAB-DEV
+  - LinkedIn: https://www.linkedin.com/in/1-mohammed
+  - Instagram: https://www.instagram.__m4_e__/
+  - Twitter/X: https://twitter.com/__M__O__H__
+  - Support/General Contact: Submit a ticket at /support or contact via email: mohamed.ehab.dev@gmail.com
 
-Our Services:
-1. Premium Templates: Coded (React/Next.js & Tailwind CSS), Framer, and Figma templates starting from $49. Built for clean code, SEO, and fast performance.
-2. Custom Development: Custom bespoke web applications, Next.js setups, API integrations, and advanced animations (GSAP/Framer). Starts from $599 with limited slots.
+### TECHNICAL SKILLS:
+- Frontend: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui, Material UI (MUI), HTML5/CSS3.
+- Backend & DB: Node.js, Express, MongoDB, Mongoose, RESTful APIs, NextAuth, Authentication & RBAC.
+- Ecosystem & Tools: Git/GitHub, Vercel, Cloudinary, Liveblocks (real-time sync), Redux Toolkit, Zod, PostCSS.
 
-Page Directory:
-- Home Page (/) - Features case studies, core statistics, categories, and client testimonials.
-- Templates Page (/templates) - Browse, search, and download premium coded, Framer, or Figma templates.
-- Blog Page (/blog) - Technical articles on web performance, next.js architecture, and guidelines.
-- Pricing Page (/pricing) - Outlines template pricing ($49+) and custom development package details ($599+).
-- Custom Development (/custom-development) - Application form to secure custom slots, featuring a project-fit score indicator.
-- Support Page (/support) - Direct portal to submit official tickets for technical issues, billing, custom requests.
-- FAQs Page (/faqs) - Common questions on license models, refunds, updates, and custom projects.
+### WORK EXPERIENCE:
+1. Estajer — Full Stack Developer (Jan 2025 – Present)
+   - Architected property & asset rental platform using Next.js ISR, SSG, and MongoDB aggregation pipelines.
+   - Integrated Cloudinary media workflows and optimized page load times under 100ms.
+2. Imperial Hotel — Front End Developer (Aug 2024 – Dec 2024)
+   - Engineered luxury hospitality portal with Material UI, React, and responsive media galleries.
 
-Social Media & Contacts:
-- GitHub: https://github.com/MOHAMED-EHAB-DEV
-- LinkedIn: https://www.linkedin.com/in/MOHAMMED-EHAB-DEV
-- Twitter: https://twitter.com/__M__O__H__
-- Support/General Contact: Submit a ticket at /support or contact via email: mohamed.ehab.dev@gmail.com
+### FEATURED PROJECTS:
+1. LiveDoc (Real-Time Collaborative Document Editor)
+   - Real-time cursors, presence indicators, document editing with Liveblocks, Next.js, and MongoDB.
+2. Formify (Google Forms Alternative)
+   - Drag-and-drop form builder with real-time response collection, analytics, and CSV exports.
+3. AI Article Summarizer
+   - Content extraction tool summarizing article URLs using OpenAI API and Redis caching.
+4. Estajer Rental Platform & Imperial Hotel Experience.
 
-Directives for Response:
-- Be extremely brief, concise, and direct. Max 100 words (keep it to 1-2 short sentences for simple questions).
-- DO NOT use markdown formatting (such as bold **, italics *, headers #, or list points -) in your responses. Return plain text only.
-- The ONLY markdown formatting you are allowed to use is inline links, e.g. [Link Text](/path).
-- ALWAYS guide the customer to the proper page link.
-- Actively advertise our template catalog or custom development slots if relevant.
-- You can trigger special client-side widgets by adding a JSON block at the VERY END of your reply. Do NOT put prose after the JSON block. Enclose the JSON block inside: \`\`\`json { ... } \`\`\`.
-- Valid JSON actions are:
-  1. Template search with optional filtering criteria:
-     \`\`\`json
-     {
-       "action": "template_search",
-       "query": "optional text search query string",
-       "type": "coded" | "framer" | "figma",
-       "minPrice": number,
-       "maxPrice": number,
-       "category": "portfolio" | "ecommerce" | "saas" | "dashboard" | "blog",
-       "minRating": number (1-5),
-       "sortBy": "recent" | "popular" | "price" | "rating" | "downloads"
-     }
-     \`\`\`
-  2. Listing all templates:
-     \`\`\`json
-     {"action": "template_list"}
-     \`\`\`
-  3. Contact/Social media links card:
-     \`\`\`json
-     {"action": "contact_info"}
-     \`\`\`
+### COMMERCIAL TEMPLATES & SERVICES (MHD STORE):
+- Mohammed builds and sells production-ready Next.js templates starting from $49 at https://mhd-store.vercel.app.
+- Custom Development: Bespoke Next.js apps, backend API architecture, custom animations. Starts at $599.
+- Store Pages:
+  - Home: https://mhd-store.vercel.app/
+  - Templates: https://mhd-store.vercel.app/templates
+  - Blog: https://mhd-store.vercel.app/blog
+  - Pricing: https://mhd-store.vercel.app/pricing
+  - Custom Dev: https://mhd-store.vercel.app/custom-development
+  - Support: https://mhd-store.vercel.app/support
+  - FAQs: https://mhd-store.vercel.app/faqs
+
+### BEHAVIOR RULES & DIRECTIVES:
+1. Be professional, concise, direct, and polite. Max 100 words per response.
+2. Promote direct contact via mohamed9919698@gmail.com / mohamed.ehab.dev@gmail.com for freelance work, full-time roles, or custom development.
+3. Plain text output only. Do NOT use markdown bold (**), italics (*), or headers (#).
+4. The ONLY allowed markdown is inline links e.g. [Link Text](https://url or /path).
+5. Recommend MHD Store templates (https://mhd-store.vercel.app/templates) and portfolio projects (https://mohammedehab.vercel.app) whenever relevant.
+6. You can trigger special client-side widgets by adding a JSON block at the VERY END of your reply. Enclose in \`\`\`json { ... } \`\`\`.
+   Valid JSON actions:
+   1. Template search: \`\`\`json {"action": "template_search", "query": "...", "type": "coded"|"framer"|"figma", "minPrice": 0, "maxPrice": 100, "category": "portfolio"|"ecommerce"|"saas"|"dashboard"|"blog"} \`\`\`
+   2. Listing templates: \`\`\`json {"action": "template_list"} \`\`\`
+   3. Contact card: \`\`\`json {"action": "contact_info"} \`\`\`
 `;
 
-export async function POST(request: NextRequest) {
+export const OPTIONS = handleCorsOptions;
+
+async function chatPostHandler(request: NextRequest) {
   try {
     if (!GEMINI_API_KEY) {
-      return NextResponse.json(
-        { success: false, message: "Gemini API key is not configured" },
-        { status: 500 }
-      );
+      return createErrorResponse("Gemini API key is not configured", 500, {
+        req: request,
+      });
     }
 
     await connectToDatabase();
@@ -80,10 +90,9 @@ export async function POST(request: NextRequest) {
     const { chatId, message, visitorId, name, email } = body;
 
     if (!chatId || !message) {
-      return NextResponse.json(
-        { success: false, message: "chatId and message are required" },
-        { status: 400 }
-      );
+      return createErrorResponse("chatId and message are required", 400, {
+        req: request,
+      });
     }
 
     const ipAddress =
@@ -94,7 +103,6 @@ export async function POST(request: NextRequest) {
     // 1. Auth and Ban Check
     const user = await authenticateUser(false, true);
     const userId = user ? (user as any)._id : undefined;
-
 
     const banQuery: any = {
       isBanned: true,
@@ -108,14 +116,16 @@ export async function POST(request: NextRequest) {
 
     const bannedChat = await AIChat.findOne(banQuery);
     if (bannedChat) {
-      const banTime = bannedChat.bannedUntil ? new Date(bannedChat.bannedUntil).toLocaleString() : "indefinitely";
+      const banTime = bannedChat.bannedUntil
+        ? new Date(bannedChat.bannedUntil).toLocaleString()
+        : "indefinitely";
       return NextResponse.json(
         {
           success: false,
           isBanned: true,
           message: `Access denied. You have been banned from using the assistant until ${banTime} due to spamming.`,
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -148,7 +158,7 @@ export async function POST(request: NextRequest) {
     // Rule A: Rate Limit (max 5 messages in 10 seconds)
     const tenSecsAgo = new Date(now.getTime() - 10000);
     const recentMessagesCount = chat.messages.filter(
-      (m) => m.role === "user" && m.timestamp >= tenSecsAgo
+      (m) => m.role === "user" && m.timestamp >= tenSecsAgo,
     ).length;
 
     if (recentMessagesCount >= 5) {
@@ -185,7 +195,7 @@ export async function POST(request: NextRequest) {
             isBanned: true,
             message: `You have been banned from this chat for 7 days due to repeated spam warnings. Reason: ${spamReason}`,
           },
-          { status: 403 }
+          { status: 403 },
         );
       } else {
         await chat.save();
@@ -196,7 +206,7 @@ export async function POST(request: NextRequest) {
             warnings: chat.spamWarnings,
             message: `Spam behavior detected. Warning ${chat.spamWarnings} of 3. Please refrain from spamming or your IP will be banned for a week.`,
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -211,7 +221,11 @@ export async function POST(request: NextRequest) {
       },
       {
         role: "model",
-        parts: [{ text: "Understood. I will act as the Customer Concierge for MHD Store, guidelines active. I will guide users to services, products, and trigger structured actions where applicable." }],
+        parts: [
+          {
+            text: "Understood. I will act as the Customer Concierge for MHD Store, guidelines active. I will guide users to services, products, and trigger structured actions where applicable.",
+          },
+        ],
       },
       ...recentHistory.map((m) => ({
         role: m.role === "user" ? "user" : "model",
@@ -232,16 +246,15 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ contents }),
-      }
+      },
     );
 
     if (!response.ok) {
       const errText = await response.text();
       console.error("Gemini API Error:", errText);
-      return NextResponse.json(
-        { success: false, message: "AI Engine error. Please try again." },
-        { status: 502 }
-      );
+      return createErrorResponse("AI Engine error. Please try again.", 502, {
+        req: request,
+      });
     }
 
     const resJson = await response.json();
@@ -251,7 +264,11 @@ export async function POST(request: NextRequest) {
 
     // 5. Store user and model messages in Mongoose
     chat.messages.push({ role: "user", content: message, timestamp: now });
-    chat.messages.push({ role: "model", content: replyText, timestamp: new Date() });
+    chat.messages.push({
+      role: "model",
+      content: replyText,
+      timestamp: new Date(),
+    });
     chat.lastMessageAt = new Date();
     await chat.save();
 
@@ -272,21 +289,20 @@ export async function POST(request: NextRequest) {
       action: parsedAction,
     });
   } catch (error: any) {
-    console.error("Error in AI Chat Route:", error);
-    return NextResponse.json(
-      { success: false, message: "Internal server error" },
-      { status: 500 }
-    );
+    return createErrorResponse("Internal server error", 500, {
+      req: request,
+      error,
+    });
   }
 }
 
-export async function GET(request: NextRequest) {
+async function chatGetHandler(request: NextRequest) {
   try {
     await connectToDatabase();
     const { searchParams } = new URL(request.url);
     const chatId = searchParams.get("chatId");
     if (!chatId) {
-      return NextResponse.json({ success: false, message: "chatId is required" }, { status: 400 });
+      return createErrorResponse("chatId is required", 400, { req: request });
     }
     const chat = await AIChat.findOne({ chatId }).lean();
     if (!chat) {
@@ -294,7 +310,25 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json({ success: true, messages: chat.messages });
   } catch (error) {
-    console.error("Error fetching chat history:", error);
-    return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
+    return createErrorResponse("Internal server error", 500, {
+      req: request,
+      error,
+    });
   }
 }
+
+export const POST = withAPIMiddleware(chatPostHandler, {
+  cors: true,
+  rateLimit: {
+    maxRequests: 30,
+    windowMs: 60 * 1000,
+  },
+});
+
+export const GET = withAPIMiddleware(chatGetHandler, {
+  cors: true,
+  rateLimit: {
+    maxRequests: 60,
+    windowMs: 60 * 1000,
+  },
+});

@@ -83,10 +83,10 @@ export default function ConciergeWidget() {
 
   // Initialize chatId and visitorId
   useEffect(() => {
-    let storedChatId = localStorage.getItem("mhd_ai_chat_id");
+    let storedChatId = sessionStorage.getItem("mhd_ai_chat_id");
     if (!storedChatId) {
       storedChatId = `chat_${Math.random().toString(36).substring(2, 11)}`;
-      localStorage.setItem("mhd_ai_chat_id", storedChatId);
+      sessionStorage.setItem("mhd_ai_chat_id", storedChatId);
     }
     setChatId(storedChatId);
 

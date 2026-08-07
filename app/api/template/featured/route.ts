@@ -41,5 +41,6 @@ async function getFeaturedTemplates(req: NextRequest) {
 }
 
 export const GET = withAPIMiddleware(getFeaturedTemplates, {
+  cors: true,
   cache: { ttl: 120 * 1000 },
 });

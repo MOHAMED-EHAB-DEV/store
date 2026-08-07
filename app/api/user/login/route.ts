@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   withAPIMiddleware,
   createErrorResponse,
+  handleCorsOptions,
 } from "@/lib/utils/api-helpers";
 import { SignJWT } from "jose";
 import bcrypt from "bcryptjs";
@@ -183,7 +184,10 @@ async function loginHandler(
   }
 }
 
+export const OPTIONS = handleCorsOptions;
+
 export const POST = withAPIMiddleware(loginHandler, {
+  cors: true,
   rateLimit: {
     maxRequests: 20,
     windowMs: 60 * 60,

@@ -404,6 +404,45 @@ export function createErrorResponse(
   );
 }
 
+const ALLOWED_CORS_DOMAINS = [
+  "mhd-store.vercel.app",
+  "mohammedehab.vercel.app",
+];
+
+export function getCorsHeaders(req: NextRequest): Record<string, string> {
+  const origin = req.headers.get("origin");
+  let allowOrigin = "https://mhd-store.vercel.app";
+
+  if (process.env.NODE_ENV === "development") {
+    allowOrigin = origin || "*";
+  } else if (origin) {
+    try {
+      const { hostname } = new URL(origin);
+      if (ALLOWED_CORS_DOMAINS.includes(hostname.toLowerCase())) {
+        allowOrigin = origin;
+      }
+    } catch {
+      if (ALLOWED_CORS_DOMAINS.some((d) => origin.includes(d))) {
+        allowOrigin = origin;
+      }
+    }
+  }
+
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+    "Access-Control-Allow-Credentials": "true",
+  };
+}
+
+export function handleCorsOptions(req: NextRequest): NextResponse {
+  return new NextResponse(null, {
+    status: 204,
+    headers: getCorsHeaders(req),
+  });
+}
+
 // Middleware factory for API routes
 export function withAPIMiddleware(
   handler: (req: NextRequest, context?: any) => Promise<NextResponse>,
@@ -413,17 +452,30 @@ export function withAPIMiddleware(
     cache?: { ttl: number; keyGenerator?: (req: NextRequest) => string };
     auth?: boolean;
     validate?: (req: NextRequest) => Promise<boolean>;
+    cors?: boolean;
   } = {
     rateLimit: { maxRequests: 60, windowMs: 10 * 60 * 1000 }, // Default: 60 req / 10 min
   },
 ) {
   return async (req: NextRequest, context?: any): Promise<NextResponse> => {
+    if (req.method === "OPTIONS" && options.cors) {
+      return handleCorsOptions(req);
+    }
+
     const timer = PerformanceMonitor.startTimer(
       req.nextUrl.pathname,
       req.method,
     );
     let cacheHit = false;
     let rateLimited = false;
+
+    const applyCorsIfEnabled = (res: NextResponse) => {
+      if (options.cors) {
+        const cors = getCorsHeaders(req);
+        Object.entries(cors).forEach(([k, v]) => res.headers.set(k, v));
+      }
+      return res;
+    };
 
     try {
       // Rate limiting
@@ -446,7 +498,7 @@ export function withAPIMiddleware(
           });
 
           PerformanceMonitor.endTimer(timer, 429, { rateLimited });
-          return response;
+          return applyCorsIfEnabled(response);
         }
 
         // Add rate limit headers
@@ -479,7 +531,7 @@ export function withAPIMiddleware(
           );
 
           PerformanceMonitor.endTimer(timer, 200, { cacheHit });
-          return response;
+          return applyCorsIfEnabled(response);
         }
       }
 
@@ -489,7 +541,7 @@ export function withAPIMiddleware(
         if (!isValid) {
           const response = createErrorResponse("Invalid request", 400, { req });
           PerformanceMonitor.endTimer(timer, 400);
-          return response;
+          return applyCorsIfEnabled(response);
         }
       }
 
@@ -543,12 +595,12 @@ export function withAPIMiddleware(
         "max-age=63072000; includeSubDomains; preload",
       );
 
-      return response;
+      return applyCorsIfEnabled(response);
     } catch (error) {
       // console.error("API middleware error:", error);
       const response = createErrorResponse("Internal server error", 500);
       PerformanceMonitor.endTimer(timer, 500);
-      return response;
+      return applyCorsIfEnabled(response);
     }
   };
 }

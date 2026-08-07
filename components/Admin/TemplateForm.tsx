@@ -107,9 +107,13 @@ export default function TemplateForm({
       !formData.title.trim() ||
       !formData.description.trim() ||
       (!thumbnailUrl && !thumbnailFile) ||
-      (!fileKeyStr && !templateFile)
+      (!isEdit && !fileKeyStr && !templateFile)
     ) {
-      sonnerToast.error("Title, description, thumbnail, and file are required");
+      sonnerToast.error(
+        isEdit
+          ? "Title, description, and thumbnail are required"
+          : "Title, description, thumbnail, and file are required",
+      );
       return;
     }
 
@@ -395,7 +399,7 @@ export default function TemplateForm({
       {/* Demo Video */}
       <div className="glass rounded-xl p-6 space-y-4">
         <h3 className="text-lg font-semibold text-white">
-          Demo Video (Optional)
+          Demo Video <span className="text-sm font-normal text-muted-foreground">(Optional)</span>
         </h3>
         <p className="text-sm text-muted-foreground">
           Upload a hover preview video for this template.
@@ -437,7 +441,9 @@ export default function TemplateForm({
 
       {/* Template File */}
       <div className="glass rounded-xl p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-white">Template File</h3>
+        <h3 className="text-lg font-semibold text-white">
+          Template File {isEdit && <span className="text-sm font-normal text-muted-foreground">(Optional)</span>}
+        </h3>
         <p className="text-sm text-muted-foreground">
           Upload template files (zip, etc.)
         </p>

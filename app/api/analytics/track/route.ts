@@ -8,6 +8,7 @@ async function track(req: NextRequest) {
   try {
     const body = await req.json();
     const { visitorId, path, userId } = body;
+    const source = body.source === "portfolio" ? "portfolio" : "store";
 
     if (!visitorId || typeof visitorId !== "string") {
       return createErrorResponse("visitorId is required", 400, {
@@ -26,14 +27,16 @@ async function track(req: NextRequest) {
       try {
         await connectToDatabase();
         await Visitor.updateOne(
-          { visitorId },
+          { visitorId, source },
           {
             $set: {
+              source,
               lastVisit: now,
               userAgent,
               ipHash,
               ...(userId && { userId }),
             },
+            $setOnInsert: { firstVisit: now },
             $inc: { visitCount: 1 },
             $push: {
               pathHistory: {

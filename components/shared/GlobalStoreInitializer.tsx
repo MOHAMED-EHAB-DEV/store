@@ -77,7 +77,7 @@ export function GlobalStoreInitializer() {
       fetch("/api/analytics/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visitorId, path: pathname, userId: user?._id }),
+        body: JSON.stringify({ visitorId, path: pathname, userId: user?._id, source: "store" }),
         keepalive: true,
       }).catch(() => {});
     };

@@ -3,6 +3,7 @@ import * as v from "valibot";
 export const VisitorSchema = v.object({
   _id: v.optional(v.string()),
   visitorId: v.string(),
+  source: v.optional(v.picklist(["store", "portfolio"])),
   firstVisit: v.union([v.date(), v.string()]),
   lastVisit: v.union([v.date(), v.string()]),
   userAgent: v.optional(v.string()),

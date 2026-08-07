@@ -15,6 +15,7 @@ export interface IPageAnalytics {
 
 export interface IAnalytics extends Document {
   visitorId: string;
+  source: "store" | "portfolio";
   pages: IPageAnalytics[];
   createdAt: Date;
   updatedAt: Date;
@@ -22,7 +23,14 @@ export interface IAnalytics extends Document {
 
 const AnalyticsSchema: Schema = new Schema(
   {
-    visitorId: { type: String, required: true, unique: true, index: true },
+    visitorId: { type: String, required: true, index: true },
+    source: {
+      type: String,
+      enum: ["store", "portfolio"],
+      default: "store",
+      required: true,
+      index: true,
+    },
     pages: [
       {
         path: { type: String, required: true },
@@ -41,7 +49,8 @@ const AnalyticsSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-AnalyticsSchema.index({ "pages.path": 1 });
+AnalyticsSchema.index({ visitorId: 1, source: 1 }, { unique: true });
+AnalyticsSchema.index({ source: 1, "pages.path": 1 });
 
 const Analytics: Model<IAnalytics> =
   mongoose.models.Analytics || mongoose.model<IAnalytics>("Analytics", AnalyticsSchema);

@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { path, metrics, visitorId } = body;
+    const source = body.source === "portfolio" ? "portfolio" : "store";
 
     if (!path || !metrics || !Array.isArray(metrics)) {
       return createErrorResponse("Invalid payload", 400);
@@ -35,8 +36,8 @@ export async function POST(req: NextRequest) {
 
         // Ensure parent document exists
         await Analytics.updateOne(
-          { visitorId },
-          { $setOnInsert: { visitorId, pages: [] } },
+          { visitorId, source },
+          { $setOnInsert: { visitorId, source, pages: [] } },
           { upsert: true },
         );
 
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
           const updateResult = await Analytics.updateOne(
             {
               visitorId,
+              source,
               "pages.path": path,
               "pages.metrics.name": newMetric.name,
             },
@@ -63,14 +65,14 @@ export async function POST(req: NextRequest) {
           // 2. If metric didn't exist in page, push it to metrics array
           if (updateResult.matchedCount === 0) {
             const pagePushResult = await Analytics.updateOne(
-              { visitorId, "pages.path": path },
+              { visitorId, source, "pages.path": path },
               { $push: { "pages.$.metrics": newMetric } },
             );
 
             // 3. If page didn't exist, push new page with metric
             if (pagePushResult.matchedCount === 0) {
               await Analytics.updateOne(
-                { visitorId },
+                { visitorId, source },
                 { $push: { pages: { path, metrics: [newMetric] } } },
               );
             }

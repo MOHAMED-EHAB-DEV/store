@@ -30,7 +30,8 @@ export default function WebVitalsReporter() {
     const payload = JSON.stringify({
       path: pathname,
       metrics: metricsToSend,
-      visitorId
+      visitorId,
+      source: "store",
     });
 
     // Use sendBeacon with Blob for application/json for best performance and reliability

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import Drawer from "@/components/ui/Drawer";
 import { X } from "@/components/ui/svgs/icons/X";
@@ -21,6 +21,7 @@ export default function NotificationCenter({
 }: {
   triggerClassName?: string;
 }) {
+  const router = useRouter();
   const { onNewNotification } = useUser();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -44,7 +45,9 @@ export default function NotificationCenter({
   // Initial fetch and polling
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // Poll every 30s
+
+    // Poll every 30 seconds as fallback
+    const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -75,45 +78,77 @@ export default function NotificationCenter({
 
   // Mark single as read
   const markAsRead = async (id: string) => {
+    // Optimistically update UI first
+    setNotifications((prev) =>
+      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)),
+    );
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+
     try {
       await fetch("/api/notifications", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notificationIds: [id] }),
       });
-
-      setNotifications((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n)),
-      );
-      setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
       console.error("Failed to mark as read:", error);
     }
   };
 
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.isRead) {
+      await markAsRead(notification._id);
+    }
+    setIsOpen(false);
+    if (notification.link && notification.link !== "#") {
+      router.push(notification.link);
+    }
+  };
+
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case "ticket_created":
+      case "template_published":
+      case "new_template":
         return (
-          <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0 text-purple-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 text-emerald-400"
+              className="w-4 h-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
             >
-              <path d="M12 5v14M5 12h14" />
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+          </div>
+        );
+      case "order_success":
+      case "payment_received":
+        return (
+          <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
           </div>
         );
       case "ticket_reply":
+      case "support":
         return (
-          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 text-blue-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 text-blue-400"
+              className="w-4 h-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -123,19 +158,21 @@ export default function NotificationCenter({
             </svg>
           </div>
         );
-      case "ticket_status_changed":
+      case "discount":
+      case "promotion":
         return (
-          <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4 text-purple-400"
+              className="w-4 h-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
             >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 16 14" />
+              <line x1="19" y1="5" x2="5" y2="19" />
+              <circle cx="6.5" cy="6.5" r="2.5" />
+              <circle cx="17.5" cy="17.5" r="2.5" />
             </svg>
           </div>
         );
@@ -257,16 +294,11 @@ export default function NotificationCenter({
             </div>
           ) : (
             notifications.map((notification) => (
-              <Link
+              <button
                 key={notification._id}
-                href={notification.link || "#"}
-                onClick={() => {
-                  if (!notification.isRead) {
-                    markAsRead(notification._id);
-                  }
-                  setIsOpen(false);
-                }}
-                className={`flex gap-3.5 p-4 rounded-xl hover:bg-white/[0.06] transition-colors cursor-pointer w-full group ${
+                type="button"
+                onClick={() => handleNotificationClick(notification)}
+                className={`flex gap-3.5 p-4 rounded-xl hover:bg-white/[0.06] transition-colors cursor-pointer w-full text-left group ${
                   !notification.isRead ? "bg-purple-500/[0.08]" : ""
                 }`}
               >
@@ -293,7 +325,7 @@ export default function NotificationCenter({
                     {formatTime(notification.createdAt)}
                   </p>
                 </div>
-              </Link>
+              </button>
             ))
           )}
         </div>

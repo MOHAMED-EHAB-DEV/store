@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Footer from "@/components/ui/Footer";
 import Navbar from "@/components/ui/Navbar";
+import FloatingSearch from "@/components/ui/FloatingSearch";
 import MainProvider from "./MainProvider";
 
 export default function RootLayout({
@@ -20,9 +21,9 @@ export default function RootLayout({
           {children}
         </div>
 
+        <FloatingSearch />
         <Footer />
       </div>
     </MainProvider>
   );
 }
-

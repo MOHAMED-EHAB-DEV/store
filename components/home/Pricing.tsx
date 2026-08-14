@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { Badge } from "@/components/ui/badge";
+import BorderBeam from "@/components/ui/BorderBeam";
 
 const SpotlightCard = dynamic(() => import('../ui/SpotlightCard'));
 
@@ -45,30 +45,47 @@ const Pricing = () => {
   const tiers = [
     {
       name: 'Starter',
-      price: '0$',
+      price: '$0',
       isPerMonth: false,
-      description: 'Perfect for side projects and hobbyists.',
-      features: ['Up to 3 Free Templates', "Community Support", 'Personal Use license'],
-      cta: 'Get Started',
+      description: 'Perfect for side projects, prototypes, and hobbyists.',
+      features: [
+        'Up to 3 Free Templates',
+        'Next.js 16 + React 19',
+        'Community Support',
+        'Personal Use License',
+      ],
+      cta: 'Get Started Free',
       ctaLink: "/register",
       highlight: false,
     },
     {
-      name: "Lifetime",
-      price: "399$",
+      name: "Lifetime Access",
+      price: "$399",
       isPerMonth: false,
-      description: "For long term users",
-      features: ["Unlimited access for lifetime", 'Access to all Templates', 'Priority Support', 'Commercial Use license'],
-      cta: 'Pay once, Build Forever',
+      description: "Unlimited access to current and all future templates.",
+      features: [
+        "Unlimited Lifetime Access",
+        "All Premium Code & Design Templates",
+        "Commercial & Client Work License",
+        "Figma + Framer Source Files",
+        "Priority 1-on-1 Discord Support",
+        "Lifetime Updates & New Releases",
+      ],
+      cta: 'Pay Once, Build Forever',
       ctaLink: "/register",
       highlight: true,
     },
     {
       name: "Custom Build",
-      price: "Custom Price",
+      price: "Custom",
       isPerMonth: false,
-      description: "Tailored to your brand, backend, or business logic.",
-      features: ["Full Customization", "Backend Integration", "Dedicated Support", "Source Code Delivered"],
+      description: "Tailored to your brand, backend architecture, or business logic.",
+      features: [
+        "Full End-to-End Development",
+        "Custom Backend & Database Integration",
+        "Dedicated Engineering & Revisions",
+        "Full Source Code Ownership",
+      ],
       cta: 'Request Custom Build',
       ctaLink: "/custom-development",
       highlight: false,
@@ -76,63 +93,81 @@ const Pricing = () => {
   ];
 
   return (
-    <section className="w-full py-6 text-white relative overflow-hidden" aria-labelledby="pricing-title">
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-pink-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
+    <section className="w-full py-16 text-white relative overflow-hidden" aria-labelledby="pricing-title">
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-pink-600/10 rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
+
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12 pricing-header">
-          <h2 id="pricing-title" className="text-3xl font-bold tracking-tighter sm:text-5xl font-paras">Simple, transparent pricing</h2>
-          <p className="max-w-[900px] text-neutral-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Choose the plan that fits your needs. No hidden fees.
+        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16 pricing-header">
+          <h2 id="pricing-title" className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight font-paras text-white">
+            Simple, Transparent Pricing
+          </h2>
+          <p className="max-w-[700px] text-gray-400 text-lg leading-relaxed">
+            Choose the tier that fits your goals. Zero subscription lock-in, no hidden fees.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 max-w-7xl mx-auto">
+
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 max-w-7xl mx-auto items-stretch">
           {tiers.map((tier) => (
             <SpotlightCard
               key={tier.name}
-              className={`flex flex-col h-full pricing-card ${tier.highlight
-                ? 'highlighted-card border-neutral-600 bg-neutral-900/30 backdrop-blur-sm md:scale-105'
-                : 'bg-neutral-950/40 backdrop-blur-sm'
-                }`}
+              className={`relative flex flex-col justify-between h-full pricing-card transition-all duration-500 rounded-3xl p-8 ${
+                tier.highlight
+                  ? 'highlighted-card border-purple-500/40 bg-[#15161b]/95 backdrop-blur-xl md:scale-105 shadow-[0_0_50px_-10px_rgba(168,85,247,0.3)] z-10'
+                  : 'border-white/10 bg-[#15161b]/60 backdrop-blur-md hover:border-white/20'
+              }`}
             >
-              <div className="flex flex-col gap-4 h-full">
+              {/* Border Beam on Featured Card */}
+              {tier.highlight && (
+                <BorderBeam size={250} duration={6} borderWidth={2} colorFrom="#a855f7" colorTo="#06b6d4" />
+              )}
+
+              <div className="flex flex-col gap-6">
                 <div>
-                  <h3 className="text-xl font-bold">{tier.name}</h3>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-4xl font-bold tracking-tight">{tier.price}</span>
-                    {tier.isPerMonth && <span className="text-sm font-semibold text-neutral-400">/month</span>}
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-2xl font-bold font-paras text-white">{tier.name}</h3>
                   </div>
-                  <p className="mt-4 text-sm text-neutral-400">{tier.description}</p>
+
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">{tier.price}</span>
+                    {tier.isPerMonth && <span className="text-sm font-semibold text-gray-400">/month</span>}
+                  </div>
+                  <p className="mt-3 text-sm text-gray-400 leading-relaxed">{tier.description}</p>
                 </div>
-                {/* {tier.promo && (
-                  <Badge className="bg-linear-to-r flex items-center justify-center gap-2 from-yellow-400 to-orange-500 text-black border-none mt-2 text-xs py-1">
-                    {tier.promo}
-                  </Badge>
-                )} */}
-                <ul className="flex-1 space-y-3 mt-4">
+
+                <div className="h-px bg-white/10 w-full" />
+
+                <ul className="space-y-3.5 flex-1">
                   {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-neutral-300">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-4 w-4 text-white"
-                        aria-hidden="true"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      {feature}
+                    <li key={feature} className="flex items-start gap-3 text-sm text-gray-300">
+                      <div className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 mt-0.5 border border-purple-500/30">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-3 w-3"
+                          aria-hidden="true"
+                        >
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      </div>
+                      <span className="leading-snug">{feature}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div className="mt-8">
                 <Link
-                  className={`mt-8 w-full rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors text-center ${tier.highlight
-                    ? 'bg-white text-black hover:bg-neutral-200'
-                    : 'bg-neutral-800 text-white hover:bg-neutral-700'
-                    }`}
+                  className={`w-full inline-flex items-center justify-center rounded-full px-6 py-4 text-base font-bold transition-all duration-300 transform hover:scale-[1.02] text-center ${
+                    tier.highlight
+                      ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white shadow-xl shadow-purple-500/25 hover:shadow-purple-500/40 hover:brightness-110'
+                      : 'bg-white/10 hover:bg-white/20 text-white border border-white/10'
+                  }`}
                   href={tier.ctaLink}
                   aria-label={`${tier.cta} - ${tier.name} plan (${tier.price})`}
                   onClick={() => sendGTMEvent({ 

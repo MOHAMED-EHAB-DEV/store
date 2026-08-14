@@ -16,7 +16,16 @@ export const metadata = buildMetadata({
   screenshotName: "custom-development",
 });
 
-const CustomDevelopmentPage = () => {
+interface PageProps {
+  searchParams: Promise<{
+    scope?: string;
+    addons?: string;
+  }>;
+}
+
+const CustomDevelopmentPage = async ({ searchParams }: PageProps) => {
+  const params = await searchParams;
+
   return (
     <main className="relative min-h-screen text-white font-inter w-full">
       <GSAPInitializer />
@@ -30,7 +39,10 @@ const CustomDevelopmentPage = () => {
       <TechStack />
       <SEOContent />
       <div id="application-form">
-        <ApplicationForm />
+        <ApplicationForm
+          initialScope={params.scope}
+          initialAddons={params.addons}
+        />
       </div>
     </main>
   );

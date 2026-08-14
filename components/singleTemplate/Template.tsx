@@ -10,6 +10,8 @@ import DownloadBtn from "./DownloadBtn";
 import { ITemplate } from "@/lib/validations/template";
 import TemplateThumbnail from "./TemplateThumbnail";
 
+import StickyPurchaseBar from "./StickyPurchaseBar";
+
 const Template = async ({
   template,
   similarTemplates,
@@ -19,6 +21,12 @@ const Template = async ({
 }) => {
   return (
     <div className="flex flex-col gap-10 px-4 sm:px-6 lg:px-8 py-10 w-full max-w-screen mx-auto text-white">
+      <StickyPurchaseBar
+        templateId={template._id}
+        title={template.title}
+        price={template.price}
+        demoLink={template.demoLink}
+      />
       {/* Top Section */}
       <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-8 items-start">
         {/* Thumbnail */}

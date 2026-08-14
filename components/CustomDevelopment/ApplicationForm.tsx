@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import dynamic from "next/dynamic";
@@ -15,11 +15,54 @@ const SuccessModal = dynamic(() => import("./SuccessModal"), { ssr: false });
 
 const TOTAL_STEPS = 4;
 
-const ApplicationForm = () => {
+interface ApplicationFormProps {
+  initialScope?: string;
+  initialAddons?: string;
+}
+
+const getInitialSituation = (scope?: string) => {
+  switch (scope) {
+    case "customization":
+      return "I am looking for Template Customization: Rebranding, styling, copywriting, and CMS integration into an existing template.";
+    case "fullstack":
+      return "I need a Full-Stack Web Application: Complete authentication, database models, payment checkout, server actions, dashboard, and responsive UI.";
+    case "custom":
+    case "bespoke":
+      return "I need Custom Architecture: End-to-end bespoke system engineering, microservices, complex asynchronous workflows, and AI integrations.";
+    default:
+      return "";
+  }
+};
+
+const getInitialFeatures = (addons?: string) => {
+  if (!addons) return [];
+  const list: string[] = [];
+  const split = addons.split(",");
+  if (split.includes("stripe")) list.push("Payments (Stripe/PayPal)");
+  if (split.includes("ai")) list.push("3rd-Party API Integration");
+  if (split.includes("auth")) list.push("Auth (OAuth/JWT)");
+  return list;
+};
+
+const getInitialBudget = (scope?: string) => {
+  switch (scope) {
+    case "customization":
+      return "$500 – $2,000";
+    case "fullstack":
+      return "$2,000 – $5,000";
+    case "custom":
+    case "bespoke":
+      return "$5,000 – $10,000";
+    default:
+      return "";
+  }
+};
+
+const ApplicationForm = ({ initialScope, initialAddons }: ApplicationFormProps) => {
   const [step, setStep] = useState(1);
-  const [situation, setSituation] = useState("");
-  const [features, setFeatures] = useState<string[]>([]);
-  const [budget, setBudget] = useState("");
+  const [situation, setSituation] = useState(() => getInitialSituation(initialScope));
+  const [features, setFeatures] = useState<string[]>(() => getInitialFeatures(initialAddons));
+  const [budget, setBudget] = useState(() => getInitialBudget(initialScope));
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -27,6 +70,18 @@ const ApplicationForm = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const stepsWrapRef = useRef<HTMLDivElement>(null);
+
+  // Auto scroll to form if initiated from home blueprint calculator
+  useEffect(() => {
+    if (initialScope || initialAddons) {
+      const el = document.getElementById("application-form");
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      }
+    }
+  }, [initialScope, initialAddons]);
 
   // Create refs for each step container
   const stepRefs = [
@@ -136,7 +191,7 @@ ${budget}`;
       } else {
         sonnerToast.error(data.error || "Failed to submit application");
       }
-    } catch (error) {
+    } catch {
       sonnerToast.error("An error occurred during submission");
     } finally {
       setIsSubmitting(false);
@@ -195,7 +250,7 @@ ${budget}`;
         {/* Steps Container */}
         <div
           ref={stepsWrapRef}
-          className="relative flex-1 grid grid-cols-1 grid-rows-1  min-h-[500px]"
+          className="relative flex-1 grid grid-cols-1 grid-rows-1 min-h-[500px]"
         >
           {/* STEP 1 */}
           <div

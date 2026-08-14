@@ -22,9 +22,12 @@ const StepBudget = ({ budget, setBudget, featureCount }: StepBudgetProps) => {
 
   return (
     <div className="w-full flex flex-col h-full justify-center">
-      <h3 className="text-2xl md:text-3xl font-bold mb-4 font-paras">Step 3: Budget Expectation</h3>
+      <h3 className="text-2xl md:text-3xl font-bold mb-4 font-paras">
+        Step 3: Budget Expectation
+      </h3>
       <p className="text-gray-400 mb-8 text-sm md:text-base">
-        Select a budget range. We craft premium, high-converting digital products, so our projects start at $5k.
+        Select a budget range. We craft premium, high-converting digital
+        products, so our projects start at $5k.
       </p>
 
       <div className="relative w-full max-w-md mx-auto z-20">
@@ -33,19 +36,32 @@ const StepBudget = ({ budget, setBudget, featureCount }: StepBudgetProps) => {
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
-          aria-label={budget ? `Selected budget: ${budget}` : "Select your budget tier"}
+          aria-label={
+            budget ? `Selected budget: ${budget}` : "Select your budget tier"
+          }
           className={`w-full p-5 rounded-2xl border flex items-center justify-between transition-all ${
-            isOpen ? "border-purple-500 bg-white/10" : "border-white/20 bg-black/40 hover:bg-white/5"
+            isOpen
+              ? "border-purple-500 bg-white/10"
+              : "border-white/20 bg-black/40 hover:bg-white/5"
           }`}
         >
-          <span className={`text-lg ${budget ? "text-white font-medium" : "text-gray-500"}`}>
+          <span
+            className={`text-lg ${budget ? "text-white font-medium" : "text-gray-500"}`}
+          >
             {budget || "Select your budget tier..."}
           </span>
-          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+          <ChevronDown
+            className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+            aria-hidden="true"
+          />
         </button>
 
         {isOpen && (
-          <div role="listbox" aria-label="Budget tiers" className="absolute top-[calc(100%+8px)] left-0 w-full rounded-2xl border border-white/20 bg-[#1a1b23] shadow-2xl overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div
+            role="listbox"
+            aria-label="Budget tiers"
+            className="absolute top-[calc(100%+8px)] left-0 w-full rounded-2xl border border-white/20 bg-[#1a1b23] shadow-2xl overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-200"
+          >
             {BUDGET_TIERS.map((tier) => (
               <button
                 key={tier}
@@ -57,7 +73,9 @@ const StepBudget = ({ budget, setBudget, featureCount }: StepBudgetProps) => {
                   setIsOpen(false);
                 }}
                 className={`w-full text-left px-6 py-4 transition-colors hover:bg-purple-500/20 hover:text-purple-300 ${
-                  budget === tier ? "bg-purple-500/10 text-purple-400 font-medium" : "text-gray-300"
+                  budget === tier
+                    ? "bg-purple-500/10 text-purple-400 font-medium"
+                    : "text-gray-300"
                 }`}
               >
                 {tier}

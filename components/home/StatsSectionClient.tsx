@@ -149,9 +149,9 @@ export default function StatsSectionClient({ stats }: StatsSectionClientProps) {
       tl.to(cardNodes, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        stagger: 0.09, // ~90ms stagger between cards
-        ease: "power2.in",
+        duration: 0.5,
+        stagger: 0.06,
+        ease: "power2.out",
       });
 
       // 2. Count numbers up from 0 to freshest target value at trigger time
@@ -168,13 +168,13 @@ export default function StatsSectionClient({ stats }: StatsSectionClientProps) {
           proxy,
           {
             val: targetVal,
-            duration: 2.5,
-            ease: "power4.out",
+            duration: 1.3,
+            ease: "power3.out",
             onUpdate: () => {
               el.textContent = formatValue(proxy.val, decimals);
             },
           },
-          "<0.1" // start count-up right as cards reveal begins
+          "<0.05"
         );
       });
     },

@@ -247,7 +247,11 @@
   body {
     overflow-x: hidden;
     line-height: var(--leading-normal);
-    font-family: var(--font-roboto), system-ui, -apple-system, sans-serif;
+    font-family:
+      var(--font-roboto),
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   /* Fix browser autofill background */

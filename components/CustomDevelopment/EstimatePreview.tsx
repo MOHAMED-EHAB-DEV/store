@@ -32,11 +32,13 @@ const EstimatePreview = ({ budgetTier, featureCount }: EstimatePreviewProps) => 
     });
   }, [budgetTier]); // Re-animate when budget changes
 
-  // Simple logic to estimate timeline based on budget and features
-  let estimatedWeeks = 4;
-  if (budgetTier.includes("$10k")) estimatedWeeks = 6;
-  if (budgetTier.includes("$25k")) estimatedWeeks = 8;
-  if (budgetTier.includes("$50k+")) estimatedWeeks = 12;
+  // Estimate timeline based on budget and features
+  let estimatedWeeks = 2;
+  if (budgetTier.includes("500")) estimatedWeeks = 1;
+  else if (budgetTier.includes("2,000")) estimatedWeeks = 2;
+  else if (budgetTier.includes("5,000")) estimatedWeeks = 3;
+  else if (budgetTier.includes("10,000")) estimatedWeeks = 5;
+  else if (budgetTier.includes("25,000")) estimatedWeeks = 8;
   
   estimatedWeeks += Math.floor(featureCount / 3);
 

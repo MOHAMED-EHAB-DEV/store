@@ -16,7 +16,7 @@ const Template = ({
   template,
   mode = "store",
 }: {
-  template: any; // Using any to support both ITemplate and IPopulatedTemplate
+  template: any;
   mode?: "store" | "dashboard";
 }) => {
   const [isHovering, setIsHovering] = useState(false);
@@ -24,6 +24,8 @@ const Template = ({
   const [loadHighRes, setLoadHighRes] = useState(false);
   const [highResLoaded, setHighResLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,8 +34,57 @@ const Template = ({
     return () => clearTimeout(timer);
   }, []);
 
+  // 3D Perspective Tilt & Specular Glare Physics (GPU-Accelerated via CSS Custom Properties)
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    let rafId: number;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+
+        const rx = (py - 0.5) * -10;
+        const ry = (px - 0.5) * 10;
+
+        el.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02, 1.02, 1.02)`;
+
+        if (glareRef.current) {
+          glareRef.current.style.transform = `translate(${(px - 0.5) * rect.width}px, ${(py - 0.5) * rect.height}px)`;
+        }
+      });
+    };
+
+    const handleMouseLeave = () => {
+      cancelAnimationFrame(rafId);
+      el.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+      if (glareRef.current) {
+        glareRef.current.style.transform = "translate(0px, 0px)";
+      }
+    };
+
+    el.addEventListener("mousemove", handleMouseMove, { passive: true });
+    el.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      el.removeEventListener("mousemove", handleMouseMove);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
   return (
     <Link
+      ref={cardRef}
       href={`/templates/${template.slug}`}
       aria-label={`View details for ${template.title} template`}
       onClick={() =>
@@ -43,11 +94,18 @@ const Template = ({
           template_title: template.title,
         })
       }
-      className="group relative overflow-hidden w-full h-fit rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 transform hover:scale-[1.02] flex flex-col"
+      className="group relative overflow-hidden w-full h-fit rounded-3xl glass-strong hover:bg-white/15 transition-all duration-500 flex flex-col [transform-style:preserve-3d] [perspective:1000px] border border-white/10 hover:border-white/20 hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(168,85,247,0.15)] will-change-transform"
     >
+      {/* Specular Glare Follower */}
+      <div
+        ref={glareRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_60%)] z-20"
+      />
+
       {/* Gradient Background */}
       <div
-        className={`absolute inset-0 bg-linear-to-br ${template.gradient || 'from-gray-800 to-gray-900'} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}
+        className={`absolute inset-0 bg-linear-to-br ${template.gradient || 'from-gray-800 to-gray-900'} opacity-10 group-hover:opacity-25 transition-opacity duration-500`}
       />
 
       {/* Featured Badge */}
@@ -55,9 +113,9 @@ const Template = ({
         (tag: string) =>
           tag?.toLowerCase() === "featured",
       ) && (
-        <div className="absolute top-4 left-4 z-10">
-          <Badge className="bg-linear-to-r flex items-center gap-2 from-yellow-400 to-orange-500 text-black border-none">
-            <Heart className="w-4 h-4" />
+        <div className="absolute top-4 start-4 z-30">
+          <Badge className="bg-gradient-to-r flex items-center gap-1.5 from-yellow-400 to-orange-500 text-black font-bold border-none shadow-lg">
+            <Heart className="w-3.5 h-3.5 fill-black" />
             Featured
           </Badge>
         </div>
@@ -66,7 +124,7 @@ const Template = ({
       {/* Favorite Button (Store mode only) */}
       {mode === "store" && <DynamicFavoriteButton template={template} />}
 
-      {/* Thumbnail */}
+      {/* Thumbnail with Video Hover Scrub */}
       <div
         className="relative w-full h-56 overflow-hidden flex-shrink-0"
         onMouseEnter={() => {
@@ -81,6 +139,13 @@ const Template = ({
                 });
               }
             }
+          }
+        }}
+        onMouseMove={(e) => {
+          if (template.demoVideo && videoRef.current && videoRef.current.duration) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const progress = (e.clientX - rect.left) / rect.width;
+            videoRef.current.currentTime = progress * videoRef.current.duration;
           }
         }}
         onMouseLeave={() => {
@@ -111,7 +176,7 @@ const Template = ({
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
-                className="w-full h-full object-contain block"
+                className="w-full h-full object-contain block group-hover:scale-105 transition-transform duration-500"
               />
             </>
           );

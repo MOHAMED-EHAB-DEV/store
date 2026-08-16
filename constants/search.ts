@@ -78,3 +78,26 @@ export const GlobalSearchItems: GlobalSearchItem[] = [
     iconName: "dashboard",
   },
 ];
+
+let cachedSearchItems: GlobalSearchItem[] | null = null;
+let searchItemsPromise: Promise<GlobalSearchItem[]> | null = null;
+
+export async function getLiveSearchItems(): Promise<GlobalSearchItem[]> {
+  if (cachedSearchItems) return cachedSearchItems;
+  if (!searchItemsPromise) {
+    searchItemsPromise = fetch("/api/page-search")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success && Array.isArray(data.data)) {
+          cachedSearchItems = data.data;
+          return data.data;
+        }
+        return GlobalSearchItems;
+      })
+      .catch(() => GlobalSearchItems)
+      .finally(() => {
+        searchItemsPromise = null;
+      });
+  }
+  return searchItemsPromise;
+}

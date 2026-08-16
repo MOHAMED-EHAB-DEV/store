@@ -87,7 +87,7 @@ export const ModalContent = React.forwardRef<
     "5xl": "sm:max-w-5xl",
     "6xl": "sm:max-w-6xl",
     "7xl": "sm:max-w-7xl",
-    "full": "sm:max-w-full",
+    "full": "w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] h-[calc(100dvh-1rem)] sm:h-[calc(100dvh-2rem)] max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)]",
   };
 
   return (

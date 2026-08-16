@@ -2,8 +2,12 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { GlobalSearchItems, GlobalSearchItem } from "@/constants/search";
-import CommandPalette from "./CommandPalette";
+import dynamic from "next/dynamic";
+import { GlobalSearchItems, GlobalSearchItem, getLiveSearchItems } from "@/constants/search";
+
+const CommandPalette = dynamic(() => import("./CommandPalette"), {
+  ssr: false,
+});
 
 function getSearchIcon(name: GlobalSearchItem["iconName"]) {
   switch (name) {
@@ -69,13 +73,14 @@ export default function FloatingSearch() {
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [shortcutText, setShortcutText] = useState("⌘K");
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // OS detection for dynamic shortcut badge (Mac -> ⌘K, Windows/Linux -> Ctrl K)
+  // OS detection for dynamic shortcut badge
   useEffect(() => {
     const isMac =
       typeof window !== "undefined" &&
@@ -83,16 +88,16 @@ export default function FloatingSearch() {
     setShortcutText(isMac ? "⌘K" : "Ctrl K");
   }, []);
 
-  // Fetch full sitemap items (categories, templates, pages) asynchronously
-  useEffect(() => {
-    fetch("/api/page-search")
-      .then((res) => res.json())
+  // Lazy fetch search items on user interaction
+  const loadSearchData = useCallback(() => {
+    setIsLoading(true);
+    getLiveSearchItems()
       .then((data) => {
-        if (data?.success && Array.isArray(data.data)) {
-          setItems(data.data);
-        }
+        setItems(data);
       })
-      .catch(() => {});
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   // Global Ctrl+K / Cmd+K keydown trigger
@@ -100,6 +105,7 @@ export default function FloatingSearch() {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
+        loadSearchData();
         if (isInlineExpandMode) {
           inputRef.current?.focus();
           setIsFocused(true);
@@ -111,7 +117,7 @@ export default function FloatingSearch() {
 
     window.addEventListener("keydown", handleGlobalKeyDown);
     return () => window.removeEventListener("keydown", handleGlobalKeyDown);
-  }, [isInlineExpandMode]);
+  }, [isInlineExpandMode, loadSearchData]);
 
   // Click outside listener to dismiss popover
   useEffect(() => {
@@ -162,18 +168,38 @@ export default function FloatingSearch() {
 
   return (
     <>
-      <CommandPalette isOpen={modalOpen} setIsOpen={setModalOpen} />
+      {modalOpen && (
+        <CommandPalette
+          isOpen={modalOpen}
+          setIsOpen={setModalOpen}
+          initialItems={items}
+        />
+      )}
 
       <div
         ref={containerRef}
-        onMouseEnter={() => isInlineExpandMode && setIsHovered(true)}
+        onMouseEnter={() => {
+          if (isInlineExpandMode) {
+            setIsHovered(true);
+            loadSearchData();
+          }
+        }}
         onMouseLeave={() => isInlineExpandMode && setIsHovered(false)}
         className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40"
       >
-        {/* Autocomplete Popover (Direct clean list, categories & templates included) */}
+        {/* Autocomplete Popover */}
         {isInlineExpandMode && isFocused && (
-          <div className="absolute bottom-full mb-2.5 left-1/2 -translate-x-1/2 w-72 sm:w-80 max-h-64 overflow-y-auto rounded-2xl bg-[#0e1017]/85 border border-white/15 backdrop-blur-2xl p-1.5 text-white animate-in fade-in slide-in-from-bottom-2 duration-200">
-            {filtered.length === 0 ? (
+          <div className="absolute bottom-full mb-2.5 left-1/2 -translate-x-1/2 w-72 sm:w-80 max-h-64 overflow-y-auto rounded-2xl bg-[#0e1017]/90 border border-white/15 backdrop-blur-2xl p-1.5 text-white animate-in fade-in slide-in-from-bottom-2 duration-200">
+            {isLoading && items.length === 0 ? (
+              <div className="p-2 space-y-2">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.04] animate-pulse">
+                    <div className="h-3 w-28 rounded bg-white/10" />
+                    <div className="h-3 w-10 rounded bg-white/5" />
+                  </div>
+                ))}
+              </div>
+            ) : filtered.length === 0 ? (
               <div className="py-4 px-2 text-center text-xs text-gray-400">
                 No matches found
               </div>
@@ -204,6 +230,7 @@ export default function FloatingSearch() {
         {/* Floating Glass Pill Bar */}
         <div
           onClick={() => {
+            loadSearchData();
             if (!isInlineExpandMode) {
               setModalOpen(true);
             } else {
@@ -216,21 +243,28 @@ export default function FloatingSearch() {
               : "w-40 sm:w-48"
           }`}
         >
-          {/* Glassy Search Icon */}
+          {/* Glassy Search Icon / Loading Spinner */}
           <div className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 border border-white/15 text-white/80 shrink-0" aria-hidden="true">
-            <svg
-              className="w-3 h-3 text-white/90"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            {isLoading ? (
+              <svg className="w-3 h-3 text-purple-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+              </svg>
+            ) : (
+              <svg
+                className="w-3 h-3 text-white/90"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            )}
           </div>
 
           {/* Interactive Input (Home & Custom Dev) vs Button Text (Other Pages) */}
@@ -244,7 +278,10 @@ export default function FloatingSearch() {
                 setQuery(e.target.value);
                 setIsFocused(true);
               }}
-              onFocus={() => setIsFocused(true)}
+              onFocus={() => {
+                setIsFocused(true);
+                loadSearchData();
+              }}
               onKeyDown={handleKeyDown}
               className="w-full bg-transparent text-white text-xs font-medium placeholder-gray-400 focus:outline-none"
             />
@@ -254,7 +291,7 @@ export default function FloatingSearch() {
             </span>
           )}
 
-          {/* Ultimate Dynamic OS Shortcut Badge */}
+          {/* Dynamic OS Shortcut Badge */}
           <kbd className="shrink-0 px-1.5 py-0.5 text-[9px] font-mono font-semibold text-white/70 bg-white/10 rounded-md border border-white/15 select-none">
             {shortcutText}
           </kbd>

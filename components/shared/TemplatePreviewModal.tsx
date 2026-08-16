@@ -48,7 +48,7 @@ export default function TemplatePreviewModal({
           e.preventDefault();
           e.stopPropagation();
         }}
-        className="h-[92vh] max-w-[96vw] p-0 overflow-hidden bg-[#0c0e15]/95 border border-white/15 backdrop-blur-3xl rounded-3xl flex flex-col shadow-2xl z-50"
+        className="p-0 overflow-hidden bg-[#0c0e15]/95 border border-white/15 backdrop-blur-3xl rounded-2xl sm:rounded-3xl flex flex-col shadow-2xl z-50"
       >
         {/* Top Controls Bar */}
         <div
@@ -138,7 +138,7 @@ export default function TemplatePreviewModal({
 
           {/* Action CTAs */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <a
+            <Link
               href={demoUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -148,7 +148,7 @@ export default function TemplatePreviewModal({
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Open in Tab</span>
-            </a>
+            </Link>
 
             <Link
               href={`/templates/${slug}`}
@@ -166,7 +166,7 @@ export default function TemplatePreviewModal({
         {/* Main Sandbox Frame Container */}
         <div
           onClick={(e) => e.stopPropagation()}
-          className="flex-1 flex items-center justify-center p-2 sm:p-4 bg-[#08090d] overflow-hidden"
+          className="flex-1 flex items-center justify-center p-1 bg-[#08090d] overflow-hidden"
         >
           <div
             className={`h-full ${getFrameWidth()} rounded-2xl overflow-hidden border border-white/15 bg-black shadow-2xl relative transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]`}

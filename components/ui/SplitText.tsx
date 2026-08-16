@@ -5,7 +5,7 @@ const SplitText = (text: string, className: string = "") => {
       {word.split("").map((char, charIndex) => (
         <span
           key={charIndex}
-          className={`char inline-block! transition-transform duration-200 hover:scale-110 ${className}`}
+          className={`char inline-block! transition-transform duration-200 ${className}`}
         >
           {char}
         </span>

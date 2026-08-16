@@ -57,7 +57,7 @@ const Navbar = () => {
             <ul className="flex flex-row gap-4 items-center justify-center">
               {NavigationLinks.map(({ id, text, link }) => (
                 <li key={id}>
-                  <NavbarItem text={text} link={link} />
+                  <NavbarItem text={text} link={link} isActive={link === pathname || (link.includes("/templates") && pathname.includes(link))} />
                 </li>
               ))}
             </ul>
@@ -131,12 +131,12 @@ const Navbar = () => {
 };
 export default Navbar;
 
-const NavbarItem = ({ text, link }: { text: string; link: string }) => {
+const NavbarItem = ({ text, link, isActive }: { text: string; link: string, isActive: Boolean }) => {
   return (
     <Link
       href={link}
       aria-label={`${text} navigation link`}
-      className="group decoration-none flex flex-col gap-[2px] items-center w-fit justify-center text-secondary hover:text-white"
+      className={`group decoration-none flex flex-col gap-[2px] items-center w-fit justify-center ${isActive ? "text-white" : "text-secondary hover:text-white"}`}
       onClick={() =>
         sendGTMEvent({
           event: "nav_link_click",

@@ -1,385 +1,333 @@
 "use client";
 
 import { useRef } from "react";
+import type { ReactNode } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { STEPS } from "@/constants/steps";
-import { StepKey } from "@/types/step";
-// import { Badge } from "../ui/badge";
 import SplitText from "../ui/SplitText";
 
-// Fixed geometry for the straight track.
-const NODE_POS: Record<StepKey, { cx: number; cy: number }> = {
-  buy: { cx: 80, cy: 90 },
-  download: { cx: 265, cy: 90 },
-  setup: { cx: 450, cy: 90 },
-  customize: { cx: 635, cy: 90 },
-  launch: { cx: 820, cy: 90 },
-};
+gsap.registerPlugin(ScrollTrigger);
 
-const MAIN_LINE_D = "M80,90 L820,90";
-
-// Fractions of the main line's total length reached once each main-line node
-// is "done". Segments are 185 long (total 740).
-const CHECK_FRACTION: Record<
-  "buy" | "download" | "setup" | "customize" | "launch",
-  number
-> = {
-  buy: 0,
-  download: 0.25,
-  setup: 0.5,
-  customize: 0.75,
-  launch: 1,
+// Minimal line icons, 1.75px stroke, one consistent family —
+// no external dependency, no emoji.
+const ICONS: Record<string, ReactNode> = {
+  buy: (
+    <>
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+      <path d="M3 6h18" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" x2="12" y1="3" y2="15" />
+    </>
+  ),
+  setup: (
+    <>
+      <rect width="18" height="14" x="3" y="5" rx="2" />
+      <polyline points="7 10 9.5 12 7 14" />
+      <line x1="12" x2="16" y1="14" y2="14" />
+    </>
+  ),
+  customize: (
+    <>
+      <path d="M12 3 13.1 9 19 10.5 13.1 12 12 18 10.9 12 5 10.5 10.9 9 Z" />
+      <path d="M5 3 5.5 5 7.5 5.5 5.5 6 5 8 4.5 6 2.5 5.5 4.5 5 Z" />
+      <path d="M19 15l.5 1.5 1.5.5-1.5.5-.5 1.5-.5-1.5-1.5-.5 1.5-.5z" />
+    </>
+  ),
+  launch: (
+    <>
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+    </>
+  ),
 };
 
 const HowItWorks = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const stepBlockRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const mainFillRef = useRef<SVGPathElement | null>(null);
-  const nodeRefs = useRef<Record<string, SVGCircleElement | null>>({});
-  const glowRefs = useRef<Record<string, SVGCircleElement | null>>({});
-  const checkRefs = useRef<Record<string, SVGPathElement | null>>({});
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const trackWrapRef = useRef<HTMLDivElement>(null);
+  const trackFillRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const glowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const iconRefs = useRef<(SVGSVGElement | null)[]>([]);
 
   useGSAP(
     () => {
-      let mm = gsap.matchMedia();
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
-      mm.add(
-        {
-          isMobile: "(max-width: 767px)",
-          isDesktop: "(min-width: 768px)",
-        },
-        (context) => {
-          const { isMobile } = context.conditions as { isMobile: boolean };
+      const rows = rowRefs.current.filter(Boolean) as HTMLDivElement[];
+      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+      const nodes = nodeRefs.current.filter(Boolean) as HTMLDivElement[];
+      const glows = glowRefs.current.filter(Boolean) as HTMLDivElement[];
+      const icons = iconRefs.current.filter(Boolean) as SVGSVGElement[];
 
-          const mainFill = mainFillRef.current;
-          if (!mainFill) return;
-
-          const mainLen = mainFill.getTotalLength();
-
-          gsap.set(mainFill, {
-            strokeDasharray: mainLen,
-            strokeDashoffset: mainLen,
-          });
-
-          // initial paint: "buy" active, everything else upcoming — not part
-          // of the scrub timeline, just the resting state before scroll starts
-          STEPS.forEach((step) => {
-            const node = nodeRefs.current[step.key];
-            const glow = glowRefs.current[step.key];
-            if (!node || !glow) return;
-            if (step.key === "buy") {
-              gsap.set(node, {
-                attr: { fill: step.color, stroke: step.color },
-              });
-              gsap.set(glow, { opacity: 0.55 });
-            } else {
-              gsap.set(node, { attr: { fill: "#1c1d24", stroke: "#4b4c56" } });
-              gsap.set(glow, { opacity: 0 });
-            }
-          });
-
-          const blocks = stepBlockRefs.current.filter(
-            Boolean,
-          ) as HTMLDivElement[];
-          gsap.set(blocks, { autoAlpha: 0, yPercent: 40 });
-          gsap.set(blocks[0], { autoAlpha: 1, yPercent: 0 });
-
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 0.2%",
-              end: isMobile
-                ? `+=${STEPS.length * 80}%`
-                : `+=${STEPS.length * 100}%`,
-              scrub: 1,
-              pin: true,
-              pinSpacing: true,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-              onToggle: (self) => {
-                const nav = document.querySelector(".navbar");
-                if (nav) {
-                  gsap.to(nav, {
-                    opacity: self.isActive ? 0 : 1,
-                    pointerEvents: self.isActive ? "none" : "auto",
-                    duration: 0.5,
-                    ease: "power2.inOut",
-                  });
-                }
-              },
-            },
-          });
-
-          const ease = "power1.inOut";
-          tl.to({}, { duration: isMobile ? 0.05 : 0.5 });
-
-          STEPS.forEach((step, i) => {
-            if (i === 0) return;
-            const label = `step${i}`;
-            const prevKey = STEPS[i - 1].key;
-
-            tl.to(
-              blocks[i - 1],
-              { autoAlpha: 0, yPercent: -40, duration: 1, ease },
-              label,
-            ).to(
-              blocks[i],
-              { autoAlpha: 1, yPercent: 0, duration: 1, ease },
-              label,
-            );
-
-            const fraction =
-              CHECK_FRACTION[
-                step.key as
-                  | "buy"
-                  | "download"
-                  | "setup"
-                  | "customize"
-                  | "launch"
-              ];
-            tl.to(
-              mainFill,
-              {
-                strokeDashoffset: mainLen * (1 - fraction),
-                duration: 1,
-                ease,
-              },
-              label,
-            );
-
-            const prevGlow = glowRefs.current[prevKey];
-            const prevCheck = checkRefs.current[prevKey];
-            const currNode = nodeRefs.current[step.key];
-            const currGlow = glowRefs.current[step.key];
-
-            if (prevGlow)
-              tl.to(prevGlow, { opacity: 0.18, duration: 1, ease }, label);
-            if (prevCheck)
-              tl.to(prevCheck, { opacity: 1, duration: 1, ease }, label);
-            if (currNode)
-              tl.to(
-                currNode,
-                {
-                  attr: { fill: step.color, stroke: step.color },
-                  duration: 1,
-                  ease,
-                },
-                label,
-              );
-            if (currGlow)
-              tl.to(currGlow, { opacity: 0.55, duration: 1, ease }, label);
-
-            tl.to({}, { duration: isMobile ? 0.05 : 0.5 });
-          });
-        },
-      );
-      let timeoutId: number;
-      const refresh = () => {
-        window.clearTimeout(timeoutId);
-        timeoutId = window.setTimeout(() => ScrollTrigger.refresh(), 100);
-      };
-      
-      document.fonts?.ready?.then(refresh);
-      
-      let ro: ResizeObserver;
-      if (typeof ResizeObserver !== "undefined") {
-        ro = new ResizeObserver(() => refresh());
-        ro.observe(document.body);
-      } else {
-        window.addEventListener("load", refresh);
+      if (reduceMotion) {
+        gsap.set(rows, { autoAlpha: 1, y: 0 });
+        gsap.set(trackFillRef.current, { scaleY: 1 });
+        nodes.forEach((n, i) =>
+          gsap.set(n, {
+            backgroundColor: "#0e1017",
+            borderColor: STEPS[i].color,
+          }),
+        );
+        icons.forEach((el, i) => gsap.set(el, { color: STEPS[i].color }));
+        cards.forEach((c, i) =>
+          gsap.set(c, { borderColor: `${STEPS[i].color}40` }),
+        );
+        gsap.set(glows, { opacity: 0.35 });
+        return;
       }
 
-      return () => {
-        window.clearTimeout(timeoutId);
-        if (ro) ro.disconnect();
-        window.removeEventListener("load", refresh);
-      };
+      // Resting state
+      gsap.set(headingRef.current, { autoAlpha: 0, y: 20 });
+      gsap.set(rows, { autoAlpha: 0, y: 28 });
+      gsap.set(trackFillRef.current, { scaleY: 0, transformOrigin: "top" });
+      gsap.set(glows, { opacity: 0 });
+
+      // Heading — reveals once, nothing pinned, navbar untouched
+      gsap.to(headingRef.current, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+      });
+
+      // Track fills as the user scrolls naturally past the whole list
+      gsap.to(trackFillRef.current, {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: trackWrapRef.current,
+          start: "top 70%",
+          end: "bottom 55%",
+          scrub: 0.6,
+        },
+      });
+
+      // Each step reveals independently as it enters the viewport
+      rows.forEach((row, i) => {
+        const node = nodes[i];
+        const glow = glows[i];
+        const card = cards[i];
+        const icon = icons[i];
+        const color = STEPS[i].color;
+        const prevGlow = i > 0 ? glows[i - 1] : null;
+
+        const trigger = {
+          trigger: row,
+          start: "top 82%",
+          toggleActions: "play none none none",
+        };
+
+        gsap.to(row, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          scrollTrigger: trigger,
+        });
+
+        gsap.to(node, {
+          backgroundColor: "#0e1017",
+          borderColor: color,
+          duration: 0.5,
+          scrollTrigger: trigger,
+        });
+
+        gsap.to(icon, {
+          color,
+          duration: 0.5,
+          scrollTrigger: trigger,
+        });
+
+        gsap.to(card, {
+          borderColor: `${color}40`,
+          duration: 0.6,
+          scrollTrigger: trigger,
+        });
+
+        gsap.to(glow, {
+          opacity: 0.45,
+          duration: 0.6,
+          scrollTrigger: trigger,
+        });
+
+        if (prevGlow) {
+          gsap.to(prevGlow, {
+            opacity: 0.15,
+            duration: 0.5,
+            scrollTrigger: trigger,
+          });
+        }
+      });
     },
-    { scope: containerRef, dependencies: [] },
+    { scope: sectionRef, dependencies: [] },
   );
 
   return (
-    <div className="w-full block">
-      <section
-        className="w-full h-[100dvh] relative z-10 overflow-hidden"
-        ref={containerRef}
-        aria-labelledby="howitworks-heading"
-      >
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
-        {/* Header */}
-        <div className="absolute top-16 left-0 w-full text-center z-20 pointer-events-none">
-          <div className="flex flex-col items-center justify-center gap-4 mb-10">
-            {/* <Badge
-              variant="outline"
-              className="bg-transparent relative hover:shadow-[0_0_25px_#746D91]"
-            >
-              How it works
-              <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/50 to-transparent animate-shine" />
-            </Badge> */}
-            <h2 id="howitworks-heading" className="text-3xl md:text-5xl font-bold font-paras text-white">
-              {SplitText("From")}{" "}
-              <span className="relative">
-                {SplitText("Purchase")}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
-                />
-              </span>{" "}
-              {SplitText("to")}{" "}
-              <span className="relative">
-                {SplitText("Production")}{" "}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
-                />
-              </span>{" "}
-              {SplitText("in 4 simple steps")}
-            </h2>
-          </div>
+    <section
+      ref={sectionRef}
+      className="relative w-full py-24 md:py-32 overflow-hidden"
+      aria-labelledby="howitworks-heading"
+    >
+      <div
+        className="absolute top-0 end-0 w-72 h-72 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-0 start-0 w-72 h-72 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"
+        aria-hidden="true"
+      />
+
+      <div ref={headingRef} className="text-center mb-20 md:mb-28 px-4">
+        <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full border border-white/10 text-xs font-medium tracking-wide text-gray-400">
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-emerald-400"
+            aria-hidden="true"
+          />
+          How it works
         </div>
-
-        {/* Track */}
-        <div className="absolute top-[26%] md:top-[30%] left-1/2 -translate-x-1/2 w-[88vw] max-w-[920px]">
-          <svg viewBox="0 0 900 190" className="w-full h-auto overflow-visible" aria-hidden="true">
-            <path
-              d={MAIN_LINE_D}
-              stroke="#2a2b33"
-              strokeWidth="2"
-              fill="none"
-            />
-            <path
-              ref={mainFillRef}
-              d={MAIN_LINE_D}
-              stroke="#ffffff"
-              strokeWidth="2.5"
-              fill="none"
-              strokeLinecap="round"
-            />
-
-            {STEPS.map((step) => (
-              <circle
-                key={`glow-${step.key}`}
-                ref={(el) => {
-                  glowRefs.current[step.key] = el;
-                }}
-                cx={NODE_POS[step.key].cx}
-                cy={NODE_POS[step.key].cy}
-                r={19}
-                fill={step.color}
-                opacity={0}
-                style={{ filter: "blur(8px)" }}
-              />
-            ))}
-
-            {STEPS.map((step) => (
-              <circle
-                key={`node-${step.key}`}
-                ref={(el) => {
-                  nodeRefs.current[step.key] = el;
-                }}
-                cx={NODE_POS[step.key].cx}
-                cy={NODE_POS[step.key].cy}
-                r={9}
-                fill="#1c1d24"
-                stroke="#4b4c56"
-                strokeWidth="2"
-              />
-            ))}
-
-            {STEPS.filter((s) => s.key !== "launch").map((step) => {
-              const { cx, cy } = NODE_POS[step.key];
-              return (
-                <path
-                  key={`check-${step.key}`}
-                  ref={(el) => {
-                    checkRefs.current[step.key] = el;
-                  }}
-                  d={`M${cx - 5},${cy} L${cx - 1},${cy + 4} L${cx + 6},${cy - 5}`}
-                  stroke="#0b0c10"
-                  strokeWidth="2"
-                  fill="none"
-                  opacity={0}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              );
-            })}
-          </svg>
-
-          {/* Node labels — positioned as % of the 900-wide viewBox */}
-          <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
-            style={{ left: "8.9%", top: "90%" }}
-          >
-            Buy
-          </div>
-          <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
-            style={{ left: "29.4%", top: "90%" }}
-          >
-            Download
-          </div>
-          <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
-            style={{ left: "50%", top: "90%" }}
-          >
-            Setup
-          </div>
-          <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2 text-center"
-            style={{ left: "70.6%", top: "90%" }}
-          >
-            Customize
-            <span className="block text-[10px] font-medium italic text-gray-400 mt-0.5 uppercase tracking-wide">
-              optional
-            </span>
-          </div>
-          <div
-            className="absolute text-xs md:text-sm font-semibold text-gray-300 -translate-x-1/2"
-            style={{ left: "91.1%", top: "90%" }}
-          >
-            Launch
-          </div>
-        </div>
-
-        {/* Center content */}
-        <div className="absolute top-[54%] md:top-[56%] left-1/2 -translate-x-1/2 w-[86vw] max-w-[680px] text-center">
-          {STEPS.map((step, i) => (
+        <h2
+          id="howitworks-heading"
+          className="text-3xl md:text-5xl font-bold font-paras text-white"
+        >
+          {SplitText("From")}{" "}
+          <span className="relative">
+            {SplitText("Purchase")}
             <div
-              key={step.key}
-              ref={(el) => {
-                stepBlockRefs.current[i] = el;
-              }}
-              className="absolute top-0 left-0 w-full"
-            >
-              <div
-                className="font-bold font-paras text-white/5 leading-none mb-[-0.1em] select-none"
-                style={{ fontSize: "clamp(60px, 9vw, 110px)" }}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </div>
-              <h3
-                className="font-bold font-paras text-white tracking-tight mb-3 md:mb-4"
-                style={{ fontSize: "clamp(26px, 4vw, 42px)" }}
-              >
-                {step.title}
-              </h3>
-              <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-xl mx-auto">
-                {step.description}
-              </p>
-              {step.optional && (
-                <div className="inline-block mt-4 px-3.5 py-1.5 rounded-full border border-white/10 text-xs text-gray-300 tracking-wide">
-                  Optional — doesn&apos;t block launch
-                </div>
-              )}
-            </div>
-          ))}
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+            />
+          </span>{" "}
+          {SplitText("to")}{" "}
+          <span className="relative">
+            {SplitText("Production")}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+            />
+          </span>{" "}
+          {SplitText("in 4 simple steps")}
+        </h2>
+      </div>
+
+      <div ref={trackWrapRef} className="relative max-w-4xl mx-auto px-6 md:px-4">
+        {/* track — start rail on mobile, centered on desktop */}
+        <div className="absolute start-[43px] md:start-1/2 -translate-x-1/2 top-1 bottom-1 w-[2px] bg-white/10 rounded-full overflow-hidden z-0 pointer-events-none">
+          <div
+            ref={trackFillRef}
+            className="absolute top-0 start-0 w-full h-full bg-gradient-to-b from-emerald-400 via-sky-400 to-amber-400 rounded-full"
+          />
         </div>
-      </section>
-    </div>
+
+        <div className="relative z-10 flex flex-col gap-14 md:gap-16">
+          {STEPS.map((step, i) => {
+            const isEven = i % 2 === 0;
+            return (
+              <div
+                key={step.key}
+                ref={(el) => {
+                  rowRefs.current[i] = el;
+                }}
+                className="relative flex gap-6 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-10"
+              >
+                {/* node */}
+                <div className="relative shrink-0 z-10 md:col-start-2 md:justify-self-center">
+                  <div
+                    ref={(el) => {
+                      glowRefs.current[i] = el;
+                    }}
+                    className="absolute -inset-2.5 rounded-full blur-[12px] pointer-events-none"
+                    style={{ backgroundColor: step.color, opacity: 0 }}
+                    aria-hidden="true"
+                  />
+                  <div
+                    ref={(el) => {
+                      nodeRefs.current[i] = el;
+                    }}
+                    className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 bg-[#0e1017] border-white/10 flex items-center justify-center shadow-lg"
+                  >
+                    <svg
+                      ref={(el) => {
+                        iconRefs.current[i] = el;
+                      }}
+                      viewBox="0 0 24 24"
+                      className="w-[18px] h-[18px] text-gray-500"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      {ICONS[step.key]}
+                    </svg>
+                  </div>
+                </div>
+
+                {/* content */}
+                <div
+                  className={
+                    isEven
+                      ? "flex-1 md:col-start-1 md:text-end"
+                      : "flex-1 md:col-start-3 md:text-start"
+                  }
+                >
+                  <div
+                    ref={(el) => {
+                      cardRefs.current[i] = el;
+                    }}
+                    className="rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm px-5 py-4 md:px-6 md:py-5"
+                  >
+                    <div
+                      className="text-[11px] font-semibold tracking-[0.16em] uppercase mb-2"
+                      style={{ color: step.color }}
+                    >
+                      Step {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <h3 className="font-bold font-paras text-white tracking-tight text-lg md:text-xl mb-1.5">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm md:text-[15px] text-gray-400 leading-relaxed">
+                      {step.description}
+                    </p>
+                    {step.optional && (
+                      <div
+                        className="inline-block mt-3 px-3 py-1 rounded-full border text-[11px] font-medium tracking-wide"
+                        style={{
+                          borderColor: `${step.color}33`,
+                          color: step.color,
+                        }}
+                      >
+                        Optional — doesn&apos;t block launch
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 };
 

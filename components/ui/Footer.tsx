@@ -74,10 +74,18 @@ const Footer = () => {
             <ul className="flex flex-col gap-2.5 text-sm">
               <li>
                 <Link
+                  href="/custom-development"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Custom Development
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/pricing"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  Lifetime Access Pass
+                  Premium Access
                 </Link>
               </li>
               <li>

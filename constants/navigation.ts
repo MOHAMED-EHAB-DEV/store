@@ -11,10 +11,7 @@ export const FooterLinks = [
   { id: 0, text: "Home", link: "/" },
   { id: 1, text: "Templates", link: "/templates" },
   { id: 2, text: "Blog", link: "/blog" },
-  { id: 3, text: "Pricing", link: "/pricing" },
   { id: 4, text: "FAQs", link: "/faqs" },
-  { id: 5, text: "Support", link: "/support" },
-  { id: 6, text: "Custom Development", link: "/custom-development" },
 ] as const;
 
 import { LayoutDashboard as LayoutDashboardIcon } from "@/components/ui/svgs/icons/LayoutDashboard";

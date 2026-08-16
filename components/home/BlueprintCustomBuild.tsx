@@ -105,14 +105,14 @@ const BlueprintCustomBuild = () => {
 
   return (
     <section
-      className="w-full py-16 text-white relative z-20"
+      className="w-full py-16 text-white relative z-20 overflow-hidden"
       aria-labelledby="blueprint-title"
     >
       <div
         className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none"
         aria-hidden="true"
       />
-      <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div
           ref={bandRef}
           className="bg-[#12131a]/95 border border-white/15 rounded-3xl p-6 sm:p-10 flex flex-col gap-8 relative overflow-hidden backdrop-blur-2xl shadow-2xl"
@@ -149,7 +149,7 @@ const BlueprintCustomBuild = () => {
 
             {/* Live Estimate Result Pill */}
             <div className="flex items-center gap-4 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl backdrop-blur-md shrink-0">
-              <div className="text-right">
+              <div className="text-end">
                 <span className="block text-[11px] font-mono text-gray-400 uppercase tracking-wider">
                   Est. Delivery: ~{totalDays} Days
                 </span>

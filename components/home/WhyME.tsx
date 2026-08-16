@@ -1,5 +1,3 @@
-"use client";
-
 import { getImageProps } from "@/lib/utils/image";
 
 const WhyME = () => {
@@ -10,7 +8,7 @@ const WhyME = () => {
   });
 
   return (
-    <section className="flex flex-col mx-auto md:flex-row items-center justify-center w-full h-full px-5 gap-28 relative" aria-labelledby="whyme-title">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 flex flex-col md:flex-row items-center justify-between relative" aria-labelledby="whyme-title">
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
       <div className="flex flex-col gap-4 md:w-1/2 w-full h-full md:h-1/2 relative z-10">
         <h2 id="whyme-title" className="md:text-4xl font-bold text-2xl font-paras">
@@ -21,19 +19,19 @@ const WhyME = () => {
           today — and if you need it tailored to your brand, backend, or
           business logic, I&apos;ll build that part too, in days not months.
         </p>
-        <ul className="text-secondary text-base md:text-lg list-d built to engage and convertisc pl-5 space-y-1">
+        <ul className="text-secondary text-base md:text-lg list-disc ps-5 space-y-1">
           <li>
-            - Professionally designed, conversion‑ready layouts built to engage
+            Professionally designed, conversion‑ready layouts built to engage
             and convert.
           </li>
-          <li>- Fully responsive—optimized for mobile, tablet, and desktop.</li>
-          <li>- Customizable without the typical builder constraints.</li>
+          <li>Fully responsive—optimized for mobile, tablet, and desktop.</li>
+          <li>Customizable without the typical builder constraints.</li>
         </ul>
         <span className="font-bold text-xl tracking-wide md:text-2xl font-paras">
           Build smarter. Launch sooner.
         </span>
       </div>
-      <div className="flex items-center justify-center w-full md:w-1/4">
+      <div className="flex items-center justify-center w-full md:w-1/5">
         <img
           {...imgProps}
           alt="Cursor Illustration"

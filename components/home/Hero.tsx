@@ -82,7 +82,7 @@ const Hero = () => {
   return (
     <section
       ref={containerRef}
-      className="relative flex items-center justify-center gap-3 min-h-screen pb-4 pt-24 md:pt-36 h-full w-full [perspective:1200px]"
+      className="relative flex items-center justify-center gap-3 min-h-screen pb-4 pt-24 md:pt-36 h-full w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 [perspective:1200px]"
       aria-labelledby="hero-title"
     >
       <div className="flex flex-col gap-6 items-center justify-center w-full relative z-10">

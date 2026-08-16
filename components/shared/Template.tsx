@@ -63,7 +63,7 @@ const Template = ({
     }
   };
 
-  const thumbUrl = getThumbnailData(template.thumbnail.url) .url;
+  const thumbUrl = getThumbnailData(template.thumbnail.url).url;
 
   const thumbProps = getImageProps({
     src: thumbUrl,
@@ -155,7 +155,7 @@ const Template = ({
               content={
                 template.createdAt
                   ? new Date(template.createdAt).toISOString()
-                  : new Date().toISOString()
+                  : "2024-01-01T00:00:00.000Z"
               }
               suppressHydrationWarning
             />

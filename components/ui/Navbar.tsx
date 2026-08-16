@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Suspense, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { NavigationLinks } from "@/constants/navigation";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
@@ -16,7 +16,6 @@ const NotificationCenter = dynamic(() => import("@/components/shared/Notificatio
 const MobileDrawer = dynamic(() => import("./MobileDrawer"), { ssr: false });
 
 const Navbar = () => {
-  const router = useRouter();
   const pathname = usePathname();
   const isCustomDev = pathname === "/custom-development";
   const { user, favoriteTemplates } = useUser();
@@ -45,10 +44,13 @@ const Navbar = () => {
         }`}
       >
         <div className="flex items-center justify-between px-6 md:px-8">
-          <Logo
-            onClick={() => router.push("/")}
+          <Link
+            href="/"
+            aria-label="Return to home page"
             className={!user ? "md:flex-1" : ""}
-          />
+          >
+            <Logo />
+          </Link>
 
           <nav
             className={`md:flex hidden ${user && "md:flex-1"} flex-row gap-4 items-center justify-center`}

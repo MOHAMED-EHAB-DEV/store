@@ -97,7 +97,7 @@ const Pricing = () => {
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-pink-600/10 rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
       <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16 pricing-header">
           <h2 id="pricing-title" className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight font-paras text-white">
             Simple, Transparent Pricing
@@ -107,7 +107,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 max-w-7xl mx-auto items-stretch">
+        <div className="w-full grid grid-cols-1 gap-8 md:grid-cols-3 mx-auto items-stretch">
           {tiers.map((tier) => (
             <SpotlightCard
               key={tier.name}

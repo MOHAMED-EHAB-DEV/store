@@ -79,7 +79,7 @@ const FramerFeatures = () => {
   }, []);
 
   return (
-    <section className="flex flex-col w-full h-full items-center justify-center gap-6 py-6">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 flex flex-col items-center justify-center gap-6">
       {/* Header Section */}
       <div className="flex flex-col items-center justify-center gap-2 framer-header">
         <Badge
@@ -104,7 +104,7 @@ const FramerFeatures = () => {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[7fr_3fr] w-full gap-6 px-6 md:px-20">
+      <div className="grid grid-cols-1 md:grid-cols-[7fr_3fr] w-full gap-6">
         {/* Left Content */}
         <div className="grid gap-6 auto-rows-auto">
           {/* Pricing Card */}

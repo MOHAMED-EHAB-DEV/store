@@ -438,14 +438,14 @@ const CodedFeatures = () => {
 
   return (
     <section
-      className="code-section relative z-10 px-6 py-12"
+      className="code-section relative z-10 w-full py-16 overflow-hidden"
       aria-labelledby="coded-features-title"
     >
       <div
         className="absolute top-1/2 start-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none"
         aria-hidden="true"
       />
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div className="text-center mb-16">
           <h2
             id="coded-features-title"

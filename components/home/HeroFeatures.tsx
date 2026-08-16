@@ -64,7 +64,7 @@ export default function HeroFeatures() {
   return (
     <section
       ref={containerRef}
-      className="flex flex-col md:flex-row gap-6 md:gap-10 items-center justify-center w-full px-2 sm:px-4 md:px-0"
+      className="flex flex-col md:flex-row gap-6 md:gap-10 items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8"
       aria-label="Key features overview"
     >
       {HeroItems.map(({ id, title, desc }) => {

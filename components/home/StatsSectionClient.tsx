@@ -360,7 +360,7 @@ export default function StatsSectionClient({ stats }: StatsSectionClientProps) {
   return (
     <section
       ref={containerRef}
-      className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 z-10"
+      className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 md:py-24 z-10"
       aria-label="Platform Statistics"
     >
       {/* Ambient background glows */}

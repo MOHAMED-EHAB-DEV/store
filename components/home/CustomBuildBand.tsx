@@ -28,14 +28,14 @@ const CustomBuildBand = () => {
 
   return (
     <section className="w-full py-16 text-white relative z-20">
-      <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div
           ref={bandRef}
           className="bg-surface-dark/80 border border-purple-500/30 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden backdrop-blur-md shadow-2xl group"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-          <div className="flex-1 relative z-10 text-center md:text-left">
+          <div className="flex-1 relative z-10 text-center md:text-start">
             <h3 className="text-3xl md:text-4xl font-bold font-paras text-white mb-4">
               Need something custom?
             </h3>

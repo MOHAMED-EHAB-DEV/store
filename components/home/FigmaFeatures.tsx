@@ -61,10 +61,10 @@ const FigmaFeatures = () => {
     }, []);
 
     return (
-        <section className="figma-section relative z-10 px-4 py-6">
-            <div className="max-w-7xl mx-auto">
+        <section className="figma-section relative z-10 w-full py-16">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
-                    <div className="text-center lg:text-left">
+                    <div className="text-center lg:text-start">
                         <h2 className="figma-title text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-paras font-bold text-white mb-6 font-heading leading-tight">
                             <span className="relative">
                                 {SplitText('Figma')}

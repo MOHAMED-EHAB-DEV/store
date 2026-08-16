@@ -58,11 +58,11 @@ export default function HomeFAQ() {
     };
 
     return (
-        <section ref={containerRef} className="w-full relative overflow-hidden" aria-labelledby="home-faq-title">
+        <section ref={containerRef} className="w-full py-16 relative overflow-hidden" aria-labelledby="home-faq-title">
             {/* Background ambient glow */}
             <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
             
-            <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
                     
                     {/* Left Column: Sticky Heading */}

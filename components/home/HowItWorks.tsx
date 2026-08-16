@@ -197,134 +197,136 @@ const HowItWorks = () => {
         aria-hidden="true"
       />
 
-      <div ref={headingRef} className="text-center mb-20 md:mb-28 px-4">
-        <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full border border-white/10 text-xs font-medium tracking-wide text-gray-400">
-          <span
-            className="w-1.5 h-1.5 rounded-full bg-emerald-400"
-            aria-hidden="true"
-          />
-          How it works
-        </div>
-        <h2
-          id="howitworks-heading"
-          className="text-3xl md:text-5xl font-bold font-paras text-white"
-        >
-          {SplitText("From")}{" "}
-          <span className="relative">
-            {SplitText("Purchase")}
-            <div
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+        <div ref={headingRef} className="text-center mb-20 md:mb-28">
+          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full border border-white/10 text-xs font-medium tracking-wide text-gray-400">
+            <span
+              className="w-1.5 h-1.5 rounded-full bg-emerald-400"
               aria-hidden="true"
-              className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
             />
-          </span>{" "}
-          {SplitText("to")}{" "}
-          <span className="relative">
-            {SplitText("Production")}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
-            />
-          </span>{" "}
-          {SplitText("in 4 simple steps")}
-        </h2>
-      </div>
-
-      <div ref={trackWrapRef} className="relative max-w-4xl mx-auto px-6 md:px-4">
-        {/* track — start rail on mobile, centered on desktop */}
-        <div className="absolute start-[43px] md:start-1/2 -translate-x-1/2 top-1 bottom-1 w-[2px] bg-white/10 rounded-full overflow-hidden z-0 pointer-events-none">
-          <div
-            ref={trackFillRef}
-            className="absolute top-0 start-0 w-full h-full bg-gradient-to-b from-emerald-400 via-sky-400 to-amber-400 rounded-full"
-          />
-        </div>
-
-        <div className="relative z-10 flex flex-col gap-14 md:gap-16">
-          {STEPS.map((step, i) => {
-            const isEven = i % 2 === 0;
-            return (
+            How it works
+          </div>
+          <h2
+            id="howitworks-heading"
+            className="text-3xl md:text-5xl font-bold font-paras text-white"
+          >
+            {SplitText("From")}{" "}
+            <span className="relative">
+              {SplitText("Purchase")}
               <div
-                key={step.key}
-                ref={(el) => {
-                  rowRefs.current[i] = el;
-                }}
-                className="relative flex gap-6 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-10"
-              >
-                {/* node */}
-                <div className="relative shrink-0 z-10 md:col-start-2 md:justify-self-center">
-                  <div
-                    ref={(el) => {
-                      glowRefs.current[i] = el;
-                    }}
-                    className="absolute -inset-2.5 rounded-full blur-[12px] pointer-events-none"
-                    style={{ backgroundColor: step.color, opacity: 0 }}
-                    aria-hidden="true"
-                  />
-                  <div
-                    ref={(el) => {
-                      nodeRefs.current[i] = el;
-                    }}
-                    className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 bg-[#0e1017] border-white/10 flex items-center justify-center shadow-lg"
-                  >
-                    <svg
-                      ref={(el) => {
-                        iconRefs.current[i] = el;
-                      }}
-                      viewBox="0 0 24 24"
-                      className="w-[18px] h-[18px] text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      {ICONS[step.key]}
-                    </svg>
-                  </div>
-                </div>
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+              />
+            </span>{" "}
+            {SplitText("to")}{" "}
+            <span className="relative">
+              {SplitText("Production")}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-1 bg-linear-to-r from-purple-500/20 via-pink-500/20 to-cyan-500/20 blur-md rounded-lg"
+              />
+            </span>{" "}
+            {SplitText("in 4 simple steps")}
+          </h2>
+        </div>
 
-                {/* content */}
+        <div ref={trackWrapRef} className="relative max-w-4xl mx-auto px-6 md:px-4">
+          {/* track — start rail on mobile, centered on desktop */}
+          <div className="absolute start-[43px] md:start-1/2 -translate-x-1/2 top-1 bottom-1 w-[2px] bg-white/10 rounded-full overflow-hidden z-0 pointer-events-none">
+            <div
+              ref={trackFillRef}
+              className="absolute top-0 start-0 w-full h-full bg-gradient-to-b from-emerald-400 via-sky-400 to-amber-400 rounded-full"
+            />
+          </div>
+
+          <div className="relative z-10 flex flex-col gap-14 md:gap-16">
+            {STEPS.map((step, i) => {
+              const isEven = i % 2 === 0;
+              return (
                 <div
-                  className={
-                    isEven
-                      ? "flex-1 md:col-start-1 md:text-end"
-                      : "flex-1 md:col-start-3 md:text-start"
-                  }
+                  key={step.key}
+                  ref={(el) => {
+                    rowRefs.current[i] = el;
+                  }}
+                  className="relative flex gap-6 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-10"
                 >
+                  {/* node */}
+                  <div className="relative shrink-0 z-10 md:col-start-2 md:justify-self-center">
+                    <div
+                      ref={(el) => {
+                        glowRefs.current[i] = el;
+                      }}
+                      className="absolute -inset-2.5 rounded-full blur-[12px] pointer-events-none"
+                      style={{ backgroundColor: step.color, opacity: 0 }}
+                      aria-hidden="true"
+                    />
+                    <div
+                      ref={(el) => {
+                        nodeRefs.current[i] = el;
+                      }}
+                      className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 bg-[#0e1017] border-white/10 flex items-center justify-center shadow-lg"
+                    >
+                      <svg
+                        ref={(el) => {
+                          iconRefs.current[i] = el;
+                        }}
+                        viewBox="0 0 24 24"
+                        className="w-[18px] h-[18px] text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        {ICONS[step.key]}
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* content */}
                   <div
-                    ref={(el) => {
-                      cardRefs.current[i] = el;
-                    }}
-                    className="rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm px-5 py-4 md:px-6 md:py-5"
+                    className={
+                      isEven
+                        ? "flex-1 md:col-start-1 md:text-end"
+                        : "flex-1 md:col-start-3 md:text-start"
+                    }
                   >
                     <div
-                      className="text-[11px] font-semibold tracking-[0.16em] uppercase mb-2"
-                      style={{ color: step.color }}
+                      ref={(el) => {
+                        cardRefs.current[i] = el;
+                      }}
+                      className="rounded-2xl border border-white/[0.07] bg-white/[0.025] backdrop-blur-sm px-5 py-4 md:px-6 md:py-5"
                     >
-                      Step {String(i + 1).padStart(2, "0")}
-                    </div>
-                    <h3 className="font-bold font-paras text-white tracking-tight text-lg md:text-xl mb-1.5">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm md:text-[15px] text-gray-400 leading-relaxed">
-                      {step.description}
-                    </p>
-                    {step.optional && (
                       <div
-                        className="inline-block mt-3 px-3 py-1 rounded-full border text-[11px] font-medium tracking-wide"
-                        style={{
-                          borderColor: `${step.color}33`,
-                          color: step.color,
-                        }}
+                        className="text-[11px] font-semibold tracking-[0.16em] uppercase mb-2"
+                        style={{ color: step.color }}
                       >
-                        Optional — doesn&apos;t block launch
+                        Step {String(i + 1).padStart(2, "0")}
                       </div>
-                    )}
+                      <h3 className="font-bold font-paras text-white tracking-tight text-lg md:text-xl mb-1.5">
+                        {step.title}
+                      </h3>
+                      <p className="text-sm md:text-[15px] text-gray-400 leading-relaxed">
+                        {step.description}
+                      </p>
+                      {step.optional && (
+                        <div
+                          className="inline-block mt-3 px-3 py-1 rounded-full border text-[11px] font-medium tracking-wide"
+                          style={{
+                            borderColor: `${step.color}33`,
+                            color: step.color,
+                          }}
+                        >
+                          Optional — doesn&apos;t block launch
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

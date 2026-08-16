@@ -113,9 +113,25 @@ async function updateAdminTemplate(
         "templates_thumbnails",
         "image",
       );
-      body.thumbnail = uploadResult.secure_url;
+      const { extractColorsFromImageUrl } = await import("@/lib/server-image-utils");
+      const { gradientColors, gradientStyle } = await extractColorsFromImageUrl(
+        uploadResult.secure_url
+      );
+      body.thumbnail = {
+        url: uploadResult.secure_url,
+        gradientColors,
+        gradientStyle,
+      };
     } else if (thumbnailUrl) {
-      body.thumbnail = thumbnailUrl;
+      const { extractColorsFromImageUrl } = await import("@/lib/server-image-utils");
+      const { gradientColors, gradientStyle } = await extractColorsFromImageUrl(
+        thumbnailUrl
+      );
+      body.thumbnail = {
+        url: thumbnailUrl,
+        gradientColors,
+        gradientStyle,
+      };
     }
 
     if (demoVideoFile) {

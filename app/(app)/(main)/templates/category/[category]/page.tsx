@@ -121,7 +121,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
       item: {
         "@type": "Product",
         name: template.title,
-        image: template.thumbnail,
+        image: typeof template.thumbnail === "string" ? template.thumbnail : template.thumbnail?.url,
         description: template.description,
         url: `${APP_URL}/templates/${template.slug || template._id}`,
         offers: {

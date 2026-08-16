@@ -1,11 +1,20 @@
 import * as v from "valibot";
 import { CategorySchema } from "./category";
 
+export const ThumbnailSchema = v.union([
+  v.string(),
+  v.object({
+    url: v.string(),
+    gradientColors: v.optional(v.array(v.string())),
+    gradientStyle: v.optional(v.string()),
+  }),
+]);
+
 export const TemplateSchema = v.object({
   _id: v.string(),
   title: v.string(),
   description: v.string(),
-  thumbnail: v.string(),
+  thumbnail: ThumbnailSchema,
   demoLink: v.string(),
   price: v.number(),
   demoVideo: v.optional(v.string()),

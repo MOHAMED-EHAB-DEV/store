@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { createImageProxyLoader } from "@/lib/utils/image";
+import { getThumbnailData } from "@/lib/image-utils";
 import {
   Select,
   SelectItem,
@@ -255,7 +256,7 @@ export default function PurchasedTemplatesClient({
             >
               <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
                 <Image
-                  src={template.thumbnail}
+                  src={getThumbnailData(template.thumbnail).url}
                   loader={createImageProxyLoader(false)}
                   alt={template.title}
                   fill

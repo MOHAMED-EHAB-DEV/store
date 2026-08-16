@@ -1,5 +1,5 @@
 import { mdToHtmlAndHeadings } from "@/lib/markdown";
-import TocHighlightClient from "@/components/singleTemplate/TOCHighlight";
+import TemplateTOC from "@/components/singleTemplate/TemplateTOC";
 
 type Props = {
   content: string;
@@ -13,38 +13,23 @@ export default async function Markdown({
   const { html, headings } = await mdToHtmlAndHeadings(content);
 
   return (
-    <div className="flex flex-col md:flex-row w-full mx-auto p-4">
-      {/* Markdown Content */}
-      <div className={disableSidebar ? "" : "md:w-4/5 md:pr-6 prose dark:prose-invert max-w-none text-gray-500"}>
+    <div className="relative flex flex-col lg:flex-row items-start gap-8 lg:gap-12 w-full mx-auto">
+      {/* Markdown Content Area */}
+      <div
+        className={`w-full ${
+          disableSidebar ? "" : "lg:flex-1"
+        } min-w-0 prose dark:prose-invert max-w-none text-gray-300`}
+      >
         <div
           className="markdown-body"
           dangerouslySetInnerHTML={{ __html: html }}
         />
-        {/* small spacer */}
       </div>
 
-      {/* TOC Sidebar */}
-      {!disableSidebar && (
-        <aside className="md:w-1/5 md:pl-4 border-l border-gray-300 dark:border-gray-700">
-          <div className="hidden md:block max-h-[80vh] overflow-y-auto">
-            <ul className="space-y-2 text-sm" id="page-toc">
-              {headings.map((h, i) => (
-                <li
-                  key={i}
-                  className={`pl-${(h.level - 1) * 4} hover:underline`}
-                >
-                  <a href={`#${h.id}`} data-toc-id={h.id}>
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
+      {/* Redesigned Modern TOC Sidebar */}
+      {!disableSidebar && headings && headings.length > 0 && (
+        <TemplateTOC headings={headings} />
       )}
-
-      {/* Optional client-side enhancements (tiny) */}
-      {headings.length > 0 && !disableSidebar ? <TocHighlightClient /> : null}
     </div>
   );
 }

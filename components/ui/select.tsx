@@ -38,7 +38,7 @@ const flattenChildren = (
 const sanitizeKey = (key: React.Key | null) => {
   if (typeof key !== "string") return String(key);
   let sanitized = key;
-  if (sanitized.startsWith(".")) {
+  if (sanitized?.startsWith(".")) {
     const dollarIndex = sanitized.indexOf("$");
     if (dollarIndex !== -1) {
       sanitized = sanitized.slice(dollarIndex + 1);

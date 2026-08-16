@@ -6,6 +6,7 @@ import { Heart } from "@/components/ui/svgs/icons/Heart";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { getImageProps } from "@/lib/utils/image";
 import Link from "next/link";
+import { getThumbnailData } from "@/lib/image-utils";
 import FavoriteButton from "./FavoriteButton";
 import StoreTemplateDetails from "./StoreTemplateDetails";
 import DashboardTemplateDetails from "./DashboardTemplateDetails";
@@ -62,8 +63,10 @@ const Template = ({
     }
   };
 
+  const thumbUrl = getThumbnailData(template.thumbnail.url) .url;
+
   const thumbProps = getImageProps({
-    src: template.thumbnail,
+    src: thumbUrl,
     sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px",
     defaultWidth: 600,
   });
@@ -146,7 +149,7 @@ const Template = ({
           >
             <meta itemProp="name" content={`${template.title} demo video`} />
             <meta itemProp="description" content={template.description} />
-            <meta itemProp="thumbnailUrl" content={template.thumbnail} />
+            <meta itemProp="thumbnailUrl" content={thumbUrl} />
             <meta
               itemProp="uploadDate"
               content={

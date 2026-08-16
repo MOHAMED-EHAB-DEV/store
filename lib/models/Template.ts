@@ -7,7 +7,13 @@ export interface ITemplate extends Document {
   title: string;
   demoVideo?: string;
   description: string;
-  thumbnail: string;
+  thumbnail:
+    | string
+    | {
+        url: string;
+        gradientColors?: string[];
+        gradientStyle?: string;
+      };
   demoLink: string;
   price: number;
   content: string;
@@ -58,9 +64,8 @@ const TemplateSchema = new Schema<ITemplate>(
       index: true,
     },
     thumbnail: {
-      type: String,
+      type: mongoose.Schema.Types.Mixed,
       required: true,
-      trim: true,
     },
     categories: [
       {

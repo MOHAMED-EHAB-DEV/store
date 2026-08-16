@@ -33,7 +33,9 @@ function validateSimilarParams(req: NextRequest): {
                 ?.split(",")
                 .map((tag) => tag.trim().toLowerCase())
                 .filter(Boolean) || [];
-        const limit = Number(searchParams.get("limit")) || 3;
+        const limit = searchParams.get("limit")
+            ? Number(searchParams.get("limit"))
+            : undefined;
 
         return {
             isValid: true,
@@ -110,7 +112,7 @@ async function getSimilarTemplatesHandler(
         const pipeline: any[] = [
             { $match: matchConditions },
             { $sort: { createdAt: -1 } },
-            { $limit: limit },
+            ...(limit ? [{ $limit: limit }] : []),
             // optional: populate author small projection (unwind later)
             // {
             //     $lookup: {

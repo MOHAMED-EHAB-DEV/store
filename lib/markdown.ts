@@ -354,7 +354,7 @@ function rehypeShiki() {
 
 function rehypeAddClasses() {
   return (tree: any) => {
-    visit(tree, "element", (node: any) => {
+    visit(tree, "element", (node: any, index: any, parent: any) => {
       if (!node.tagName) return;
       node.properties = node.properties || {};
 
@@ -469,21 +469,76 @@ function rehypeAddClasses() {
             );
           }
           break;
-        case "table":
+        case "table": {
           addClass(
-            "block w-full overflow-x-auto whitespace-nowrap border-collapse border border-gray-700 rounded-lg my-6 text-sm md:text-base",
+            "w-full min-w-full border-collapse text-sm md:text-base text-start",
           );
+
+          if (
+            parent &&
+            typeof index === "number" &&
+            !(
+              parent.properties?.className &&
+              Array.isArray(parent.properties.className) &&
+              parent.properties.className.includes("table-wrapper")
+            )
+          ) {
+            const tableWrapper = {
+              type: "element",
+              tagName: "div",
+              properties: {
+                className: [
+                  "table-wrapper",
+                  "my-6",
+                  "w-full",
+                  "overflow-x-auto",
+                  "rounded-xl",
+                  "border",
+                  "border-gray-700/80",
+                ],
+              },
+              children: [node],
+            };
+            parent.children[index] = tableWrapper;
+          }
           break;
+        }
         case "th":
           addClass(
-            "border border-gray-700 px-4 py-2 bg-gray-800 font-semibold text-left",
+            "border border-gray-700/80 px-4 py-2.5 bg-gray-800/90 font-semibold text-start text-white",
           );
           break;
         case "td":
-          addClass("border border-gray-700 px-4 py-2");
+          addClass("border border-gray-700/60 px-4 py-2.5 text-gray-300");
           break;
         default:
           break;
+      }
+    });
+  };
+}
+
+function getNodeText(node: any): string {
+  if (!node) return "";
+  if (node.type === "text") return node.value || "";
+  if (node.children && Array.isArray(node.children)) {
+    return node.children.map(getNodeText).join("");
+  }
+  return "";
+}
+
+function rehypeExtractHeadings(
+  headingsTarget: Array<{ level: number; text: string; id: string }>
+) {
+  return (tree: any) => {
+    visit(tree, "element", (node: any) => {
+      if (/^h[1-6]$/.test(node.tagName)) {
+        const level = parseInt(node.tagName.charAt(1), 10);
+        const id = String(node.properties?.id || "");
+        const text = getNodeText(node).trim();
+        if (id && text) {
+          headingsTarget.push({ level, text, id });
+        }
       }
     });
   };
@@ -493,6 +548,8 @@ function rehypeAddClasses() {
 
 export async function mdToHtmlAndHeadings(content: string) {
   try {
+    const headings: Array<{ level: number; text: string; id: string }> = [];
+
     const file = await unified()
       .use(remarkParse)
       .use(remarkGfm)
@@ -501,21 +558,10 @@ export async function mdToHtmlAndHeadings(content: string) {
       .use(rehypeRaw) // handle inline raw HTML inside MD
       .use(rehypeShiki) // highlight + wrap
       .use(rehypeSlug)
+      .use(() => rehypeExtractHeadings(headings))
       .use(rehypeAddClasses)
       .use(rehypeStringify, { allowDangerousHtml: true })
       .process(content);
-
-    const headingMatches = [...content?.matchAll(/^(#{1,6})\s+(.*)$/gm)];
-    const headings = headingMatches.map((m) => {
-      const level = m[1].length;
-      const text = m[2].trim();
-      const id = text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, "")
-        .trim()
-        .replace(/\s+/g, "-");
-      return { level, text, id };
-    });
 
     return {
       html: String(file),

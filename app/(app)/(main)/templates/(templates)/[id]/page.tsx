@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import MarkdownCopyHandler from "@/components/Markdown/MarkdownCopyHandler";
 import { truncateDescription } from "@/lib/seo";
 import { getImageProps } from "@/lib/utils/image";
+import { getThumbnailData } from "@/lib/image-utils";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -46,11 +47,15 @@ const getSimilarTemplates = async (
   excludeId: string,
 ) => {
   try {
+    const categoryQuery = categoryIds
+      .map((c) => (typeof c === "string" ? c : c._id || c.name))
+      .filter(Boolean)
+      .join(",");
+
     const queryParams = new URLSearchParams({
-      categories: categoryIds.join(","),
+      categories: categoryQuery,
       tags: tags.join(","),
       excludeId,
-      limit: "3",
     });
 
     const response = await fetch(
@@ -90,19 +95,37 @@ export async function generateMetadata({
     return { title: "Template Not Found" };
   }
 
-  const url = `${APP_URL}/templates/${id}`;
+  const thumbUrl =
+    getThumbnailData(template.thumbnail).url || `${APP_URL}/screenshots/1.png`;
+  const url = `${APP_URL}/templates/${template.slug || id}`;
+  const typeLabel =
+    template.type === "coded"
+      ? "Next.js Template"
+      : template.type === "framer"
+      ? "Framer Template"
+      : "Figma UI Kit";
+  const priceLabel =
+    template.price === 0 ? "Free Download" : `$${template.price}`;
+
   const truncatedDesc = truncateDescription(
-    template.description || `Premium template - ${template.title}`,
+    `${template.title} — ${template.description} | ${typeLabel} | ${priceLabel}`,
     160,
   );
-  const imageUrl = template.thumbnail || `${APP_URL}/screenshots/1.png`;
+
+  const keywords = [
+    ...(template.tags || []),
+    template.type,
+    "template",
+    "web template",
+    "nextjs template",
+    "premium template",
+    template.price === 0 ? "free template" : "commercial template",
+  ].filter(Boolean) as string[];
 
   return {
-    title: `${template.title} | MHD Store Premium Templates`,
-    description: `Premium template - ${template.title}`,
-    keywords: [...(template.tags || []), "template", "web template"].filter(
-      Boolean,
-    ),
+    title: `${template.title} — ${typeLabel} | MHD Store`,
+    description: truncatedDesc,
+    keywords,
     alternates: {
       canonical: url,
     },
@@ -113,7 +136,7 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: imageUrl,
+          url: thumbUrl,
           width: 1200,
           height: 630,
           alt: template.title,
@@ -124,7 +147,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${template.title} | Premium Templates`,
       description: truncatedDesc,
-      images: [imageUrl],
+      images: [thumbUrl],
     },
   };
 }
@@ -144,15 +167,36 @@ const Page = async ({ params }: PageProps) => {
     template?._id,
   );
 
-  // JSON-LD structured data for SEO
+  const thumbUrl = getThumbnailData(template.thumbnail).url;
+  const templateSlug = template.slug || id;
+  const primaryCategory =
+    template.categories && template.categories.length > 0
+      ? typeof template.categories[0] === "string"
+        ? { name: template.categories[0], slug: template.categories[0].toLowerCase() }
+        : (template.categories[0] as any)
+      : null;
+
+  // Rich JSON-LD structured data for SEO
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": ["Product", "SoftwareApplication"],
     name: template.title,
-    applicationCategory: "WebApplication",
+    applicationCategory:
+      template.type === "coded"
+        ? "WebApplication"
+        : template.type === "framer"
+        ? "DesignApplication"
+        : "DesignApplication",
+    operatingSystem: "Web, Cross-Platform",
     description: template.description,
-    image: template.thumbnail,
-    url: `${APP_URL}/templates/${id}`,
+    image: thumbUrl,
+    url: `${APP_URL}/templates/${templateSlug}`,
+    ...(template.createdAt && {
+      datePublished: new Date(template.createdAt).toISOString(),
+    }),
+    ...(template.updatedAt && {
+      dateModified: new Date(template.updatedAt).toISOString(),
+    }),
     offers: {
       "@type": "Offer",
       price: template.price || 0,
@@ -170,35 +214,59 @@ const Page = async ({ params }: PageProps) => {
     }),
     brand: {
       "@type": "Brand",
-      name: "Premium Templates",
+      name: "MHD Store Premium Templates",
     },
   };
+
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: `${APP_URL}`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Templates",
+      item: `${APP_URL}/templates`,
+    },
+  ];
+
+  if (primaryCategory) {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: 3,
+      name: primaryCategory.name,
+      item: `${APP_URL}/templates/${primaryCategory.slug || primaryCategory.name.toLowerCase()}`,
+    });
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: 4,
+      name: template.title,
+      item: `${APP_URL}/templates/${templateSlug}`,
+    });
+  } else {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: 3,
+      name: template.title,
+      item: `${APP_URL}/templates/${templateSlug}`,
+    });
+  }
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Templates",
-        item: `${APP_URL}/templates`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: template.title,
-        item: `${APP_URL}/templates/${id}`,
-      },
-    ],
+    itemListElement: breadcrumbItems,
   };
 
-  const templatePreload = template.thumbnail
+  const templatePreload = thumbUrl
     ? getImageProps({
-        src: template.thumbnail,
-        sizes: "(min-width: 1024px) 600px, (min-width: 640px) 500px, 400px",
+        src: thumbUrl,
+        sizes: "(min-width: 1024px) 800px, (min-width: 640px) 600px, 100vw",
         quality: 80,
-        defaultWidth: 600,
+        defaultWidth: 800,
       })
     : null;
 
@@ -214,13 +282,11 @@ const Page = async ({ params }: PageProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <MarkdownCopyHandler />
-      <main className="min-h-screen py-24 md:py-28 text-gray-200">
-        <div className="max-w-7xl px-4">
-          <Template
-            template={template}
-            similarTemplates={similarTemplates || []}
-          />
-        </div>
+      <main className="min-h-screen pt-20 sm:pt-24 pb-16 md:pb-24 text-gray-200">
+        <Template
+          template={template}
+          similarTemplates={similarTemplates || []}
+        />
       </main>
     </>
   );

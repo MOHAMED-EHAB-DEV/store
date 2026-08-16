@@ -375,17 +375,6 @@ export default function StatsSectionClient({ stats }: StatsSectionClientProps) {
 
       {/* Section Header */}
       <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-        {/* Live Telemetry Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-md mb-4 shadow-inner">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-          </span>
-          <span className="text-xs font-mono font-medium tracking-wider uppercase text-neutral-300">
-            Live Platform Telemetry
-          </span>
-        </div>
-
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white font-paras">
           Scale & Velocity in{" "}
           <span className="bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">

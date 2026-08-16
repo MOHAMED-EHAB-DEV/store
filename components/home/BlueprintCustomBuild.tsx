@@ -108,10 +108,6 @@ const BlueprintCustomBuild = () => {
       className="w-full py-16 text-white relative z-20 overflow-hidden"
       aria-labelledby="blueprint-title"
     >
-      <div
-        className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[140px] pointer-events-none"
-        aria-hidden="true"
-      />
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div
           ref={bandRef}

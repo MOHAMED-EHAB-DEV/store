@@ -2,6 +2,15 @@ import React from "react";
 import { Grid } from "@/components/ui/svgs/icons/Grid";
 import { NextJS } from "@/components/ui/svgs/icons/NextJS";
 import { Vite } from "@/components/ui/svgs/icons/Vite";
+import { TailwindCSS } from "@/components/ui/svgs/icons/TailwindCSS";
+import { LayoutDashboard } from "@/components/ui/svgs/icons/LayoutDashboard";
+import { Rocket } from "@/components/ui/svgs/icons/Rocket";
+import { Palette } from "@/components/ui/svgs/icons/Palette";
+import { Globe } from "@/components/ui/svgs/icons/Globe";
+import { Smartphone } from "@/components/ui/svgs/icons/Smartphone";
+import { Code2 } from "@/components/ui/svgs/icons/Code2";
+import { Sparkles } from "@/components/ui/svgs/icons/Sparkles";
+import { Layers } from "@/components/ui/svgs/icons/Layers";
 
 export const ReactIcon = ({ className }: { className?: string }) => (
   <svg
@@ -100,11 +109,22 @@ export const CATEGORY_ICONS: Record<
   react: ReactIcon,
   nextjs: NextJS,
   vite: Vite,
+  tailwindcss: TailwindCSS,
+  saas: Rocket,
+  dashboard: LayoutDashboard,
+  admin: LayoutDashboard,
+  design: Palette,
+  ecommerce: Layers,
+  "e-commerce": Layers,
+  mobile: Smartphone,
+  web: Globe,
+  developer: Code2,
+  ai: Sparkles,
 };
 
 export const getCategoryIcon = (
   iconName?: string | null,
 ): React.FC<{ className?: string }> => {
   if (!iconName) return Grid;
-  return CATEGORY_ICONS[iconName?.toLowerCase()] || Grid;
+  return CATEGORY_ICONS[iconName?.toLowerCase().trim()] || Grid;
 };

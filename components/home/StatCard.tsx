@@ -1,6 +1,8 @@
 "use client";
 
-import { ComponentType, useState, MouseEvent } from "react";
+import { ComponentType, useRef, useCallback } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export interface StatTheme {
   primary: string;
@@ -47,16 +49,80 @@ export default function StatCard({
   const decimals = config.decimals ?? 0;
   const theme = config.theme;
 
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+  const localCardRef = useRef<HTMLDivElement | null>(null);
+  const spotlightRef = useRef<HTMLDivElement | null>(null);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
+  const setMergedCardRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      localCardRef.current = node;
+      cardRef(node);
+    },
+    [cardRef]
+  );
+
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      if (prefersReducedMotion) return;
+
+      const card = localCardRef.current;
+      const spotlight = spotlightRef.current;
+      if (!card || !spotlight) return;
+
+      gsap.set(spotlight, { willChange: "transform, opacity" });
+
+      const xTo = gsap.quickTo(spotlight, "x", {
+        duration: 0.25,
+        ease: "power2.out",
+      });
+      const yTo = gsap.quickTo(spotlight, "y", {
+        duration: 0.25,
+        ease: "power2.out",
+      });
+
+      let rafId: number | null = null;
+      let lastEvent: MouseEvent | null = null;
+
+      const handleMouseMove = (e: MouseEvent) => {
+        lastEvent = e;
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            if (!card || !lastEvent) {
+              rafId = null;
+              return;
+            }
+            const rect = card.getBoundingClientRect();
+            xTo(lastEvent.clientX - rect.left);
+            yTo(lastEvent.clientY - rect.top);
+            rafId = null;
+          });
+        }
+      };
+
+      const handleMouseEnter = () => {
+        gsap.to(spotlight, { opacity: 0.7, duration: 0.3, ease: "power2.out" });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(spotlight, { opacity: 0, duration: 0.4, ease: "power2.out" });
+      };
+
+      card.addEventListener("mousemove", handleMouseMove);
+      card.addEventListener("mouseenter", handleMouseEnter);
+      card.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        card.removeEventListener("mousemove", handleMouseMove);
+        card.removeEventListener("mouseenter", handleMouseEnter);
+        card.removeEventListener("mouseleave", handleMouseLeave);
+        if (rafId) cancelAnimationFrame(rafId);
+      };
+    },
+    { scope: localCardRef }
+  );
 
   // SSR Initial formatted string for crawlers & instant paint
   const formattedInitial =
@@ -66,18 +132,15 @@ export default function StatCard({
 
   return (
     <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      ref={setMergedCardRef}
       className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-neutral-900/50 backdrop-blur-2xl border border-white/[0.08] p-6 sm:p-7 transition-all duration-500 hover:border-white/25 hover:shadow-2xl hover:-translate-y-1.5"
     >
-      {/* Dynamic Cursor Spotlight Overlay */}
+      {/* GSAP Cursor Spotlight Overlay */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300"
+        ref={spotlightRef}
+        className="pointer-events-none absolute w-[400px] h-[400px] -left-[200px] -top-[200px] opacity-0"
         style={{
-          opacity: isHovered ? 0.65 : 0,
-          background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, ${theme.glow}, transparent 75%)`,
+          background: `radial-gradient(circle, ${theme.glow} 0%, transparent 75%)`,
         }}
         aria-hidden="true"
       />
@@ -147,4 +210,3 @@ export default function StatCard({
     </div>
   );
 }
-

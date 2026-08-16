@@ -1,68 +1,106 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
-
-interface Position {
-  x: number;
-  y: number;
-}
+import React, { useRef } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 interface SpotlightCardProps extends React.PropsWithChildren {
   className?: string;
-  spotlightColor?: `rgba(${number}, ${number}, ${number}, ${number})`;
+  spotlightColor?: string;
+  spotlightSize?: number;
 }
 
 const SpotlightCard: React.FC<SpotlightCardProps> = ({
   children,
-  className = '',
-  spotlightColor = 'rgba(255, 255, 255, 0.25)'
+  className = "",
+  spotlightColor = "rgba(255, 255, 255, 0.15)",
+  spotlightSize = 500,
 }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState<number>(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = e => {
-    if (!divRef.current || isFocused) return;
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
-    const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
+      if (prefersReducedMotion) return;
 
-  const handleFocus = () => {
-    setIsFocused(true);
-    setOpacity(0.6);
-  };
+      const card = cardRef.current;
+      const spotlight = spotlightRef.current;
+      if (!card || !spotlight) return;
 
-  const handleBlur = () => {
-    setIsFocused(false);
-    setOpacity(0);
-  };
+      gsap.set(spotlight, { willChange: "transform, opacity" });
 
-  const handleMouseEnter = () => {
-    setOpacity(0.6);
-  };
+      const xTo = gsap.quickTo(spotlight, "x", {
+        duration: 0.25,
+        ease: "power2.out",
+      });
+      const yTo = gsap.quickTo(spotlight, "y", {
+        duration: 0.25,
+        ease: "power2.out",
+      });
 
-  const handleMouseLeave = () => {
-    setOpacity(0);
-  };
+      let rafId: number | null = null;
+      let lastEvent: MouseEvent | null = null;
+
+      const handleMouseMove = (e: MouseEvent) => {
+        lastEvent = e;
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            if (!card || !lastEvent) {
+              rafId = null;
+              return;
+            }
+            const rect = card.getBoundingClientRect();
+            xTo(lastEvent.clientX - rect.left);
+            yTo(lastEvent.clientY - rect.top);
+            rafId = null;
+          });
+        }
+      };
+
+      const handleMouseEnter = () => {
+        gsap.to(spotlight, { opacity: 1, duration: 0.3, ease: "power2.out" });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(spotlight, { opacity: 0, duration: 0.4, ease: "power2.out" });
+      };
+
+      card.addEventListener("mousemove", handleMouseMove);
+      card.addEventListener("mouseenter", handleMouseEnter);
+      card.addEventListener("mouseleave", handleMouseLeave);
+
+      return () => {
+        card.removeEventListener("mousemove", handleMouseMove);
+        card.removeEventListener("mouseenter", handleMouseEnter);
+        card.removeEventListener("mouseleave", handleMouseLeave);
+        if (rafId) cancelAnimationFrame(rafId);
+      };
+    },
+    { scope: cardRef }
+  );
+
+  const halfSize = spotlightSize / 2;
 
   return (
     <div
-      ref={divRef}
-      onMouseMove={handleMouseMove}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative rounded-3xl border border-neutral-800 bg-neutral-900 overflow-hidden p-8 ${className}`}
+      ref={cardRef}
+      className={`relative rounded-3xl border border-neutral-800 bg-neutral-900 overflow-hidden ${className}`}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"
+        ref={spotlightRef}
+        className="pointer-events-none absolute opacity-0"
         style={{
-          opacity,
-          background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`
+          width: `${spotlightSize}px`,
+          height: `${spotlightSize}px`,
+          left: `-${halfSize}px`,
+          top: `-${halfSize}px`,
+          background: `radial-gradient(circle, ${spotlightColor} 0%, transparent 65%)`,
         }}
+        aria-hidden="true"
       />
       {children}
     </div>

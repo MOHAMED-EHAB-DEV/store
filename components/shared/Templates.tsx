@@ -19,6 +19,7 @@ import { Search } from "@/components/ui/svgs/icons/Search";
 import { cn } from "@/lib/utils";
 import { ICategory } from "@/lib/validations/category";
 import { ITemplate } from "@/lib/validations/template";
+import EmptyState from "@/components/shared/EmptyState";
 
 /* ─── SlidersIcon ───────────────────────────────────────────── */
 const SlidersIcon = ({ className }: { className?: string }) => (
@@ -243,37 +244,29 @@ const Templates = ({
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center text-center py-12">
-            <div className="w-32 h-32 mb-4" aria-hidden="true">
-              <Search className="w-full h-full text-gray-400 opacity-60" aria-hidden="true" />
-            </div>
-            <h3 className="text-lg font-semibold text-white/90 mb-2">
-              No templates found
-            </h3>
-            <p className="text-sm text-gray-400 mb-4 max-w-md">
-              {hasActiveFilters
+          <EmptyState
+            icon={Search}
+            title="No templates found"
+            description={
+              hasActiveFilters
                 ? "Try adjusting your search or clearing filters to see more results."
-                : "We don't have any templates available right now. Please check back soon or contact support."}
-            </p>
-            <div className="flex gap-3">
-              {hasActiveFilters && (
-                <button
-                  onClick={clearFilters}
-                  aria-label="Clear Filters"
-                  className="px-4 py-2 rounded-lg bg-[var(--gold,#c9a84c)] text-black font-medium hover:brightness-110 transition"
-                >
-                  Clear Filters
-                </button>
-              )}
-              <button
-                onClick={() => router.refresh()}
-                aria-label="Retry"
-                className="px-4 py-2 rounded-lg border border-white/10 text-white hover:bg-white/10 transition"
-              >
-                Retry
-              </button>
-            </div>
-          </div>
+                : "We don't have any templates available right now. Please check back soon or contact support."
+            }
+            primaryAction={
+              hasActiveFilters
+                ? {
+                    label: "Clear Filters",
+                    onClick: clearFilters,
+                    className: "bg-[var(--gold,#c9a84c)] text-black font-medium hover:brightness-110",
+                  }
+                : undefined
+            }
+            secondaryAction={{
+              label: "Retry",
+              onClick: () => router.refresh(),
+              variant: "outline",
+            }}
+          />
         )}
       </div>
 

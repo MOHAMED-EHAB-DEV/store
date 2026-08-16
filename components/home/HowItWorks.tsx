@@ -188,24 +188,8 @@ const HowItWorks = () => {
       className="relative w-full py-24 md:py-32 overflow-hidden"
       aria-labelledby="howitworks-heading"
     >
-      <div
-        className="absolute top-0 end-0 w-72 h-72 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-0 start-0 w-72 h-72 bg-purple-600/10 rounded-full blur-[120px] pointer-events-none"
-        aria-hidden="true"
-      />
-
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
         <div ref={headingRef} className="text-center mb-20 md:mb-28">
-          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full border border-white/10 text-xs font-medium tracking-wide text-gray-400">
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-emerald-400"
-              aria-hidden="true"
-            />
-            How it works
-          </div>
           <h2
             id="howitworks-heading"
             className="text-3xl md:text-5xl font-bold font-paras text-white"

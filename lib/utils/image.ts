@@ -105,5 +105,3 @@ export const getImageProps = (params: {
   };
 };
 
-export const getZeroJSImageProps = getImageProps;
-

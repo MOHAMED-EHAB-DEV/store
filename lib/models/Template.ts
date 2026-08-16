@@ -7,13 +7,11 @@ export interface ITemplate extends Document {
   title: string;
   demoVideo?: string;
   description: string;
-  thumbnail:
-    | string
-    | {
-        url: string;
-        gradientColors?: string[];
-        gradientStyle?: string;
-      };
+  thumbnail: {
+    url: string;
+    gradientColors?: string[];
+    gradientStyle?: string;
+  };
   demoLink: string;
   price: number;
   content: string;
@@ -480,8 +478,6 @@ TemplateSchema.statics.searchTemplates = function (
 
   return this.aggregate(pipeline).allowDiskUse(true);
 };
-
-
 
 // Pre-save middleware for tag normalization
 TemplateSchema.pre("save", function (next) {

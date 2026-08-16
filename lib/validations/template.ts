@@ -1,14 +1,11 @@
 import * as v from "valibot";
 import { CategorySchema } from "./category";
 
-export const ThumbnailSchema = v.union([
-  v.string(),
-  v.object({
-    url: v.string(),
-    gradientColors: v.optional(v.array(v.string())),
-    gradientStyle: v.optional(v.string()),
-  }),
-]);
+export const ThumbnailSchema = v.object({
+  url: v.string(),
+  gradientColors: v.optional(v.array(v.string())),
+  gradientStyle: v.optional(v.string()),
+});
 
 export const TemplateSchema = v.object({
   _id: v.string(),
@@ -21,7 +18,7 @@ export const TemplateSchema = v.object({
   content: v.union([v.string(), v.undefined()]),
   categories: v.array(v.union([v.string(), CategorySchema])),
   tags: v.array(v.string()),
-  author: v.optional(v.union([v.string(), v.any()])), 
+  author: v.optional(v.union([v.string(), v.any()])),
   downloads: v.number(),
   averageRating: v.number(),
   gradient: v.optional(v.string()),

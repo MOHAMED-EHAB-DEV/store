@@ -49,9 +49,9 @@ const SKILLS_DATA = [
 
 const SUPERPOWERS = [
   {
-    title: "Rapid Turnaround",
-    desc: "Production delivery in days, not months",
-    icon: Zap,
+    title: "Clean Architecture",
+    desc: "Modular, zero-bloat & scalable code",
+    icon: Code2,
   },
   {
     title: "Enterprise Grade",

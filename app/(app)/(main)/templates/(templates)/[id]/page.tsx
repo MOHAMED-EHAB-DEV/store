@@ -102,8 +102,8 @@ export async function generateMetadata({
     template.type === "coded"
       ? "Next.js Template"
       : template.type === "framer"
-      ? "Framer Template"
-      : "Figma UI Kit";
+        ? "Framer Template"
+        : "Figma UI Kit";
   const priceLabel =
     template.price === 0 ? "Free Download" : `$${template.price}`;
 
@@ -172,7 +172,10 @@ const Page = async ({ params }: PageProps) => {
   const primaryCategory =
     template.categories && template.categories.length > 0
       ? typeof template.categories[0] === "string"
-        ? { name: template.categories[0], slug: template.categories[0].toLowerCase() }
+        ? {
+            name: template.categories[0],
+            slug: template.categories[0].toLowerCase(),
+          }
         : (template.categories[0] as any)
       : null;
 
@@ -185,8 +188,8 @@ const Page = async ({ params }: PageProps) => {
       template.type === "coded"
         ? "WebApplication"
         : template.type === "framer"
-        ? "DesignApplication"
-        : "DesignApplication",
+          ? "DesignApplication"
+          : "DesignApplication",
     operatingSystem: "Web, Cross-Platform",
     description: template.description,
     image: thumbUrl,

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Breadcrumbs, { DynamicBreadcrumbItem } from "@/components/ui/breadcrumb";
 import { ExternalLink } from "@/components/ui/svgs/icons/ExternalLink";
 import { Star } from "@/components/ui/svgs/icons/Star";
 import { Download } from "@/components/ui/svgs/icons/Download";
@@ -60,6 +61,23 @@ export default async function Template({
 
   const TypeIcon = typeBadgeConfig?.icon || Code2;
 
+  const breadcrumbItems: DynamicBreadcrumbItem[] = [
+    { label: "Home", href: "/" },
+    { label: "Templates", href: "/templates" },
+    ...(firstCategory
+      ? [
+          {
+            label: firstCategory.name,
+            href: `/templates/category/${firstCategory.slug || firstCategory.name.toLowerCase()}`,
+          },
+        ]
+      : []),
+    {
+      label: template.title,
+      className: "truncate max-w-[200px] sm:max-w-xs",
+    },
+  ];
+
   return (
     <div className="relative flex flex-col gap-14 sm:gap-18 lg:gap-22 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-white">
       {/* Dynamic Ambient Background Aura */}
@@ -75,33 +93,10 @@ export default async function Template({
       />
 
       {/* Breadcrumbs Navigation */}
-      <nav
-        aria-label="Breadcrumb"
-        className="flex items-center gap-2 text-xs sm:text-sm text-gray-400"
-      >
-        <Link href="/" className="hover:text-white transition-colors">
-          Home
-        </Link>
-        <span className="text-gray-600">/</span>
-        <Link href="/templates" className="hover:text-white transition-colors">
-          Templates
-        </Link>
-        {firstCategory && (
-          <>
-            <span className="text-gray-600">/</span>
-            <Link
-              href={`/templates/${firstCategory.slug || firstCategory.name.toLowerCase()}`}
-              className="hover:text-white transition-colors"
-            >
-              {firstCategory.name}
-            </Link>
-          </>
-        )}
-        <span className="text-gray-600">/</span>
-        <span className="text-gray-200 truncate max-w-[200px] sm:max-w-xs">
-          {template.title}
-        </span>
-      </nav>
+      <Breadcrumbs
+        items={breadcrumbItems}
+        separator={<span className="text-gray-600">/</span>}
+      />
 
       {/* 2-Column Balanced Hero Section */}
       <section className="grid grid-cols-1 lg:grid-cols-[440px_1fr] xl:grid-cols-[480px_1fr] gap-8 lg:gap-10 items-start w-full">
